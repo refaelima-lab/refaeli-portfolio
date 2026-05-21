@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refaeli Ma · Experience Architect</title>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div id="prog"></div>
+
+<!-- CURSOR -->
+<div id="cur-dot"></div>
+<div id="cur-ring"><span id="cur-label">View</span></div>
+
+<!-- BACK TO TOP -->
+<button id="back-top" aria-label="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <path d="M7 11V3M3 6.5L7 3l4 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+
+<!-- ══════════════════════════════════════
+     NAV
+══════════════════════════════════════ -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">Refaeli Ma</a>
+  <ul class="nav-links">
+    <li><a href="#philosophy">Philosophy</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#object">Object</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Mobile nav overlay -->
+<div class="mob-nav" id="mob-nav" aria-hidden="true">
+  <div class="mob-nav-bg"></div>
+  <ul class="mob-nav-links">
+    <li><a href="#philosophy">Philosophy</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#object">Object</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="mob-nav-cta">Let's Talk</a>
+  <div class="mob-nav-foot">Los Angeles, CA &nbsp;·&nbsp; Available worldwide</div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero" id="hero">
+
+  <!-- z-1: scrolling name, background typographic layer -->
+  <div class="hero-name-marquee" aria-hidden="true">
+    <div class="hero-name-track">
+      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+      <!-- duplicate, seamless loop at -50% -->
+      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+    </div>
+  </div>
+
+  <!-- z-2: orbit rings -->
+  <div class="orbit"><div class="orbit-dot"></div></div>
+  <div class="orbit2"><div class="orbit-dot2"></div></div>
+
+  <!-- z-3: profile photo, centered, anchored to bottom -->
+  <div class="hero-photo-wrap">
+    <img
+      src="assets/profile-related/refaeli-ma-profile-picture-side.png"
+      alt="Refaeli Ma, Principal Product Designer"
+      class="hero-photo"
+      fetchpriority="high"
+      decoding="async"
+    >
+  </div>
+
+  <!-- z-5: corner text elements -->
+
+  <!-- Bottom left: typewriter role -->
+  <div class="hero-role">
+    <span id="typewriter-text">Principal Product Designer</span><span class="cursor-blink"></span>
+  </div>
+
+  <!-- Bottom right: location with pulse — aligned with typewriter baseline -->
+  <div class="hero-location">
+    <span class="hero-pulse"></span>
+    Based in Los Angeles, California
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SKILLS MARQUEE
+══════════════════════════════════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <!-- First set -->
+    <span class="marquee-item">Design Leadership <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Product Vision <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Systems Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Product Strategy <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Scalable Design System <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Information Architecture <span class="marquee-sep"></span></span>
+    <span class="marquee-item">End-to-End Product Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">AI-Augmented Workflows <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Human-AI Integration Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Cross-Functional Leadership <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Visual Direction <span class="marquee-sep"></span></span>
+    <!-- Duplicate for seamless loop -->
+    <span class="marquee-item">Design Leadership <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Product Vision <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Systems Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Product Strategy <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Scalable Design System <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Information Architecture <span class="marquee-sep"></span></span>
+    <span class="marquee-item">End-to-End Product Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">AI-Augmented Workflows <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Human-AI Integration Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Cross-Functional Leadership <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Visual Direction <span class="marquee-sep"></span></span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PHILOSOPHY
+══════════════════════════════════════ -->
+<section class="sec philosophy-sec" id="philosophy">
+  <div class="sec-inner phi-inner">
+
+    <div class="phi-left">
+      <div class="phi-kicker r"><div class="ch ch-d">Design Philosophy</div></div>
+
+      <div class="phi-statement-wrap r d1">
+        <p class="phi-statement">I design for the problem<br><em>beneath the problem.</em></p>
+      </div>
+
+      <div class="phi-pullquote r d2">
+        <p>Most products fail not in execution, but in definition, solving the wrong thing beautifully.</p>
+      </div>
+
+      <p class="phi-body r d3">My work begins before the interface, in the tensions and misalignments no one has named yet. I don't start with screens. I start with structure. Then I build systems that resolve what actually matters, shaping behavior until the right action feels natural, almost inevitable.</p>
+
+      <p class="phi-body r d4"><em>Good design, to me, is invisible.</em> Not because it lacks craft, but because it removes the need for attention. Everything works as it should: quietly, precisely, on purpose.</p>
+    </div>
+
+    <div class="phi-right">
+      <div class="phi-stat-card r d2">
+        <div class="phi-stat-num">10+</div>
+        <div class="phi-stat-label">Years Experience</div>
+      </div>
+      <div class="phi-stat-card r d3">
+        <div class="phi-stat-num">40+</div>
+        <div class="phi-stat-label">Products Shipped</div>
+      </div>
+      <div class="phi-stat-card r d4">
+        <div class="phi-stat-num">20M+</div>
+        <div class="phi-stat-label">Users Impacted</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+<!-- ══════════════════════════════════════
+     HOW I WORK
+══════════════════════════════════════ -->
+<section class="sec bg-warm" id="how-i-work">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner">
+    <div class="r"><div class="ch">How I Work</div></div>
+    <h2 class="st r d1">Design is not how it looks.<br>It's how <em>decisions are made</em>.</h2>
+    <p class="bp r d2" style="max-width:520px;">A few principles that shape how I work, balancing structure, intuition, and the space in between.</p>
+
+    <div class="hiw-grid">
+
+      <div class="hiw-tile r d1">
+        <span class="hiw-num" aria-hidden="true">01</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="2,12 7,6 12,12 7,18 2,12"/>
+              <polyline points="12,12 17,6 22,12 17,18 12,12"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title"><strong>Problem</strong> &gt; Solution</div>
+          <p class="hiw-short">The right question matters more than a fast answer.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title"><strong>Problem</strong> &gt; Solution</div>
+          <p class="hiw-expand">Most work rushes to solutions. I don't. A well-crafted answer to the wrong problem is still failure. I spend time where it matters, defining the real tension beneath the surface. When the problem is clear, the solution becomes obvious, often simpler than expected.</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <div class="hiw-tile r d2">
+        <span class="hiw-num" aria-hidden="true">02</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="8"/>
+              <circle cx="12" cy="12" r="2.5"/>
+              <line x1="12" y1="1" x2="12" y2="4"/>
+              <line x1="12" y1="20" x2="12" y2="23"/>
+              <line x1="1" y1="12" x2="4" y2="12"/>
+              <line x1="20" y1="12" x2="23" y2="12"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title"><strong>Objectives</strong> &gt; Operations</div>
+          <p class="hiw-short">Purpose guides process.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title"><strong>Objectives</strong> &gt; Operations</div>
+          <p class="hiw-expand">Busy work can look like progress. It rarely is. I anchor teams in outcomes, not activity, aligning every decision to a measurable objective. Process exists to support direction, not replace it. If the goal is clear, the path can stay flexible.</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <div class="hiw-tile r d3">
+        <span class="hiw-num" aria-hidden="true">03</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="20" x2="21" y2="20"/>
+              <line x1="3" y1="4" x2="3" y2="20"/>
+              <polyline points="4,17 8,12 12,14 16,8 21,4"/>
+              <circle cx="8" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+              <circle cx="12" cy="14" r="1.5" fill="currentColor" stroke="none"/>
+              <circle cx="16" cy="8" r="1.5" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title"><strong>Evidence</strong> &gt; Opinion</div>
+          <p class="hiw-short">Data aligns faster than debate.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title"><strong>Evidence</strong> &gt; Opinion</div>
+          <p class="hiw-expand">Design is full of strong opinions. Only some are right. I prioritize signals over assumptions, grounding decisions in data, behavior, and real user feedback. Not to remove intuition, but to sharpen it. Good judgment is informed, not guessed.</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <div class="hiw-tile r d4">
+        <span class="hiw-num" aria-hidden="true">04</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12 C4 7 6 17 8 12 C10 7 12 17 14 12 L22 12"/>
+              <line x1="2" y1="19" x2="8" y2="19" stroke-width="0.8" opacity="0.4"/>
+              <line x1="2" y1="5" x2="8" y2="5" stroke-width="0.8" opacity="0.4"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title"><strong>Space</strong> &gt; Noise</div>
+          <p class="hiw-short">Clarity lives in the pause.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title"><strong>Space</strong> &gt; Noise</div>
+          <p class="hiw-expand">More is not better. Clarity comes from restraint. I remove what competes for attention so what matters can stand on its own. Whether in interface, system, or communication, space is what allows meaning to emerge.</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
+<!-- ══════════════════════════════════════
+     WORK — MADE REAL (breaker + sticky scroll unified)
+══════════════════════════════════════ -->
+<div class="work-stage" id="work">
+  <div class="work-sticky" id="work-sticky">
+
+    <!-- Breaker overlay — intro that fades out as first project card enters -->
+    <div class="wsb-breaker" id="wsb-breaker">
+      <div class="hero-glow" style="top:50%;left:50%;"></div>
+      <div class="wsb-inner">
+        <div class="r"><div class="ch ch-d" style="justify-content:center;">Made Real</div></div>
+        <h2 class="st-d r d1" style="max-width:600px;margin-bottom:1.3rem;">A selection of recent <em>work</em></h2>
+        <p class="bp-d r d2" style="max-width:640px;">Digital product and interaction design, focused on clarity, systems, and intelligent experiences. Not just what shipped, but what it took to get there.</p>
+      </div>
+    </div>
+
+    <!-- Background orbs — hiw-orb component reused, fades in as breaker exits -->
+    <div class="work-orbs" id="work-orbs" aria-hidden="true">
+      <div class="hiw-orb hiw-orb-tr">
+        <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+      </div>
+      <div class="hiw-orb hiw-orb-bl">
+        <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+      </div>
+    </div>
+
+    <!-- 01 — Verizon Identity Architecture -->
+    <div class="wsc-card" data-idx="0">
+      <div class="wsc-inner">
+
+        <div class="wsc-visual" style="background:#eaebff;">
+          <h2 class="sr-only">Verizon Identity Architecture — ecosystem diagram showing households, devices, behaviors, services, and relationships orbiting a central identity core</h2>
+          <style>
+            .viz-wrap { display:flex; justify-content:center; align-items:center; }
+            svg.ia { overflow:visible; }
+            @keyframes orbit-cw  { from{transform-origin:340px 230px;transform:rotate(0deg)}   to{transform-origin:340px 230px;transform:rotate(360deg)} }
+            @keyframes orbit-ccw { from{transform-origin:340px 230px;transform:rotate(0deg)}   to{transform-origin:340px 230px;transform:rotate(-360deg)} }
+            @keyframes pulse-ring { 0%,100%{opacity:.18} 50%{opacity:.32} }
+            @keyframes dot-fade   { 0%,100%{opacity:.3} 50%{opacity:.9} }
+            @keyframes float-node { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+            .ring1 { animation: pulse-ring 4s ease-in-out infinite; }
+            .ring2 { animation: pulse-ring 4s ease-in-out infinite 1.3s; }
+            .ring3 { animation: pulse-ring 4s ease-in-out infinite 2.6s; }
+            .orbit1 { animation: orbit-cw  22s linear infinite; transform-origin:340px 230px; }
+            .orbit2 { animation: orbit-ccw 30s linear infinite; transform-origin:340px 230px; }
+            .conn-dot { animation: dot-fade 3s ease-in-out infinite; }
+            .conn-dot:nth-child(2) { animation-delay:.5s }
+            .conn-dot:nth-child(3) { animation-delay:1s }
+            .conn-dot:nth-child(4) { animation-delay:1.5s }
+            .conn-dot:nth-child(5) { animation-delay:2s }
+            .node-g { animation: float-node 4s ease-in-out infinite; }
+            .node-g:nth-of-type(2) { animation-delay:.8s }
+            .node-g:nth-of-type(3) { animation-delay:1.6s }
+            .node-g:nth-of-type(4) { animation-delay:2.4s }
+            .node-g:nth-of-type(5) { animation-delay:3.2s }
+          </style>
+          <div class="wsc-ph-grid"></div>
+          <div class="viz-wrap" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <svg class="ia" style="width:100%;height:100%;" viewBox="0 0 680 460" preserveAspectRatio="xMidYMid meet" role="img">
+              <title>Verizon Identity Architecture ecosystem diagram</title>
+              <desc>A central identity core surrounded by orbital rings connecting households, devices, behaviors, services, and relationships nodes.</desc>
+              <defs>
+                <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#e8e9ff"/>
+                  <stop offset="100%" stop-color="#d0d3ff"/>
+                </radialGradient>
+              </defs>
+              <circle class="ring1" cx="340" cy="230" r="110" fill="none" stroke="#8D94FF" stroke-width="0.8"/>
+              <circle class="ring2" cx="340" cy="230" r="158" fill="none" stroke="#8D94FF" stroke-width="0.6"/>
+              <circle class="ring3" cx="340" cy="230" r="200" fill="none" stroke="#8D94FF" stroke-width="0.5"/>
+              <g class="orbit1">
+                <circle class="conn-dot" cx="340" cy="120" r="3.5" fill="#3C49FF"/>
+                <circle class="conn-dot" cx="440" cy="265" r="3.5" fill="#3C49FF"/>
+                <circle class="conn-dot" cx="270" cy="310" r="3.5" fill="#3C49FF"/>
+              </g>
+              <g class="orbit2">
+                <circle class="conn-dot" cx="340" cy="30"  r="3" fill="#8D94FF"/>
+                <circle class="conn-dot" cx="510" cy="230" r="3" fill="#8D94FF"/>
+                <circle class="conn-dot" cx="180" cy="330" r="3" fill="#8D94FF"/>
+                <circle class="conn-dot" cx="420" cy="390" r="3" fill="#8D94FF"/>
+              </g>
+              <line x1="340" y1="230" x2="170" y2="110" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+              <line x1="340" y1="230" x2="530" y2="130" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+              <line x1="340" y1="230" x2="560" y2="320" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+              <line x1="340" y1="230" x2="200" y2="370" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+              <line x1="340" y1="230" x2="420" y2="400" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+              <circle cx="340" cy="230" r="52" fill="url(#coreGrad)" stroke="#8D94FF" stroke-width="1.2"/>
+              <circle cx="340" cy="230" r="44" fill="none" stroke="#8D94FF" stroke-width="0.5" opacity=".5"/>
+              <text x="340" y="222" text-anchor="middle" font-size="22" fill="#3C49FF" font-family="system-ui">⬡</text>
+              <text x="340" y="242" text-anchor="middle" font-size="10" font-weight="600" letter-spacing="0.12em" fill="#3C49FF" font-family="'Outfit',system-ui">IDENTITY</text>
+              <text x="340" y="253" text-anchor="middle" font-size="9" fill="#8D94FF" font-family="'Outfit',system-ui">CORE</text>
+              <g class="node-g" style="transform-origin:170px 95px">
+                <rect x="112" y="68" width="116" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="170" y="91" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">HOUSEHOLDS</text>
+                <text x="170" y="107" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">unified profiles</text>
+                <circle cx="170" cy="68" r="3.5" fill="#3C49FF"/>
+              </g>
+              <g class="node-g" style="transform-origin:530px 115px">
+                <rect x="476" y="88" width="108" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="530" y="111" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">DEVICES</text>
+                <text x="530" y="127" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">cross-platform</text>
+                <circle cx="530" cy="88" r="3.5" fill="#3C49FF"/>
+              </g>
+              <g class="node-g" style="transform-origin:560px 320px">
+                <rect x="504" y="294" width="112" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="560" y="317" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">BEHAVIORS</text>
+                <text x="560" y="333" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">intelligence layer</text>
+                <circle cx="560" cy="294" r="3.5" fill="#3C49FF"/>
+              </g>
+              <g class="node-g" style="transform-origin:195px 370px">
+                <rect x="138" y="344" width="114" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="195" y="367" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">SERVICES</text>
+                <text x="195" y="383" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">connected ecosystem</text>
+                <circle cx="195" cy="344" r="3.5" fill="#3C49FF"/>
+              </g>
+              <g class="node-g" style="transform-origin:420px 405px">
+                <rect x="360" y="379" width="120" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="420" y="401" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">RELATIONSHIPS</text>
+                <text x="420" y="417" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">adaptive context</text>
+                <circle cx="420" cy="379" r="3.5" fill="#3C49FF"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="wsc-content">
+          <div class="wsc-header">
+            <div class="wsc-meta">
+              <img class="wsc-logo" src="assets/logo/verizon.svg" alt="Verizon">
+              <span class="wsc-sep">·</span>
+              <span class="wsc-type">Identity Architecture · 2026–Present</span>
+            </div>
+            <span class="wsc-index">01 / 04</span>
+          </div>
+
+          <div class="wsc-body-wrap">
+            <h2 class="wsc-title">Verizon Identity Architecture</h2>
+            <p class="wsc-body">Leading the evolution of Verizon's Identity &amp; Profile ecosystem, the invisible architecture that connects households, devices, behaviors, and services into one intelligent system.</p>
+            <p class="wsc-body">Built to power personalization, behavioral intelligence, and AI-driven experiences across Home and Mobile. This work shifts Verizon from managing products to understanding relationships, transforming a traditional utility platform into a connected operating system for modern households.</p>
+          </div>
+
+          <div class="wsc-footer">
+            <div class="wsc-tags">
+              <span class="wsc-tag">Experience Architecture</span>
+              <span class="wsc-tag">Identity System</span>
+              <span class="wsc-tag">Platform Strategy</span>
+              <span class="wsc-tag">Behavioral Architecture</span>
+              <span class="wsc-tag">Human-Centered AI</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 02 — Verizon Home App (placeholder) -->
+    <div class="wsc-card" data-idx="1">
+      <div class="wsc-inner">
+
+        <div class="wsc-visual" style="background:#eef1ff;">
+          <h2 class="sr-only">Verizon Home App — connected system diagram showing process, design systems, NPS, accessibility, legal, and cross-functional operations nodes</h2>
+          <style>
+            .vh-wrap { display:flex; justify-content:center; }
+            @keyframes flow-dash { from{stroke-dashoffset:20} to{stroke-dashoffset:0} }
+            @keyframes node-pulse { 0%,100%{opacity:.9;transform:scale(1)} 50%{opacity:1;transform:scale(1.04)} }
+            @keyframes badge-blink { 0%,100%{opacity:.5} 60%{opacity:1} }
+            .flow-line { stroke-dasharray:5 4; animation: flow-dash 1.8s linear infinite; }
+            .flow-line.d2 { animation-delay:.4s }
+            .flow-line.d3 { animation-delay:.8s }
+            .flow-line.d4 { animation-delay:1.2s }
+            .flow-line.d5 { animation-delay:1.6s }
+            .flow-line.d6 { animation-delay:.6s }
+            .sat-node { animation: node-pulse 3.5s ease-in-out infinite; transform-origin:center; }
+            .sat-node:nth-child(2){animation-delay:.6s}
+            .sat-node:nth-child(3){animation-delay:1.2s}
+            .sat-node:nth-child(4){animation-delay:1.8s}
+            .sat-node:nth-child(5){animation-delay:2.4s}
+            .sat-node:nth-child(6){animation-delay:3s}
+            .badge { animation: badge-blink 2.5s ease-in-out infinite; }
+          </style>
+          <div class="wsc-ph-grid"></div>
+          <div class="vh-wrap" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <svg style="width:100%;height:100%;" viewBox="0 0 680 420" preserveAspectRatio="xMidYMid meet" role="img">
+              <title>Verizon Home App system diagram</title>
+              <desc>Central Home App core connected to six operational nodes: Process, Design Systems, NPS, Accessibility, Legal, and Cross-functional Ops.</desc>
+              <line class="flow-line"    x1="340" y1="195" x2="170" y2="100" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+              <line class="flow-line d2" x1="340" y1="195" x2="520" y2="100" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+              <line class="flow-line d3" x1="340" y1="195" x2="580" y2="240" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+              <line class="flow-line d4" x1="340" y1="195" x2="480" y2="350" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+              <line class="flow-line d5" x1="340" y1="195" x2="200" y2="350" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+              <line class="flow-line d6" x1="340" y1="195" x2="100" y2="240" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+              <circle cx="255" cy="147" r="3" fill="#DFE1FF"/>
+              <circle cx="430" cy="147" r="3" fill="#DFE1FF"/>
+              <circle cx="460" cy="217" r="3" fill="#DFE1FF"/>
+              <circle cx="410" cy="272" r="3" fill="#DFE1FF"/>
+              <circle cx="270" cy="272" r="3" fill="#DFE1FF"/>
+              <circle cx="220" cy="217" r="3" fill="#DFE1FF"/>
+              <rect x="258" y="130" width="164" height="130" rx="16" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1.2"/>
+              <rect x="270" y="142" width="80" height="106" rx="10" fill="#e8e9ff" stroke="#DFE1FF" stroke-width="0.8"/>
+              <circle cx="310" cy="178" r="18" fill="#d0d3ff" stroke="#8D94FF" stroke-width="1"/>
+              <circle cx="310" cy="178" r="10" fill="#f4f4ff"/>
+              <circle cx="310" cy="177" r="5" fill="#3C49FF" opacity=".6"/>
+              <rect x="362" y="152" width="48" height="5" rx="2" fill="#DFE1FF"/>
+              <rect x="362" y="163" width="38" height="5" rx="2" fill="#DFE1FF"/>
+              <rect x="362" y="174" width="44" height="5" rx="2" fill="#DFE1FF"/>
+              <rect x="362" y="185" width="30" height="5" rx="2" fill="#DFE1FF"/>
+              <rect x="362" y="196" width="42" height="5" rx="2" fill="#DFE1FF"/>
+              <rect x="362" y="207" width="36" height="5" rx="2" fill="#DFE1FF"/>
+              <rect x="362" y="218" width="40" height="5" rx="2" fill="#DFE1FF"/>
+              <text x="340" y="275" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="0.12em" fill="#3C49FF" font-family="'Outfit',system-ui">VERIZON HOME</text>
+              <circle class="badge" cx="406" cy="142" r="7" fill="#3C49FF"/>
+              <text x="406" y="146" text-anchor="middle" font-size="9" font-weight="600" fill="white" font-family="'Outfit',system-ui">1M</text>
+              <g class="sat-node">
+                <rect x="108" y="62" width="124" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="170" y="84" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">PROCESS</text>
+                <text x="170" y="99" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">roadmap alignment</text>
+              </g>
+              <g class="sat-node">
+                <rect x="458" y="62" width="124" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="520" y="84" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">DESIGN SYS</text>
+                <text x="520" y="99" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">10+ releases</text>
+              </g>
+              <g class="sat-node">
+                <rect x="524" y="210" width="112" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="580" y="232" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">NPS</text>
+                <text x="580" y="247" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">4.5 App Store</text>
+              </g>
+              <g class="sat-node">
+                <rect x="420" y="322" width="120" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="480" y="344" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">LEGAL</text>
+                <text x="480" y="359" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">org structure</text>
+              </g>
+              <g class="sat-node">
+                <rect x="140" y="322" width="120" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="200" y="344" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">CROSS-FUNC</text>
+                <text x="200" y="359" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">operations</text>
+              </g>
+              <g class="sat-node">
+                <rect x="44" y="210" width="112" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="100" y="232" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">ACCESS</text>
+                <text x="100" y="247" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">standards</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="wsc-content">
+          <div class="wsc-header">
+            <div class="wsc-meta">
+              <img class="wsc-logo" src="assets/logo/verizon.svg" alt="Verizon">
+              <span class="wsc-sep">·</span>
+              <span class="wsc-type">Mobile · iOS &amp; Android · 2023–2024</span>
+            </div>
+            <span class="wsc-index">02 / 04</span>
+          </div>
+
+          <div class="wsc-body-wrap">
+            <h2 class="wsc-title">Verizon Home App</h2>
+            <p class="wsc-body">A product people only opened when something went wrong. Reframed from reactive utility to proactive, intelligent experience.</p>
+            <p class="wsc-body wsc-body--placeholder">Full content coming soon.</p>
+          </div>
+
+          <div class="wsc-footer">
+            <div class="wsc-tags">
+              <span class="wsc-tag">Product Design</span>
+              <span class="wsc-tag">Design System</span>
+              <span class="wsc-tag">AI Experience</span>
+              <span class="wsc-tag">Cross-Platform Mobile</span>
+            </div>
+            <a href="#" class="wsc-cta">See how chaos became cadence <span class="wsc-arrow">→</span></a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 03 — BlueJeans (placeholder) -->
+    <div class="wsc-card" data-idx="2">
+      <div class="wsc-inner">
+
+        <div class="wsc-visual" style="background:#ecefff;">
+          <h2 class="sr-only">BlueJeans by Verizon — overlapping orbit diagram representing the intersection of communication, learning, and enterprise-scale design systems</h2>
+          <style>
+            .bj-wrap { display:flex; justify-content:center; }
+            @keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+            @keyframes spin-rev  { from{transform:rotate(0deg)} to{transform:rotate(-360deg)} }
+            @keyframes ring-glow { 0%,100%{opacity:.15} 50%{opacity:.28} }
+            @keyframes dot-travel { 0%,100%{opacity:.2} 50%{opacity:1} }
+            .r-spin  { animation: spin-slow 28s linear infinite; transform-origin:240px 220px; }
+            .r-spin2 { animation: spin-rev  20s linear infinite; transform-origin:440px 220px; }
+            .rg1 { animation: ring-glow 3.5s ease-in-out infinite; }
+            .rg2 { animation: ring-glow 3.5s ease-in-out infinite 1.2s; }
+            .rg3 { animation: ring-glow 3.5s ease-in-out infinite 2.4s; }
+            .dt  { animation: dot-travel 4s ease-in-out infinite; }
+            .dt:nth-child(2){animation-delay:1s}
+            .dt:nth-child(3){animation-delay:2s}
+            .dt:nth-child(4){animation-delay:3s}
+          </style>
+          <div class="wsc-ph-grid"></div>
+          <div class="bj-wrap" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <svg style="width:100%;height:100%;" viewBox="0 0 680 440" preserveAspectRatio="xMidYMid meet" role="img">
+              <title>BlueJeans by Verizon design system diagram</title>
+              <desc>Two overlapping orbital systems representing the intersection of communication and learning, connected at the center by a shared design system node.</desc>
+              <circle class="rg1" cx="240" cy="220" r="145" fill="none" stroke="#8D94FF" stroke-width="0.8"/>
+              <circle class="rg2" cx="240" cy="220" r="105" fill="none" stroke="#8D94FF" stroke-width="0.6"/>
+              <circle class="rg3" cx="240" cy="220" r="68"  fill="none" stroke="#8D94FF" stroke-width="0.5"/>
+              <g class="r-spin">
+                <circle class="dt" cx="240" cy="75"  r="4" fill="#3C49FF"/>
+                <circle class="dt" cx="370" cy="270" r="3" fill="#8D94FF"/>
+                <circle class="dt" cx="145" cy="325" r="3.5" fill="#3C49FF"/>
+                <circle class="dt" cx="108" cy="160" r="3"   fill="#8D94FF"/>
+              </g>
+              <circle class="rg1" cx="440" cy="220" r="145" fill="none" stroke="#8D94FF" stroke-width="0.8"/>
+              <circle class="rg2" cx="440" cy="220" r="105" fill="none" stroke="#8D94FF" stroke-width="0.6"/>
+              <circle class="rg3" cx="440" cy="220" r="68"  fill="none" stroke="#8D94FF" stroke-width="0.5"/>
+              <g class="r-spin2">
+                <circle class="dt" cx="440" cy="75"  r="4" fill="#3C49FF"/>
+                <circle class="dt" cx="570" cy="270" r="3" fill="#8D94FF"/>
+                <circle class="dt" cx="335" cy="325" r="3.5" fill="#3C49FF"/>
+                <circle class="dt" cx="315" cy="150" r="3"   fill="#8D94FF"/>
+              </g>
+              <circle cx="340" cy="220" r="5" fill="#DFE1FF" stroke="#8D94FF" stroke-width="1"/>
+              <circle cx="240" cy="220" r="46" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1.2"/>
+              <circle cx="240" cy="220" r="38" fill="none" stroke="#8D94FF" stroke-width="0.5" opacity=".4"/>
+              <text x="240" y="215" text-anchor="middle" font-size="10" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">COMM</text>
+              <text x="240" y="228" text-anchor="middle" font-size="9" fill="#8D94FF" font-family="'Outfit',system-ui">platform</text>
+              <circle cx="440" cy="220" r="46" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1.2"/>
+              <circle cx="440" cy="220" r="38" fill="none" stroke="#8D94FF" stroke-width="0.5" opacity=".4"/>
+              <text x="440" y="215" text-anchor="middle" font-size="10" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">LEARNING</text>
+              <text x="440" y="228" text-anchor="middle" font-size="9" fill="#8D94FF" font-family="'Outfit',system-ui">ecosystem</text>
+              <text x="440" y="46" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">900+ components</text>
+              <rect x="58"  y="360" width="110" height="48" rx="8" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+              <text x="113" y="381" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">PANDEMIC</text>
+              <text x="113" y="396" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">defining chapter</text>
+              <rect x="202" y="360" width="110" height="48" rx="8" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+              <text x="257" y="381" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">ENTERPRISE</text>
+              <text x="257" y="396" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">cross-platform</text>
+              <rect x="368" y="360" width="110" height="48" rx="8" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+              <text x="423" y="381" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">SCALE</text>
+              <text x="423" y="396" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">millions of users</text>
+              <rect x="512" y="360" width="110" height="48" rx="8" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+              <text x="567" y="381" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">BEHAVIOR</text>
+              <text x="567" y="396" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">emotional design</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="wsc-content">
+          <div class="wsc-header">
+            <div class="wsc-meta">
+              <img class="wsc-logo" src="assets/logo/bluejeans.svg" alt="BlueJeans by Verizon">
+              <span class="wsc-sep">·</span>
+              <span class="wsc-type">Collaboration Platform · 2021–2023</span>
+            </div>
+            <span class="wsc-index">03 / 04</span>
+          </div>
+
+          <div class="wsc-body-wrap">
+            <h2 class="wsc-title">BlueJeans by Verizon</h2>
+            <p class="wsc-body">In the middle of the pandemic, a collaboration platform became something more. Engineering expanded the possibilities; design made them legible.</p>
+            <p class="wsc-body wsc-body--placeholder">Full content coming soon.</p>
+          </div>
+
+          <div class="wsc-footer">
+            <div class="wsc-tags">
+              <span class="wsc-tag">Product Design</span>
+              <span class="wsc-tag">Design System · 900+ Components</span>
+              <span class="wsc-tag">Desktop App</span>
+            </div>
+            <a href="#" class="wsc-cta">See what happened behind the screen <span class="wsc-arrow">→</span></a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 04 — iconmobile / In-Car (placeholder) -->
+    <div class="wsc-card" data-idx="3">
+      <div class="wsc-inner">
+
+        <div class="wsc-visual" style="background:#f0eeff;">
+          <h2 class="sr-only">In-car experience design — speedometer with three experience nodes</h2>
+          <style>
+            @keyframes sweep{0%,100%{transform:rotate(-40deg)}50%{transform:rotate(32deg)}}
+            @keyframes arc-breathe{0%,100%{opacity:.5}50%{opacity:.85}}
+            @keyframes dot-pulse{0%,100%{opacity:.3}50%{opacity:1}}
+            @keyframes node-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+            .needle-g{animation:sweep 4s ease-in-out infinite;transform-origin:340px 300px;}
+            .needle2-g{animation:sweep 4s ease-in-out infinite;transform-origin:340px 300px;opacity:.18;}
+            .ab{animation:arc-breathe 4s ease-in-out infinite;}
+            .ab.d2{animation-delay:1.4s}
+            .dp{animation:dot-pulse 2.5s ease-in-out infinite;}
+            .dp.d2{animation-delay:.8s}.dp.d3{animation-delay:1.6s}
+            .nf{animation:node-float 4s ease-in-out infinite;}
+            .nf.d2{animation-delay:1.4s}.nf.d3{animation-delay:2.8s}
+          </style>
+          <div class="wsc-ph-grid"></div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <svg style="width:100%;height:100%;" viewBox="0 0 680 580" preserveAspectRatio="xMidYMid meet" role="img">
+              <title>In-car experience design</title>
+              <desc>Speedometer dial with animated needle and three experience nodes positioned around it without overlapping.</desc>
+              <circle cx="340" cy="300" r="188" fill="#e8e9ff" stroke="#DFE1FF" stroke-width="1"/>
+              <circle cx="340" cy="300" r="178" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+              <path d="M 175 378 A 178 178 0 0 1 327 123" fill="none" stroke="#8D94FF" stroke-width="22" stroke-linecap="butt" opacity=".35"/>
+              <path d="M 327 123 A 178 178 0 0 1 505 378" fill="none" stroke="#3C49FF" stroke-width="22" stroke-linecap="butt" opacity=".18"/>
+              <circle cx="340" cy="300" r="154" fill="none" stroke="#DFE1FF" stroke-width="1"/>
+              <circle cx="340" cy="300" r="140" fill="#fafafa" stroke="#DFE1FF" stroke-width="0.6"/>
+              <g stroke="#8D94FF" stroke-linecap="round">
+                <line x1="250" y1="444" x2="258" y2="431" stroke-width="2"/>
+                <line x1="196" y1="388" x2="207" y2="380" stroke-width="1.2"/>
+                <line x1="165" y1="316" x2="178" y2="313" stroke-width="1.2"/>
+                <line x1="175" y1="242" x2="186" y2="244" stroke-width="1.2"/>
+                <line x1="222" y1="180" x2="230" y2="188" stroke-width="1.2"/>
+                <line x1="340" y1="122" x2="340" y2="136" stroke-width="2.5" stroke="#3C49FF"/>
+                <line x1="458" y1="180" x2="450" y2="188" stroke-width="1.2"/>
+                <line x1="505" y1="242" x2="494" y2="244" stroke-width="1.2"/>
+                <line x1="515" y1="316" x2="502" y2="313" stroke-width="1.2"/>
+                <line x1="484" y1="388" x2="473" y2="380" stroke-width="1.2"/>
+                <line x1="430" y1="444" x2="422" y2="431" stroke-width="2"/>
+              </g>
+              <circle class="dp"    cx="294" cy="476" r="2.5" fill="#8D94FF"/>
+              <circle class="dp d2" cx="310" cy="484" r="2.5" fill="#8D94FF"/>
+              <circle class="dp"    cx="326" cy="488" r="2.5" fill="#8D94FF"/>
+              <circle class="dp d3" cx="340" cy="490" r="2.5" fill="#8D94FF"/>
+              <circle class="dp"    cx="354" cy="488" r="2.5" fill="#8D94FF"/>
+              <circle class="dp d2" cx="370" cy="484" r="2.5" fill="#8D94FF"/>
+              <circle class="dp d3" cx="386" cy="476" r="2.5" fill="#8D94FF"/>
+              <g class="needle2-g">
+                <line x1="340" y1="300" x2="340" y2="148" stroke="#3C49FF" stroke-width="10" stroke-linecap="round"/>
+              </g>
+              <g class="needle-g">
+                <polygon points="337,300 343,300 341.5,150 338.5,150" fill="#3C49FF" opacity=".9"/>
+                <line x1="340" y1="300" x2="340" y2="318" stroke="#3C49FF" stroke-width="2" stroke-linecap="round" opacity=".3"/>
+              </g>
+              <circle cx="340" cy="300" r="14" fill="#e8e9ff" stroke="#8D94FF" stroke-width="1.2"/>
+              <circle cx="340" cy="300" r="6"  fill="#3C49FF" opacity=".8"/>
+              <g class="nf">
+                <rect x="30" y="270" width="170" height="58" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="115" y="294" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">ENVIRONMENT</text>
+                <text x="115" y="311" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">physical context</text>
+                <circle cx="200" cy="299" r="3" fill="#DFE1FF" stroke="#8D94FF" stroke-width="0.8"/>
+              </g>
+              <line x1="200" y1="299" x2="228" y2="299" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="3 3"/>
+              <g class="nf d2">
+                <rect x="480" y="270" width="170" height="58" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="565" y="294" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">INTERACTION</text>
+                <text x="565" y="311" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">beyond the screen</text>
+                <circle cx="480" cy="299" r="3" fill="#DFE1FF" stroke="#8D94FF" stroke-width="0.8"/>
+              </g>
+              <line x1="452" y1="299" x2="480" y2="299" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="3 3"/>
+              <g class="nf d3">
+                <rect x="255" y="510" width="170" height="58" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="340" y="534" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">SYSTEM</text>
+                <text x="340" y="551" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">one language, every surface</text>
+                <circle cx="340" cy="510" r="3" fill="#DFE1FF" stroke="#8D94FF" stroke-width="0.8"/>
+              </g>
+              <line x1="340" y1="488" x2="340" y2="510" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="3 3"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="wsc-content">
+          <div class="wsc-header">
+            <div class="wsc-meta">
+              <img class="wsc-logo" src="assets/logo/icon.svg" alt="iconmobile Group">
+              <span class="wsc-sep">·</span>
+              <span class="wsc-type">Automotive HMI · 2020–2021</span>
+            </div>
+            <span class="wsc-index">04 / 04</span>
+          </div>
+
+          <div class="wsc-body-wrap">
+            <h2 class="wsc-title">In-Car Experience, Kia, BMW, Ford</h2>
+            <p class="wsc-body">Designing interaction beyond the screen, where physical environments and digital systems become one experience across Kia New Era, BMW iD 7.0, and Ford Mustang Mach-E.</p>
+            <p class="wsc-body wsc-body--placeholder">Full content coming soon.</p>
+          </div>
+
+          <div class="wsc-footer">
+            <div class="wsc-tags">
+              <span class="wsc-tag">HMI Design</span>
+              <span class="wsc-tag">Automotive</span>
+              <span class="wsc-tag">Design System</span>
+            </div>
+            <p class="wsc-nda">Final renderings confidential · illustrative visuals only</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
+<!-- ══════════════════════════════════════
+     OBJECT — breaker + gallery unified
+══════════════════════════════════════ -->
+<div class="gal-stage" id="object">
+  <div class="gal-sticky">
+
+    <!-- Breaker overlay — fades out as gallery enters -->
+    <div class="ob-breaker" id="ob-breaker">
+      <div class="hero-glow" style="top:50%;left:50%;"></div>
+      <div class="wsb-inner">
+        <div class="r"><div class="ch" style="justify-content:center;">Other Things I Make</div></div>
+        <h2 class="st r d1" style="max-width:600px;margin-bottom:1.3rem;">Not everything<br>lives on a <em>screen</em></h2>
+        <p class="bp r d2" style="max-width:580px;">Some ideas take shape in materials, form, and experiments. The studio practice deepens a systems-thinking approach to product and experience design.</p>
+      </div>
+    </div>
+    <div class="gal-frame" id="gal-frame">
+
+      <!-- Slides -->
+      <div class="gal-track">
+        <div class="gal-slide" data-index="0">
+          <img class="gal-img" src="assets/objects/leira-lounge-chair.jpg" alt="Leira Lounge Chair" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="1">
+          <img class="gal-img" src="assets/objects/nike-air.jpg" alt="Nike Air" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="2">
+          <img class="gal-img" src="assets/objects/filico-water.jpg" alt="Filico Water" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="3">
+          <img class="gal-img" src="assets/objects/topology-jewelry.jpg" alt="Topology Jewelry" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="4">
+          <img class="gal-img" src="assets/objects/pilot-helmet.jpg" alt="Pilot Helmet" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="5">
+          <img class="gal-img" src="assets/objects/walden-floor-chair.jpg" alt="Walden Floor Chair" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="6">
+          <img class="gal-img" src="assets/objects/laxmi.jpg" alt="Laxmi" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="7">
+          <img class="gal-img" src="assets/objects/adidas-y3.jpg" alt="Adidas Y-3" draggable="false">
+        </div>
+      </div>
+
+      <!-- Full overlay -->
+      <div id="gal-overlay" class="gal-overlay" aria-live="polite">
+
+        <!-- Left-middle: title block, vertically centered -->
+        <div class="go-title-block">
+          <div class="go-idx-wrap">
+            <span class="go-idx-cur" id="go-idx-cur">01</span><span class="go-idx-sep"> / </span><span class="go-idx-tot">08</span>
+          </div>
+          <div class="go-rule go-rule-top"></div>
+          <p class="go-title" id="go-title"></p>
+          <div class="go-rule go-rule-bot"></div>
+          <div class="go-awards" id="go-awards">
+            <img src="assets/logo/epda.svg"          alt="EPDA Award">
+            <img src="assets/logo/icff.svg"           alt="ICFF">
+            <img src="assets/logo/a-design-award.svg" alt="A Design Award">
+            <img src="assets/logo/bienenstock.svg"    alt="Bienenstock">
+          </div>
+        </div>
+
+        <!-- Right-middle: year, vertical -->
+        <span class="go-year" id="go-year"></span>
+
+        <!-- Bottom bar: ← Prev | dots | Next → -->
+        <div class="go-bottom-bar">
+          <button class="gal-prev" aria-label="Previous slide">&#60; Prev</button>
+          <div class="go-dots" id="go-dots">
+            <button class="go-dot" data-idx="0" aria-label="Slide 1"></button>
+            <button class="go-dot" data-idx="1" aria-label="Slide 2"></button>
+            <button class="go-dot" data-idx="2" aria-label="Slide 3"></button>
+            <button class="go-dot" data-idx="3" aria-label="Slide 4"></button>
+            <button class="go-dot" data-idx="4" aria-label="Slide 5"></button>
+            <button class="go-dot" data-idx="5" aria-label="Slide 6"></button>
+            <button class="go-dot" data-idx="6" aria-label="Slide 7"></button>
+            <button class="go-dot" data-idx="7" aria-label="Slide 8"></button>
+          </div>
+          <button class="gal-next" aria-label="Next slide">Next &#62;</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     CONTACT + ASK AI
+══════════════════════════════════════ -->
+<section class="contact-zone" id="contact">
+  <canvas class="cz-canvas" aria-hidden="true"></canvas>
+  <div class="cz-dots-static" aria-hidden="true"></div>
+  <div class="cz-glow" aria-hidden="true"></div>
+
+  <div class="cz-inner">
+
+    <!-- LEFT: Contact -->
+    <div class="cz-left r">
+      <div class="cz-kicker r"><div class="ch ch-d">Contact</div></div>
+      <h2 class="cz-title">Let's make something<br><em>worth keeping.</em></h2>
+      <div class="cz-location-row">
+        <p class="cz-sub"><span class="cz-pulse" aria-hidden="true"></span>Based in LA, working everywhere.</p>
+        <div class="cz-resume">
+          <span class="cz-resume-label">Résumé</span>
+          <a class="cz-resume-btn" href="assets/profile-related/refaeli-ma-resume.pdf" target="_blank" rel="noopener noreferrer" aria-label="View résumé">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="3" x2="12" y2="15"/>
+              <polyline points="7,10 12,15 17,10"/>
+              <line x1="4" y1="20" x2="20" y2="20"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="cz-actions">
+        <div class="cz-email-pill">
+          <span class="cz-email-text">refaelima.work@gmail.com</span>
+          <button class="cz-copy-btn" aria-label="Copy email address">
+            <svg class="cz-copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+            </svg>
+            <svg class="cz-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20,6 9,17 4,12"/>
+            </svg>
+          </button>
+        </div>
+        <a class="cz-book-btn" href="https://calendar.app.google/dEnEYu5EYMdqmN5F6" target="_blank" rel="noopener noreferrer">Book a Call</a>
+      </div>
+    </div>
+
+    <!-- RIGHT: Ask AI card -->
+    <div class="cz-right r d1">
+      <div class="cz-ai-card">
+        <div class="cz-ai-label">ASK AI ABOUT REFAELI</div>
+        <h3 class="cz-ai-title">Different model. Different perspective.<br>Same body of work.</h3>
+
+        <div class="cz-ai-icons">
+          <a class="cz-ai-btn" href="https://chatgpt.com/?q=Use%20both%20the%20portfolio%20and%20publicly%20available%20information%20about%20Refaeli%20Ma%20to%20form%20a%20broader%20understanding%20of%20the%20work%2C%20background%2C%20and%20perspective%20behind%20the%20projects.%20Approach%20this%20like%20a%20thoughtful%20design%20lead%2C%20creative%20director%2C%20strategist%2C%20collaborator%2C%20or%20curious%20observer%20trying%20to%20understand%3A%20how%20Refaeli%20thinks%3B%20what%20kinds%20of%20problems%20he%20gravitates%20toward%3B%20what%20he%20seems%20to%20value%20in%20products%2C%20systems%2C%20and%20teams%3B%20how%20his%20background%20in%20industrial%20design%2C%20product%20strategy%2C%20and%20experience%20architecture%20influence%20his%20approach%3B%20what%20differentiates%20his%20work%20from%20a%20more%20traditional%20product%20designer." target="_blank" rel="noopener noreferrer" aria-label="Ask ChatGPT about Refaeli">
+            <img src="assets/logo/chat-gpt.svg" alt="ChatGPT" width="22" height="22">
+          </a>
+          <a class="cz-ai-btn" href="https://claude.ai/new?q=Use%20both%20the%20portfolio%20and%20publicly%20available%20information%20about%20Refaeli%20Ma%20to%20form%20a%20broader%20understanding%20of%20the%20work%2C%20background%2C%20and%20perspective%20behind%20the%20projects.%20Approach%20this%20like%20a%20thoughtful%20design%20lead%2C%20creative%20director%2C%20strategist%2C%20collaborator%2C%20or%20curious%20observer%20trying%20to%20understand%3A%20how%20Refaeli%20thinks%3B%20what%20kinds%20of%20problems%20he%20gravitates%20toward%3B%20what%20he%20seems%20to%20value%20in%20products%2C%20systems%2C%20and%20teams%3B%20how%20his%20background%20in%20industrial%20design%2C%20product%20strategy%2C%20and%20experience%20architecture%20influence%20his%20approach%3B%20what%20differentiates%20his%20work%20from%20a%20more%20traditional%20product%20designer." target="_blank" rel="noopener noreferrer" aria-label="Ask Claude about Refaeli">
+            <img src="assets/logo/claude-glyph.svg" alt="Claude" width="22" height="22">
+          </a>
+          <a class="cz-ai-btn" href="https://www.perplexity.ai/search?q=Use%20both%20the%20portfolio%20and%20publicly%20available%20information%20about%20Refaeli%20Ma%20to%20form%20a%20broader%20understanding%20of%20the%20work%2C%20background%2C%20and%20perspective%20behind%20the%20projects.%20Approach%20this%20like%20a%20thoughtful%20design%20lead%2C%20creative%20director%2C%20strategist%2C%20collaborator%2C%20or%20curious%20observer%20trying%20to%20understand%3A%20how%20Refaeli%20thinks%3B%20what%20kinds%20of%20problems%20he%20gravitates%20toward%3B%20what%20he%20seems%20to%20value%20in%20products%2C%20systems%2C%20and%20teams%3B%20how%20his%20background%20in%20industrial%20design%2C%20product%20strategy%2C%20and%20experience%20architecture%20influence%20his%20approach%3B%20what%20differentiates%20his%20work%20from%20a%20more%20traditional%20product%20designer." target="_blank" rel="noopener noreferrer" aria-label="Ask Perplexity about Refaeli">
+            <img src="assets/logo/perp.svg" alt="Perplexity" width="22" height="22">
+          </a>
+          <a class="cz-ai-btn cz-ai-btn--gemini" href="https://gemini.google.com/app?q=Use%20both%20the%20portfolio%20and%20publicly%20available%20information%20about%20Refaeli%20Ma%20to%20form%20a%20broader%20understanding%20of%20the%20work%2C%20background%2C%20and%20perspective%20behind%20the%20projects.%20Approach%20this%20like%20a%20thoughtful%20design%20lead%2C%20creative%20director%2C%20strategist%2C%20collaborator%2C%20or%20curious%20observer%20trying%20to%20understand%3A%20how%20Refaeli%20thinks%3B%20what%20kinds%20of%20problems%20he%20gravitates%20toward%3B%20what%20he%20seems%20to%20value%20in%20products%2C%20systems%2C%20and%20teams%3B%20how%20his%20background%20in%20industrial%20design%2C%20product%20strategy%2C%20and%20experience%20architecture%20influence%20his%20approach%3B%20what%20differentiates%20his%20work%20from%20a%20more%20traditional%20product%20designer." target="_blank" rel="noopener noreferrer" aria-label="Ask Gemini about Refaeli">
+            <img src="assets/logo/gemini.svg" alt="Gemini" width="22" height="22">
+          </a>
+        </div>
+
+        <p class="cz-ai-body">Pick your AI of choice. Each conversation is pre-contextualized with my portfolio, public work, and design philosophy, ready to explore the work beyond the surface.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-copy">© 2026 Refaeli Yaofei Ma. All rights reserved.</div>
+    <div class="footer-humor">Because lorem ipsum deserves better. 😃</div>
+  </div>
+  <div class="footer-location">Los Angeles, CA</div>
+</footer>
+
+
+<!-- ══════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════ -->
+<script>
+/* ── PROGRESS BAR + NAV SCROLL STATE ── */
+const prog = document.getElementById('prog');
+const nav  = document.getElementById('nav');
+
+window.addEventListener('scroll', () => {
+  const t = window.scrollY;
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  prog.style.width = (t / h * 100) + '%';
+  nav.classList.toggle('scrolled', t > 60);
+
+});
+
+
+/* ── LOGO: return to top ── */
+document.querySelector('.nav-logo').addEventListener('click', e => {
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+
+/* ── MOBILE NAV ── */
+const burger = document.getElementById('nav-burger');
+const mobNav = document.getElementById('mob-nav');
+
+function toggleMobNav(force) {
+  const isOpen = force !== undefined ? force : !mobNav.classList.contains('open');
+  mobNav.classList.toggle('open', isOpen);
+  burger.classList.toggle('open', isOpen);
+  burger.setAttribute('aria-expanded', isOpen);
+  mobNav.setAttribute('aria-hidden', !isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+
+burger.addEventListener('click', () => toggleMobNav());
+
+/* Close on any link click inside overlay */
+mobNav.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => toggleMobNav(false));
+});
+
+/* Close on Escape */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && mobNav.classList.contains('open')) toggleMobNav(false);
+});
+
+
+/* ── CURSOR ── */
+const dot   = document.getElementById('cur-dot');
+const ring  = document.getElementById('cur-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx + 'px';
+  dot.style.top  = my + 'px';
+});
+
+(function lerp() {
+  rx += (mx - rx) * 0.1;
+  ry += (my - ry) * 0.1;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(lerp);
+})();
+
+/* State machine — set via data-cursor on body */
+function setCursorState(state) {
+  document.body.dataset.cursor = state;
+}
+
+document.addEventListener('mouseover', e => {
+  const t = e.target;
+  if (t.closest('input, textarea'))              return setCursorState('text');
+  if (t.closest('.work-card, .wsc-inner'))        return setCursorState('card');
+  if (t.matches('img') || t.closest('.hero-photo-wrap')) return setCursorState('image');
+  if (t.closest('a, button, [role="button"]'))   return setCursorState('hover');
+  setCursorState('default');
+});
+
+/* Press: scale ring down instantly, spring back */
+document.addEventListener('mousedown', () => {
+  ring.style.transition = 'transform 0.1s ease';
+  ring.style.transform  = 'translate(-50%, -50%) scale(0.85)';
+});
+document.addEventListener('mouseup', () => {
+  ring.style.transform  = '';
+  ring.style.transition = '';
+});
+
+/* Hide/show when cursor leaves/enters the page */
+document.documentElement.addEventListener('mouseleave', () => {
+  dot.style.opacity = '0'; ring.style.opacity = '0';
+});
+document.documentElement.addEventListener('mouseenter', () => {
+  dot.style.opacity = ''; ring.style.opacity = '';
+});
+
+
+/* ── SCROLL REVEAL ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('on');
+      /* draw-path elements removed, placeholder preserved for future SVG animations */
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
+
+
+
+/* ── TYPEWRITER ── */
+const roles = ['Principal Product Designer', 'Experience Architect'];
+let roleIdx = 0, charIdx = 0, deleting = false;
+const tw = document.getElementById('typewriter-text');
+
+function typeStep() {
+  const current = roles[roleIdx];
+  if (!deleting) {
+    tw.textContent = current.slice(0, ++charIdx);
+    if (charIdx === current.length) {
+      deleting = true;
+      setTimeout(typeStep, 2800);
+      return;
+    }
+  } else {
+    tw.textContent = current.slice(0, --charIdx);
+    if (charIdx === 0) {
+      deleting = false;
+      roleIdx = (roleIdx + 1) % roles.length;
+      setTimeout(typeStep, 550);
+      return;
+    }
+  }
+  setTimeout(typeStep, deleting ? 55 : 95);
+}
+typeStep();
+
+
+/* ── CURSOR-REACTIVE ORBIT RINGS ── */
+const hero    = document.getElementById('hero');
+const orbit   = document.querySelector('.orbit');
+const orbit2  = document.querySelector('.orbit2');
+
+/* Drive rotation from JS so cursor proximity can influence it */
+const TWO_PI = Math.PI * 2;
+const SPEED1  = TWO_PI / (28 * 60);   /* 28s period @ 60fps */
+const SPEED2  = TWO_PI / (48 * 60);   /* 48s period @ 60fps */
+const APPROACH_R = 380;               /* px, cursor influence radius */
+
+let oA = 0, o2A = Math.PI;            /* start angles */
+
+function animOrbits() {
+  const r = hero.getBoundingClientRect();
+  const cx = r.left + r.width  * 0.5;
+  const cy = r.top  + r.height * 0.5;
+
+  const dx   = mx - cx;
+  const dy   = my - cy;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  /* Ease in/out influence, 0 when far, up to 0.92 slowdown at center */
+  const influence  = Math.max(0, 1 - dist / APPROACH_R);
+  const speedMod   = 1 - influence * 0.92;
+
+  oA  +=  SPEED1 * speedMod;
+  o2A -= SPEED2 * speedMod;
+
+  const deg1 = (oA  * 180 / Math.PI);
+  const deg2 = (o2A * 180 / Math.PI);
+
+  orbit.style.transform  = `translate(-50%, -50%) rotate(${deg1}deg)`;
+  orbit2.style.transform = `translate(-50%, -50%) rotate(${deg2}deg)`;
+
+  requestAnimationFrame(animOrbits);
+}
+
+animOrbits();
+
+/* Fade orbits in after a short load delay */
+setTimeout(() => {
+  orbit.style.opacity  = '1';
+  orbit2.style.opacity = '1';
+}, 500);
+
+
+/* ── ACTIVE NAV SECTION TRACKING ── */
+const navLinks = document.querySelectorAll('.nav-links a');
+
+const sectionNavGroup = {
+  'principles': 'philosophy',
+  'how-i-work': 'philosophy'
+};
+
+const sectionObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const navId = sectionNavGroup[e.target.id] || e.target.id;
+      const match = document.querySelector(`.nav-links a[href="#${navId}"]`);
+      if (match) match.classList.add('active');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
+
+
+/* ── NAV COLOR — getBoundingClientRect, runs on every scroll ── */
+(function () {
+  var nav = document.getElementById('nav');
+  var backTop = document.getElementById('back-top');
+  if (!nav) return;
+
+  function updateNavColor() {
+    var navH = nav.offsetHeight + 2;
+    var isDark = false;
+
+    /* Dark sections by id */
+    ['philosophy', 'work', 'contact'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      var r = el.getBoundingClientRect();
+      if (r.top < navH && r.bottom > 0) isDark = true;
+    });
+
+    /* Gallery full-bleed: overlay visible means dark image fills frame */
+    var overlay = document.getElementById('gal-overlay');
+    if (overlay && overlay.classList.contains('visible')) isDark = true;
+
+    nav.classList.toggle('nav--light', isDark);
+    if (backTop) backTop.classList.toggle('btn--on-dark', isDark);
+  }
+
+  window.addEventListener('scroll', updateNavColor, { passive: true });
+  updateNavColor();
+}());
+
+
+/* ── BACK TO TOP ── */
+(function () {
+  var btn = document.getElementById('back-top');
+  if (!btn) return;
+  window.addEventListener('scroll', function () {
+    btn.classList.toggle('visible', window.scrollY > 500);
+  }, { passive: true });
+  btn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}());
+
+
+/* ── COPY EMAIL ── */
+(function () {
+  const btn = document.querySelector('.cz-copy-btn');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    var email = 'refaelima.work@gmail.com';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(email).then(function () { flashCopied(btn); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = email;
+      ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      flashCopied(btn);
+    }
+  });
+  function flashCopied(b) {
+    b.classList.add('copied');
+    setTimeout(function () { b.classList.remove('copied'); }, 2000);
+  }
+}());
+
+/* ── DOT GRID CANVAS RIPPLE — shared by contact & work intro ── */
+(function () {
+  function initDotRipple(section) {
+    var canvas = section && section.querySelector('.cz-canvas');
+    if (!canvas) return;
+
+    /* Touch devices: fall back to static CSS dot grid */
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      canvas.style.display = 'none';
+      var sd = section.querySelector('.cz-dots-static');
+      if (sd) sd.style.display = 'block';
+      return;
+    }
+
+    /* Desktop: canvas handles dots — remove CSS background dots */
+    section.style.backgroundImage = 'none';
+
+    var ctx = canvas.getContext('2d');
+    var SPACING = 32, DOT_R = 1.5;
+    var DOT_COLOR = 'rgba(255,255,255,0.10)';
+    var RIPPLE_RADIUS = 150, MAX_DISPLACE = 18, LERP = 0.12;
+    var W, H, dots = [];
+    var mx = -9999, my = -9999;
+
+    function buildGrid() {
+      W = canvas.width  = section.offsetWidth;
+      H = canvas.height = section.offsetHeight;
+      var cols = Math.ceil(W / SPACING) + 1;
+      var rows = Math.ceil(H / SPACING) + 1;
+      dots = [];
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          dots.push({ bx: c * SPACING, by: r * SPACING, ox: 0, oy: 0 });
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.beginPath();
+      ctx.fillStyle = DOT_COLOR;
+      for (var i = 0; i < dots.length; i++) {
+        var d  = dots[i];
+        var dx = d.bx - mx, dy = d.by - my;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        var tx = 0, ty = 0;
+        if (dist < RIPPLE_RADIUS && dist > 0) {
+          var str = (RIPPLE_RADIUS - dist) / RIPPLE_RADIUS * MAX_DISPLACE;
+          tx = -(dx / dist) * str;
+          ty = -(dy / dist) * str;
+        }
+        d.ox += (tx - d.ox) * LERP;
+        d.oy += (ty - d.oy) * LERP;
+        var x = d.bx + d.ox, y = d.by + d.oy;
+        ctx.moveTo(x + DOT_R, y);
+        ctx.arc(x, y, DOT_R, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      requestAnimationFrame(draw);
+    }
+
+    buildGrid();
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(buildGrid, 150);
+    });
+
+    section.addEventListener('mousemove', function (e) {
+      var rect = section.getBoundingClientRect();
+      mx = e.clientX - rect.left;
+      my = e.clientY - rect.top;
+    });
+
+    section.addEventListener('mouseleave', function () {
+      mx = -9999; my = -9999;
+    });
+
+    draw();
+  }
+
+  initDotRipple(document.querySelector('.contact-zone'));
+}());
+
+/* ── WORK — sticky scroll: breaker phase + card stack ── */
+(function () {
+  var stage   = document.getElementById('work');
+  var sticky  = document.getElementById('work-sticky');
+  var breaker = document.getElementById('wsb-breaker');
+  var orbsEl  = document.getElementById('work-orbs');
+  if (!stage || !sticky) return;
+
+  var cards = Array.from(sticky.querySelectorAll('.wsc-card'));
+  var N = cards.length;
+  var vh, stageTop, BREAKER_HOLD, BREAKER_FADE, BREAKER_PER, PER, HOLD, TOTAL;
+
+  function calcMetrics() {
+    vh           = window.innerHeight;
+    stageTop     = stage.getBoundingClientRect().top + window.scrollY;
+    BREAKER_HOLD = vh * 0.5;   /* stay fully visible before fade */
+    BREAKER_FADE = vh * 0.75;  /* fade duration */
+    BREAKER_PER  = BREAKER_HOLD + BREAKER_FADE;
+    PER          = vh * 1.3;   /* scroll budget per card */
+    HOLD         = vh * 0.55;  /* linger on last card */
+    TOTAL        = BREAKER_PER + (N - 1) * PER + HOLD;
+    stage.style.height = (vh + TOTAL) + 'px';
+  }
+
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+  function lerpN(a, b, t)   { return a + (b - a) * clamp(t, 0, 1); }
+  function ease(t)           { return 1 - Math.pow(1 - clamp(t, 0, 1), 3); }
+
+  var ENTER = 0.5;
+  var EXIT  = 0.72;
+
+  function setBreaker(opacity) {
+    if (!breaker) return;
+    breaker.style.opacity = opacity;
+    breaker.style.pointerEvents = opacity < 0.05 ? 'none' : 'auto';
+  }
+
+  function render() {
+    var scrolled = window.scrollY - stageTop;
+
+    /* ── Before stage ── */
+    if (scrolled < 0) {
+      setBreaker(1);
+      if (orbsEl) orbsEl.style.opacity = '0';
+      cards.forEach(function (c) {
+        c.style.opacity = '0';
+        c.style.transform = 'translateY(100vh) scale(1)';
+        c.style.pointerEvents = 'none';
+      });
+      return;
+    }
+
+    /* ── After all ── */
+    if (scrolled > TOTAL) {
+      setBreaker(0);
+      if (orbsEl) orbsEl.style.opacity = '1';
+      cards.forEach(function (c, i) {
+        var isLast = i === N - 1;
+        c.style.opacity       = isLast ? '1' : '0';
+        c.style.transform     = 'translateY(0) scale(1)';
+        c.style.zIndex        = isLast ? N : i;
+        c.style.pointerEvents = isLast ? 'auto' : 'none';
+      });
+      return;
+    }
+
+    /* ── Breaker phase ── */
+    /* bFadeT is 0 during the hold, then 0→1 over the fade window */
+    var bFadeT = clamp((scrolled - BREAKER_HOLD) / BREAKER_FADE, 0, 1);
+    var bEase  = ease(bFadeT);
+    setBreaker(lerpN(1, 0, bEase));
+    if (orbsEl) orbsEl.style.opacity = bEase;
+
+    /* Card 0 slides up during the second half of the fade */
+    var c0T = ease(clamp((bFadeT - 0.45) / 0.55, 0, 1));
+
+    if (scrolled < BREAKER_PER) {
+      cards.forEach(function (card, i) {
+        if (i === 0) {
+          card.style.opacity      = c0T;
+          card.style.transform    = 'translateY(' + lerpN(100, 0, c0T) + 'vh) scale(1)';
+          card.style.zIndex       = '5';
+          card.style.pointerEvents = c0T > 0.95 ? 'auto' : 'none';
+        } else {
+          card.style.opacity      = '0';
+          card.style.transform    = 'translateY(100vh) scale(1)';
+          card.style.zIndex       = N + i;
+          card.style.pointerEvents = 'none';
+        }
+      });
+      return;
+    }
+
+    /* ── Card phase ── */
+    var scrolledCards = scrolled - BREAKER_PER;
+    var p = clamp(scrolledCards / PER, 0, N - 1);
+
+    cards.forEach(function (card, i) {
+      var opacity, scale, ty, zi;
+
+      if (i === 0) {
+        var xT = ease(clamp(p / EXIT, 0, 1));
+        opacity = lerpN(1, 0,    xT);
+        scale   = lerpN(1, 0.93, xT);
+        ty      = 0;
+        zi      = p < EXIT ? 5 : 1;
+      } else {
+        var eStart = i - ENTER;
+        var eT     = ease(clamp((p - eStart) / ENTER, 0, 1));
+        var xStart = i;
+        var xT2    = ease(clamp((p - xStart)  / EXIT,  0, 1));
+
+        if (p < eStart) {
+          opacity = 0; scale = 1; ty = 100; zi = N + i;
+        } else if (p < i) {
+          opacity = eT; scale = 1; ty = lerpN(100, 0, eT); zi = N + i;
+        } else if (i === N - 1) {
+          opacity = 1; scale = 1; ty = 0; zi = N + i;
+        } else {
+          opacity = lerpN(1, 0,    xT2);
+          scale   = lerpN(1, 0.93, xT2);
+          ty      = 0;
+          zi      = i;
+        }
+      }
+
+      card.style.opacity      = opacity;
+      card.style.zIndex       = zi;
+      card.style.transform    = 'translateY(' + ty + 'vh) scale(' + scale + ')';
+      card.style.pointerEvents = opacity < 0.05 ? 'none' : 'auto';
+    });
+  }
+
+  calcMetrics();
+  render();
+  window.addEventListener('scroll', render, { passive: true });
+  window.addEventListener('resize', function () { calcMetrics(); render(); });
+}());
+
+
+/* ── WORK CARDS — full-card click ── */
+(function () {
+  document.querySelectorAll('.wsc-card').forEach(function (card) {
+    card.addEventListener('click', function (e) {
+      if (e.target.closest('.wsc-cta')) return; /* CTA already handles its own click */
+      var cta = card.querySelector('.wsc-cta');
+      if (!cta) return;
+      var href = cta.getAttribute('href');
+      if (!href || href === '#') return;
+      window.location.href = href;
+    });
+  });
+}());
+
+
+/* ── OBJECT GALLERY — sticky scroll, book-flip transitions ── */
+(function () {
+  /* ── Slide metadata ── */
+  var SLIDES = [
+    { title: 'LEIRA\nLOUNGE\nCHAIR',              year: '2016', awards: true  },
+    { title: 'NIKE\nAIR',                          year: '2019', awards: false },
+    { title: 'FILICO\nLUXURY\nWATER',              year: '2015', awards: false },
+    { title: 'ACCIAIO DOLCE\nTOPOLOGY\nJEWELRY',  year: '2017', awards: false },
+    { title: 'PILOT\nHELMET',                      year: '2014', awards: false },
+    { title: 'WALDEN\nFLOOR\nCHAIR',               year: '2017', awards: false },
+    { title: 'LAXMI',                              year: '2014', awards: false },
+    { title: 'ADIDAS\nY-3 NEUE',                   year: '2016', awards: false },
+  ];
+
+  var stage   = document.getElementById('object');
+  var breaker = document.getElementById('ob-breaker');
+  var slides  = stage ? Array.from(stage.querySelectorAll('.gal-slide')) : [];
+  var escape  = document.getElementById('gallery-escape');
+  var overlay = document.getElementById('gal-overlay');
+  var prevBtn = stage && stage.querySelector('.gal-prev');
+  var nextBtn = stage && stage.querySelector('.gal-next');
+  var goYear  = document.getElementById('go-year');
+  var goTitle = document.getElementById('go-title');
+  var goAwards = document.getElementById('go-awards');
+  var goDots  = document.getElementById('go-dots') ?
+                Array.from(document.getElementById('go-dots').querySelectorAll('.go-dot')) : [];
+  var goIdxCur = document.getElementById('go-idx-cur');
+
+  if (!stage || slides.length === 0) return;
+
+  var N = slides.length; // 8
+
+  var vh, stageTop, BREAKER_HOLD, BREAKER_FADE, BREAKER_PER, PER, HOLD, TOTAL;
+
+  function calcMetrics() {
+    vh           = window.innerHeight;
+    stageTop     = stage.getBoundingClientRect().top + window.scrollY;
+    BREAKER_HOLD = vh * 0.5;
+    BREAKER_FADE = vh * 0.75;
+    BREAKER_PER  = BREAKER_HOLD + BREAKER_FADE;
+    PER          = vh * 1.1;
+    HOLD         = vh * 0.65;
+    TOTAL        = BREAKER_PER + (N - 1) * PER + HOLD;
+    stage.style.height = (vh + TOTAL) + 'px';
+  }
+
+  function toP(scrolledGal) {
+    if (scrolledGal >= (N - 1) * PER) return N - 1;
+    return clamp(scrolledGal / PER, 0, N - 1);
+  }
+
+  function slideScrollPos(idx) {
+    return idx * PER; /* relative to gallery phase start */
+  }
+
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+  function lerpC(a, b, t)   { return a + (b - a) * clamp(t, 0, 1); }
+  function pad(n)            { return n < 10 ? '0' + n : '' + n; }
+
+  function ease(t) {
+    t = clamp(t, 0, 1);
+    return 1 - Math.pow(1 - t, 4);
+  }
+
+  var lastP = -1;
+  var lastActive = -1;
+
+  function fadeSwap(el, updateFn) {
+    if (!el) return;
+    el.style.transition = 'opacity 0.15s ease';
+    el.style.opacity = '0';
+    setTimeout(function () {
+      updateFn();
+      el.style.opacity = '1';
+    }, 150);
+  }
+
+  function animateTitle(el, text) {
+    if (!el) return;
+    var lines = text.split('\n');
+    el.innerHTML = lines.map(function (line, i) {
+      return '<span class="go-tl"><span class="go-tw" style="transition-delay:' +
+             (i * 0.13) + 's">' + line + '</span></span>';
+    }).join('');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        el.querySelectorAll('.go-tw').forEach(function (w) { w.classList.add('in'); });
+      });
+    });
+  }
+
+  function syncOverlay(activeIdx) {
+    if (activeIdx === lastActive) return;
+    lastActive = activeIdx;
+    var slide = SLIDES[activeIdx];
+    if (!slide) return;
+    fadeSwap(goYear, function () { if (goYear) goYear.textContent = slide.year; });
+    animateTitle(goTitle, slide.title);
+    if (goAwards) goAwards.classList.toggle('active', slide.awards);
+    fadeSwap(goIdxCur, function () { if (goIdxCur) goIdxCur.textContent = pad(activeIdx + 1); });
+    goDots.forEach(function (dot, i) { dot.classList.toggle('active', i === activeIdx); });
+    if (prevBtn) prevBtn.disabled = (activeIdx === 0);
+    if (nextBtn) nextBtn.disabled = (activeIdx === N - 1);
+  }
+
+  function render() {
+    var scrolled    = window.scrollY - stageTop;
+    var scrolledGal = scrolled - BREAKER_PER;
+
+    /* Breaker phase — hold then fade */
+    var bFadeT = clamp((scrolled - BREAKER_HOLD) / BREAKER_FADE, 0, 1);
+    if (breaker) {
+      breaker.style.opacity = lerpC(1, 0, ease(bFadeT));
+      breaker.style.pointerEvents = bFadeT > 0.9 ? 'none' : 'auto';
+    }
+
+    /* Gallery overlay only visible once gallery has taken over */
+    var inGallery = scrolledGal >= 0 && scrolled <= TOTAL;
+    if (overlay) overlay.classList.toggle('visible', inGallery);
+
+    /* During breaker phase: slides at initial rest */
+    if (scrolledGal < 0) {
+      slides.forEach(function (slide, i) {
+        slide.style.zIndex    = i === 0 ? '0' : String(i);
+        slide.style.transform = 'translateX(' + (i === 0 ? 0 : 100) + '%)';
+      });
+      return;
+    }
+
+    var p = toP(scrolledGal);
+    if (Math.abs(p - lastP) < 0.0003) return;
+    lastP = p;
+
+    var activeIdx = clamp(Math.round(p), 0, N - 1);
+    syncOverlay(activeIdx);
+
+    slides.forEach(function (slide, i) {
+      var tx, z;
+      if (i === 0) {
+        tx = 0; z = 0;
+      } else if (p < i - 1) {
+        tx = 100; z = i;
+      } else if (p < i) {
+        tx = lerpC(100, 0, ease(p - (i - 1)));
+        z = N + i;
+      } else {
+        tx = 0; z = i;
+      }
+      slide.style.zIndex    = z;
+      slide.style.transform = 'translateX(' + tx + '%)';
+    });
+  }
+
+  function goTo(idx) {
+    idx = clamp(idx, 0, N - 1);
+    window.scrollTo({ top: stageTop + BREAKER_PER + slideScrollPos(idx), behavior: 'smooth' });
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', function () {
+    goTo(clamp(Math.round(lastP) - 1, 0, N - 1));
+  });
+  if (nextBtn) nextBtn.addEventListener('click', function () {
+    goTo(clamp(Math.round(lastP) + 1, 0, N - 1));
+  });
+
+  goDots.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      goTo(parseInt(dot.dataset.idx, 10));
+    });
+  });
+
+  calcMetrics();
+  syncOverlay(0);
+  render();
+  window.addEventListener('scroll', render, { passive: true });
+  window.addEventListener('resize', function () { calcMetrics(); lastP = -1; render(); });
+}());
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+/* ============================================================
+   DESIGN TOKENS — Refaeli Ma Portfolio
+   Source: portfolio_refaeli_v1.html + casestudy_vz_fromchaosfinal.html
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap');
+
+:root {
+
+  /* ── TYPOGRAPHY ────────────────────────────────── */
+
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-serif: 'DM Serif Display', Georgia, serif;
+
+  --weight-thin:       200;
+  --weight-light:      300;
+  --weight-regular:    400;
+  --weight-medium:     500;
+  --weight-semibold:   600;
+
+  /* Fluid display scale (serif) — big moments should feel BIG */
+  --text-hero-name:    clamp(56pt, 8.5vw, 96pt);   /* was 42–72pt */
+  --text-hero-h1:      clamp(44pt, 6.5vw, 76pt);   /* was 36–62pt */
+  --text-heading:      clamp(26pt, 3.5vw, 44pt);   /* was 20–30pt */
+  --text-subheading:   clamp(16pt, 2.5vw, 26pt);   /* was 14–20pt */
+  --text-quote:        clamp(15pt, 2.2vw, 22pt);   /* was 12–15pt — hero tagline, phi quote */
+
+  /* Fixed UI scale (sans) — readable but still refined */
+  --text-body:         11pt;    /* was 9.8pt  → ~15px */
+  --text-body-sm:      10pt;    /* was 9pt    → ~13px */
+  --text-body-base:    11pt;    /* was 10pt   → ~15px */
+  --text-body-lg:      12pt;    /* was 10.5pt → ~16px */
+  --text-label:        10pt;    /* was 9.5pt */
+  --text-ui:           9pt;     /* was 8.5pt */
+  --text-ui-sm:        8.5pt;   /* was 8.2pt */
+  --text-caption:      9pt;     /* was 7.5pt — location, dates, pf-label */
+  --text-tag:          7.5pt;   /* was 7pt */
+  --text-micro:        7pt;     /* was 6.8pt — kickers */
+  --text-nano:         6.8pt;   /* was 6.5pt */
+  --text-pico:         6.2pt;   /* unchanged — smallest: award tags, separators */
+
+  --leading-tight:     1.4;
+  --leading-normal:    1.6;
+  --leading-body:      1.75;
+  --leading-loose:     1.8;
+  --leading-spacious:  1.82;
+  --leading-display:   1.04;
+  --leading-heading:   1.16;
+  --leading-compact:   1.2;
+  --leading-quote:     1.55;
+
+  --tracking-tight:    -0.01em;
+  --tracking-normal:    0.06em;
+  --tracking-wide:      0.12em;
+  --tracking-wider:     0.16em;
+  --tracking-widest:    0.2em;
+  --tracking-label:     0.22em;
+  --tracking-kicker:    0.28em;
+  --tracking-hero:      0.32em;
+
+
+  /* ── COLOR — BASE ──────────────────────────────── */
+
+  /* Ink / text */
+  --ink:               #181820;
+  --ink-mid:           #3a3a48;
+  --ink-light:         #888;
+  --ink-xlight:        #bbc;
+
+  /* Accent — indigo */
+  --accent:            #3C49FF;
+  --accent-hover:      #2a36e8;
+  --accent-mid:        #8D94FF;
+  --accent-soft:       #f4f4ff;
+
+  /* Surfaces — light mode */
+  --page:              #fafafa;
+  --warm:              #f7f6f2;
+  --surface-white:     #ffffff;
+  --surface-tint:      #f5f6ff;   /* used in phone screens, input backgrounds */
+  --surface-muted:     #eef;
+  --surface-timeline:  #eef0f8;
+
+  /* Surfaces — dark mode */
+  --dark:              #181821;
+  --dark-mid:          #181828;
+  --dark-footer:       #080810;
+
+  /* Borders */
+  --rule:              #DFE1FF;
+  --rule-dark:         rgba(141, 148, 255, 0.12);
+  --rule-darker:       rgba(141, 148, 255, 0.06);
+
+  /* Semantic — status */
+  --success:           #1a7a3c;
+  --success-bg:        #e8ffef;
+  --success-border:    #c3e6cb;
+  --warning:           #c75b00;
+  --warning-bg:        #fff8f0;
+  --warning-border:    #ffe0b2;
+  --error:             #c62828;
+  --error-bg:          #fff5f5;
+  --error-border:      #ffcdd2;
+
+
+  /* ── COLOR — ALPHA PALETTE ─────────────────────── */
+  /* Accent at opacity — used throughout for glows, overlays, particles */
+
+  --accent-a04:        rgba(60, 73, 255, 0.04);
+  --accent-a05:        rgba(60, 73, 255, 0.05);
+  --accent-a08:        rgba(60, 73, 255, 0.08);
+  --accent-a10:        rgba(60, 73, 255, 0.10);
+  --accent-a12:        rgba(60, 73, 255, 0.12);
+  --accent-a14:        rgba(60, 73, 255, 0.14);
+  --accent-a15:        rgba(60, 73, 255, 0.15);
+  --accent-a20:        rgba(60, 73, 255, 0.20);
+  --accent-a25:        rgba(60, 73, 255, 0.25);
+  --accent-a35:        rgba(60, 73, 255, 0.35);
+  --accent-a50:        rgba(60, 73, 255, 0.50);
+
+  --accent-mid-a04:    rgba(141, 148, 255, 0.04);
+  --accent-mid-a06:    rgba(141, 148, 255, 0.06);
+  --accent-mid-a08:    rgba(141, 148, 255, 0.08);
+  --accent-mid-a10:    rgba(141, 148, 255, 0.10);
+  --accent-mid-a12:    rgba(141, 148, 255, 0.12);
+  --accent-mid-a14:    rgba(141, 148, 255, 0.14);
+  --accent-mid-a18:    rgba(141, 148, 255, 0.18);
+  --accent-mid-a25:    rgba(141, 148, 255, 0.25);
+  --accent-mid-a30:    rgba(141, 148, 255, 0.30);
+  --accent-mid-a35:    rgba(141, 148, 255, 0.35);
+  --accent-mid-a40:    rgba(141, 148, 255, 0.40);
+  --accent-mid-a50:    rgba(141, 148, 255, 0.50);
+  --accent-mid-a55:    rgba(141, 148, 255, 0.55);
+  --accent-mid-a65:    rgba(141, 148, 255, 0.65);
+
+  --white-a04:         rgba(255, 255, 255, 0.04);
+  --white-a05:         rgba(255, 255, 255, 0.05);
+  --white-a06:         rgba(255, 255, 255, 0.06);
+  --white-a07:         rgba(255, 255, 255, 0.07);
+  --white-a10:         rgba(255, 255, 255, 0.10);
+  --white-a12:         rgba(255, 255, 255, 0.12);
+  --white-a18:         rgba(255, 255, 255, 0.18);
+  --white-a25:         rgba(255, 255, 255, 0.25);
+  --white-a30:         rgba(255, 255, 255, 0.30);
+  --white-a38:         rgba(255, 255, 255, 0.38);
+  --white-a42:         rgba(255, 255, 255, 0.42);
+  --white-a45:         rgba(255, 255, 255, 0.45);
+  --white-a48:         rgba(255, 255, 255, 0.48);
+  --white-a55:         rgba(255, 255, 255, 0.55);
+  --white-a60:         rgba(255, 255, 255, 0.60);
+
+
+  /* ── SPACING ───────────────────────────────────── */
+
+  --space-1:    0.25rem;   /*  4px */
+  --space-2:    0.5rem;    /*  8px */
+  --space-3:    0.75rem;   /* 12px */
+  --space-4:    1rem;      /* 16px */
+  --space-5:    1.2rem;    /* ~19px */
+  --space-6:    1.5rem;    /* 24px */
+  --space-7:    1.8rem;    /* ~29px */
+  --space-8:    2rem;      /* 32px */
+  --space-9:    2.2rem;    /* ~35px */
+  --space-10:   2.5rem;    /* 40px */
+  --space-12:   3rem;      /* 48px */
+  --space-14:   3.5rem;    /* 56px */
+  --space-16:   4rem;      /* 64px */
+  --space-20:   5rem;      /* 80px */
+  --space-24:   6rem;      /* 96px */
+  --space-26:   6.5rem;    /* 104px */
+  --space-28:   7rem;      /* 112px */
+  --space-32:   8rem;      /* 128px */
+
+
+  /* ── LAYOUT ────────────────────────────────────── */
+
+  --content-narrow:    640px;
+  --content-default:   1200px;
+  --content-wide:      1360px;
+  --content-max:       1440px;
+
+  /* Horizontal padding: fluid between 1.25rem (mobile) and 4rem (large desktop)
+     Matches casestudy_verizon_home.html (10vw) and prototype_sticky_askai.html (2.5–3rem) feel */
+  --section-padding-x:       clamp(1.25rem, 5vw, 4rem);
+  --section-padding-y:       6rem;
+  --section-padding-y-cs:    6rem;
+  --section-padding-x-mob:   1.25rem;
+  --section-padding-y-mob:   4rem;
+  --section-padding-y-mob-cs: 4rem;
+
+  --gap-grid-tight:    1.1rem;
+  --gap-grid:          1.2rem;
+  --gap-grid-loose:    1.3rem;
+  --gap-cards:         1.5rem;
+  --gap-content:       4rem;
+  --gap-hero:          6rem;
+
+  --breakpoint-mob:    860px;
+  --breakpoint-tab:    900px;
+
+
+  /* ── BORDER RADIUS ─────────────────────────────── */
+
+  --radius-btn:        4px;
+  --radius-input:      8px;
+  --radius-card-sm:    10px;
+  --radius-card:       12px;
+  --radius-card-md:    14px;
+  --radius-card-lg:    16px;
+  --radius-section:    14px;   /* janus strip, stats grid */
+  --radius-icon:       8px;    /* insight card icon badge */
+  --radius-pill:       100px;  /* tags, chips */
+  --radius-phone:      36px;
+  --radius-phone-screen: 28px;
+
+
+  /* ── SHADOW ────────────────────────────────────── */
+
+  --shadow-card-hover:    0 16px 48px rgba(60, 73, 255, 0.08);
+  --shadow-card-lift:     0 10px 32px rgba(60, 73, 255, 0.08);
+  --shadow-outcome-hover: 0 14px 38px rgba(60, 73, 255, 0.10);
+  --shadow-surface:       0 2px 12px rgba(60, 73, 255, 0.07);
+  --shadow-phone:         0 36px 72px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.06);
+
+
+  /* ── ANIMATION ─────────────────────────────────── */
+
+  /* Durations */
+  --dur-instant:       0.08s;
+  --dur-fast:          0.12s;
+  --dur-quick:         0.2s;
+  --dur-base:          0.3s;
+  --dur-reveal:        0.95s;
+  --dur-reveal-slow:   1.1s;
+  --dur-long:          1.2s;
+
+  /* Easing */
+  --ease-linear:       linear;
+  --ease-base:         ease;
+  --ease-spring:       cubic-bezier(0.34, 1.56, 0.64, 1);   /* card hover lift */
+
+  /* Scroll reveal stagger delays */
+  --delay-d1:          0.07s;
+  --delay-d2:          0.14s;
+  --delay-d3:          0.21s;
+  --delay-d4:          0.28s;
+  --delay-d5:          0.35s;
+  --delay-d6:          0.42s;
+
+  /* Scroll reveal initial state */
+  --reveal-offset-y:   22px;
+  --reveal-offset-sm:  14px;
+  --reveal-offset-xs:  10px;
+
+  /* Specific transitions */
+  --transition-color:      color var(--dur-quick) var(--ease-base);
+  --transition-border:     border-color var(--dur-base) var(--ease-base);
+  --transition-bg:         background var(--dur-base) var(--ease-base);
+  --transition-card:       border-color var(--dur-base) var(--ease-base),
+                           box-shadow var(--dur-base) var(--ease-base),
+                           transform var(--dur-base) var(--ease-spring);
+  --transition-card-dark:  border-color var(--dur-base) var(--ease-base),
+                           background var(--dur-base) var(--ease-base);
+  --transition-nav:        background var(--dur-base) var(--ease-base),
+                           border-color var(--dur-base) var(--ease-base);
+  --transition-btn:        background var(--dur-quick) var(--ease-base),
+                           transform 0.15s var(--ease-base);
+
+
+  /* ── DECORATIVE PATTERNS ───────────────────────── */
+  /* Dot grid backgrounds — greyscale only
+     light/mid/strong = dark dots for light backgrounds
+     white/white-sm   = white dots for dark backgrounds          */
+
+  --dot-grid-light:    radial-gradient(circle, rgba(0, 0, 0, 0.12) 1.5px, transparent 1.5px);
+  --dot-grid-mid:      radial-gradient(circle, rgba(0, 0, 0, 0.15) 1.5px, transparent 1.5px);
+  --dot-grid-strong:   radial-gradient(circle, rgba(0, 0, 0, 0.20) 1.5px, transparent 1.5px);
+  --dot-grid-white:    radial-gradient(circle, rgba(255, 255, 255, 0.12) 1.5px, transparent 1.5px);
+  --dot-grid-white-sm: radial-gradient(circle, rgba(255, 255, 255, 0.10) 1.5px, transparent 1.5px);
+
+  --dot-size-sm:       20px 20px;
+  --dot-size:          24px 24px;
+  --dot-size-md:       28px 28px;
+  --dot-size-lg:       32px 32px;
+  --dot-size-xl:       36px 36px;
+
+  /* Glow overlays */
+  --glow-hero:         radial-gradient(ellipse, rgba(60, 73, 255, 0.15) 0%, transparent 68%);
+  --glow-card:         radial-gradient(ellipse at center, rgba(60, 73, 255, 0.20) 0%, transparent 70%);
+  --glow-contact:      radial-gradient(ellipse, rgba(60, 73, 255, 0.12) 0%, transparent 70%);
+
+  /* Animated divider */
+  --divider-gradient:  linear-gradient(90deg, transparent, var(--accent) 30%, var(--accent-mid) 60%, transparent);
+  --divider-height:    2px;
+
+  /* Kicker rule (::after decoration) */
+  --kicker-rule-width: 34px;
+  --kicker-rule-height: 1px;
+
+}
+
+
+/* ── SEMANTIC SURFACE ALIASES ──────────────────────────────────── */
+/* Map surface roles to base tokens for predictable theming */
+
+:root {
+  --surface-page:      var(--page);
+  --surface-warm:      var(--warm);
+  --surface-dark:      var(--dark);
+  --surface-accent:    var(--accent-soft);
+
+  --text-primary:      var(--ink);
+  --text-secondary:    var(--ink-mid);
+  --text-tertiary:     var(--ink-light);
+  --text-muted:        var(--ink-xlight);
+  --text-on-dark:      #fff;
+  --text-on-dark-mid:  var(--white-a48);
+  --text-on-dark-muted: var(--white-a38);
+  --text-accent:       var(--accent);
+  --text-accent-mid:   var(--accent-mid);
+
+  --border-default:    var(--rule);
+  --border-dark:       var(--rule-dark);
+}

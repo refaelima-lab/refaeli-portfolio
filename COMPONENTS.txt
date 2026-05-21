@@ -1,0 +1,480 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+REFAELI MA PORTFOLIO — COMPONENT REFERENCE
+Files: index.html · styles.css · tokens.css
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+═══════════════════════════════════════════════════════════════════
+1. SECTION IDs — NAV TARGETS
+═══════════════════════════════════════════════════════════════════
+
+Each nav link routes to one of these section IDs.
+The breaker section always holds the ID; the gallery/cards that
+follow are the same visual chapter but have no ID.
+
+  #hero          → hero section (top of page)
+  #philosophy    → about / philosophy + stats section
+  #how-i-work    → how I work tile grid
+  #work          → MADE REAL breaker (dark, full-viewport)
+                   followed immediately by work cards (no id)
+  #object        → Object breaker (light, full-viewport)
+                   followed immediately by object gallery (no id)
+  #contact       → contact + Ask AI section
+
+
+═══════════════════════════════════════════════════════════════════
+2. LAYOUT SHELLS
+═══════════════════════════════════════════════════════════════════
+
+.sec
+  Standard section. Adds padding via --section-padding-x/y.
+  Add bg modifier or custom background directly.
+
+.sec-inner
+  Max-width container: 1200px (--content-default), margin:0 auto.
+  Use inside .sec to constrain content width.
+
+.sec-wide
+  Same but 1360px (--content-wide).
+
+.bg-page          Background: var(--page) — off-white #fafafa
+.bg-warm          Background: var(--warm) — warm off-white #f7f6f2
+
+Centering a section's inner content (used in breakers):
+  <div class="sec-inner"
+       style="display:flex;flex-direction:column;
+              align-items:center;text-align:center;
+              position:relative;z-index:2;">
+
+
+═══════════════════════════════════════════════════════════════════
+3. SECTION BREAKERS (full-viewport chapter openers)
+═══════════════════════════════════════════════════════════════════
+
+.philosophy-sec   (also used for #work / MADE REAL)
+  Dark surface. background: var(--dark) + --dot-grid-white-sm.
+  min-height:100vh. display:flex; align-items:center.
+  Canvas ripple effect active on desktop (see §9).
+  Used by: #philosophy, #work (MADE REAL).
+
+.object-breaker   (#object)
+  Light surface counterpart. background: var(--warm) + --dot-grid-mid.
+  min-height:100vh. display:flex; align-items:center.
+  Uses dark dot grid (dots visible on light bg).
+  No canvas ripple (static dot grid only).
+
+Note: breakers carry the section ID; the content section
+immediately after (work cards, object gallery) has no ID.
+No anim-divider between breaker and its gallery.
+
+
+═══════════════════════════════════════════════════════════════════
+4. ANIMATED DIVIDER
+═══════════════════════════════════════════════════════════════════
+
+HTML:
+  <div class="anim-divider">
+    <div class="anim-divider-line"></div>
+    <div class="anim-divider-dot"></div>
+  </div>
+
+Used between major chapter transitions (not between a breaker and
+its own gallery). Creates a full-width animated gradient line
+with a pulsing dot at center.
+
+
+═══════════════════════════════════════════════════════════════════
+5. TYPOGRAPHY CLASSES
+═══════════════════════════════════════════════════════════════════
+
+KICKER / EYEBROW
+  .ch       Light surface. Uppercase, letter-spaced, accent-mid color.
+            display:flex with ::after rule (accent line, 34px).
+            Add style="justify-content:center;" when centered.
+  .ch-d     Dark surface variant. Slightly muted indigo + white rule.
+
+SECTION HEADINGS (DM Serif Display)
+  .st       Light surface. Fluid: clamp(26pt, 3.5vw, 44pt).
+  .st-d     Dark surface variant.
+  Use <em> inside for italic serif accent word.
+
+BODY / SUPPORTING PARAGRAPH
+  .bp       Light surface. 11pt, weight-light, ink-mid color.
+  .bp-d     Dark surface variant. White-a45 color.
+
+Use max-width inline to control line length, e.g.:
+  style="max-width:580px;"
+
+
+═══════════════════════════════════════════════════════════════════
+6. SCROLL REVEAL SYSTEM
+═══════════════════════════════════════════════════════════════════
+
+Add to any element to animate it in on scroll:
+
+  .r        Base class. opacity:0, translateY(22px). JS adds .on
+            when element enters viewport → opacity:1, transform:none.
+
+  .d1       Delay 0.07s
+  .d2       Delay 0.14s
+  .d3       Delay 0.21s
+  .d4       Delay 0.28s
+  .d5       Delay 0.35s
+  .d6       Delay 0.42s
+
+Usage: <div class="r d2"> animates in with a 0.14s delay.
+Combine multiple elements with ascending delays for stagger effect.
+
+Transition duration: --dur-reveal (0.95s), easing: ease.
+
+
+═══════════════════════════════════════════════════════════════════
+7. NAVIGATION
+═══════════════════════════════════════════════════════════════════
+
+.nav-bar          Sticky top bar. Blurs on scroll (JS-controlled).
+.nav-links        Desktop nav link list.
+.nav-cta          "Let's Talk" pill button (accent background).
+.nav-burger       Mobile hamburger icon (3 bars → X on open).
+.mob-nav          Mobile full-screen overlay menu.
+.mob-nav-cta      Mobile CTA button inside overlay.
+
+Scroll-spy: JS IntersectionObserver highlights active link.
+Targets: all section[id] elements + div[id="contact"].
+
+
+═══════════════════════════════════════════════════════════════════
+8. HERO SECTION (#hero)
+═══════════════════════════════════════════════════════════════════
+
+.hero-glow        Radial gradient glow (absolute). Reused in other
+                  sections: <div class="hero-glow" style="top:50%;left:50%;">
+
+.hero-pulse       Breathing dot. 6px circle, accent color.
+                  Animation: hero-dot-pulse (2.2s ease-in-out infinite).
+                  Keyframe: 0%,100% opacity:1 scale:1 → 50% opacity:0.3 scale:0.6.
+                  Used in: hero location badge, contact .cz-pulse.
+
+.hero-location    Bottom-left badge. Contains .hero-pulse + location text.
+
+.orbit / .orbit2          Rotating orbit ring containers.
+.orbit-dot / .orbit-dot2  Accent dots on orbit rings.
+
+BREATHING DOT REUSE — call it anywhere:
+  <span class="hero-pulse"></span>  (light bg, uses --accent)
+
+  or contact variant:
+  <span class="cz-pulse"></span>    (dark bg, uses --accent-mid)
+  Both use the same hero-dot-pulse keyframe.
+
+
+═══════════════════════════════════════════════════════════════════
+9. CANVAS DOT RIPPLE (interactive)
+═══════════════════════════════════════════════════════════════════
+
+Cursor pushes nearby dots away; they lerp back when cursor moves.
+Applied to: .contact-zone, .philosophy-sec#work (MADE REAL).
+
+HTML required inside the section:
+  <canvas class="cz-canvas" aria-hidden="true"></canvas>
+  <div class="cz-dots-static" aria-hidden="true"></div>
+
+JS: initDotRipple(element) — defined once, called per section:
+  initDotRipple(document.querySelector('.contact-zone'));
+  initDotRipple(document.getElementById('work'));
+
+Parameters (currently hardcoded in JS):
+  SPACING = 32px grid
+  DOT_R   = 1.5px radius
+  DOT_COLOR = rgba(255,255,255,0.10)
+  RIPPLE_RADIUS = 150px
+  MAX_DISPLACE  = 18px
+  LERP          = 0.12 (snap-back speed)
+
+Mobile (pointer:coarse): canvas hidden, .cz-dots-static shown.
+Desktop: section backgroundImage set to 'none' (canvas replaces it).
+
+CSS:
+  .cz-canvas      position:absolute; inset:0; z-index:0.
+  .cz-dots-static position:absolute; inset:0; display:none by default.
+
+
+═══════════════════════════════════════════════════════════════════
+10. HOW I WORK TILES (#how-i-work)
+═══════════════════════════════════════════════════════════════════
+
+GRID
+  .hiw-grid     2×2 CSS grid, gap:1.2rem. Mobile: 1 column.
+
+TILE STRUCTURE (two-face card, fixed 260px height)
+  .hiw-tile     Glass card. height:260px, overflow:hidden,
+                backdrop-filter:blur(14px), rgba(255,255,255,0.72).
+                Hover: translateY(-6px), accent-soft tint background.
+
+  .hiw-num      Ghost serif number (01–04). Absolute top-right,
+                bleeds off corner. opacity:0.045 black. Fades on hover.
+
+  Face 1 — DEFAULT (visible at rest):
+    .hiw-face.hiw-face-default
+      Fades out + slides up on hover.
+      Children (in order):
+        .hiw-icon-badge   42px boxed SVG icon, accent-soft bg.
+        .hiw-spacer       flex:1, pushes title to bottom.
+        .hiw-title        Principle title. <strong> for bold word, plain for rest.
+        .hiw-short        One-line subtitle.
+
+  Face 2 — HOVER (hidden at rest):
+    .hiw-face.hiw-face-hover
+      justify-content:center → vertically centers content.
+      Fades in + slides up on hover (0.1s delay).
+      Children:
+        .hiw-title        Same title (duplicated in HTML).
+        .hiw-expand       Full body paragraph.
+
+BORDER TRACE ANIMATION
+  .hiw-border-svg / .hiw-border-rect
+  SVG rect with pathLength="1000". On hover: stroke-dashoffset
+  animates 1000 → 0, drawing a border clockwise from top-left.
+  Easing: cubic-bezier(0.4, 0, 0.2, 1), duration 0.55s.
+
+ORBS (decorative, background layer)
+  .hiw-orbs           Absolute container, z-index:-1.
+  .hiw-orb-tr         Top-right orbit, 86vw circle, spins CW 62s.
+  .hiw-orb-bl         Bottom-left orbit, 86vw circle, spins CCW 78s.
+  .hiw-dot-arm        Absolute arm div. Uses CSS var --da for pre-rotation.
+                      Each arm has one .hiw-orb-dot at its tip.
+  .hiw-orb-dot        7px glowing accent-mid dot.
+
+  HTML for one dot arm:
+    <span class="hiw-dot-arm" style="--da:60deg">
+      <span class="hiw-orb-dot"></span>
+    </span>
+
+  Keyframes: hiw-spin-cw, hiw-spin-ccw
+
+
+═══════════════════════════════════════════════════════════════════
+11. WORK CARDS
+═══════════════════════════════════════════════════════════════════
+
+.work-grid            CSS grid, auto-fit cards.
+.work-card            Standard card.
+.work-card.featured   Large featured card (full-width row).
+
+Card structure:
+  .wc-visual          Image/visual area. Dark background.
+    .wc-visual-bg     Dot-grid overlay inside visual.
+    .wc-visual-glow   Radial glow overlay.
+    .wc-visual-label  Year + ID badge inside visual.
+  .wc-body            Text content area.
+    .wc-meta          Meta row: company + dot-sep + tag.
+      .wc-company, .wc-dot-sep, .wc-year-tag
+    .wc-title         Card heading.
+    .wc-desc          Body paragraph.
+    .wc-tags          Flex row of tag pills.
+      .wc-tag         Individual tag chip.
+    .wc-link          CTA link at bottom.
+
+
+═══════════════════════════════════════════════════════════════════
+12. OBJECT GALLERY
+═══════════════════════════════════════════════════════════════════
+
+.object-sec           Warm bg section (no ID — part of #object chapter).
+.object-inner         2-col grid, gap:4rem, align-items:start.
+
+  .object-visual      Left: image with bg + glow layers.
+    .ov-bg            Dot-grid overlay.
+    .ov-glow          Radial glow.
+  .object-content     Right: text content.
+    .obj-year         Year label.
+    .obj-title        Object name heading.
+    .obj-role         Role/studio string.
+    .obj-body         Description paragraph.
+    .obj-awards       Award list container.
+      .obj-award      Individual award string.
+    .award-logos-row  Flex row of award logo images.
+      .award-logo     Individual logo image.
+
+
+═══════════════════════════════════════════════════════════════════
+13. CONTACT SECTION (#contact)
+═══════════════════════════════════════════════════════════════════
+
+.contact-zone         Dark bg. Has canvas ripple + glow.
+.cz-glow              Radial accent glow (absolute).
+.cz-inner             2-col inner layout (~55/45 split).
+.cz-left              Left column: contact content.
+.cz-right             Right column: Ask AI card.
+
+LEFT COLUMN
+  .cz-kicker          "Contact" eyebrow label (white, spaced).
+  .cz-title           Main heading. Uses <em> for serif italic.
+  .cz-location-row    Flex row: location line + resume.
+    .cz-sub           Location text. Contains .cz-pulse dot.
+    .cz-pulse         Breathing dot. Uses hero-dot-pulse keyframe.
+                      Color: --accent-mid (indigo, readable on dark).
+    .cz-resume        Flex group: label + icon button.
+      .cz-resume-label  "Résumé" text (white).
+      .cz-resume-btn    28px circle button, download icon SVG.
+                        Opens PDF in new tab (target="_blank").
+  .cz-actions         Flex row of CTA buttons.
+    .cz-email-pill    Pill: email text + copy button.
+      .cz-email-text  Email address string.
+      .cz-copy-btn    34px circle button with copy/check icon swap.
+        .cz-copy-icon   Clipboard SVG (shown by default).
+        .cz-check-icon  Checkmark SVG (shown on .copied state).
+      JS: adds .copied for 2s → icon swaps to check then resets.
+    .cz-book-btn      "Book a Call" filled pill (--accent bg).
+                      Links to Calendly. target="_blank".
+
+RIGHT COLUMN — ASK AI CARD
+  .cz-ai-card         Bordered card, white-a04 bg.
+    .cz-ai-label      "ASK AI ABOUT REFAELI" kicker.
+    .cz-ai-title      Headline text.
+    .cz-ai-icons      Row of 4 AI platform icon buttons.
+      .cz-ai-btn      Individual icon link (44px circle).
+                      Each links to platform with URL-encoded prompt.
+                      Platforms: ChatGPT, Claude, Perplexity, Gemini.
+      .cz-ai-btn--gemini  Gemini variant (may need filter for logo color).
+    .cz-ai-body       Supporting body text below icons.
+
+
+═══════════════════════════════════════════════════════════════════
+14. ANIMATION KEYFRAMES
+═══════════════════════════════════════════════════════════════════
+
+hero-dot-pulse
+  Breathing dot. Used by .hero-pulse and .cz-pulse.
+  0%,100%: opacity:1, scale:1
+  50%: opacity:0.3, scale:0.6
+  Duration: 2.2s ease-in-out infinite.
+
+hiw-spin-cw
+  Orbit ring: 0 → 360deg. Used by .hiw-orb-tr (62s linear).
+
+hiw-spin-ccw
+  Orbit ring: 0 → -360deg. Used by .hiw-orb-bl (78s linear).
+
+SVG border trace (not a @keyframes — CSS transition on property)
+  .hiw-border-rect: stroke-dasharray:1000; stroke-dashoffset:1000
+  On hover: stroke-dashoffset → 0
+  Duration: 0.55s cubic-bezier(0.4, 0, 0.2, 1)
+
+
+═══════════════════════════════════════════════════════════════════
+15. INTERACTION PATTERNS
+═══════════════════════════════════════════════════════════════════
+
+CANVAS DOT RIPPLE
+  Cursor displaces nearby dots (within 150px radius).
+  Math: displacement = (radius - dist) / radius * maxDisplace
+  Dots lerp back: offset += (target - offset) * 0.12
+  Implemented in initDotRipple(el). Pass any section element.
+
+TWO-FACE CARD (how-i-work tiles)
+  Default face fades out + translates up (-6px).
+  Hover face fades in + translates up from 10px offset, 0.1s delay.
+  Fixed card height (260px) — no layout shift ever.
+  Title is duplicated in both faces (one per face in HTML).
+
+SVG BORDER TRACE
+  SVG <rect> with pathLength="1000" normalization.
+  stroke-dashoffset: 1000 → 0 on hover.
+  Smooth ease-in-out cubic-bezier, no bounce.
+
+COPY TO CLIPBOARD
+  .cz-copy-btn click → navigator.clipboard.writeText()
+  Adds .copied class for 2000ms → icon swaps copy → check.
+  Fallback: textarea + execCommand for older browsers.
+
+SCROLL-SPY NAV
+  IntersectionObserver watches all section[id] elements.
+  Active link class applied to nav <a> matching section id.
+  Threshold: whichever section is most visible gets highlighted.
+
+SCROLL REVEAL
+  IntersectionObserver watches all .r elements.
+  Adds .on class when element enters viewport.
+  Stagger via .d1–.d6 delay classes.
+
+
+═══════════════════════════════════════════════════════════════════
+16. KEY CSS CUSTOM PROPERTIES (tokens.css)
+═══════════════════════════════════════════════════════════════════
+
+FONTS
+  --font-sans       'Outfit', system-ui, sans-serif
+  --font-serif      'DM Serif Display', Georgia, serif
+
+WEIGHTS
+  --weight-thin / light / regular / medium / semibold
+  (200 / 300 / 400 / 500 / 600)
+
+COLORS — ACCENT
+  --accent          #3C49FF  (primary indigo)
+  --accent-hover    #2a36e8  (hover state)
+  --accent-mid      #8D94FF  (lighter indigo, on dark surfaces)
+  --accent-soft     #f4f4ff  (very light tint, card backgrounds)
+
+COLORS — SURFACES
+  --page            #fafafa  (default light bg)
+  --warm            #f7f6f2  (warm off-white, object/hiw sections)
+  --dark            #181821  (dark sections)
+  --dark-footer     #080810  (footer)
+
+COLORS — INK
+  --ink             #181820  (primary text)
+  --ink-mid         #3a3a48  (secondary text)
+  --ink-light       #888     (tertiary / captions)
+  --ink-xlight      #bbc     (muted / decorative)
+
+DOT GRID PATTERNS
+  --dot-grid-light    Dark dots 0.12 opacity (for light surfaces)
+  --dot-grid-mid      Dark dots 0.15 opacity (for light surfaces)
+  --dot-grid-strong   Dark dots 0.20 opacity (for light surfaces)
+  --dot-grid-white    White dots 0.12 opacity (for dark surfaces)
+  --dot-grid-white-sm White dots 0.10 opacity (for dark surfaces)
+
+  --dot-size-sm / md / lg / xl  (20px / 28px / 32px / 36px)
+  Default background-size for dot grids: var(--dot-size-md)
+
+BORDER RADIUS
+  --radius-pill     100px (buttons, pills, tags)
+  --radius-card     12px  (cards)
+  --radius-card-lg  16px  (AI card)
+  --radius-icon     8px   (icon badges)
+  --radius-btn      4px   (small buttons)
+
+SHADOWS
+  --shadow-card-hover   0 16px 48px rgba(60,73,255,0.08)
+  --shadow-card-lift    0 10px 32px rgba(60,73,255,0.08)
+
+ANIMATION
+  --ease-spring     cubic-bezier(0.34, 1.56, 0.64, 1)  (bouncy lift)
+  --ease-base       ease
+  --dur-reveal      0.95s  (scroll reveal)
+  --dur-base        0.3s   (hover transitions)
+  --dur-quick       0.2s   (fast hover)
+
+REVEAL OFFSETS
+  --reveal-offset-y   22px  (standard scroll reveal offset)
+  --reveal-offset-sm  14px
+  --reveal-offset-xs  10px
+
+LAYOUT
+  --content-default   1200px
+  --content-wide      1360px
+  --content-max       1440px
+  --section-padding-x clamp(1.25rem, 5vw, 4rem)
+  --section-padding-y 6rem
+
+BREAKPOINTS
+  --breakpoint-mob  860px
+  --breakpoint-tab  900px
+  Mobile media query: @media (max-width: 900px)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+END OF COMPONENT REFERENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
