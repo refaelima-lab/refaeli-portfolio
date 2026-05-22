@@ -1,0 +1,85 @@
+﻿Portfolio Experience Brief / Site Structure PRD
+
+
+PORTFOLIO EXPERIENCE BRIEF
+Project Overview
+A one-page portfolio experience for Principal Product Designer / Experience Architect Refaeli Ma.
+The site should feel:
+* intelligent
+* restrained
+* architectural
+* cinematic
+* highly intentional
+* minimal but deep
+The portfolio is not intended to function as a traditional UX case study repository.
+It should feel like an authored narrative experience that reveals:
+* systems thinking
+* design philosophy
+* organizational impact
+* behavioral design intelligence
+* cross-disciplinary range
+The experience should prioritize:
+* storytelling clarity
+* pacing
+* emotional rhythm
+* elegant interaction
+* progressive disclosure
+The overall impression should feel closer to:
+* an Apple internal strategy presentation
+* a design manifesto
+* a cinematic systems document
+rather than:
+* a startup portfolio template
+* a Dribbble showcase
+* an overly animated agency site
+EXPERIENCE PRINCIPLES
+1. Motion Should Support Understanding
+Micro interactions and transitions should:
+* guide attention
+* reinforce hierarchy
+* create pacing
+* support immersion
+* reveal relationships between elements
+Motion should feel:
+* subtle
+* smooth
+* atmospheric
+* restrained
+* confident
+2. Negative Space Is Structural
+Whitespace is not empty space.
+It is part of the storytelling system.
+The layout should breathe heavily:
+* large margins
+* intentional pacing
+* controlled density
+* asymmetrical composition when appropriate
+Content should feel curated, not compressed.
+3. Progressive Disclosure
+The portfolio should not reveal everything immediately.
+The experience should unfold gradually:
+* simple → complex
+* philosophy → evidence
+* abstract → concrete
+* systems → execution
+The viewer should continuously discover deeper layers while scrolling.
+4. Systems Over Screens
+The portfolio should emphasize:
+* relationships
+* structures
+* thinking
+* ecosystems
+* operating models
+not just polished interfaces.
+UI should appear as evidence of systems thinking, not as decoration.
+
+
+OVERALL EMOTIONAL ARC
+The homepage should progressively transition through:
+1. Curiosity
+2. Perspective
+3. Credibility
+4. Methodology
+5. Proof
+6. Creative depth
+7. Human connection

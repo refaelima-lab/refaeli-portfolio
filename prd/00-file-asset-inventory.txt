@@ -1,0 +1,221 @@
+﻿MASTER ASSET INVENTORY
+REFAELI PORTFOLIO
+________________
+
+
+ROOT STRUCTURE
+
+
+
+
+refaeli-portfolio/
+│
+├── BRIEF.md
+├── refaeli-ma-portfolio-prd.docx
+├── index.html
+├── styles.css
+├── tokens.css
+│
+├── mock/
+│   └── home-hero-mock.png
+│
+├── prd/
+│   ├── 00-read-first.txt
+│   ├── 00-brief.txt
+│   ├── 00-design-system.txt
+│   ├── 01-navigation.txt
+│   ├── 01-header.txt
+│   ├── 01-philosophy.txt
+│   ├── 02-experience-timeline.txt
+│   ├── 02-timeline-requirement.txt
+│   ├── 02-work-principles.txt
+│   ├── 03-work-section.txt
+│   ├── 03-BlueJeans.txt
+│   ├── 03-Verizon-Home-App.txt
+│   ├── 03-Verizon-Identity-Architecture.txt
+│   ├── 03-Iconmobile.txt
+│   ├── 04-object.txt
+│   ├── 05-contact.txt
+│   ├── 06-footer.txt
+
+
+│   ├── 07-cs-vz-bluejeans.txt
+│   ├── 07-cs-vz-home-app.txt
+│   └──07-cs-vz-id-arch.txt
+│   
+├── style-guide-reference/
+│   ├── casestudy_verizon_home_v2_1.html
+│   ├── casestudy_verizon_home_v2.html
+│   ├── casestudy_verizon_home.html
+│   ├── casestudy_vz_chaosfinal.html
+│   ├── portfolio_refaeli_v1.html
+│   ├── prototype_sticky_askai.html
+│   └── prototype_timeline_horizontal.html
+│
+├── assets/
+│   ├── bluejeans-by-verizon/
+│   │   ├── app-panel-design.jpg
+│   │   ├── app-panel-installation.png
+│   │   ├── apps-annotation-facebook.png
+│   │   ├── apps-collab-board.png
+│   │   ├── apps-polling-qa.png
+│   │   ├── apps-upload-share-video.png
+│   │   ├── blue-assets.jpg
+│   │   ├── blue-hero.png
+│   │   ├── blue-marketing.jpg
+│   │   ├── blue-meeting-gallery.jpg
+│   │   ├── blue-meeting-usage-metrcis.png
+│   │   ├── blue-reaction.jpg
+│   │   ├── blue-remote-learning-entry-flow.png
+│   │   ├── blue-vs-vz-design-system.png
+│   │   ├── chats-panel.png
+│   │   ├── competitive-analysis.png
+│   │   ├── design-system-business-impact.jpg
+│   │   ├── enter-exit-flow.jpg
+│   │   ├── ftu-responsive.jpg
+│   │   ├── people-panel.png
+│   │   ├── preference-card-sorting.png
+│   │   ├── preference-information-architecture.jpg
+│   │   ├── preference-name-tag.mov
+│   │   ├── preference-profile.mov
+│   │   ├── preference-redesign-pain-point.png
+│   │   ├── preference-redesign-research.png
+│   │   ├── preference-setting.mov
+│   │   ├── preference-virtual-background.mp4
+│   │   ├── reaction-competitive-analysis.png
+│   │   ├── reaction-user-testing.png
+│   │   ├── receive-weather-person-mode-share.png
+│   │   ├── remote-learning-partners.png
+│   │   ├── remote-learning-dashboard-configuration.png
+│   │   ├── remote-learning-dashboard.mp4
+│   │   ├── remote-learning-expand-collapse.jpg
+│   │   ├── schedule-meeting.jpg
+│   │   ├── screen-share-rendering.jpg
+│   │   ├── screen-share-widget.png
+│   │   ├── screenshare.mov
+│   │   ├── smart-component-design-system.mov
+│   │   ├── smart-theme.mp4
+│   │   ├── teaching-apps-information-architecture.jpg
+│   │   ├── user-interview-01.png
+│   │   ├── user-interview-02.png
+│   │   ├── user-interview-03.png
+│   │   ├── user-interview-04.png
+│   │   ├── user-interview-05.png
+│   │   ├── user-testing.png
+│   │   ├── video-layout-grid-people.png
+│   │   ├── video-layout-grid-view-display-logic.jpg
+│   │   ├── video-layout-grid-view.png
+│   │   ├── video-layout-people-view-display-logic.png
+│   │   ├── video-layout-rendering-logic.png
+│   │   ├── video-layout-speaker-view-display-logic.png
+│   │   ├── video-layout-speaker-view.png
+│   │   ├── weather-person-mode-flow.png
+│   │   └── weather-person-mode.jpg
+│   │
+│   ├── how-i-work/
+│   │   ├── e-o.png
+│   │   ├── o-o.png
+│   │   ├── p-s.png
+│   │   └── s-n.png
+│   │
+│   ├── iconmobile/
+│   │   ├── bmw/
+│   │   │   ├── bmw-cover.png
+│   │   │   ├── bmw-i7-interface-music.webp
+│   │   │   ├── bmw-i7-layout-select.webp
+│   │   │   ├── bmw-i7-rear-fullscreen.webp
+│   │   │   ├── bmw-i7-rear-interface.webp
+│   │   │   └── bmw-in-car-ex.jpeg
+│   │   │
+│   │   ├── ford/
+│   │   │   ├── ford-cover.png
+│   │   │   └── ford-mach-e-animation.gif
+│   │   │
+│   │   └── kia/
+│   │       ├── kia-cover.png
+│   │       ├── kia-in-car-ex.jpg
+│   │       └── kia-new-branding.jpg
+│   │
+│   ├── logo/
+│   │   ├── 4as.svg
+│   │   ├── 13-orphan.svg
+│   │   ├── a-design-award.svg
+│   │   ├── amazon.svg
+│   │   ├── anthropic.svg
+│   │   ├── art-center.svg
+│   │   ├── bienenstock.svg
+│   │   ├── bluejeans.svg
+│   │   ├── bmw.svg
+│   │   ├── byaa.svg
+│   │   ├── chat-gpt.svg
+│   │   ├── claude.svg
+│   │   ├── claude-glyph.svg
+│   │   ├── epda.svg
+│   │   ├── fetch-ai.svg
+│   │   ├── ford.svg
+│   │   ├── gemini.svg
+│   │   ├── icff.svg
+│   │   ├── icon.svg
+│   │   ├── ifel.svg
+│   │   ├── kia.svg
+│   │   ├── perp.svg
+│   │   ├── porsche.svg
+│   │   ├── supabase.svg
+│   │   ├── ucla.svg
+│   │   └── verizon.svg
+│   │
+│   ├── objects/
+│   │   ├── adidas-y3.jpg
+│   │   ├── filico-water.jpg
+│   │   ├── laxmi.jpg
+│   │   ├── leira-lounge-chair.jpg
+│   │   ├── nike-air.jpg
+│   │   ├── pilot-helmet.jpg
+│   │   ├── topoloty-jewelry.jpg
+│   │   └── walden-floor-chair.jpg
+│   │
+│   ├── profile-related/
+│   │   ├── refaeli-ma-profile-picture-half.png
+│   │   ├── refaeli-ma-profile-picture-side.png
+│   │   └── refaeli-ma-resume.pdf
+│   │
+│   ├── verizon-home-app/
+│   │   ├── devices/
+│   │   ├── devices-parental-control/
+│   │   ├── download_ios.png
+│   │   ├── download-google-play.png
+│   │   ├── edit-wifi/
+│   │   ├── equipment-details/
+│   │   ├── from-reactive-to-proactive-video.mp4
+│   │   ├── ftu/
+│   │   │   ├── ftu-problem.png
+│   │   │   ├── ftu-select-your-services.png
+│   │   │   ├── ftu-splash.png
+│   │   │   └── ftu-warning.png
+│   │   │
+│   │   ├── hero-shot-with-hand.png
+│   │   ├── home/
+│   │   ├── home-assistant-default/
+│   │   ├── home-assistant-parental-control/
+│   │   ├── home-assistant-parental-limit/
+│   │   ├── home-assistant-prototype.mov
+│   │   ├── home-assistant-time-limit/
+│   │   ├── home-awareness/
+│   │   ├── home-banner.jpg
+│   │   ├── home-vision-video-1.mp4
+│   │   ├── ia-restructure-user-intent.png
+│   │   ├── mission-reference-only.png
+│   │   ├── network-hub/
+│   │   ├── new-ia-structure-navigation.png
+│   │   ├── problem-statement.png
+│   │   ├── services/
+│   │   └── vz-home-screens.png
+│   │
+│   └── verizon-identity-architecture/
+│       ├── business-customer-impact.png
+│       ├── core-diagnosis.png
+│       ├── current-state-strategic-vision.png
+│       ├── execution-strategy-30-60-90-plan.png
+│       ├── idarch-cover.png
+│       ├── if-we-do-not-fix-this.png
+│       └── why-this-is-so-hard-at-verizon.png

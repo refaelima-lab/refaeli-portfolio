@@ -1,0 +1,183 @@
+﻿Reference: refaeli-portfolio/mock/contact-ask-ai
+
+
+IMPORTANT: The attached screenshot (contact-ask-ai.png) is a 
+rough layout reference only — use it for structure and placement, 
+not for colors, fonts, spacing, or visual style.
+
+
+All styling must follow the existing design system in this project:
+tokens.css, and the patterns already built in index.html.
+Dark background = --dark (#0f0f17)
+Typography = Outfit + DM Serif Display, existing scale
+Colors = existing CSS variables only
+Card style, button style, hover states = match what's already built
+Do not directly derive any style values from the screenshot.
+Unless its a new style/component we do not have. 
+
+
+TASK: Rebuild the Contact section in index.html
+
+
+REFERENCE: Screenshot uploaded as contact-ask-ai.png
+Read it carefully before writing any code.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LAYOUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+Two-column layout, full viewport width, 
+Left column (~55%): Contact content
+Right column (~45%): Ask AI card
+
+
+- Two buttons side by side, pill-shaped, large border-radius:
+  Button 1 — email display pill:
+    Left side: "refaelima.work@gmail.com" 
+    Right side: copy icon button (square-on-square icon), 
+    rounded, slightly separated.
+    On click: copies email to clipboard. 
+    On success: icon briefly changes to checkmark, resets after 2s.
+  Button 2 — "Book a Call" — filled, accent color background
+    Links to: https://calendar.app.google/dEnEYu5EYMdqmN5F6
+    Opens in new tab.
+
+
+RIGHT COLUMN:
+Ask AI card — bordered card
+
+
+Inside the card:
+- Label: "ASK AI ABOUT REFAELI"
+- Headline: "Different model. Different perspective.
+  Same body of work." 
+- Four AI platform icon buttons — row, pill container, 
+  dark background, rounded, each icon ~44px circle:
+  1. ChatGPT — OpenAI logo (use SVG or img from assets)
+  2. Claude — Anthropic logo  
+  3. Perplexity — Perplexity logo
+  4. Gemini — Google Gemini logo
+  Each icon links to that platform with pre-populated prompt (see below).
+  On hover: icon lifts slightly, border brightens.
+- Small body text below icons:
+  "Pick your AI of choice. Each conversation is pre-contextualized 
+  with my portfolio, public work, and design philosophy, ready to 
+  explore the work beyond the surface."
+
+
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AI PLATFORM LINKS WITH PRE-POPULATED PROMPTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+Each icon opens a new tab to that AI platform with this prompt 
+pre-loaded (URL-encoded):
+
+
+Prompt text:
+"Use both the portfolio and publicly available information about Refaeli Ma to form a broader understanding of the work, background, and perspective behind the projects.
+Approach this like a thoughtful design lead, creative director, strategist, collaborator, or curious observer trying to understand:
+- how Refaeli thinks
+- what kinds of problems he gravitates toward
+- what he seems to value in products, systems, and teams
+- how his background in industrial design, product strategy, and experience architecture influence his approach
+- what differentiates his work from a more traditional product designer"
+
+
+ChatGPT:
+https://chatgpt.com/?q=[encoded prompt]
+
+
+Claude:
+https://claude.ai/new?q=[encoded prompt]
+
+
+Perplexity:
+https://www.perplexity.ai/search?q=[encoded prompt]
+
+
+Gemini:
+https://gemini.google.com/app?q=[encoded prompt]
+
+
+URL-encode the prompt properly when building the href values.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BACKGROUND — DOT GRID MODIFICATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+For this section only (test here before making global):
+- Dot color: rgba(141,148,255,0.22) — more visible than current global
+- Dot spacing: 32px grid (larger than current)
+- Dot size: 1.2px radius
+
+
+This replaces the global dot grid only within this section's 
+background element. Do not change global tokens yet.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CURSOR RIPPLE EFFECT ON DOT GRID
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+On mousemove over the contact section background:
+Draw the dot grid on a Canvas element instead of CSS background-image.
+Each dot's position is displaced by a ripple/wave distortion 
+based on distance from the cursor.
+
+
+Distortion math:
+- Each dot calculates its distance from cursor (mx, my)
+- If distance < rippleRadius (120px): 
+  dot is pushed away from cursor proportionally
+  displacement = (rippleRadius - dist) / rippleRadius * maxDisplace
+  maxDisplace = 10px
+- The dot snaps back smoothly when cursor moves away
+  Use lerp on each dot's offset: offset += (target - offset) * 0.12
+
+
+This creates a ripple/distortion that follows the cursor —
+like pressing on a flexible surface. Dots near cursor push outward,
+dots far away are undisturbed.
+
+
+The effect should be subtle — the grid reads as normal until 
+you move the cursor over it, then it feels alive.
+
+
+On mobile / touch: disable the canvas distortion, 
+fall back to static CSS dot grid.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DESIGN SYSTEM RULES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+Follow existing tokens.css for all colors, fonts, spacing.
+Pill buttons: use large border-radius (100px), consistent with 
+nav CTA button style already in the project.
+Card border: same treatment as other dark-section cards.
+Hover states: translateY(-2px) + border brightens, 
+same spring easing as established components.
+Do not introduce new font sizes or weights.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BUILD ORDER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+1. Static layout first — both columns, no interactions
+2. Confirm layout matches mock before continuing
+3. Add copy-to-clipboard on email button
+4. Add AI platform links
+5. Add canvas dot grid with cursor ripple last
+   Confirm static layout is not broken by canvas addition

@@ -1,0 +1,411 @@
+﻿Featured Work — BlueJeans by Verizon Specification
+CASE STUDY PAGE SPECIFICATION
+Overall Purpose
+This case study should feel:
+* systems-oriented
+* emotionally contextualized
+* highly visual
+* technically mature
+* operationally grounded
+This is not only:
+“I designed screens.”
+This case study should demonstrate:
+* systems thinking
+* platform thinking
+* scalable architecture
+* design leadership
+* behavioral understanding
+* collaboration with engineering
+* product thinking under global change
+The emotional subtext is:
+digital communication became essential infrastructure during the pandemic.
+________________
+
+
+Visual Direction
+Reference and evolve from:
+ Current BlueJeans Case Study
+Keep:
+* narrative pacing
+* layered storytelling
+* visual immersion
+Refine toward:
+* cleaner typography
+* stronger spacing
+* more cinematic rhythm
+* more premium atmosphere
+* tighter information hierarchy
+* alignment with new portfolio visual language
+________________
+
+
+HERO SECTION
+Assets
+Use:
+* BlueJeans logo
+* hero visuals from assets/bluejeans-by-verizon
+* optional video integration
+YouTube video:
+ BlueJeans Video
+Potential usage:
+* ambient hero background
+* cinematic section transition
+* embedded showcase moment
+________________
+
+
+Hero Copy
+Title
+BLUEJEANS BY VERIZON
+Optional Supporting Body
+At BlueJeans, we were building video conferencing solutions at the exact moment digital communication became essential infrastructure.
+What started as a collaboration platform evolved into something far more human, a place where work, learning, and connection converged.
+________________
+
+
+CASE STUDY NAVIGATION SYSTEM
+Purpose
+Create a structured reading experience for a long-form case study.
+The navigation should help users:
+* orient themselves
+* jump between chapters
+* understand progression
+________________
+
+
+Navigation Requirements
+Side Navigation / Dot Navigation
+Include:
+* floating side navigation
+* progress indicator
+* clickable section anchors
+* active section highlighting
+The interaction should feel:
+* lightweight
+* elegant
+* architectural
+Avoid:
+* bulky sticky sidebars
+* distracting motion
+* excessive labels
+________________
+
+
+Navigation Sections
+Corporate Training & Remote Learning
+BlueJeans Hero Product
+Atomic Design System
+________________
+
+
+SECTION 01
+Corporate Training & Remote Learning
+Purpose
+Show how design supported:
+* remote learning transformation
+* digital classroom systems
+* behavioral adaptation
+* multi-user collaboration
+This section should feel:
+* human-centered
+* operationally complex
+* immersive
+* educational
+* pandemic-contextualized
+________________
+
+
+Intro Copy
+As Design Lead for the Remote Learning product, I helped shape a virtual classroom experience designed to support both teaching and human connection at scale.
+The platform was adopted by organizations including Verizon Training, the University of Michigan, Wharton School of Pennsylvania, and many others, validating its impact across education and enterprise learning environments.
+________________
+
+
+Visual Direction
+Use:
+remote-learning-dashboard
+Potential:
+* immersive dashboard video
+* layered classroom atmosphere
+* large UI environment compositions
+The section should feel:
+like entering a digital classroom ecosystem.
+________________
+
+
+Partner Quotes
+Use:
+assets/remote-learning-partners
+Render quotes cinematically.
+Potential:
+* large typography
+* editorial quote layouts
+* subtle school branding
+* layered visual environment
+________________
+
+
+Features Section Direction
+DO NOT render as:
+* giant feature list
+* marketing website grid
+Instead:
+* group into themes
+* visually paced storytelling blocks
+* modular experience highlights
+Potential feature clusters:
+* Classroom Management
+* Collaboration & Engagement
+* Flexible Learning
+* Smart Communication
+This section should feel:
+system-oriented, not feature-dumped.
+________________
+
+
+User Testing Section
+Use assets:
+* user-testing
+* user-interview
+________________
+
+
+Purpose
+Show maturity in:
+* user research
+* validation
+* iterative refinement
+* pandemic adaptation
+________________
+
+
+Refined Copy
+During the pandemic, traditional in-person research became impossible. User testing shifted entirely online through platforms including usabilityhub and usertesting.com.
+Through extensive A/B testing, heat map analysis, event tracking, and expert interviews, we continuously refined the product around real classroom behavior rather than assumptions.
+Educators across multiple grade levels participated in cognitive walkthroughs, helping validate whether the platform addressed the realities of teaching, engagement, and classroom management in a remote environment.
+________________
+
+
+Insights Section
+Direction
+Render insights as:
+* intelligent observation cards
+* structured insight system
+* editorial research presentation
+Avoid:
+* giant numbered wall of text
+Potential:
+* expandable insight modules
+* progressive reveal
+* layered insight clusters
+The emphasis should feel:
+behavioral and operational.
+________________
+
+
+FTU / Entry Flow
+Assets:
+* ftu-responsive
+* remote-learning-expand-collapse
+* blue-remote-learning-entry-flow
+* enter-exit-flow
+________________
+
+
+Narrative Direction
+Focus on:
+* reducing cognitive load
+* classroom continuity
+* onboarding clarity
+* environment transitions
+________________
+
+
+Video Layout System
+Assets:
+* remote-learning-dashboard-configuration
+* video-layout-rendering-logic
+* video-layout-grid-people
+* video-layout-speaker-view
+* video-layout-grid-view
+________________
+
+
+Narrative Focus
+This section is important.
+It demonstrates:
+* systems thinking
+* responsive architecture
+* engineering collaboration
+* behavioral flexibility
+________________
+
+
+Refined Copy
+Designing the virtual classroom meant designing for constant adaptation.
+Every participant, teaching style, and classroom dynamic demanded flexibility, while technical infrastructure imposed strict limitations on layout behavior and rendering logic.
+The challenge wasn’t simply arranging windows. It was designing a system capable of balancing teaching, visibility, communication, and engagement simultaneously.
+________________
+
+
+Screen Share
+Assets:
+* screenshare
+* video-layout-speaker-view-display-logic
+Narrative focus:
+* complexity management
+* multi-state system behavior
+* scalability under constraints
+________________
+
+
+Weather Person Mode
+Assets:
+* weather-person-mode
+* receive-weather-person-mode-share
+________________
+
+
+Refined Copy
+I led the development of “Weather Person Mode,” allowing instructors to overlay themselves directly onto presentations without background interruption.
+The feature transformed passive screen sharing into a more engaging and human teaching experience.
+________________
+
+
+Panels Section
+Assets:
+* people-panel
+* chats-panel
+* teaching-apps-information-architecture
+________________
+
+
+Narrative Direction
+Frame this as:
+* modular classroom architecture
+* multitasking optimization
+* balancing teaching + management simultaneously
+________________
+
+
+SECTION 02
+BlueJeans Meetings
+Purpose
+Shift from:
+* education ecosystem
+to:
+* core platform optimization
+* usability refinement
+* desktop experience modernization
+________________
+
+
+Desktop Preference Redesign
+Asset:
+* preference-setting
+________________
+
+
+Refined Intro
+The Preferences redesign restructured one of the most heavily used areas of the product, improving discoverability, reducing friction, and modernizing the experience across the desktop ecosystem.
+________________
+
+
+Metrics Highlights
+Emphasize:
+* 12% increase in usage
+* 85% reduction in task completion time
+These should feel:
+* integrated
+* editorial
+* not dashboard-heavy
+________________
+
+
+Supporting Assets
+* preference-information-architecture
+* preference-profile
+* blue-meeting-usage-metrcis
+* preference-virtual-background
+* preference-name-tag
+________________
+
+
+Smart Theme (POC)
+Asset:
+* smart-theme
+________________
+
+
+Narrative Focus
+Frame this as:
+* early AI experimentation
+* contextual personalization
+* intelligent environment adaptation
+________________
+
+
+Schedule Meetings In App
+Asset:
+* schedule-meeting
+Narrative focus:
+* ecosystem simplification
+* reducing context switching
+* unified workflow experience
+________________
+
+
+SECTION 03
+BLUE DESIGN SYSTEM
+Purpose
+Demonstrate:
+* scalability
+* operational maturity
+* system architecture
+* engineering collaboration
+* organizational impact
+This section should feel:
+* structured
+* intelligent
+* technically credible
+* highly operational
+________________
+
+
+Atomic Design System
+Assets:
+* design-system-business-impact
+* smart-component-design-system.mov
+* blue-vs-vz-design-system
+Figma:
+ Blue Design System Figma
+________________
+
+
+Refined Copy
+I led the creation of a comprehensive Atomic Design System in Figma, consisting of more than 900 responsive components designed to scale across multiple products and platforms.
+The system unified branding, accelerated collaboration between design and engineering, and dramatically improved the speed of product iteration and delivery.
+________________
+
+
+Metrics Presentation
+Present metrics elegantly:
+* 30% reduction in design time
+* 5× faster prototyping
+* 70% reduction in UI bugs
+* 3× faster UI implementation on average
+* up to 7× faster in optimized scenarios
+Avoid:
+* startup metric dashboards
+* loud infographic style
+Metrics should feel:
+* operational
+* evidence-driven
+* integrated into narrative
+________________
+
+
+Emotional Goal
+The viewer should leave this case study feeling:
+“This wasn’t just interface design.
+It was systems leadership during a moment when digital communication became essential to how people worked, learned, and connected.”

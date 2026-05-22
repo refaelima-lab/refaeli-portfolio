@@ -1,0 +1,1 @@
+﻿READ FIRST: Also read all four HTML files in the /reference folder. They contain the established design system, components, and animation patterns. Build from those — do not start from scratch.

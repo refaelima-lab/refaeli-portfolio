@@ -1,0 +1,155 @@
+﻿Here’s the refined Hero / Header Section Requirement for Claude Code.
+________________
+
+
+Hero Section Specification
+Purpose
+Create a welcoming first impression that feels sleek, creative, intelligent, and fluid.
+The hero should establish Refaeli Ma as a senior design leader with a systems-oriented practice, without over-explaining or showing metrics too early.
+This section should feel like an entry point into the portfolio world.
+________________
+
+
+Content Requirements
+Primary Name
+Refaeli Ma
+Large, confident typography.
+Role Line
+Principal Product Designer
+ Experience Architect
+Render this as a typewriter animation.
+Behavior:
+* Type “Principal Product Designer”
+* Pause briefly
+* Delete or fade out
+* Type “Experience Architect”
+* Loop smoothly
+* Animation should feel elegant, not gimmicky
+Display format may include:
+Principal Product Designer | Experience Architect
+But the animation should rotate between the two role phrases.
+Location
+📍 Based in Los Angeles, California
+Keep this smaller and warmer.
+Optional Tagline
+Add a concise tagline beneath the role/location.
+Recommended:
+Designing clarity in complex systems. Building the invisible structures that shape human experience.
+Tone:
+* welcoming
+* precise
+* quietly confident
+* not overly corporate
+________________
+
+
+Visual Asset Requirement
+Profile Image
+Use the profile image located at:
+assets/profile-related/refaeli-ma-profile-picture-side
+Render it in the hero section.
+Requirements:
+* Integrate image elegantly into the composition
+* Feel free to adjust opacity, scale, crop, and positioning
+* Image should support the atmosphere, not dominate it
+* Avoid a standard “profile card” treatment
+* Consider layering image with glow, transparency, soft mask, or spatial depth
+The image should feel editorial and cinematic.
+________________
+
+
+Background / Motion Requirements
+Rotating Circle + Dots Animation
+Preserve the rotating circle-with-dots animation from the existing demo:
+file:///Users/rari/Downloads/portfolio_refaeli_v1.html
+Requirements:
+* Use it as a subtle background or atmospheric layer
+* It should create movement and visual interest
+* Keep it refined and non-distracting
+* Animation should feel slow, elegant, and continuous
+Background Glow
+Include the existing background glow direction, with slightly more movement.
+Requirements:
+* Soft ambient glow
+* Slow organic motion
+* Subtle shifting or drifting
+* No harsh gradients
+* No neon or overly futuristic effects
+* Movement should feel alive but calm
+________________
+
+
+Layout Direction
+The hero should feel:
+* sleek
+* eye-catching
+* creative
+* flowing
+* spacious
+* premium
+Avoid:
+* overly static centered layout
+* generic portfolio hero card
+* heavy metrics
+* cluttered intro copy
+* excessive visual noise
+This section is the welcome moment, not the proof moment.
+________________
+
+
+Interaction Requirements
+Hero Motion
+Use subtle motion to create atmosphere:
+* slow background rotation
+* gentle glow movement
+* soft image reveal
+* restrained text entrance
+* typewriter role animation
+Motion should guide attention toward:
+1. name
+2. role
+3. tagline
+4. profile image atmosphere
+________________
+
+
+Rolling Skills Marquee
+Add a rolling text marquee immediately after the hero/header section.
+Purpose
+Create a rhythmic transition from identity into capability.
+Content
+Include the following skills:
+* Design Leadership
+* Product Vision
+* Systems Design
+* Product Strategy
+* Scalable Design System
+* Information Architecture
+* End-to-End Product Design
+* AI-Augmented Workflows
+* Human-AI Integration Design
+* Cross-Functional Leadership
+Visual Direction
+The marquee should feel:
+* elegant
+* editorial
+* kinetic
+* premium
+* not noisy
+Requirements:
+* Continuous horizontal scroll
+* Smooth loop
+* Good spacing between phrases
+* Subtle separators or dot markers allowed
+* Typography should feel refined and confident
+Avoid:
+* fast movement
+* loud colors
+* oversized text that overwhelms the page
+* tech-bro ticker style
+________________
+
+
+Emotional Goal
+The viewer should feel:
+“This is a designer with clarity, depth, and a distinct point of view.”

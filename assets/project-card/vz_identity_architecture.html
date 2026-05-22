@@ -1,0 +1,116 @@
+
+<h2 class="sr-only">Verizon Identity Architecture — ecosystem diagram showing households, devices, behaviors, services, and relationships orbiting a central identity core</h2>
+<style>
+.viz-wrap { display:flex; justify-content:center; align-items:center; padding:2rem 0; }
+svg.ia { overflow:visible; }
+@keyframes orbit-cw  { from{transform-origin:340px 230px;transform:rotate(0deg)}   to{transform-origin:340px 230px;transform:rotate(360deg)} }
+@keyframes orbit-ccw { from{transform-origin:340px 230px;transform:rotate(0deg)}   to{transform-origin:340px 230px;transform:rotate(-360deg)} }
+@keyframes pulse-ring { 0%,100%{opacity:.18} 50%{opacity:.32} }
+@keyframes dot-fade   { 0%,100%{opacity:.3} 50%{opacity:.9} }
+@keyframes float-node { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+.ring1 { animation: pulse-ring 4s ease-in-out infinite; }
+.ring2 { animation: pulse-ring 4s ease-in-out infinite 1.3s; }
+.ring3 { animation: pulse-ring 4s ease-in-out infinite 2.6s; }
+.orbit1 { animation: orbit-cw  22s linear infinite; transform-origin:340px 230px; }
+.orbit2 { animation: orbit-ccw 30s linear infinite; transform-origin:340px 230px; }
+.conn-dot { animation: dot-fade 3s ease-in-out infinite; }
+.conn-dot:nth-child(2) { animation-delay:.5s }
+.conn-dot:nth-child(3) { animation-delay:1s }
+.conn-dot:nth-child(4) { animation-delay:1.5s }
+.conn-dot:nth-child(5) { animation-delay:2s }
+.node-g { animation: float-node 4s ease-in-out infinite; }
+.node-g:nth-of-type(2) { animation-delay:.8s }
+.node-g:nth-of-type(3) { animation-delay:1.6s }
+.node-g:nth-of-type(4) { animation-delay:2.4s }
+.node-g:nth-of-type(5) { animation-delay:3.2s }
+</style>
+<div class="viz-wrap">
+<svg class="ia" width="100%" viewBox="0 0 680 460" role="img">
+  <title>Verizon Identity Architecture ecosystem diagram</title>
+  <desc>A central identity core surrounded by orbital rings connecting households, devices, behaviors, services, and relationships nodes.</desc>
+
+  <defs>
+    <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e8e9ff"/>
+      <stop offset="100%" stop-color="#d0d3ff"/>
+    </radialGradient>
+  </defs>
+
+  <!-- orbit rings -->
+  <circle class="ring1" cx="340" cy="230" r="110" fill="none" stroke="#8D94FF" stroke-width="0.8"/>
+  <circle class="ring2" cx="340" cy="230" r="158" fill="none" stroke="#8D94FF" stroke-width="0.6"/>
+  <circle class="ring3" cx="340" cy="230" r="200" fill="none" stroke="#8D94FF" stroke-width="0.5"/>
+
+  <!-- connector dots on inner ring -->
+  <g class="orbit1">
+    <circle class="conn-dot" cx="340" cy="120" r="3.5" fill="#3C49FF"/>
+    <circle class="conn-dot" cx="440" cy="265" r="3.5" fill="#3C49FF"/>
+    <circle class="conn-dot" cx="270" cy="310" r="3.5" fill="#3C49FF"/>
+  </g>
+
+  <!-- connector dots on outer ring -->
+  <g class="orbit2">
+    <circle class="conn-dot" cx="340" cy="30"  r="3" fill="#8D94FF"/>
+    <circle class="conn-dot" cx="510" cy="230" r="3" fill="#8D94FF"/>
+    <circle class="conn-dot" cx="180" cy="330" r="3" fill="#8D94FF"/>
+    <circle class="conn-dot" cx="420" cy="390" r="3" fill="#8D94FF"/>
+  </g>
+
+  <!-- connecting lines from core to nodes -->
+  <line x1="340" y1="230" x2="170" y2="110" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+  <line x1="340" y1="230" x2="530" y2="130" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+  <line x1="340" y1="230" x2="560" y2="320" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+  <line x1="340" y1="230" x2="200" y2="370" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+  <line x1="340" y1="230" x2="420" y2="400" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+
+  <!-- core -->
+  <circle cx="340" cy="230" r="52" fill="url(#coreGrad)" stroke="#8D94FF" stroke-width="1.2"/>
+  <circle cx="340" cy="230" r="44" fill="none" stroke="#8D94FF" stroke-width="0.5" opacity=".5"/>
+  <!-- arrow icon for core -->
+  <text x="340" y="222" text-anchor="middle" font-size="22" fill="#3C49FF" font-family="system-ui">⬡</text>
+  <text x="340" y="242" text-anchor="middle" font-size="8" font-weight="600" letter-spacing="0.12em" fill="#3C49FF" font-family="'Outfit',system-ui" text-transform="uppercase">IDENTITY</text>
+  <text x="340" y="253" text-anchor="middle" font-size="7" fill="#8D94FF" font-family="'Outfit',system-ui">CORE</text>
+
+  <!-- satellite nodes -->
+  <!-- Households -->
+  <g class="node-g" style="transform-origin:170px 95px">
+    <rect x="112" y="68" width="116" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="170" y="91" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">HOUSEHOLDS</text>
+    <text x="170" y="107" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">unified profiles</text>
+    <circle cx="170" cy="68" r="3.5" fill="#3C49FF"/>
+  </g>
+
+  <!-- Devices -->
+  <g class="node-g" style="transform-origin:530px 115px">
+    <rect x="476" y="88" width="108" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="530" y="111" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">DEVICES</text>
+    <text x="530" y="127" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">cross-platform</text>
+    <circle cx="530" cy="88" r="3.5" fill="#3C49FF"/>
+  </g>
+
+  <!-- Behaviors -->
+  <g class="node-g" style="transform-origin:560px 320px">
+    <rect x="504" y="294" width="112" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="560" y="317" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">BEHAVIORS</text>
+    <text x="560" y="333" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">intelligence layer</text>
+    <circle cx="560" cy="294" r="3.5" fill="#3C49FF"/>
+  </g>
+
+  <!-- Services -->
+  <g class="node-g" style="transform-origin:195px 370px">
+    <rect x="138" y="344" width="114" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="195" y="367" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">SERVICES</text>
+    <text x="195" y="383" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">connected ecosystem</text>
+    <circle cx="195" cy="344" r="3.5" fill="#3C49FF"/>
+  </g>
+
+  <!-- Relationships -->
+  <g class="node-g" style="transform-origin:420px 405px">
+    <rect x="360" y="379" width="120" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="420" y="401" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">RELATIONSHIPS</text>
+    <text x="420" y="417" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">adaptive context</text>
+    <circle cx="420" cy="379" r="3.5" fill="#3C49FF"/>
+  </g>
+
+</svg>
+</div>

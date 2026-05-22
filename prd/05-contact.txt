@@ -1,0 +1,357 @@
+﻿Contact Section Specification
+Purpose
+Create a warm, confident closing moment that invites conversation without feeling overly corporate.
+This section should feel:
+* open
+* human
+* refined
+* calm
+* easy to act on
+The contact section should close the portfolio with quiet confidence.
+________________
+
+
+Section Title
+CONTACT
+________________
+
+
+Primary Copy
+Headline
+Let’s make something worth keeping.
+Body
+Whether you have a role, a project, or just want to talk design, I’m always up for a good conversation.
+Location Line
+Based in LA, working everywhere.
+________________
+
+
+Contact Links
+Render social and contact links with icons.
+Icon style should remain consistent with the rest of the site:
+* minimal
+* refined
+* line-based or softly geometric
+* no mixed icon styles
+* no overly decorative icons
+Required Links
+LinkedIn
+https://www.linkedin.com/in/refaelima/
+Instagram
+https://www.instagram.com/refaelimmmmma/
+Email
+mailto:refaelima.work@gmail.com
+Résumé
+Use download icon.
+File path:
+assets/profile-related/refaeli-ma-resume
+CTA label:
+Download Résumé
+________________
+
+
+Contact Form
+Create a contact form that allows viewers to send an email directly.
+Form Fields
+First Name
+Placeholder / helper text:
+What should I call you?
+Email *
+Placeholder / helper text:
+How should I get back to you?
+Required field.
+Subject
+Placeholder / helper text:
+What’s on your mind?
+Message
+Placeholder / helper text:
+Give me the context. The more honest, the better.
+________________
+
+
+Form CTA
+Button Label
+Let’s Connect
+________________
+
+
+Interaction Requirements
+Form Interaction
+The form should feel:
+* clean
+* lightweight
+* premium
+* easy to complete
+States required:
+* regular
+* focus
+* hover
+* error
+* success
+Focus states should be clear but subtle.
+Avoid:
+* heavy outlines
+* generic browser defaults
+* overly bright validation colors
+Success State
+After submission, show a warm confirmation message.
+Suggested copy:
+Message sent. I’ll get back to you soon.
+Error State
+Show concise, human error messaging.
+Suggested copy:
+Something didn’t go through. Please check your email or try again.
+________________
+
+
+Layout Direction
+The section should balance:
+* invitation
+* contact options
+* form interaction
+Potential layout:
+* Left side: headline, body, location, social links, résumé
+* Right side: contact form
+On mobile:
+* Stack content vertically
+* Contact copy first
+* Form second
+* Links remain easy to tap
+________________
+
+
+Visual Direction
+The contact section should feel like a soft landing after the portfolio.
+Visual tone:
+* spacious
+* minimal
+* warm
+* refined
+* slightly more personal than previous sections
+Potential design elements:
+* subtle glow continuation
+* low-contrast background shift
+* soft divider from previous section
+* quiet hover animations on links and button
+Avoid:
+* loud footer-style CTA block
+* aggressive sales language
+* excessive form styling
+________________
+
+
+Emotional Goal
+The viewer should feel:
+“This is someone thoughtful, approachable, and worth reaching out to.”
+
+
+
+
+
+
+
+
+________________
+
+
+Contact Section Add-on: Ask AI
+Feature Name
+ASK AI
+Purpose
+Add an interactive AI-powered experience inside the Contact section that allows viewers to ask questions about Refaeli’s work, experience, portfolio, design philosophy, and case studies.
+This feature should feel like:
+* a smart portfolio concierge
+* a guided conversation layer
+* a more interactive way to understand the designer
+* a bridge between passive viewing and direct contact
+It should not replace the contact form.
+It should support exploration before reaching out.
+________________
+
+
+Reference Prototype
+Claude has already created a demo in:
+reference/prototype_sticky_askai
+Use this prototype as the interaction and behavior reference.
+Do not copy it blindly. Refine it to match the final portfolio visual system:
+* sleek
+* minimal
+* premium
+* calm
+* intelligent
+* consistent with the site’s motion and typography
+________________
+
+
+Placement
+Place Ask AI within the Contact section, alongside or near the contact form.
+Recommended layout:
+* Left side: Contact copy, social links, résumé
+* Right side: Contact form
+* Ask AI: sticky floating assistant or integrated panel within the Contact area
+Alternative:
+* Add a small sticky Ask AI entry point near the lower-right corner once users reach the Contact section
+* Expand into a compact chat panel when clicked
+________________
+
+
+Content / Entry Copy
+Label
+Ask AI
+Supporting Copy
+Curious about my work? Ask the AI version of my portfolio.
+Alternative:
+Ask about my projects, process, experience, or how I think through design problems.
+Keep it short and warm.
+________________
+
+
+Suggested Prompt Starters
+Include 4 to 6 suggested questions to help viewers begin.
+Recommended prompts:
+* What kind of designer is Refaeli?
+* What is her strongest case study?
+* How does she approach complex systems?
+* What makes her different from a typical product designer?
+* What did she do on Verizon Home App?
+* Is she more strategy or execution?
+Tone should feel direct and useful, not gimmicky.
+________________
+
+
+Interaction Requirements
+Default State
+Ask AI should appear as:
+* compact
+* inviting
+* non-intrusive
+Potential formats:
+* small floating button
+* compact card
+* sticky mini-panel
+* subtle assistant orb
+Avoid:
+* chatbot cliché
+* loud AI branding
+* oversized widget
+* distracting animation
+________________
+
+
+Expanded State
+When opened, Ask AI should reveal:
+* short intro message
+* input field
+* suggested prompts
+* response area
+* close/minimize control
+The panel should feel:
+* polished
+* lightweight
+* integrated into the portfolio
+* not like a third-party widget
+________________
+
+
+Visual Direction
+Ask AI should use the same visual language as the site:
+* glass effect
+* subtle glow
+* soft motion
+* clean typography
+* minimal icons
+* calm contrast
+It can echo the hero animation language:
+* dots
+* lines
+* small orbiting motion
+* subtle intelligence-system feel
+Avoid:
+* robot icons
+* neon gradients
+* overly literal AI visuals
+________________
+
+
+Behavior Requirements
+Sticky Behavior
+Since the reference is prototype_sticky_askai, preserve the sticky behavior.
+Requirements:
+* Ask AI should remain accessible while users are in or near the Contact section
+* It should not cover important content
+* It should collapse gracefully on scroll
+* It should remain usable on mobile
+Mobile Behavior
+On mobile:
+* render as a compact button
+* expand into a full-width bottom sheet or modal
+* keep input easy to reach
+* avoid covering the contact form permanently
+________________
+
+
+AI Response Scope
+The AI should answer based only on portfolio-approved content.
+It can discuss:
+* Refaeli’s experience
+* case studies
+* design philosophy
+* principles
+* skills
+* contact information
+* résumé summary
+* project summaries
+It should avoid:
+* making claims not supported by the portfolio
+* exposing confidential information
+* inventing metrics
+* speaking as Refaeli in first person unless clearly styled that way
+* pretending to know private details not included in the site
+Recommended system behavior:
+Answer questions using only the portfolio content provided. If something is not covered, say that the portfolio does not include that detail and suggest contacting Refaeli directly.
+________________
+
+
+Personality / Tone
+The assistant should sound:
+* helpful
+* concise
+* thoughtful
+* slightly warm
+* aligned with Refaeli’s portfolio voice
+It should not sound:
+* overly salesy
+* robotic
+* generic
+* exaggerated
+________________
+
+
+Example Opening Message
+Hi, I’m trained on this portfolio. Ask me about Refaeli’s work, design philosophy, case studies, or experience.
+Alternative with more personality:
+Ask me anything about Refaeli’s work, from systems design to the problem beneath the problem.
+________________
+
+
+CTA Bridge
+After a few questions, subtly encourage direct contact.
+Example:
+Want to talk through a role, project, or collaboration? Send Refaeli a note below.
+This should not feel pushy.
+________________
+
+
+Success Criteria
+Ask AI is successful if it:
+* helps visitors understand the portfolio faster
+* makes the Contact section more memorable
+* reinforces Refaeli’s AI-forward positioning
+* increases confidence before reaching out
+* feels like part of the site, not an added plugin
+________________
+
+
+Emotional Goal
+The viewer should feel:
+“Even the contact section has a point of view. This designer thinks about interaction, intelligence, and storytelling all the way through.”

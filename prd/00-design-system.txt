@@ -1,0 +1,18 @@
+﻿DESIGN SYSTEM
+
+
+Reference file: reference/portfolio_refaeli_v1.html
+Fonts: Outfit (200–600) + DM Serif Display (regular, italic)
+Primary accent: #3C49FF / Mid: #8D94FF
+Dark background: #0f0f17 / Page: #fafafa / Warm: #f7f6f2
+All CSS tokens are in the reference file — extract and use as tokens.css
+
+
+Typography floor: no label below 7pt, no body text below 9pt.
+Legibility always wins over scale.
+
+
+
+
+Horizontal page margins: 3rem (matching casestudy_verizon_home.html 
+and prototype_sticky_askai.html). NOT the wider margins from other files.

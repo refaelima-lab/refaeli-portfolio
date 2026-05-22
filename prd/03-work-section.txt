@@ -1,0 +1,109 @@
+﻿Case Study Introduction Section Specification
+Purpose
+This section acts as a transition moment before entering the detailed case studies.
+It should provide:
+* a visual and emotional reset
+* breathing room after the Experience and Principles sections
+* a shift from philosophy into proof
+This section should feel:
+* calm
+* cinematic
+* spacious
+* intentional
+* immersive
+The goal is to slow the pacing slightly before introducing the featured work.
+________________
+Section Title
+MADE REAL
+This title should feel:
+* grounded
+* confident
+* understated
+Typography should carry strong presence through:
+* spacing
+* scale
+* rhythm
+Avoid decorative treatments.
+________________
+Supporting Copy
+A selection of recent work in digital product and interaction design, focused on clarity, systems, and intelligent experiences.
+Tone:
+* precise
+* restrained
+* mature
+* quietly confident
+Avoid:
+* marketing language
+* exaggerated claims
+* excessive explanation
+________________
+Visual Direction
+This section should remain intentionally minimal.
+It should function as:
+a cinematic pause between chapters.
+The atmosphere should feel:
+* elegant
+* architectural
+* ambient
+* slightly futuristic
+* immersive without distraction
+________________
+Background Animation Requirements
+Use the same visual language introduced in the Hero section.
+Potential elements:
+* rotating line systems
+* geometric structures
+* moving dots
+* orbital motion
+* connected nodes
+* flowing line patterns
+* subtle particle movement
+Visual language should feel:
+* systematic
+* intelligent
+* lightweight
+* atmospheric
+Avoid:
+* heavy sci-fi visuals
+* flashy particle systems
+* chaotic movement
+* excessive visual density
+________________
+Motion Requirements
+Motion should feel:
+* slow
+* ambient
+* continuous
+* meditative
+Potential motion behaviors:
+* rotating geometric systems
+* drifting connection lines
+* orbital dot movement
+* layered parallax depth
+* soft opacity transitions
+Animation should support atmosphere rather than demand attention.
+________________
+Layout Requirements
+The composition should remain:
+* centered or asymmetrically balanced
+* spacious
+* typography-forward
+Allow generous breathing room around:
+* title
+* supporting copy
+* animated background elements
+The section should visually prepare the user for deeper exploration.
+________________
+Transition Requirements
+This section should transition smoothly into the featured case studies.
+Potential ideas:
+* background system gradually becoming more structured
+* lines evolving into case study layout grid
+* geometric movement subtly guiding toward first project
+* opacity shift into project reveal
+The transition should feel:
+seamless and intentional.
+________________
+Emotional Goal
+The viewer should feel:
+“Now I’m entering the proof behind the philosophy.”

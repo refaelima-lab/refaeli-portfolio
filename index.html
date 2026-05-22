@@ -78,9 +78,8 @@
     </div>
   </div>
 
-  <!-- z-2: orbit rings -->
-  <div class="orbit"><div class="orbit-dot"></div></div>
-  <div class="orbit2"><div class="orbit-dot2"></div></div>
+  <!-- z-2: orbit ring — shell handles scale+fade; inner div handles JS rotation -->
+  <div class="orbit-shell"><div class="orbit"><div class="orbit-dot"></div></div></div>
 
   <!-- z-3: profile photo, centered, anchored to bottom -->
   <div class="hero-photo-wrap">
@@ -164,15 +163,15 @@
     </div>
 
     <div class="phi-right">
-      <div class="phi-stat-card r d2">
+      <div class="phi-stat-card r r-late d4">
         <div class="phi-stat-num">10+</div>
         <div class="phi-stat-label">Years Experience</div>
       </div>
-      <div class="phi-stat-card r d3">
+      <div class="phi-stat-card r r-late d5">
         <div class="phi-stat-num">40+</div>
         <div class="phi-stat-label">Products Shipped</div>
       </div>
-      <div class="phi-stat-card r d4">
+      <div class="phi-stat-card r r-late d6">
         <div class="phi-stat-num">20M+</div>
         <div class="phi-stat-label">Users Impacted</div>
       </div>
@@ -213,7 +212,7 @@
 
     <div class="hiw-grid">
 
-      <div class="hiw-tile r d1">
+      <div class="hiw-tile r r-late d3">
         <span class="hiw-num" aria-hidden="true">01</span>
         <div class="hiw-face hiw-face-default">
           <div class="hiw-icon-badge">
@@ -233,7 +232,7 @@
         <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
       </div>
 
-      <div class="hiw-tile r d2">
+      <div class="hiw-tile r r-late d4">
         <span class="hiw-num" aria-hidden="true">02</span>
         <div class="hiw-face hiw-face-default">
           <div class="hiw-icon-badge">
@@ -257,7 +256,7 @@
         <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
       </div>
 
-      <div class="hiw-tile r d3">
+      <div class="hiw-tile r r-late d5">
         <span class="hiw-num" aria-hidden="true">03</span>
         <div class="hiw-face hiw-face-default">
           <div class="hiw-icon-badge">
@@ -281,7 +280,7 @@
         <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
       </div>
 
-      <div class="hiw-tile r d4">
+      <div class="hiw-tile r r-late d6">
         <span class="hiw-num" aria-hidden="true">04</span>
         <div class="hiw-face hiw-face-default">
           <div class="hiw-icon-badge">
@@ -320,7 +319,7 @@
       <div class="hero-glow" style="top:50%;left:50%;"></div>
       <div class="wsb-inner">
         <div class="r"><div class="ch ch-d" style="justify-content:center;">Made Real</div></div>
-        <h2 class="st-d r d1" style="max-width:600px;margin-bottom:1.3rem;">A selection of recent <em>work</em></h2>
+        <h2 class="st-d r d1" style="max-width:600px;margin-bottom:2rem;">A selection of recent <em>work</em></h2>
         <p class="bp-d r d2" style="max-width:640px;">Digital product and interaction design, focused on clarity, systems, and intelligent experiences. Not just what shipped, but what it took to get there.</p>
       </div>
     </div>
@@ -346,7 +345,7 @@
     </div>
 
     <!-- 01 — Verizon Identity Architecture -->
-    <div class="wsc-card" data-idx="0">
+    <div class="wsc-card" data-idx="0" data-href="cs-vz-id-arch.html">
       <div class="wsc-inner">
 
         <div class="wsc-visual" style="background:#eaebff;">
@@ -456,8 +455,7 @@
 
           <div class="wsc-body-wrap">
             <h2 class="wsc-title">Verizon Identity Architecture</h2>
-            <p class="wsc-body">Leading the evolution of Verizon's Identity &amp; Profile ecosystem, the invisible architecture that connects households, devices, behaviors, and services into one intelligent system.</p>
-            <p class="wsc-body">Built to power personalization, behavioral intelligence, and AI-driven experiences across Home and Mobile. This work shifts Verizon from managing products to understanding relationships, transforming a traditional utility platform into a connected operating system for modern households.</p>
+            <p class="wsc-body">Most people never see this work. That's the point. Leading Verizon's Identity &amp; Profile ecosystem, creating the invisible structure that connects households, devices, behaviors, and services into one intelligent system.</p>
           </div>
 
           <div class="wsc-footer">
@@ -475,7 +473,7 @@
     </div>
 
     <!-- 02 — Verizon Home App (placeholder) -->
-    <div class="wsc-card" data-idx="1">
+    <div class="wsc-card" data-idx="1" data-href="cs-vz-home.html">
       <div class="wsc-inner">
 
         <div class="wsc-visual" style="background:#eef1ff;">
@@ -570,25 +568,26 @@
             <div class="wsc-meta">
               <img class="wsc-logo" src="assets/logo/verizon.svg" alt="Verizon">
               <span class="wsc-sep">·</span>
-              <span class="wsc-type">Mobile · iOS &amp; Android · 2023–2024</span>
+              <span class="wsc-type">Mobile · iOS &amp; Android · 2023–2025</span>
             </div>
             <span class="wsc-index">02 / 04</span>
           </div>
 
           <div class="wsc-body-wrap">
             <h2 class="wsc-title">Verizon Home App</h2>
-            <p class="wsc-body">A product people only opened when something went wrong. Reframed from reactive utility to proactive, intelligent experience.</p>
-            <p class="wsc-body wsc-body--placeholder">Full content coming soon.</p>
+            <p class="wsc-body">A product people only opened when something went wrong. Low trust, low engagement, and a system that felt fragmented. We reframed it. From a reactive utility into a more proactive, intelligent experience. One that surfaces what matters, guides action, and earns trust over time.</p>
           </div>
 
           <div class="wsc-footer">
             <div class="wsc-tags">
-              <span class="wsc-tag">Product Design</span>
+              <span class="wsc-tag">Digital Product Design</span>
               <span class="wsc-tag">Design System</span>
-              <span class="wsc-tag">AI Experience</span>
-              <span class="wsc-tag">Cross-Platform Mobile</span>
+              <span class="wsc-tag">Cross-Platform Mobile Application</span>
+              <span class="wsc-tag">Smart Home / IoT</span>
+              <span class="wsc-tag">Home Connectivity</span>
+              <span class="wsc-tag">Intelligent Ecosystem</span>
+              <span class="wsc-tag">0–1 Product Development</span>
             </div>
-            <a href="#" class="wsc-cta">See how chaos became cadence <span class="wsc-arrow">→</span></a>
           </div>
         </div>
 
@@ -596,7 +595,7 @@
     </div>
 
     <!-- 03 — BlueJeans (placeholder) -->
-    <div class="wsc-card" data-idx="2">
+    <div class="wsc-card" data-idx="2" data-href="cs-bluejeans.html">
       <div class="wsc-inner">
 
         <div class="wsc-visual" style="background:#ecefff;">
@@ -678,17 +677,19 @@
 
           <div class="wsc-body-wrap">
             <h2 class="wsc-title">BlueJeans by Verizon</h2>
-            <p class="wsc-body">In the middle of the pandemic, a collaboration platform became something more. Engineering expanded the possibilities; design made them legible.</p>
-            <p class="wsc-body wsc-body--placeholder">Full content coming soon.</p>
+            <p class="wsc-body">In the middle of the pandemic, a collaboration platform became something more. A space where work, communication, and human behavior converged. This was a technical chapter. Where engineering expanded the possibilities, and design made them legible. Not just shaping interfaces, but reshaping habits through structure and intent.</p>
           </div>
 
           <div class="wsc-footer">
             <div class="wsc-tags">
-              <span class="wsc-tag">Product Design</span>
-              <span class="wsc-tag">Design System · 900+ Components</span>
-              <span class="wsc-tag">Desktop App</span>
+              <span class="wsc-tag">Digital Product Design</span>
+              <span class="wsc-tag">Design System</span>
+              <span class="wsc-tag">Unified Communication</span>
+              <span class="wsc-tag">Mobile Application</span>
+              <span class="wsc-tag">Cross-Platform Collaboration Platform</span>
+              <span class="wsc-tag">Cloud-Based Video Conferencing</span>
+              <span class="wsc-tag">Desktop App (Windows / macOS)</span>
             </div>
-            <a href="#" class="wsc-cta">See what happened behind the screen <span class="wsc-arrow">→</span></a>
           </div>
         </div>
 
@@ -696,7 +697,7 @@
     </div>
 
     <!-- 04 — iconmobile / In-Car (placeholder) -->
-    <div class="wsc-card" data-idx="3">
+    <div class="wsc-card" data-idx="3" data-href="cs-iconmobile.html">
       <div class="wsc-inner">
 
         <div class="wsc-visual" style="background:#f0eeff;">
@@ -791,18 +792,22 @@
           </div>
 
           <div class="wsc-body-wrap">
-            <h2 class="wsc-title">In-Car Experience, Kia, BMW, Ford</h2>
-            <p class="wsc-body">Designing interaction beyond the screen, where physical environments and digital systems become one experience across Kia New Era, BMW iD 7.0, and Ford Mustang Mach-E.</p>
-            <p class="wsc-body wsc-body--placeholder">Full content coming soon.</p>
+            <h2 class="wsc-title">Iconmobile</h2>
+            <p class="wsc-body">The dashboard is never the product. The experience begins long before someone touches a screen and continues long after they leave the vehicle. Working in automotive taught me to design for context, constraints, and human behavior at scale. It reinforced a belief I still carry today: the best experiences emerge when every part of the system works together so naturally that the technology fades into the background.</p>
           </div>
 
           <div class="wsc-footer">
             <div class="wsc-tags">
               <span class="wsc-tag">HMI Design</span>
-              <span class="wsc-tag">Automotive</span>
-              <span class="wsc-tag">Design System</span>
+              <span class="wsc-tag">Automotive UX</span>
+              <span class="wsc-tag">Design Systems</span>
+              <span class="wsc-tag">Connected Ecosystems</span>
+              <span class="wsc-tag">Multi-Screen Experiences</span>
+              <span class="wsc-tag">Digital + Physical Interaction</span>
+              <span class="wsc-tag">Spatial Computing</span>
+              <span class="wsc-tag">Accessibility</span>
+              <span class="wsc-tag">Human-Centered Technology</span>
             </div>
-            <p class="wsc-nda">Final renderings confidential · illustrative visuals only</p>
           </div>
         </div>
 
@@ -826,8 +831,8 @@
       <div class="hero-glow" style="top:50%;left:50%;"></div>
       <div class="wsb-inner">
         <div class="r"><div class="ch" style="justify-content:center;">Other Things I Make</div></div>
-        <h2 class="st r d1" style="max-width:600px;margin-bottom:1.3rem;">Not everything<br>lives on a <em>screen</em></h2>
-        <p class="bp r d2" style="max-width:580px;">Some ideas take shape in materials, form, and experiments. The studio practice deepens a systems-thinking approach to product and experience design.</p>
+        <h2 class="st r d1" style="max-width:600px;margin-bottom:2rem;">Not everything<br>lives on a <em>screen</em></h2>
+        <p class="bp r d2" style="max-width:640px;">Some ideas take shape in materials, form, and experiments. The studio practice deepens a systems-thinking approach to product and experience design.</p>
       </div>
     </div>
     <div class="gal-frame" id="gal-frame">
@@ -912,6 +917,7 @@
   <div class="cz-dots-static" aria-hidden="true"></div>
   <div class="cz-glow" aria-hidden="true"></div>
 
+  <div class="cz-body">
   <div class="cz-inner">
 
     <!-- LEFT: Contact -->
@@ -945,6 +951,11 @@
             </svg>
           </button>
         </div>
+        <a class="cz-li-btn" href="https://www.linkedin.com/in/refaelima/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+        </a>
         <a class="cz-book-btn" href="https://calendar.app.google/dEnEYu5EYMdqmN5F6" target="_blank" rel="noopener noreferrer">Book a Call</a>
       </div>
     </div>
@@ -974,20 +985,18 @@
       </div>
     </div>
 
+  </div><!-- /.cz-inner -->
+  </div><!-- /.cz-body -->
+
+  <div class="cz-foot">
+    <div class="cz-foot-left">
+      <div class="cz-foot-copy">© 2026 Refaeli Yaofei Ma. All rights reserved.</div>
+      <div class="cz-foot-humor">Because lorem ipsum deserves better. 😃</div>
+    </div>
+    <div class="cz-foot-right">Los Angeles, CA</div>
   </div>
+
 </section>
-
-
-<!-- ══════════════════════════════════════
-     FOOTER
-══════════════════════════════════════ -->
-<footer>
-  <div class="footer-left">
-    <div class="footer-copy">© 2026 Refaeli Yaofei Ma. All rights reserved.</div>
-    <div class="footer-humor">Because lorem ipsum deserves better. 😃</div>
-  </div>
-  <div class="footer-location">Los Angeles, CA</div>
-</footer>
 
 
 <!-- ══════════════════════════════════════
@@ -1102,7 +1111,13 @@ const obs = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
 
-document.querySelectorAll('.r').forEach(el => obs.observe(el));
+/* Tiles use a tighter trigger — must scroll the tile itself into view */
+const obsTile = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.15, rootMargin: '0px 0px -12% 0px' });
+
+document.querySelectorAll('.r:not(.r-late)').forEach(el => obs.observe(el));
+document.querySelectorAll('.r-late').forEach(el => obsTile.observe(el));
 
 
 
@@ -1131,13 +1146,12 @@ function typeStep() {
   }
   setTimeout(typeStep, deleting ? 55 : 95);
 }
-typeStep();
+setTimeout(typeStep, 550);
 
 
 /* ── CURSOR-REACTIVE ORBIT RINGS ── */
 const hero    = document.getElementById('hero');
 const orbit   = document.querySelector('.orbit');
-const orbit2  = document.querySelector('.orbit2');
 
 /* Drive rotation from JS so cursor proximity can influence it */
 const TWO_PI = Math.PI * 2;
@@ -1167,18 +1181,11 @@ function animOrbits() {
   const deg2 = (o2A * 180 / Math.PI);
 
   orbit.style.transform  = `translate(-50%, -50%) rotate(${deg1}deg)`;
-  orbit2.style.transform = `translate(-50%, -50%) rotate(${deg2}deg)`;
 
   requestAnimationFrame(animOrbits);
 }
 
 animOrbits();
-
-/* Fade orbits in after a short load delay */
-setTimeout(() => {
-  orbit.style.opacity  = '1';
-  orbit2.style.opacity = '1';
-}, 500);
 
 
 /* ── ACTIVE NAV SECTION TRACKING ── */
@@ -1500,12 +1507,11 @@ document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
 /* ── WORK CARDS — full-card click ── */
 (function () {
   document.querySelectorAll('.wsc-card').forEach(function (card) {
+    var href = card.dataset.href;
+    if (!href) return;
+    card.style.cursor = 'none';
     card.addEventListener('click', function (e) {
-      if (e.target.closest('.wsc-cta')) return; /* CTA already handles its own click */
-      var cta = card.querySelector('.wsc-cta');
-      if (!cta) return;
-      var href = cta.getAttribute('href');
-      if (!href || href === '#') return;
+      if (e.target.closest('a, button')) return;
       window.location.href = href;
     });
   });
@@ -1544,7 +1550,7 @@ document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
 
   var N = slides.length; // 8
 
-  var vh, stageTop, BREAKER_HOLD, BREAKER_FADE, BREAKER_PER, PER, HOLD, TOTAL;
+  var vh, stageTop, BREAKER_HOLD, BREAKER_FADE, BREAKER_PER, LEIRA_HOLD, PER, HOLD, TOTAL;
 
   function calcMetrics() {
     vh           = window.innerHeight;
@@ -1552,19 +1558,22 @@ document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
     BREAKER_HOLD = vh * 0.5;
     BREAKER_FADE = vh * 0.75;
     BREAKER_PER  = BREAKER_HOLD + BREAKER_FADE;
+    LEIRA_HOLD   = vh * 0.6;
     PER          = vh * 1.1;
     HOLD         = vh * 0.65;
-    TOTAL        = BREAKER_PER + (N - 1) * PER + HOLD;
+    TOTAL        = BREAKER_PER + LEIRA_HOLD + (N - 1) * PER + HOLD;
     stage.style.height = (vh + TOTAL) + 'px';
   }
 
   function toP(scrolledGal) {
-    if (scrolledGal >= (N - 1) * PER) return N - 1;
-    return clamp(scrolledGal / PER, 0, N - 1);
+    var g = scrolledGal - LEIRA_HOLD;
+    if (g < 0) return 0;
+    if (g >= (N - 1) * PER) return N - 1;
+    return clamp(g / PER, 0, N - 1);
   }
 
   function slideScrollPos(idx) {
-    return idx * PER; /* relative to gallery phase start */
+    return LEIRA_HOLD + idx * PER;
   }
 
   function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
@@ -1628,8 +1637,8 @@ document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
       breaker.style.pointerEvents = bFadeT > 0.9 ? 'none' : 'auto';
     }
 
-    /* Gallery overlay only visible once gallery has taken over */
-    var inGallery = scrolledGal >= 0 && scrolled <= TOTAL;
+    /* Overlay fades in as breaker fades — content arrives with LEIRA, not after */
+    var inGallery = bFadeT > 0.5 && scrolled <= TOTAL;
     if (overlay) overlay.classList.toggle('visible', inGallery);
 
     /* During breaker phase: slides at initial rest */
@@ -1684,7 +1693,23 @@ document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
   });
 
   calcMetrics();
-  syncOverlay(0);
+  /* Slide 0 (LEIRA) seeded at final state — no animation — so text is present the moment overlay fades in */
+  (function () {
+    var s0 = SLIDES[0];
+    if (goYear)    goYear.textContent = s0.year;
+    if (goIdxCur)  goIdxCur.textContent = '01';
+    if (goAwards)  goAwards.classList.toggle('active', s0.awards);
+    if (prevBtn)   prevBtn.disabled = true;
+    if (nextBtn)   nextBtn.disabled = (N === 1);
+    goDots.forEach(function (d, i) { d.classList.toggle('active', i === 0); });
+    if (goTitle) {
+      var lines = s0.title.split('\n');
+      goTitle.innerHTML = lines.map(function (line, i) {
+        return '<span class="go-tl"><span class="go-tw in" style="transition-delay:' + (i * 0.13) + 's">' + line + '</span></span>';
+      }).join('');
+    }
+    lastActive = 0;
+  }());
   render();
   window.addEventListener('scroll', render, { passive: true });
   window.addEventListener('resize', function () { calcMetrics(); lastP = -1; render(); });

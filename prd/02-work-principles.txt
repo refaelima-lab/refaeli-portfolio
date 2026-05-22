@@ -1,0 +1,305 @@
+﻿Principles / How I Work Section Specification
+Purpose
+This section translates experience into operational philosophy.
+The goal is to show:
+* how decisions are made
+* how leadership is approached
+* how complexity is navigated
+* how design thinking becomes operational structure
+This section should feel:
+* precise
+* intelligent
+* structured
+* calm
+* highly intentional
+The viewer should feel:
+“This designer has a clear internal operating system.”
+________________
+
+
+Section Title
+HOW I WORK
+Potential supporting statement:
+Design is not how it looks.
+It’s how decisions are made.
+Supporting copy:
+A few principles that shape how I work, balancing structure, intuition, and the space in between.
+________________
+
+
+Section Structure
+Render this section as a modular tile/grid system.
+Each principle should exist as an interactive tile.
+The interaction model should prioritize:
+* clarity
+* pacing
+* progressive disclosure
+The section should initially feel minimal and clean.
+The deeper explanation should reveal only through interaction.
+________________
+
+
+Tile Interaction System
+Default State
+Each tile should display:
+* principle title
+* short supporting line only
+The layout should feel:
+* structured
+* spacious
+* architectural
+* restrained
+Avoid:
+* dense text
+* overly card-heavy UI
+* excessive borders or shadows
+The default state should create curiosity and scanning rhythm.
+________________
+
+
+Hover State
+On hover:
+* reveal expanded explanation
+* smoothly transition typography and spacing
+* preserve layout stability
+* maintain elegance and readability
+Hover should feel:
+* immersive
+* intentional
+* subtle
+* responsive
+Avoid:
+* aggressive flipping animations
+* dramatic scaling
+* flashy transitions
+Potential interactions:
+* opacity transitions
+* soft vertical motion
+* background tonal shift
+* layered reveal
+* text fade progression
+The hover interaction should reward curiosity without overwhelming the page.
+________________
+
+
+Visual Direction
+The section should feel:
+* editorial
+* intelligent
+* structured
+* tactile
+* premium
+Potential visual direction:
+* asymmetrical grid layouts
+* modular spacing system
+* restrained hover glow
+* subtle depth layering
+* minimal motion atmosphere
+Typography should carry most of the visual weight.
+________________
+
+
+Principles Content
+01
+Problem > Solution
+Default State
+The right question matters more than a fast answer.
+Hover State
+Most work rushes to solutions. I don’t. A well-crafted answer to the wrong problem is still failure.
+I spend time where it matters, defining the real tension beneath the surface. When the problem is clear, the solution becomes obvious, often simpler than expected.
+________________
+
+
+02
+Objectives > Operations
+Default State
+Purpose guides process.
+Hover State
+Busy work can look like progress. It rarely is.
+I anchor teams in outcomes, not activity, aligning every decision to a measurable objective. Process exists to support direction, not replace it.
+If the goal is clear, the path can stay flexible.
+________________
+
+
+03
+Evidence > Opinion
+Default State
+Data aligns faster than debate.
+Hover State
+Design is full of strong opinions. Only some are right.
+I prioritize signals over assumptions, grounding decisions in data, behavior, and real user feedback. Not to remove intuition, but to sharpen it.
+Good judgment is informed, not guessed.
+________________
+
+
+04
+Space > Noise
+Default State
+Clarity lives in the pause.
+Hover State
+More is not better. Clarity comes from restraint.
+I remove what competes for attention so what matters can stand on its own. Whether in interface, system, or communication, space is what allows meaning to emerge.
+________________
+
+
+Layout Requirements
+Grid System
+The grid should feel:
+* spacious
+* balanced
+* intentional
+Potential directions:
+* 2x2 modular layout
+* staggered architectural layout
+* responsive adaptive grid
+Spacing should create rhythm and breathing room.
+________________
+
+
+Motion Requirements
+Hover interactions should feel:
+* soft
+* responsive
+* highly polished
+Potential motion details:
+* subtle blur transitions
+* gentle opacity changes
+* layered typography movement
+* controlled background shift
+Avoid:
+* excessive bounce
+* rapid transitions
+* futuristic UI gimmicks
+________________
+
+
+Responsive Requirements
+On mobile:
+* preserve readability
+* maintain clean hierarchy
+* use tap-to-expand interaction instead of hover
+* avoid overcrowding
+The interaction should remain:
+* elegant
+* tactile
+* minimal
+________________
+
+
+Emotional Goal
+The viewer should leave this section feeling:
+“This designer doesn’t just make interfaces.
+They create clarity, alignment, and direction.”
+
+
+Additional Asset Requirement — How I Work Section
+Asset Location
+Use icons and supporting assets from:
+assets/how-i-work
+These assets should visually reinforce each principle tile within the “How I Work” section.
+________________
+
+
+Purpose
+The icons should:
+* support recognition
+* reinforce conceptual meaning
+* add subtle visual rhythm
+* increase scanability
+The icons are NOT decorative illustrations.
+They should feel:
+* intentional
+* architectural
+* symbolic
+* system-oriented
+________________
+
+
+Icon Usage Requirements
+Assign one icon from assets/how-i-work to each principle:
+* Problem > Solution
+* Objectives > Operations
+* Evidence > Opinion
+* Space > Noise
+Icons should visually align with:
+* the principle meaning
+* the overall site visual system
+* the portfolio’s restrained aesthetic
+________________
+
+
+Visual Direction
+Icons should feel:
+* lightweight
+* refined
+* minimal
+* intelligent
+* integrated into the typography system
+Potential styling:
+* monochrome
+* low-contrast
+* outline-based
+* soft glow treatment
+* subtle opacity layering
+Avoid:
+* colorful illustration style
+* oversized iconography
+* skeuomorphic visuals
+* heavy gradients
+The icon should support the content, not dominate it.
+________________
+
+
+Tile Composition
+Default State
+Each tile should contain:
+* principle title
+* short supporting statement
+* corresponding icon
+The icon should help establish:
+* rhythm
+* visual identity
+* balance
+________________
+
+
+Hover State
+On hover:
+* icon may subtly animate
+* increase clarity slightly
+* shift opacity or depth
+* softly respond to interaction
+Potential motion:
+* slight rotation
+* soft glow increase
+* layered parallax movement
+* line animation
+* subtle scaling
+Motion should remain:
+* calm
+* premium
+* restrained
+Avoid:
+* bouncing
+* aggressive morphing
+* flashy interaction
+________________
+
+
+Layout Integration
+Icons should integrate naturally into the modular tile system.
+Potential placements:
+* top-left anchor
+* background watermark treatment
+* floating corner element
+* inline beside title
+Spacing should preserve:
+* breathing room
+* clarity
+* editorial composition
+________________
+
+
+Emotional Goal
+The icons should make the section feel:
+“Structured, intentional, and thoughtfully designed down to the smallest interaction detail.”

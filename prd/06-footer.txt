@@ -1,0 +1,73 @@
+﻿Footer Specification
+Purpose
+The footer exists as a quiet closing moment.
+There is no major functional or conversion goal for this section.
+It should simply provide:
+* closure
+* personality
+* a final human touch
+The footer should feel:
+* minimal
+* calm
+* lightly playful
+* intentional
+________________
+Content
+Primary Footer Text
+© 2026 by Refaeli Yaofei Ma. All rights reserved.
+Secondary Footer Text
+Because lorem ipsum deserves better. 😃
+Location
+Los Angeles, CA
+________________
+Tone
+The footer should maintain the portfolio’s overall sophistication while allowing a small moment of personality.
+The humor should feel:
+* subtle
+* intelligent
+* understated
+* human
+Avoid:
+* meme energy
+* loud jokes
+* excessive animation
+* overly casual styling
+________________
+Visual Direction
+The footer should remain:
+* visually lightweight
+* spacious
+* low contrast
+* highly legible
+Typography should stay readable even with reduced emphasis.
+Potential direction:
+* smaller typography scale
+* soft opacity hierarchy
+* generous spacing
+* subtle divider from contact section
+* minimalist layout structure
+________________
+Layout Requirements
+Potential structure:
+* left-aligned copyright
+* centered playful line
+* right-aligned location
+Or stacked vertically on smaller screens.
+Spacing should feel:
+* breathable
+* uncluttered
+* intentional
+________________
+Interaction Requirements
+Keep interactions minimal.
+Optional:
+* subtle hover response on playful line
+* very soft opacity transition
+Avoid:
+* animated footer gimmicks
+* scrolling marquees
+* large motion effects
+________________
+Emotional Goal
+The viewer should leave the site feeling:
+“Thoughtful, intentional, deeply designed, but still human.”

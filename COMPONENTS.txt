@@ -1,6 +1,7 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 REFAELI MA PORTFOLIO — COMPONENT REFERENCE
 Files: index.html · styles.css · tokens.css
+Last updated: Session 11
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
@@ -63,6 +64,11 @@ Centering a section's inner content (used in breakers):
   Uses dark dot grid (dots visible on light bg).
   No canvas ripple (static dot grid only).
 
+Title/body spacing inside breakers:
+  h2 uses style="margin-bottom:2rem;" inline to space from body.
+  Both MADE REAL and OBJECT breakers use max-width:600px on heading,
+  max-width:640px on body paragraph.
+
 Note: breakers carry the section ID; the content section
 immediately after (work cards, object gallery) has no ID.
 No anim-divider between breaker and its gallery.
@@ -91,16 +97,19 @@ KICKER / EYEBROW
   .ch       Light surface. Uppercase, letter-spaced, accent-mid color.
             display:flex with ::after rule (accent line, 34px).
             Add style="justify-content:center;" when centered.
+            Scroll reveal variant: clip-path left-to-right.
   .ch-d     Dark surface variant. Slightly muted indigo + white rule.
 
 SECTION HEADINGS (DM Serif Display)
   .st       Light surface. Fluid: clamp(26pt, 3.5vw, 44pt).
   .st-d     Dark surface variant.
   Use <em> inside for italic serif accent word.
+  Scroll reveal variant: 1.9s ease-reveal duration.
 
 BODY / SUPPORTING PARAGRAPH
   .bp       Light surface. 11pt, weight-light, ink-mid color.
   .bp-d     Dark surface variant. White-a45 color.
+  Scroll reveal variant: blur-to-clear 1.7s.
 
 Use max-width inline to control line length, e.g.:
   style="max-width:580px;"
@@ -110,22 +119,61 @@ Use max-width inline to control line length, e.g.:
 6. SCROLL REVEAL SYSTEM
 ═══════════════════════════════════════════════════════════════════
 
-Add to any element to animate it in on scroll:
+Two observer pattern — regular elements vs. tiles/stats.
 
-  .r        Base class. opacity:0, translateY(22px). JS adds .on
-            when element enters viewport → opacity:1, transform:none.
+BASE CLASS
+  .r        Pre-reveal state: opacity:0, translateY(30px).
+            JS adds .on when element enters viewport.
+            .r.on → opacity:1, transform:none, transition fires.
 
-  .d1       Delay 0.07s
-  .d2       Delay 0.14s
-  .d3       Delay 0.21s
-  .d4       Delay 0.28s
-  .d5       Delay 0.35s
-  .d6       Delay 0.42s
+LATE TRIGGER CLASS (tiles and stat cards only)
+  .r-late   Use alongside .r. Watched by obsTile (tighter rootMargin)
+            instead of the standard obs observer.
+            Tiles only animate when the tile itself is in view,
+            not when the section header enters viewport.
 
-Usage: <div class="r d2"> animates in with a 0.14s delay.
-Combine multiple elements with ascending delays for stagger effect.
+DELAY CLASSES (stagger)
+  .d1       0.12s     .d4   0.84s
+  .d2       0.40s     .d5   1.04s
+  .d3       0.62s     .d6   1.24s
 
-Transition duration: --dur-reveal (0.95s), easing: ease.
+REVEAL VARIANT RULES
+  Eyebrow (.ch, .ch-d)    clip-path: inset(0 0 0 100%) → inset(0)
+                          direction: left-to-right reveal
+  Title (.st, .st-d)      duration: 1.9s, ease-reveal easing
+  Body (.bp, .bp-d)       blur-to-clear filter, 1.7s
+  Tile / stat card        @keyframes tile-reveal (see below)
+
+TILE REVEAL ANIMATION
+  Applied to: .hiw-tile.r.on, .phi-stat-card.r.on
+  Uses @keyframes tile-reveal — NOT transition — so it runs
+  independently of the hover spring transition.
+
+  @keyframes tile-reveal {
+    from { opacity: 0; transform: translateY(36px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  animation-fill-mode: backwards — keeps tile invisible during
+  its delay period. No forwards fill — .r.on CSS owns final state
+  so hover lift works normally after reveal completes.
+
+  Tile stagger delay overrides (high-specificity rules):
+    .hiw-tile.r.on.d3, .phi-stat-card.r.on.d3  → 0s (immediate)
+    .hiw-tile.r.on.d4, .phi-stat-card.r.on.d4  → 0.15s
+    .hiw-tile.r.on.d5, .phi-stat-card.r.on.d5  → 0.30s
+    .hiw-tile.r.on.d6, .phi-stat-card.r.on.d6  → 0.45s
+
+JS OBSERVERS
+  obs       rootMargin: -30px. Watches all .r:not(.r-late).
+  obsTile   rootMargin: -12%. Watches all .r-late.
+            Fires only when the tile is in the lower viewport.
+
+USAGE EXAMPLES
+  Section heading:   <h2 class="st r d1">
+  Body paragraph:    <p class="bp r d2">
+  HOW I WORK tile:   <div class="hiw-tile r r-late d4">
+  Philosophy stat:   <div class="phi-stat-card r r-late d5">
 
 
 ═══════════════════════════════════════════════════════════════════
@@ -133,6 +181,7 @@ Transition duration: --dur-reveal (0.95s), easing: ease.
 ═══════════════════════════════════════════════════════════════════
 
 .nav-bar          Sticky top bar. Blurs on scroll (JS-controlled).
+                  Page-load: @keyframes fu, delay 0.1s.
 .nav-links        Desktop nav link list.
 .nav-cta          "Let's Talk" pill button (accent background).
 .nav-burger       Mobile hamburger icon (3 bars → X on open).
@@ -147,6 +196,51 @@ Targets: all section[id] elements + div[id="contact"].
 8. HERO SECTION (#hero)
 ═══════════════════════════════════════════════════════════════════
 
+PAGE-LOAD SEQUENCE (staggered via @keyframes fu)
+  nav           delay 0.1s  — slides up first
+  hero-role     delay 0.55s — typewriter container visible; JS fires
+  hero-location delay 0.95s — location line
+  marquee       delay 1.1s  — REFAELI MA rolling text (clip-path reveal)
+  hero-photo    delay 2.3s  — profile photo appears last
+
+  All use: animation: fu 0.9s var(--ease-reveal) Xs both;
+  @keyframes fu only defines a `to` state (opacity:1, translateY:0).
+  The element's own CSS sets the `from` state (opacity:0 + offset).
+  animation-fill-mode: both — element stays invisible during delay.
+
+TYPEWRITER
+  JS setTimeout: 550ms — synced with hero-role container visibility.
+
+ORBIT (single ring, orbit2 removed)
+  HTML:
+    <div class="orbit-shell">
+      <div class="orbit"><div class="orbit-dot"></div></div>
+    </div>
+
+  .orbit-shell    position:absolute; inset:0; z-index:2.
+                  CSS @keyframes orbit-shell-in handles scale+fade.
+                  Scale origin: 50% 50% of full-hero div (center).
+
+  @keyframes orbit-shell-in {
+    from { opacity: 0; transform: scale(1.28); }
+    to   { opacity: 1; transform: none; }
+  }
+  Duration: 2.0s ease-reveal.
+
+  .orbit          Inner ring. JS handles rotation only.
+                  transform: translate(-50%,-50%) rotate(Xdeg)
+                  Scale must NOT be in this chain — breaks centering.
+
+MARQUEE
+  .hero-name-marquee  Initial: clip-path: inset(0 0 0 100%)
+                      @keyframes marquee-in: inset left → 0%
+                      Direction: right-to-left (left inset shrinks)
+                      Duration: 1.2s ease-reveal, delay 1.1s, both.
+
+LOCATION LINE
+  .hero-location   letter-spacing: var(--tracking-wider) — matches nav links.
+                   @keyframes fu, delay 0.95s.
+
 .hero-glow        Radial gradient glow (absolute). Reused in other
                   sections: <div class="hero-glow" style="top:50%;left:50%;">
 
@@ -154,11 +248,6 @@ Targets: all section[id] elements + div[id="contact"].
                   Animation: hero-dot-pulse (2.2s ease-in-out infinite).
                   Keyframe: 0%,100% opacity:1 scale:1 → 50% opacity:0.3 scale:0.6.
                   Used in: hero location badge, contact .cz-pulse.
-
-.hero-location    Bottom-left badge. Contains .hero-pulse + location text.
-
-.orbit / .orbit2          Rotating orbit ring containers.
-.orbit-dot / .orbit-dot2  Accent dots on orbit rings.
 
 BREATHING DOT REUSE — call it anywhere:
   <span class="hero-pulse"></span>  (light bg, uses --accent)
@@ -204,12 +293,14 @@ CSS:
 ═══════════════════════════════════════════════════════════════════
 
 GRID
-  .hiw-grid     2×2 CSS grid, gap:1.2rem. Mobile: 1 column.
+  .hiw-grid     2×2 CSS grid, auto-fit minmax(500px, 1fr), gap:1.2rem.
+                Mobile: 1 column.
 
 TILE STRUCTURE (two-face card, fixed 260px height)
   .hiw-tile     Glass card. height:260px, overflow:hidden,
                 backdrop-filter:blur(14px), rgba(255,255,255,0.72).
-                Hover: translateY(-6px), accent-soft tint background.
+                Hover: translateY(-3px), accent-soft tint background.
+                Scroll reveal: .r .r-late d3–d6
 
   .hiw-num      Ghost serif number (01–04). Absolute top-right,
                 bleeds off corner. opacity:0.045 black. Fades on hover.
@@ -226,10 +317,11 @@ TILE STRUCTURE (two-face card, fixed 260px height)
   Face 2 — HOVER (hidden at rest):
     .hiw-face.hiw-face-hover
       justify-content:center → vertically centers content.
+      padding-left/right: 2.2rem (extra side padding for shorter lines).
       Fades in + slides up on hover (0.1s delay).
       Children:
         .hiw-title        Same title (duplicated in HTML).
-        .hiw-expand       Full body paragraph.
+        .hiw-expand       Full body paragraph. font-size: --text-body-sm (12pt).
 
 BORDER TRACE ANIMATION
   .hiw-border-svg / .hiw-border-rect
@@ -254,39 +346,72 @@ ORBS (decorative, background layer)
 
 
 ═══════════════════════════════════════════════════════════════════
-11. WORK CARDS
+11. WORK CARDS (work-stage section)
 ═══════════════════════════════════════════════════════════════════
 
-.work-grid            CSS grid, auto-fit cards.
-.work-card            Standard card.
-.work-card.featured   Large featured card (full-width row).
+.work-stage-grid      CSS grid containing all work cards.
+.work-stage-card      Individual card container.
+.work-stage-card.featured  Large featured card (full-width row).
 
 Card structure:
-  .wc-visual          Image/visual area. Dark background.
-    .wc-visual-bg     Dot-grid overlay inside visual.
-    .wc-visual-glow   Radial glow overlay.
-    .wc-visual-label  Year + ID badge inside visual.
-  .wc-body            Text content area.
-    .wc-meta          Meta row: company + dot-sep + tag.
-      .wc-company, .wc-dot-sep, .wc-year-tag
-    .wc-title         Card heading.
-    .wc-desc          Body paragraph.
-    .wc-tags          Flex row of tag pills.
-      .wc-tag         Individual tag chip.
-    .wc-link          CTA link at bottom.
+  .wsc-visual         Image/SVG visual area. Dark background.
+  .wsc-body-wrap      Text content area.
+    .wsc-eyebrow      Company name + eyebrow label.
+    .wsc-type         Medium/platform/date range line.
+                      Format: "Platform · OS · Year–Year"
+    .wsc-title        Card heading (project/product name).
+    .wsc-body         Body paragraph (3–5 sentences).
+    .wsc-tags         Flex row of tag pills.
+      .wsc-tag        Individual tag chip.
+    .wsc-index        Floating card index number (01, 02, etc.)
+                      Positioned top-right or per-card layout.
+
+ACTIVE CARDS (in order)
+  01 — VZ Identity Architecture (featured, Card 01)
+       Year: 2017–2022. Dark themed SVG visual.
+
+  02 — Verizon Home App (Card 02)
+       Type: Mobile · iOS & Android · 2023–2025
+       Body: From reactive utility to proactive, intelligent experience.
+       Tags: Digital Product Design, Design System,
+             Cross-Platform Mobile Application, Smart Home / IoT,
+             Home Connectivity, Intelligent Ecosystem,
+             0–1 Product Development
+
+  03 — BlueJeans by Verizon (Card 03)
+       Type: Enterprise · Cloud Video · 2019–2023
+       Tags: Digital Product Design, Design System,
+             Unified Communication, Mobile Application,
+             Cross-Platform Collaboration Platform,
+             Cloud-Based Video Conferencing,
+             Desktop App (Windows / macOS)
+
+  04 — Iconmobile (Card 04)
+       Title: Iconmobile
+       Body: From dashboard-as-product to full-context automotive UX.
+       Tags: HMI Design, Automotive UX, Design Systems,
+             Connected Ecosystems, Multi-Screen Experiences,
+             Digital + Physical Interaction, Spatial Computing,
+             Accessibility, Human-Centered Technology
+
+NOTE: No wsc-cta (text links) on any card. No wsc-nda line.
 
 
 ═══════════════════════════════════════════════════════════════════
-12. OBJECT GALLERY
+12. OBJECT GALLERY (gal-stage section)
 ═══════════════════════════════════════════════════════════════════
 
-.object-sec           Warm bg section (no ID — part of #object chapter).
-.object-inner         2-col grid, gap:4rem, align-items:start.
+.gal-stage            Sticky scroll section (no ID — part of #object).
+.gal-inner            2-col grid layout, gap:4rem, align-items:start.
 
-  .object-visual      Left: image with bg + glow layers.
-    .ov-bg            Dot-grid overlay.
-    .ov-glow          Radial glow.
-  .object-content     Right: text content.
+Sticky scroll: JS tracks bFadeT progress (0→1) through 4 object slides.
+LEIRA fix: static pre-seed + early overlay trigger (bFadeT > 0.5) +
+LEIRA_HOLD constant — ensures LEIRA content renders before user reaches it.
+
+  .gal-visual         Left: image with bg + glow layers.
+    .gv-bg            Dot-grid overlay.
+    .gv-glow          Radial glow.
+  .gal-content        Right: text content.
     .obj-year         Year label.
     .obj-title        Object name heading.
     .obj-role         Role/studio string.
@@ -344,6 +469,30 @@ RIGHT COLUMN — ASK AI CARD
 14. ANIMATION KEYFRAMES
 ═══════════════════════════════════════════════════════════════════
 
+fu (fade-up — page-load sequence)
+  Only defines `to` state. Element CSS sets `from` (opacity:0 + Y offset).
+  Used by: nav (0.1s), hero-role (0.55s), hero-location (0.95s).
+  Duration: 0.9s ease-reveal. fill-mode: both.
+
+orbit-shell-in
+  Hero orbit entrance: scale 1.28→1, opacity 0→1.
+  Applied to .orbit-shell wrapper.
+  Duration: 2.0s ease-reveal.
+
+marquee-in
+  Hero marquee entrance: clip-path inset(0 0 0 100%) → inset(0 0 0 0%).
+  Left inset shrinks → right-side first reveal (scroll-right direction).
+  Applied to .hero-name-marquee. Duration: 1.2s, delay: 1.1s, both.
+
+photo-reveal
+  Hero photo: opacity + custom ease. Delay: 2.3s.
+  Applied to .hero-photo.
+
+tile-reveal
+  Tiles/stat cards bottom-to-top: translateY(36px)→none, opacity 0→1.
+  Applied to .hiw-tile.r.on, .phi-stat-card.r.on.
+  Duration: 1.4s ease-reveal. fill-mode: backwards.
+
 hero-dot-pulse
   Breathing dot. Used by .hero-pulse and .cz-pulse.
   0%,100%: opacity:1, scale:1
@@ -356,7 +505,7 @@ hiw-spin-cw
 hiw-spin-ccw
   Orbit ring: 0 → -360deg. Used by .hiw-orb-bl (78s linear).
 
-SVG border trace (not a @keyframes — CSS transition on property)
+SVG border trace (CSS transition, not @keyframes)
   .hiw-border-rect: stroke-dasharray:1000; stroke-dashoffset:1000
   On hover: stroke-dashoffset → 0
   Duration: 0.55s cubic-bezier(0.4, 0, 0.2, 1)
@@ -373,10 +522,11 @@ CANVAS DOT RIPPLE
   Implemented in initDotRipple(el). Pass any section element.
 
 TWO-FACE CARD (how-i-work tiles)
-  Default face fades out + translates up (-6px).
+  Default face fades out + translates up (-3px on hover).
   Hover face fades in + translates up from 10px offset, 0.1s delay.
   Fixed card height (260px) — no layout shift ever.
   Title is duplicated in both faces (one per face in HTML).
+  Hover content: padding-left/right 2.2rem, body text 12pt.
 
 SVG BORDER TRACE
   SVG <rect> with pathLength="1000" normalization.
@@ -393,10 +543,21 @@ SCROLL-SPY NAV
   Active link class applied to nav <a> matching section id.
   Threshold: whichever section is most visible gets highlighted.
 
-SCROLL REVEAL
-  IntersectionObserver watches all .r elements.
-  Adds .on class when element enters viewport.
-  Stagger via .d1–.d6 delay classes.
+SCROLL REVEAL (two-observer system)
+  obs: rootMargin -30px, threshold 0.1 — fires for .r:not(.r-late)
+  obsTile: rootMargin -12%, threshold 0.15 — fires for .r-late
+  Both add .on class; tile reveal uses @keyframes, others use transition.
+
+CUSTOM CURSOR
+  5 states tracked via JS mousemove + hover detection.
+  Lerp ring follows cursor with lag for smooth trailing effect.
+
+HERO ORBIT JS
+  Single orbit ring. JS handles rotation only.
+  animOrbits(): oA += SPEED1 * speedMod
+  orbit.style.transform = `translate(-50%,-50%) rotate(${deg1}deg)`
+  Mouse proximity slows rotation (influence based on distance).
+  Scale is NOT in JS transform — handled exclusively by .orbit-shell CSS.
 
 
 ═══════════════════════════════════════════════════════════════════
@@ -452,15 +613,30 @@ SHADOWS
 
 ANIMATION
   --ease-spring     cubic-bezier(0.34, 1.56, 0.64, 1)  (bouncy lift)
+  --ease-reveal     cubic-bezier(0.16, 1, 0.3, 1)      (fast-out reveals)
   --ease-base       ease
-  --dur-reveal      0.95s  (scroll reveal)
+  --dur-reveal      1.6s   (scroll reveal base)
+  --dur-reveal-slow 1.9s   (title reveals)
   --dur-base        0.3s   (hover transitions)
   --dur-quick       0.2s   (fast hover)
 
+STAGGER DELAYS
+  --delay-d1  0.12s   --delay-d4  0.84s
+  --delay-d2  0.40s   --delay-d5  1.04s
+  --delay-d3  0.62s   --delay-d6  1.24s
+
 REVEAL OFFSETS
-  --reveal-offset-y   22px  (standard scroll reveal offset)
-  --reveal-offset-sm  14px
+  --reveal-offset-y   30px  (standard scroll reveal offset)
+  --reveal-offset-sm  16px
   --reveal-offset-xs  10px
+
+LETTER SPACING (frequently reused)
+  --tracking-normal   0.06em
+  --tracking-wide     0.12em
+  --tracking-wider    0.16em  ← nav links, hero location, eyebrows
+  --tracking-widest   0.2em
+  --tracking-label    0.22em
+  --tracking-kicker   0.28em
 
 LAYOUT
   --content-default   1200px
@@ -473,6 +649,68 @@ BREAKPOINTS
   --breakpoint-mob  860px
   --breakpoint-tab  900px
   Mobile media query: @media (max-width: 900px)
+
+
+═══════════════════════════════════════════════════════════════════
+17. LOGO ASSETS
+═══════════════════════════════════════════════════════════════════
+
+Path: assets/logo/*.svg
+
+Company logos used in work cards and experience timeline.
+Always use SVG format. No hardcoded fill colors — logos should
+respect the surface they're on.
+
+Asset folders:
+  assets/logo/              Company logos (SVG)
+  assets/objects/           Object gallery images
+  assets/profile-related/   Hero photo, profile images
+  assets/project-card/      Work card visual assets
+  assets/how-i-work/        HOW I WORK section assets
+  assets/verizon-home-app/          Case study assets
+  assets/bluejeans-by-verizon/      Case study assets
+  assets/verizon-identity-architecture/  Case study assets
+  assets/iconmobile/                Case study assets
+
+
+═══════════════════════════════════════════════════════════════════
+18. CASE STUDY PAGES (not yet built)
+═══════════════════════════════════════════════════════════════════
+
+Four case study pages are planned. Each is a standalone HTML file
+that links from the corresponding work card on index.html.
+
+FILES TO BUILD
+  cs-vz-home.html          Verizon Home App
+  cs-bluejeans.html        BlueJeans by Verizon
+  cs-vz-id-arch.html       Verizon Identity Architecture
+  cs-iconmobile.html       Iconmobile In-Car Experience
+
+REFERENCE FILES (existing, do not modify)
+  casestudy_verizon_home.html              VZ Home reference
+  casestudy_vz_fromchaosfinal.html         BlueJeans reference
+
+BUILD APPROACH
+  1. Link tokens.css + styles.css — reuse all existing design tokens.
+  2. Reuse components: .sec/.sec-inner, .ch/.ch-d, .st/.st-d, .bp/.bp-d,
+     .anim-divider, nav (.nav-bar), footer, scroll reveal (.r/.d1–d6).
+  3. Extend with case-study-specific layout as needed (new classes OK,
+     must still use tokens — no hardcoded values).
+  4. Nav and footer copy exactly from index.html. Scroll-spy still works.
+  5. Work card SVG visuals: inline SMIL SVG, dark background (#181821).
+
+TYPICAL CS PAGE SECTIONS (adapt per project)
+  Hero        Project title, role, year, brief tagline.
+  Overview    Problem statement, my role, team context.
+  Process     Research, ideation, iterations — image-heavy.
+  Solution    Final design, key screens/flows.
+  Outcomes    Metrics, impact, what shipped.
+  Next        What I'd do differently / what's next.
+  Footer      White background, dark text (same as index.html).
+
+LETTER SPACING NOTE
+  Use --tracking-wider (0.16em) for kicker/eyebrow labels,
+  consistent with index.html nav links and hero location.
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

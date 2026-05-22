@@ -1,0 +1,127 @@
+﻿TASK: Build the Experience Timeline section for index.html
+
+
+REFERENCE FILE: reference/prototype_timeline_horizontal.html
+Read this file first. This is the working prototype to implement.
+Do not deviate from its interaction model or visual logic.
+Build on top of the existing design system already established in this project.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DESIGN SYSTEM — FOLLOW WHAT EXISTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+Do not introduce new font sizes, weights, or color values.
+Use the existing tokens from tokens.css for all type, color, and spacing.
+If a new component is needed (stat card, award item, logo card), 
+create it following the same visual language — border-radius, 
+border style, backdrop-filter, hover behavior — already established 
+in the reference file and tokens.css.
+
+
+For the section label, chapter counter, and nav dots: 
+match the same fixed-UI style used in other sections of index.html.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INTERACTION MODEL — EXACT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+The Experience section is a horizontal scroll strip.
+Vertical mouse wheel input is intercepted and translated 
+to horizontal movement. No snap. No hard stops. Fluid lerp 
+at 0.085 easing factor — same as the reference file.
+
+
+The section occupies full viewport height (100vh).
+Each of the 6 chapters is 100vw wide.
+The strip is 600vw total.
+
+
+Fixed UI elements (do not scroll with strip):
+- "Experience" section label — top left
+- Chapter counter (01/06) — top right, DM Serif Display
+- Six navigation dots — bottom center, clickable to jump
+- Progress bar — bottom edge, 2px, accent color
+- "Scroll to explore →" hint — bottom right, disappears after first scroll
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BACKGROUND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+Single continuous background across all 6 chapters: #eef0f8
+No color change between chapters.
+Continuous dot grid overlay: rgba(60,73,255,0.065) dots, 
+26px spacing, running across the full 600vw strip.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+THE WAVE LINE — CANVAS-BASED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+Drawn on a Canvas element sized to the full 600vw strip.
+The wave uses Gaussian bump math — NOT sine waves.
+Long flat baseline stretches punctuated by sudden dramatic spikes 
+at chapter transitions. Each spike is unique in character and amplitude.
+The line stays within 12%–88% of viewport height at all times — 
+this prevents the line from hitting the viewport edge and appearing 
+to bounce or go flat. No invisible walls. Clamp smoothly.
+
+
+Ghost line (unscrolled):
+- stroke: rgba(60,73,255, 0.18) — make this visible, not invisible
+- stroke-width: 0.8
+- stroke-dasharray: 4 11
+
+
+Revealed line (fills in as you scroll):
+- stroke: rgba(60,73,255, 0.32)
+- stroke-width: 1.3
+- No dash
+
+
+Chapter nodes (6 total, one per chapter at the wave peak):
+- Outer ring: 4px radius unreached, 6px reached
+- Inner dot: 2px unreached, 3px reached  
+- Breathing pulse ring animation when reached
+- Thin bezier connector line from node to text block (dashed, very subtle)
+
+
+Pulse particles (always running, 5 total):
+- Travel continuously along the wave at different speeds
+- Size range: 1.2–2.5px radius
+- Opacity: 0.16–0.32
+- Pull the eye rightward even without scrolling
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SPECIFIC FIXES FROM PROTOTYPE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+1. Wave clamping: The wave must stay between 12vh and 88vh at all times.
+   Use Math.max(VH*0.12, Math.min(VH*0.88, y)) on the output.
+   This prevents the line hitting viewport edges and appearing flat.
+   The BlueJeans chapter (Ch4) had this problem in the prototype — 
+   reduce that spike amplitude slightly so it never hits the clamp.
+
+
+2. Ghost line visibility: Increase ghost line opacity to 0.18 minimum.
+   In the reference it was too faint. Should be subtly visible 
+   even before scrolling begins.
+
+
+3. Negative space: Everything 10–15% larger than the prototype.
+   Real content is denser than placeholders — scale up to match.
+   Logo cards: min-height 100px. Stat cards: larger numbers.
+
+
+4. Logo balance: All logo assets should be in containers of consistent 
+   size with optical centering. Use object-fit: contain, padding 20%.
+   If logos are very different shapes, use the shape-matching rule:
+   horizontal logos → 160x80 container, square/circular → 100x100.

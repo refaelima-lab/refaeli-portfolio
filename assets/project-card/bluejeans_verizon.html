@@ -1,0 +1,83 @@
+
+<h2 class="sr-only">BlueJeans by Verizon — overlapping orbit diagram representing the intersection of communication, learning, and enterprise-scale design systems</h2>
+<style>
+.bj-wrap { display:flex; justify-content:center; padding:2rem 0; }
+@keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+@keyframes spin-rev  { from{transform:rotate(0deg)} to{transform:rotate(-360deg)} }
+@keyframes ring-glow { 0%,100%{opacity:.15} 50%{opacity:.28} }
+@keyframes dot-travel { 0%,100%{opacity:.2} 50%{opacity:1} }
+.r-spin  { animation: spin-slow 28s linear infinite; transform-origin:240px 220px; }
+.r-spin2 { animation: spin-rev  20s linear infinite; transform-origin:440px 220px; }
+.rg1 { animation: ring-glow 3.5s ease-in-out infinite; }
+.rg2 { animation: ring-glow 3.5s ease-in-out infinite 1.2s; }
+.rg3 { animation: ring-glow 3.5s ease-in-out infinite 2.4s; }
+.dt  { animation: dot-travel 4s ease-in-out infinite; }
+.dt:nth-child(2){animation-delay:1s}
+.dt:nth-child(3){animation-delay:2s}
+.dt:nth-child(4){animation-delay:3s}
+</style>
+<div class="bj-wrap">
+<svg width="100%" viewBox="0 0 680 440" role="img">
+  <title>BlueJeans by Verizon design system diagram</title>
+  <desc>Two overlapping orbital systems representing the intersection of communication and learning, connected at the center by a shared design system node.</desc>
+
+  <!-- left orbit system — Communication -->
+  <circle class="rg1" cx="240" cy="220" r="145" fill="none" stroke="#8D94FF" stroke-width="0.8"/>
+  <circle class="rg2" cx="240" cy="220" r="105" fill="none" stroke="#8D94FF" stroke-width="0.6"/>
+  <circle class="rg3" cx="240" cy="220" r="68"  fill="none" stroke="#8D94FF" stroke-width="0.5"/>
+  <g class="r-spin">
+    <circle class="dt" cx="240" cy="75"  r="4" fill="#3C49FF"/>
+    <circle class="dt" cx="370" cy="270" r="3" fill="#8D94FF"/>
+    <circle class="dt" cx="145" cy="325" r="3.5" fill="#3C49FF"/>
+    <circle class="dt" cx="108" cy="160" r="3"   fill="#8D94FF"/>
+  </g>
+
+  <!-- right orbit system — Learning -->
+  <circle class="rg1" cx="440" cy="220" r="145" fill="none" stroke="#8D94FF" stroke-width="0.8"/>
+  <circle class="rg2" cx="440" cy="220" r="105" fill="none" stroke="#8D94FF" stroke-width="0.6"/>
+  <circle class="rg3" cx="440" cy="220" r="68"  fill="none" stroke="#8D94FF" stroke-width="0.5"/>
+  <g class="r-spin2">
+    <circle class="dt" cx="440" cy="75"  r="4" fill="#3C49FF"/>
+    <circle class="dt" cx="570" cy="270" r="3" fill="#8D94FF"/>
+    <circle class="dt" cx="335" cy="325" r="3.5" fill="#3C49FF"/>
+    <circle class="dt" cx="315" cy="150" r="3"   fill="#8D94FF"/>
+  </g>
+
+  <!-- intersection connector dot -->
+  <circle cx="340" cy="220" r="5" fill="#DFE1FF" stroke="#8D94FF" stroke-width="1"/>
+
+  <!-- left core — Communication -->
+  <circle cx="240" cy="220" r="46" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1.2"/>
+  <circle cx="240" cy="220" r="38" fill="none" stroke="#8D94FF" stroke-width="0.5" opacity=".4"/>
+  <text x="240" y="215" text-anchor="middle" font-size="8" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">COMM</text>
+  <text x="240" y="228" text-anchor="middle" font-size="7" fill="#8D94FF" font-family="'Outfit',system-ui">platform</text>
+
+  <!-- right core — Learning -->
+  <circle cx="440" cy="220" r="46" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1.2"/>
+  <circle cx="440" cy="220" r="38" fill="none" stroke="#8D94FF" stroke-width="0.5" opacity=".4"/>
+  <text x="440" y="215" text-anchor="middle" font-size="8" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">LEARNING</text>
+  <text x="440" y="228" text-anchor="middle" font-size="7" fill="#8D94FF" font-family="'Outfit',system-ui">ecosystem</text>
+
+  <!-- top labels -->
+  <text x="240" y="46" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.14em" fill="#3C49FF" font-family="'Outfit',system-ui">BLUEJEANS BY VERIZON</text>
+  <text x="440" y="46" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">900+ components</text>
+
+  <!-- bottom stat nodes -->
+  <rect x="58"  y="360" width="110" height="48" rx="8" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+  <text x="113" y="381" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">PANDEMIC</text>
+  <text x="113" y="396" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">defining chapter</text>
+
+  <rect x="202" y="360" width="110" height="48" rx="8" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+  <text x="257" y="381" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">ENTERPRISE</text>
+  <text x="257" y="396" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">cross-platform</text>
+
+  <rect x="368" y="360" width="110" height="48" rx="8" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+  <text x="423" y="381" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">SCALE</text>
+  <text x="423" y="396" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">millions of users</text>
+
+  <rect x="512" y="360" width="110" height="48" rx="8" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+  <text x="567" y="381" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">BEHAVIOR</text>
+  <text x="567" y="396" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">emotional design</text>
+
+</svg>
+</div>

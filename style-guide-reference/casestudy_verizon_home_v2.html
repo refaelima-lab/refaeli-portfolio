@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verizon Home App · Case Study · Refaeli Ma</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --ink:#181820;
+  --ink-mid:#3a3a48;
+  --ink-light:#888;
+  --ink-xlight:#bbc;
+  --rule:#DFE1FF;
+  --accent:#3C49FF;
+  --accent-mid:#8D94FF;
+  --accent-soft:#f4f4ff;
+  --page:#fafafa;
+  --warm:#f7f6f2;
+  --sans:'Outfit',system-ui,sans-serif;
+  --serif:'DM Serif Display',Georgia,serif;
+}
+
+html{background:#0f0f17;scroll-behavior:smooth;}
+body{font-family:var(--sans);color:var(--ink);background:var(--page);font-size:10pt;line-height:1.6;overflow-x:hidden;}
+a{color:var(--accent);text-decoration:none;}
+
+/* PROGRESS */
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--accent);width:0%;z-index:200;transition:width .08s linear;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:180;
+  padding:.9rem 3rem;
+  display:flex;justify-content:space-between;align-items:center;
+  transition:background .3s,border-color .3s;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled{background:rgba(250,250,250,.92);backdrop-filter:blur(14px);border-bottom-color:var(--rule);}
+.nav-back{font-size:7.5pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-light);transition:color .2s;}
+.nav-back:hover{color:var(--accent);}
+.nav-label{font-size:7.5pt;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-xlight);}
+
+/* CURSOR */
+#cur-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:999;transition:transform .12s;}
+#cur-ring{width:28px;height:28px;border:1px solid var(--accent-mid);border-radius:50%;position:fixed;pointer-events:none;z-index:998;opacity:.45;transition:width .22s,height .22s,opacity .22s;}
+
+/* SCROLL REVEAL */
+.r{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;}
+.r.on{opacity:1;transform:none;}
+.d1{transition-delay:.08s;} .d2{transition-delay:.16s;} .d3{transition-delay:.24s;} .d4{transition-delay:.32s;} .d5{transition-delay:.4s;}
+
+/* HERO */
+.hero{
+  min-height:100vh;background:#0f0f17;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;padding:7rem 3rem 5rem;
+}
+.hero-dots{
+  position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(141,148,255,.22) 1px,transparent 1px);
+  background-size:24px 24px;
+  pointer-events:none;
+}
+.hero-glow{
+  position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);
+  width:600px;height:400px;
+  background:radial-gradient(ellipse,rgba(60,73,255,.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-inner{position:relative;z-index:2;max-width:900px;width:100%;margin:0 auto;text-align:center;}
+.hero-eyebrow{
+  font-size:7pt;font-weight:600;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--accent-mid);margin-bottom:1.6rem;
+  opacity:0;transform:translateY(14px);animation:fu .6s .15s forwards;
+}
+.hero-h1{
+  font-family:var(--serif);font-size:clamp(34pt,5.5vw,58pt);
+  font-weight:400;color:#fff;line-height:1.06;margin-bottom:1.6rem;
+  opacity:0;transform:translateY(20px);animation:fu .8s .3s forwards;
+}
+.hero-h1 em{font-style:italic;color:var(--accent-mid);}
+.hero-sub{
+  font-size:11pt;font-weight:300;color:rgba(255,255,255,.45);
+  max-width:520px;margin:0 auto 3rem;line-height:1.75;
+  opacity:0;transform:translateY(14px);animation:fu .7s .5s forwards;
+}
+.hero-chips{
+  display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:4rem;
+  opacity:0;animation:fu .6s .65s forwards;
+}
+.chip{
+  padding:.35rem 1.1rem;border:1px solid rgba(141,148,255,.3);border-radius:100px;
+  font-size:7.5pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(141,148,255,.8);
+}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:rgba(141,148,255,.12);border-radius:12px;overflow:hidden;
+  opacity:0;animation:fu .7s .8s forwards;
+}
+.hero-stat{
+  background:#0f0f17;padding:1.8rem 1.5rem;text-align:center;
+  transition:background .25s;
+}
+.hero-stat:hover{background:#181828;}
+.hs-num{font-family:var(--serif);font-size:26pt;color:#fff;line-height:1;margin-bottom:.4rem;}
+.hs-label{font-size:7pt;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(141,148,255,.6);}
+
+/* SECTION SHELL */
+.sec{padding:6.5rem 3rem;}
+.sec-inner{max-width:980px;margin:0 auto;}
+.sec-wide{max-width:1100px;margin:0 auto;}
+
+/* CHAPTER / TITLES */
+.ch{
+  font-size:7pt;font-weight:600;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--accent-mid);margin-bottom:.8rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+.ch::after{content:'';display:block;height:1px;width:36px;background:var(--rule);}
+h2.st{font-family:var(--serif);font-size:clamp(20pt,3vw,30pt);font-weight:400;color:var(--ink);line-height:1.18;margin-bottom:1.4rem;}
+h2.st em{font-style:italic;color:var(--accent);}
+h2.st-light{font-family:var(--serif);font-size:clamp(20pt,3vw,30pt);font-weight:400;color:#fff;line-height:1.18;margin-bottom:1.4rem;}
+h2.st-light em{font-style:italic;color:var(--accent-mid);}
+
+.body-p{font-size:9.8pt;font-weight:300;color:var(--ink-mid);line-height:1.8;margin-bottom:1.1rem;}
+.body-p strong{font-weight:500;color:var(--ink);}
+.body-p-light{font-size:9.8pt;font-weight:300;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:1.1rem;}
+
+/* PULLQUOTE */
+.pq{
+  border-left:3px solid var(--accent);background:var(--accent-soft);
+  padding:1.4rem 2rem;border-radius:0 10px 10px 0;margin:2.5rem 0;
+}
+.pq p{font-family:var(--serif);font-size:13.5pt;font-style:italic;color:var(--ink-mid);line-height:1.55;}
+.pq cite{display:block;font-size:7pt;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-mid);margin-top:.7rem;font-style:normal;}
+
+/* TWO COL */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;}
+
+/* INSIGHT CARDS */
+.ic{
+  background:#fff;border:1px solid var(--rule);border-radius:12px;
+  padding:1.6rem;cursor:default;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1),border-color .3s,box-shadow .3s;
+}
+.ic:hover{transform:translateY(-5px);border-color:var(--accent-mid);box-shadow:0 12px 36px rgba(60,73,255,.08);}
+.ic-icon{
+  width:34px;height:34px;border-radius:8px;background:var(--accent-soft);
+  display:flex;align-items:center;justify-content:center;margin-bottom:.9rem;
+}
+.ic-icon svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.ic-label{font-size:6.8pt;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:.4rem;}
+.ic-text{font-size:8.8pt;font-weight:300;color:var(--ink-mid);line-height:1.6;}
+.ic-text strong{font-weight:500;color:var(--ink);}
+
+/* STRATEGY DARK CARDS */
+.sc{
+  background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.15);
+  border-radius:12px;padding:2rem;cursor:default;position:relative;overflow:hidden;
+  transition:border-color .3s,background .3s;
+}
+.sc:hover{border-color:rgba(141,148,255,.4);background:rgba(60,73,255,.06);}
+.sc-n{
+  font-family:var(--serif);font-size:44pt;color:rgba(141,148,255,.1);
+  line-height:1;position:absolute;top:.2rem;right:1.2rem;
+  transition:color .3s;pointer-events:none;
+}
+.sc:hover .sc-n{color:rgba(141,148,255,.18);}
+.sc-title{font-size:9.5pt;font-weight:600;color:#fff;margin-bottom:.6rem;letter-spacing:.02em;}
+.sc-body{font-size:8.5pt;font-weight:300;color:rgba(255,255,255,.5);line-height:1.65;}
+
+/* OUTCOME CARDS */
+.oc{
+  background:#fff;border:1px solid var(--rule);border-radius:12px;
+  padding:1.8rem 1.2rem;text-align:center;cursor:default;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
+}
+.oc:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(60,73,255,.1);}
+.oc-num{font-family:var(--serif);font-size:26pt;color:var(--accent);line-height:1;margin-bottom:.45rem;}
+.oc-label{font-size:7.2pt;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-light);line-height:1.5;}
+
+/* TIMELINE */
+.tl{position:relative;padding-left:1.8rem;margin-top:2.5rem;}
+.tl::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--rule);}
+.tl-item{position:relative;margin-bottom:2.2rem;padding-left:1.4rem;cursor:default;}
+.tl-item::before{
+  content:'';position:absolute;left:-2.3rem;top:.3rem;
+  width:8px;height:8px;border-radius:50%;background:#fff;
+  border:1.5px solid var(--accent-mid);
+  transition:background .2s,transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.tl-item:hover::before{background:var(--accent);transform:scale(1.5);}
+.tl-phase{font-size:6.5pt;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:.25rem;}
+.tl-title{font-size:10pt;font-weight:500;color:var(--ink);margin-bottom:.35rem;}
+.tl-body{font-size:8.8pt;font-weight:300;color:var(--ink-mid);line-height:1.65;max-width:500px;}
+
+/* LEARNED LIST */
+.ll{list-style:none;margin-top:1.4rem;}
+.ll li{
+  position:relative;padding:.95rem 0 .95rem 1.6rem;
+  border-bottom:1px solid var(--rule);
+  font-size:9.2pt;font-weight:300;color:var(--ink-mid);line-height:1.6;cursor:default;
+  transition:color .2s;
+}
+.ll li:hover{color:var(--ink);}
+.ll li::before{
+  content:'';position:absolute;left:0;top:1.2rem;
+  width:5px;height:5px;border-radius:50%;background:var(--accent-mid);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1),background .2s;
+}
+.ll li:hover::before{transform:scale(1.7);background:var(--accent);}
+.ll li strong{font-weight:500;color:var(--ink);}
+
+/* ─────────────────────────────────────────────
+   PHONE FRAME + UI MOCKUPS
+───────────────────────────────────────────── */
+
+.phone-scene{
+  display:flex;gap:3rem;align-items:flex-start;justify-content:center;
+  padding:3rem 0;flex-wrap:wrap;
+}
+
+.phone-frame{
+  width:240px;flex-shrink:0;
+  background:#1a1a24;
+  border-radius:38px;
+  padding:10px;
+  box-shadow:0 40px 80px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.06);
+  position:relative;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.phone-frame:hover{transform:translateY(-8px) scale(1.02);}
+.phone-frame.offset-up{transform:translateY(-24px);}
+.phone-frame.offset-up:hover{transform:translateY(-32px) scale(1.02);}
+.phone-notch{
+  width:80px;height:22px;background:#0f0f17;
+  border-radius:0 0 14px 14px;margin:0 auto 0;
+  position:relative;z-index:2;
+}
+.phone-screen{
+  background:#fff;border-radius:30px;overflow:hidden;
+  position:relative;
+}
+.phone-label{
+  font-size:6.8pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-xlight);text-align:center;margin-top:1rem;
+}
+
+/* UI: STATUS BAR */
+.ui-status{
+  background:#f5f6ff;padding:6px 14px 4px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.ui-time{font-size:8pt;font-weight:600;color:#1a1a2e;}
+.ui-icons{display:flex;gap:4px;align-items:center;}
+.ui-icon-bar{width:14px;height:8px;display:flex;gap:1.5px;align-items:flex-end;}
+.ui-bar{width:2.5px;background:#1a1a2e;border-radius:1px;}
+
+/* ── SCREEN 1: HOME DASHBOARD ── */
+.screen-home{background:#f5f6ff;}
+.home-header{padding:14px 16px 10px;background:#f5f6ff;}
+.home-greeting{font-size:8.5pt;font-weight:300;color:#666;margin-bottom:1px;}
+.home-name{font-size:13pt;font-weight:600;color:#181820;letter-spacing:-.01em;}
+.home-status-card{
+  margin:0 10px 10px;background:#fff;border-radius:16px;
+  padding:12px 14px;
+  box-shadow:0 2px 12px rgba(60,73,255,.08);
+}
+.hsc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.hsc-label{font-size:6.5pt;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#8D94FF;}
+.hsc-badge{
+  font-size:6pt;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  background:#e8ffef;color:#1a7a3c;border-radius:100px;padding:2px 7px;
+}
+.hsc-speed{font-size:22pt;font-weight:200;color:#181820;line-height:1;letter-spacing:-.02em;}
+.hsc-unit{font-size:7.5pt;font-weight:400;color:#888;margin-left:2px;}
+.hsc-bar-wrap{background:#eef;border-radius:4px;height:3px;margin-top:8px;}
+.hsc-bar-fill{height:3px;border-radius:4px;background:linear-gradient(90deg,#3C49FF,#8D94FF);width:72%;}
+.hsc-sub{font-size:6.5pt;font-weight:400;color:#aab;margin-top:5px;}
+
+.home-ai-card{
+  margin:0 10px 10px;
+  background:linear-gradient(135deg,#3C49FF 0%,#6B74FF 100%);
+  border-radius:16px;padding:12px 14px;position:relative;overflow:hidden;
+}
+.hac-glow{
+  position:absolute;right:-20px;top:-20px;width:80px;height:80px;
+  border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none;
+}
+.hac-label{font-size:6.5pt;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:5px;}
+.hac-msg{font-size:8.5pt;font-weight:400;color:#fff;line-height:1.45;margin-bottom:8px;}
+.hac-cta{
+  display:inline-block;font-size:7pt;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:#fff;
+  border:1px solid rgba(255,255,255,.35);border-radius:6px;
+  padding:4px 10px;
+}
+
+.home-quick{margin:0 10px 10px;}
+.hq-label{font-size:6.5pt;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#aab;margin-bottom:7px;padding:0 2px;}
+.hq-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.hq-btn{
+  background:#fff;border-radius:12px;padding:10px 10px;
+  border:1px solid #eef;
+  display:flex;align-items:center;gap:7px;
+}
+.hq-dot{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.hq-text{font-size:7.5pt;font-weight:500;color:#181820;line-height:1.3;}
+
+.home-nav{
+  display:flex;justify-content:space-around;padding:8px 6px 10px;
+  background:#fff;border-top:1px solid #eef;
+}
+.hn-item{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.hn-icon{width:18px;height:18px;}
+.hn-label{font-size:5.5pt;font-weight:500;color:#aab;letter-spacing:.06em;text-transform:uppercase;}
+.hn-label.active{color:var(--accent);}
+
+/* ── SCREEN 2: AI ADVISOR ── */
+.screen-ai{background:#fff;}
+.ai-header{
+  background:#3C49FF;padding:14px 16px 16px;
+  position:relative;overflow:hidden;
+}
+.ah-dots{
+  position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,.12) 1px,transparent 1px);
+  background-size:14px 14px;
+}
+.ah-back{
+  display:flex;align-items:center;gap:5px;
+  font-size:7pt;font-weight:500;color:rgba(255,255,255,.6);
+  margin-bottom:10px;position:relative;z-index:2;
+}
+.ah-title{font-size:13pt;font-weight:600;color:#fff;position:relative;z-index:2;margin-bottom:2px;}
+.ah-sub{font-size:7.5pt;font-weight:300;color:rgba(255,255,255,.6);position:relative;z-index:2;}
+
+.ai-score-row{display:flex;gap:8px;padding:10px 12px;background:#f5f6ff;}
+.asr-card{
+  flex:1;background:#fff;border-radius:10px;padding:8px 10px;
+  border:1px solid #eef;
+}
+.asr-val{font-size:14pt;font-weight:600;color:#181820;line-height:1;margin-bottom:2px;}
+.asr-val.good{color:#1a7a3c;}
+.asr-val.warn{color:#d4660a;}
+.asr-label{font-size:6pt;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#aab;}
+
+.ai-insight-list{padding:10px 12px;}
+.ail-label{font-size:6.5pt;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#aab;margin-bottom:8px;}
+.ail-item{
+  display:flex;align-items:flex-start;gap:9px;
+  background:#fff;border-radius:12px;padding:10px 12px;
+  border:1px solid #eef;margin-bottom:7px;
+}
+.ail-icon{
+  width:28px;height:28px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+}
+.ail-body{}
+.ail-title{font-size:8pt;font-weight:600;color:#181820;margin-bottom:2px;line-height:1.3;}
+.ail-sub{font-size:7pt;font-weight:300;color:#888;line-height:1.4;}
+.ail-cta{
+  display:inline-block;margin-top:5px;
+  font-size:6.5pt;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:#3C49FF;
+}
+
+/* ── SCREEN 3: SELF-HEALING / ALERTS ── */
+.screen-heal{background:#fff;}
+.heal-header{padding:14px 16px 12px;background:#fff;border-bottom:1px solid #f0f0f8;}
+.hh-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.hh-title{font-size:12pt;font-weight:600;color:#181820;margin-bottom:2px;}
+.hh-sub{font-size:7.5pt;font-weight:300;color:#888;}
+.hh-badge{
+  font-size:6.5pt;font-weight:600;
+  background:#FFF4E0;color:#C75B00;
+  border-radius:8px;padding:3px 8px;
+  letter-spacing:.08em;
+}
+
+.heal-alert{
+  margin:10px;border-radius:14px;overflow:hidden;
+  border:1px solid #FFE0B2;
+}
+.ha-top{
+  background:#FFF8F0;padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+}
+.ha-icon{
+  width:30px;height:30px;border-radius:9px;background:#FF9800;
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;
+}
+.ha-text{}
+.ha-title{font-size:8.5pt;font-weight:600;color:#181820;margin-bottom:1px;}
+.ha-sub{font-size:7pt;font-weight:300;color:#888;}
+.ha-action{
+  background:#FF9800;padding:9px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.ha-act-label{font-size:7.5pt;font-weight:600;color:#fff;letter-spacing:.04em;}
+.ha-act-icon{font-size:12px;color:rgba(255,255,255,.8);}
+
+.heal-resolved{
+  margin:0 10px 10px;background:#f0fff6;border-radius:12px;
+  padding:10px 12px;border:1px solid #b3e5c8;
+  display:flex;align-items:center;gap:9px;
+}
+.hr-icon{font-size:16px;}
+.hr-title{font-size:8pt;font-weight:600;color:#1a7a3c;margin-bottom:1px;}
+.hr-sub{font-size:7pt;font-weight:300;color:#4a9966;}
+
+.heal-history{padding:0 10px 10px;}
+.hhi-label{font-size:6.5pt;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#aab;margin-bottom:8px;}
+.hhi-row{
+  display:flex;align-items:center;gap:9px;padding:7px 0;
+  border-bottom:1px solid #f0f0f8;
+}
+.hhi-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.hhi-text{font-size:7.5pt;font-weight:400;color:#555;flex:1;}
+.hhi-time{font-size:6.5pt;color:#aab;}
+
+/* FEATURE SHOWCASE SECTION */
+.feature-sec{background:var(--warm);}
+.feature-item{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:5rem;align-items:center;margin-bottom:5rem;
+  padding-bottom:5rem;border-bottom:1px solid var(--rule);
+}
+.feature-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.feature-item.flip{direction:rtl;}
+.feature-item.flip > *{direction:ltr;}
+.fi-copy{}
+.fi-num{
+  font-family:var(--serif);font-size:56pt;color:rgba(60,73,255,.07);
+  line-height:1;margin-bottom:-.6rem;
+}
+.fi-label{font-size:6.8pt;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:.6rem;}
+.fi-title{font-family:var(--serif);font-size:18pt;color:var(--ink);line-height:1.2;margin-bottom:1rem;}
+.fi-body{font-size:9pt;font-weight:300;color:var(--ink-mid);line-height:1.75;margin-bottom:1.2rem;}
+.fi-body strong{font-weight:500;color:var(--ink);}
+.fi-why{
+  background:var(--accent-soft);border-left:2.5px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:.9rem 1.2rem;
+  font-size:8.5pt;font-weight:300;color:var(--ink-mid);line-height:1.6;font-style:italic;
+}
+.fi-why strong{font-weight:500;color:var(--ink);font-style:normal;}
+
+/* ONBOARDING SCREENS: inline strip */
+.onboard-strip{
+  display:flex;gap:1.5rem;overflow-x:auto;padding:1rem 0;
+  scrollbar-width:none;
+}
+.onboard-strip::-webkit-scrollbar{display:none;}
+
+/* MINI PHONE */
+.phone-mini{
+  width:160px;flex-shrink:0;
+  background:#1a1a24;border-radius:26px;padding:7px;
+  box-shadow:0 20px 50px rgba(0,0,0,.25),0 0 0 1px rgba(255,255,255,.06);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.phone-mini:hover{transform:translateY(-6px);}
+.phone-mini .phone-notch{width:55px;height:16px;border-radius:0 0 10px 10px;}
+.phone-mini .phone-screen{border-radius:20px;}
+.phone-mini .phone-label{font-size:6pt;margin-top:.7rem;}
+
+/* ONBOARD SCREENS */
+.ob-screen{background:#f5f6ff;min-height:280px;display:flex;flex-direction:column;}
+.ob-progress{display:flex;gap:3px;padding:8px 12px 0;}
+.ob-step{flex:1;height:2.5px;border-radius:2px;background:#DFE1FF;}
+.ob-step.active{background:#3C49FF;}
+.ob-step.done{background:#8D94FF;}
+
+.ob1{padding:14px 14px 12px;background:#fff;flex:1;display:flex;flex-direction:column;}
+.ob1-icon{
+  width:40px;height:40px;border-radius:12px;background:#3C49FF;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:10px;
+}
+.ob1-title{font-size:11pt;font-weight:600;color:#181820;line-height:1.2;margin-bottom:5px;}
+.ob1-sub{font-size:7.5pt;font-weight:300;color:#888;line-height:1.45;flex:1;}
+.ob1-btn{
+  background:#3C49FF;border-radius:10px;padding:9px;
+  text-align:center;font-size:8pt;font-weight:600;color:#fff;
+  margin-top:10px;
+}
+
+.ob2{background:linear-gradient(160deg,#3C49FF 0%,#1a23cc 100%);padding:14px;flex:1;display:flex;flex-direction:column;}
+.ob2-title{font-size:10.5pt;font-weight:600;color:#fff;line-height:1.25;margin-bottom:6px;}
+.ob2-sub{font-size:7.5pt;font-weight:300;color:rgba(255,255,255,.65);line-height:1.45;flex:1;}
+.ob2-devices{display:flex;gap:5px;margin:10px 0;}
+.ob2-dev{
+  background:rgba(255,255,255,.12);border-radius:8px;padding:6px 8px;
+  flex:1;text-align:center;
+}
+.ob2-dev-icon{font-size:14px;}
+.ob2-dev-label{font-size:6pt;font-weight:500;color:rgba(255,255,255,.7);margin-top:2px;}
+.ob2-btn{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  border-radius:10px;padding:8px;text-align:center;
+  font-size:7.5pt;font-weight:600;color:#fff;
+}
+
+.ob3{background:#fff;padding:12px;flex:1;display:flex;flex-direction:column;}
+.ob3-title{font-size:10pt;font-weight:600;color:#181820;margin-bottom:8px;}
+.ob3-pref{
+  border:1.5px solid #DFE1FF;border-radius:10px;padding:8px 10px;
+  margin-bottom:6px;display:flex;align-items:center;gap:8px;
+}
+.ob3-pref.sel{border-color:#3C49FF;background:#f4f4ff;}
+.ob3-pref-dot{
+  width:20px;height:20px;border-radius:50%;border:1.5px solid #DFE1FF;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;
+}
+.ob3-pref.sel .ob3-pref-dot{border-color:#3C49FF;background:#3C49FF;color:#fff;}
+.ob3-pref-label{font-size:7.5pt;font-weight:400;color:#555;}
+.ob3-pref.sel .ob3-pref-label{font-weight:500;color:#181820;}
+.ob3-btn{
+  background:#3C49FF;border-radius:10px;padding:8px;
+  text-align:center;font-size:7.5pt;font-weight:600;color:#fff;
+  margin-top:auto;padding-top:8px;
+}
+
+/* ERROR STATE screens */
+.es-bad{background:#fff;padding:14px;display:flex;flex-direction:column;align-items:center;text-align:center;min-height:260px;justify-content:center;}
+.es-bad-icon{font-size:28px;margin-bottom:8px;opacity:.3;}
+.es-bad-title{font-size:9.5pt;font-weight:600;color:#181820;margin-bottom:5px;}
+.es-bad-body{font-size:7.5pt;font-weight:300;color:#aab;line-height:1.5;margin-bottom:12px;}
+.es-bad-btn{
+  background:#eef;border-radius:8px;padding:7px 16px;
+  font-size:7pt;font-weight:600;color:#8D94FF;letter-spacing:.08em;text-transform:uppercase;
+}
+.es-good{background:#fff;padding:14px;display:flex;flex-direction:column;min-height:260px;}
+.esg-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.esg-icon{
+  width:34px;height:34px;border-radius:10px;background:#fff8f0;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.esg-title{font-size:9pt;font-weight:600;color:#181820;}
+.esg-sub{font-size:7pt;font-weight:300;color:#aab;}
+.esg-steps{}
+.esg-step{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:7px 0;border-bottom:1px solid #f5f5f5;
+}
+.esg-step-num{
+  width:18px;height:18px;border-radius:50%;background:#3C49FF;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:6.5pt;font-weight:600;color:#fff;margin-top:1px;
+}
+.esg-step-text{font-size:7.5pt;font-weight:400;color:#555;line-height:1.4;}
+.esg-step-status{
+  margin-left:auto;font-size:6pt;font-weight:600;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0;
+}
+.status-done{color:#1a7a3c;}
+.status-active{color:#3C49FF;}
+.status-wait{color:#aab;}
+.esg-btn{
+  background:#3C49FF;border-radius:10px;padding:8px;
+  text-align:center;font-size:7.5pt;font-weight:600;color:#fff;
+  margin-top:auto;
+}
+
+/* DESIGN SYSTEM SECTION */
+.ds-sec{background:#0f0f17;}
+.ds-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2.5rem;
+}
+.ds-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.12);
+  border-radius:12px;padding:1.6rem;
+  transition:border-color .3s;
+}
+.ds-card:hover{border-color:rgba(141,148,255,.3);}
+.ds-card-label{font-size:6.8pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:.8rem;}
+.ds-card-title{font-size:10pt;font-weight:500;color:#fff;margin-bottom:.5rem;}
+.ds-card-body{font-size:8.5pt;font-weight:300;color:rgba(255,255,255,.45);line-height:1.6;}
+.ds-swatch-row{display:flex;gap:6px;margin-top:1rem;}
+.ds-swatch{width:28px;height:28px;border-radius:6px;}
+.ds-type-row{margin-top:.8rem;display:flex;flex-direction:column;gap:4px;}
+.ds-type{color:rgba(255,255,255,.7);}
+
+/* CTA */
+.cta-sec{
+  background:#0f0f17;padding:6rem 3rem;text-align:center;position:relative;overflow:hidden;
+}
+.cta-dots{
+  position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(141,148,255,.15) 1px,transparent 1px);
+  background-size:22px 22px;pointer-events:none;
+}
+.cta-glow{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:500px;height:300px;
+  background:radial-gradient(ellipse,rgba(60,73,255,.14) 0%,transparent 70%);
+  pointer-events:none;
+}
+.cta-title{font-family:var(--serif);font-size:clamp(20pt,3vw,30pt);color:#fff;margin-bottom:1rem;position:relative;z-index:2;}
+.cta-title em{font-style:italic;color:var(--accent-mid);}
+.cta-sub{font-size:9.5pt;font-weight:300;color:rgba(255,255,255,.4);margin-bottom:2.5rem;position:relative;z-index:2;}
+.cta-btn{
+  display:inline-block;padding:.85rem 2.5rem;
+  border:1px solid rgba(141,148,255,.3);border-radius:4px;
+  font-size:7.5pt;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--accent-mid);position:relative;z-index:2;
+  transition:background .25s,color .25s,border-color .25s;
+}
+.cta-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+/* ANIMS */
+@keyframes fu{to{opacity:1;transform:none;}}
+
+/* RESPONSIVE */
+@media(max-width:860px){
+  .g2,.g3,.g4,.feature-item,.feature-item.flip{grid-template-columns:1fr;direction:ltr;}
+  .g3,.g4{grid-template-columns:1fr 1fr;}
+  .hero-stats{grid-template-columns:1fr 1fr;}
+  .phone-scene{gap:1.5rem;}
+  .phone-frame{width:200px;}
+  .sec{padding:4rem 1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<nav id="nav">
+  <a href="#" class="nav-back">← Refaeli Ma</a>
+  <span class="nav-label">Verizon Home App · Case Study</span>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Principal Experience Designer · Verizon · 2021 – Present</div>
+    <h1 class="hero-h1">
+      When the problem<br>isn't the <em>interface</em>
+    </h1>
+    <p class="hero-sub">
+      Turning a reactive utility app into a trusted AI advisor for 1M+ customers — and why the real work happened long before any screen was designed.
+    </p>
+    <div class="hero-chips">
+      <span class="chip">Product Strategy</span>
+      <span class="chip">AI Experience Design</span>
+      <span class="chip">Design Systems</span>
+      <span class="chip">Design Leadership</span>
+      <span class="chip">Mobile · iOS · Android</span>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hs-num">1M+</div>
+        <div class="hs-label">Customers at Launch</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hs-num">4.5★</div>
+        <div class="hs-label">App Store · Play Store 4.4</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hs-num">71%</div>
+        <div class="hs-label">Fewer Support Escalations</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     01 · CONTEXT
+══════════════════════════════════════════ -->
+<section class="sec" style="background:#fff;">
+  <div class="sec-inner">
+    <div class="r"><div class="ch">01 · Context</div></div>
+    <h2 class="st r d1">I didn't inherit a clean slate.<br>I inherited <em>a mess with a roadmap</em>.</h2>
+    <div class="g2" style="margin-top:2rem;">
+      <div>
+        <p class="body-p r d1">Verizon Home App was a <strong>connectivity management tool</strong> for home internet customers — router controls, device management, network diagnostics. On paper, everything a customer would need. In practice, it was a product built to reduce call-center volume, not to serve people.</p>
+        <p class="body-p r d2">That one distinction — cost deflection versus customer trust — was embedded in every decision: the information hierarchy, the error states, the onboarding flow. The app was built to make customers stop calling. Not to make them feel capable.</p>
+        <p class="body-p r d3">When I joined, there were <strong>1,600+ "app unusable" tickets per release cycle.</strong> Teams had tried patching individual screens. Nobody had asked the harder question.</p>
+      </div>
+      <div>
+        <p class="body-p r d2">My first three weeks weren't in Figma. I sat with support teams, read customer transcripts, audited 18 months of release notes, and met with every PM and engineering lead I could find.</p>
+        <p class="body-p r d3">What I found: <strong>eleven teams working in parallel, no shared design language, no defined success metric from the customer's perspective,</strong> and an AI strategy that existed in a slide deck but had no design tether.</p>
+        <div class="pq r d4">
+          <p>Most products fail because they solve the wrong thing beautifully. I design systems that resolve what matters, not interfaces that mask it. Good design is invisible. It shapes behavior, until the right thing feels inevitable.</p>
+          <cite>Design Philosophy · Refaeli Ma</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     02 · THE REAL PROBLEMS
+══════════════════════════════════════════ -->
+<section class="sec" style="background:var(--warm);">
+  <div class="sec-inner">
+    <div class="r"><div class="ch">02 · The Problem Beneath the Problem</div></div>
+    <h2 class="st r d1">Three failure patterns.<br>None of them were <em>about design</em>.</h2>
+    <p class="body-p r d2" style="max-width:580px;margin-bottom:2.5rem;">Through research synthesis, customer interviews, and competitive analysis I mapped what was actually breaking. The answers weren't in the UI — they were upstream, in strategy and operating model.</p>
+    <div class="g3">
+      <div class="ic r d1">
+        <div class="ic-icon">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <div class="ic-label">Reactive, not proactive</div>
+        <p class="ic-text">The app only surfaced when something broke. No ambient presence, no guidance during the calm moments when customers were most receptive to building a relationship with the product.</p>
+      </div>
+      <div class="ic r d2">
+        <div class="ic-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="ic-label">Error states destroyed trust</div>
+        <p class="ic-text">When the app failed, it gave customers nothing — no context, no next action, no reassurance. <strong>Silence reads as incompetence.</strong> Support tickets spiked within 48 hours of every release.</p>
+      </div>
+      <div class="ic r d3">
+        <div class="ic-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="ic-label">11 teams, no shared language</div>
+        <p class="ic-text">Every team was solving the same interaction problems in isolation. Without shared components or principles, every sprint added more debt. <strong>The experience felt incoherent because it was.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     03 · MY ROLE
+══════════════════════════════════════════ -->
+<section class="sec" style="background:#0f0f17;">
+  <div class="sec-inner">
+    <div class="r"><div class="ch" style="color:var(--accent-mid);">03 · My Role</div></div>
+    <h2 class="st-light r d1">Principal-level design isn't<br><em>the best individual contributor</em><br>in the room.</h2>
+    <p class="body-p-light r d2" style="max-width:560px;margin-bottom:2.5rem;">It's changing how decisions get made. Not just what the decisions are. Here's how I framed my mandate — and how that shaped what I prioritized.</p>
+    <div class="g2" style="gap:3rem;">
+      <div class="r d1">
+        <div class="sc" style="margin-bottom:1.2rem;">
+          <div class="sc-n">01</div>
+          <div class="sc-title">Redefine the product's reason to exist</div>
+          <p class="sc-body">Before a single screen, I aligned leadership around a new north star: shift from "reduce calls" to "build trust." This reframed priorities across PM, engineering, and content simultaneously.</p>
+        </div>
+        <div class="sc" style="margin-bottom:1.2rem;">
+          <div class="sc-n">02</div>
+          <div class="sc-title">Design the operating model, not just the product</div>
+          <p class="sc-body">Established cross-functional rituals — design critiques, shared component libraries, joint sprint reviews — that let 11 teams move with coherence instead of just speed.</p>
+        </div>
+      </div>
+      <div class="r d2">
+        <div class="sc" style="margin-bottom:1.2rem;">
+          <div class="sc-n">03</div>
+          <div class="sc-title">Give the AI strategy a design tether</div>
+          <p class="sc-body">Defined what AI-enabled experience actually meant: proactive, contextual, never novelty for its own sake. Established the principle — does this make the right action feel inevitable? If not, it doesn't ship.</p>
+        </div>
+        <div class="sc">
+          <div class="sc-n">04</div>
+          <div class="sc-title">Build a team that doesn't need me in every room</div>
+          <p class="sc-body">Mentored by asking better questions, not giving answers. Established critique rituals that raised craft standards without gatekeeping. The goal was a team that could decide without me.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     04 · APPROACH TIMELINE
+══════════════════════════════════════════ -->
+<section class="sec" style="background:#fff;">
+  <div class="sec-inner">
+    <div class="g2">
+      <div>
+        <div class="r"><div class="ch">04 · Approach</div></div>
+        <h2 class="st r d1">Sequence matters<br>as much as <em>craft</em>.</h2>
+        <p class="body-p r d2">The order in which I attacked problems was as important as how I solved them. Fix trust first. Build infrastructure before features. Earn the room before redefining it.</p>
+      </div>
+      <div class="tl r d1">
+        <div class="tl-item r d1">
+          <div class="tl-phase">Months 1–2</div>
+          <div class="tl-title">Listen before designing</div>
+          <p class="tl-body">Embedded in support, interviewed engineers, audited 18 months of release notes. Built a shared picture of the problem before proposing anything — this credibility lasted years.</p>
+        </div>
+        <div class="tl-item r d2">
+          <div class="tl-phase">Months 3–4</div>
+          <div class="tl-title">Fix the trust layer</div>
+          <p class="tl-body">Redesigned error states and onboarding before building anything new. Trust is cumulative. One bad moment erases ten good ones. We stopped the bleeding first.</p>
+        </div>
+        <div class="tl-item r d3">
+          <div class="tl-phase">Months 5–10</div>
+          <div class="tl-title">Build the infrastructure</div>
+          <p class="tl-body">A 900+ component system, cross-platform standards, shared principles. Slowed down initially; by release 4, every team was significantly faster.</p>
+        </div>
+        <div class="tl-item r d4">
+          <div class="tl-phase">Months 11+</div>
+          <div class="tl-title">Introduce intelligence</div>
+          <p class="tl-body">With a stable foundation, introduced the AI advisor model — proactive guidance, smart automation. Launched in August 2024. 1M+ customers, 4.5 App Store rating.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     05 · UI FEATURE SHOWCASE
+══════════════════════════════════════════ -->
+<section class="sec feature-sec">
+  <div class="sec-wide">
+    <div class="r"><div class="ch">05 · Design Work</div></div>
+    <h2 class="st r d1">A few of the features.<br>More importantly — <em>why</em> they exist.</h2>
+    <p class="body-p r d2" style="max-width:560px;margin-bottom:4rem;">Every screen here is the output of a strategic decision made upstream. The UI is the last 10% — the part customers see. Here's the 90% that made it worth building.</p>
+
+    <!-- FEATURE 1: HOME DASHBOARD -->
+    <div class="feature-item r">
+      <div class="fi-copy">
+        <div class="fi-num">01</div>
+        <div class="fi-label">Home Dashboard</div>
+        <h3 class="fi-title">From status board to ambient advisor</h3>
+        <p class="fi-body">The original home screen was a list of settings. It told customers their router was connected. It never told them anything <strong>actionable or useful.</strong></p>
+        <p class="fi-body">The redesign centers around three zones: network health at a glance, an AI insight card surfacing the most relevant action for that customer right now, and quick access to the tasks they return to most often.</p>
+        <div class="fi-why">
+          <strong>Design decision:</strong> The AI card gets prime real estate — above the fold, above everything. Because if we're repositioning this product as an advisor, the advice needs to be the first thing you see, not something you have to find.
+        </div>
+      </div>
+      <div class="r d2" style="display:flex;justify-content:center;">
+        <div>
+          <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <!-- STATUS BAR -->
+              <div class="ui-status">
+                <span class="ui-time">9:41</span>
+                <div class="ui-icons">
+                  <div class="ui-icon-bar">
+                    <div class="ui-bar" style="height:3px;"></div>
+                    <div class="ui-bar" style="height:5px;"></div>
+                    <div class="ui-bar" style="height:7px;"></div>
+                    <div class="ui-bar" style="height:9px;"></div>
+                  </div>
+                  <svg width="15" height="11" viewBox="0 0 15 11" fill="none"><path d="M7.5 2.2C9.8 2.2 11.9 3.1 13.4 4.6L14.5 3.5C12.7 1.7 10.2.8 7.5.8S2.3 1.7.5 3.5l1.1 1.1C3.1 3.1 5.2 2.2 7.5 2.2z" fill="#1a1a2e"/><path d="M7.5 4.8c1.5 0 2.9.6 3.9 1.6l1.1-1.1C11.2 3.9 9.4 3.2 7.5 3.2S3.8 3.9 2.5 5.3l1.1 1.1c1-1 2.4-1.6 3.9-1.6z" fill="#1a1a2e"/><circle cx="7.5" cy="9.5" r="1.5" fill="#1a1a2e"/></svg>
+                  <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="#1a1a2e" stroke-opacity=".35"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#1a1a2e"/><path d="M24 4v4a2 2 0 000-4z" fill="#1a1a2e" fill-opacity=".4"/></svg>
+                </div>
+              </div>
+              <!-- HOME SCREEN -->
+              <div class="screen-home">
+                <div class="home-header">
+                  <div class="home-greeting">Good morning,</div>
+                  <div class="home-name">Refaeli</div>
+                </div>
+                <!-- Speed card -->
+                <div class="home-status-card">
+                  <div class="hsc-top">
+                    <span class="hsc-label">Network Status</span>
+                    <span class="hsc-badge">● Excellent</span>
+                  </div>
+                  <div><span class="hsc-speed">847</span><span class="hsc-unit">Mbps</span></div>
+                  <div class="hsc-bar-wrap"><div class="hsc-bar-fill"></div></div>
+                  <div class="hsc-sub">12 devices connected · All healthy</div>
+                </div>
+                <!-- AI card -->
+                <div class="home-ai-card">
+                  <div class="hac-glow"></div>
+                  <div class="hac-label">✦ AI Advisor</div>
+                  <div class="hac-msg">Your peak usage hits 9–11 PM. Want me to prioritize streaming devices automatically?</div>
+                  <div class="hac-cta">Review suggestion →</div>
+                </div>
+                <!-- Quick actions -->
+                <div class="home-quick">
+                  <div class="hq-label">Quick Access</div>
+                  <div class="hq-grid">
+                    <div class="hq-btn">
+                      <div class="hq-dot" style="background:#f0f4ff;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3C49FF" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                      <span class="hq-text">Devices</span>
+                    </div>
+                    <div class="hq-btn">
+                      <div class="hq-dot" style="background:#fff0f6;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e0356b" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+                      <span class="hq-text">Guest Wi-Fi</span>
+                    </div>
+                    <div class="hq-btn">
+                      <div class="hq-dot" style="background:#f0fff4;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1a7a3c" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                      <span class="hq-text">Speed Test</span>
+                    </div>
+                    <div class="hq-btn">
+                      <div class="hq-dot" style="background:#fff8f0;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d4660a" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+                      <span class="hq-text">Support</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Bottom Nav -->
+                <div class="home-nav">
+                  <div class="hn-item"><svg class="hn-icon" viewBox="0 0 24 24" fill="none" stroke="#3C49FF" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><span class="hn-label active">Home</span></div>
+                  <div class="hn-item"><svg class="hn-icon" viewBox="0 0 24 24" fill="none" stroke="#aab" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/></svg><span class="hn-label">Devices</span></div>
+                  <div class="hn-item"><svg class="hn-icon" viewBox="0 0 24 24" fill="none" stroke="#aab" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="hn-label">Security</span></div>
+                  <div class="hn-item"><svg class="hn-icon" viewBox="0 0 24 24" fill="none" stroke="#aab" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg><span class="hn-label">Account</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-label">Home Dashboard</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- FEATURE 2: AI ADVISOR -->
+    <div class="feature-item flip r">
+      <div class="fi-copy">
+        <div class="fi-num">02</div>
+        <div class="fi-label">AI Network Advisor</div>
+        <h3 class="fi-title">Intelligence that earns its place</h3>
+        <p class="fi-body">The AI strategy existed as a slide deck. It had no design expression — no clear answer to "what does this actually look like, feel like, or say?" My job was to give it one.</p>
+        <p class="fi-body">The Advisor is not a chatbot. It's a <strong>contextual intelligence layer</strong> that monitors network health, usage patterns, and device behavior to surface the right insight at the right moment — in plain language, with a clear next action.</p>
+        <div class="fi-why">
+          <strong>Design principle:</strong> AI earns trust through restraint. One well-timed insight beats ten generic ones. We established a strict relevance threshold — if an insight doesn't change what a customer would do, it doesn't surface.
+        </div>
+      </div>
+      <div class="r d2" style="display:flex;justify-content:center;">
+        <div>
+          <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="ui-status">
+                <span class="ui-time">9:41</span>
+                <div class="ui-icons">
+                  <div class="ui-icon-bar">
+                    <div class="ui-bar" style="height:3px;"></div>
+                    <div class="ui-bar" style="height:5px;"></div>
+                    <div class="ui-bar" style="height:7px;"></div>
+                    <div class="ui-bar" style="height:9px;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="screen-ai">
+                <div class="ai-header">
+                  <div class="ah-dots"></div>
+                  <div class="ah-back">← Network</div>
+                  <div class="ah-title">AI Advisor</div>
+                  <div class="ah-sub">Personalized for your home</div>
+                </div>
+                <div class="ai-score-row">
+                  <div class="asr-card">
+                    <div class="asr-val good">94</div>
+                    <div class="asr-label">Health Score</div>
+                  </div>
+                  <div class="asr-card">
+                    <div class="asr-val">847<span style="font-size:7pt;font-weight:400;color:#888;">Mbps</span></div>
+                    <div class="asr-label">Avg Speed</div>
+                  </div>
+                  <div class="asr-card">
+                    <div class="asr-val warn">3</div>
+                    <div class="asr-label">Suggestions</div>
+                  </div>
+                </div>
+                <div class="ai-insight-list">
+                  <div class="ail-label">✦ Insights for you</div>
+                  <div class="ail-item">
+                    <div class="ail-icon" style="background:#fff0e0;">🎯</div>
+                    <div class="ail-body">
+                      <div class="ail-title">Peak hour congestion detected</div>
+                      <div class="ail-sub">9–11 PM · Gaming &amp; streaming competing for bandwidth</div>
+                      <div class="ail-cta">Auto-prioritize →</div>
+                    </div>
+                  </div>
+                  <div class="ail-item">
+                    <div class="ail-icon" style="background:#e8f5ff;">📡</div>
+                    <div class="ail-body">
+                      <div class="ail-title">Bedroom signal weak</div>
+                      <div class="ail-sub">2 devices dropping to 2.4 GHz · Extender may help</div>
+                      <div class="ail-cta">See options →</div>
+                    </div>
+                  </div>
+                  <div class="ail-item">
+                    <div class="ail-icon" style="background:#e8fff0;">🔒</div>
+                    <div class="ail-body">
+                      <div class="ail-title">New device joined yesterday</div>
+                      <div class="ail-sub">Smart TV · Not recognized · Review access</div>
+                      <div class="ail-cta">Review →</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-label">AI Advisor</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- FEATURE 3: SELF-HEALING / ERROR STATES -->
+    <div class="feature-item r">
+      <div class="fi-copy">
+        <div class="fi-num">03</div>
+        <div class="fi-label">Self-Healing Error States</div>
+        <h3 class="fi-title">Silence was the<br>real failure</h3>
+        <p class="fi-body">The most impactful design work I did wasn't a new feature. It was redesigning what happens when something goes wrong. The old error state: a spinner, then a dead screen. <strong>That single pattern was responsible for hundreds of weekly support tickets.</strong></p>
+        <p class="fi-body">The redesigned experience treats an error as the beginning of a guided recovery — not the end of a session. Named issues, step-by-step triage, automated diagnostics, and a clear human escalation path when automation isn't enough.</p>
+        <div class="fi-why">
+          <strong>Strategic impact:</strong> "App unusable" tickets dropped from 1,600+ to under 460 per release — a 71% reduction. The fix wasn't more engineering. It was designing what recovery actually looked like.
+        </div>
+      </div>
+      <div class="r d2" style="display:flex;justify-content:center;gap:1.5rem;align-items:flex-start;">
+        <div>
+          <div class="phone-frame" style="width:175px;">
+            <div class="phone-notch" style="width:60px;height:18px;border-radius:0 0 10px 10px;"></div>
+            <div class="phone-screen">
+              <!-- BAD ERROR STATE (before) -->
+              <div style="background:#f5f5f5;padding:5px 8px;display:flex;justify-content:space-between;">
+                <span style="font-size:7pt;font-weight:600;color:#888;">9:41</span>
+              </div>
+              <div class="es-bad">
+                <div class="es-bad-icon">⚠️</div>
+                <div class="es-bad-title">Something went wrong</div>
+                <div class="es-bad-body">We couldn't connect to your network. Please try again later.</div>
+                <div class="es-bad-btn">Retry</div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-label" style="font-size:6pt;color:#e05;">Before</div>
+        </div>
+        <div>
+          <div class="phone-frame" style="width:175px;">
+            <div class="phone-notch" style="width:60px;height:18px;border-radius:0 0 10px 10px;"></div>
+            <div class="phone-screen">
+              <div class="ui-status" style="padding:4px 10px 3px;">
+                <span class="ui-time" style="font-size:7pt;">9:41</span>
+              </div>
+              <div class="screen-heal">
+                <div class="heal-header">
+                  <div class="hh-top">
+                    <div>
+                      <div class="hh-title">Connection Issue</div>
+                      <div class="hh-sub">Diagnosing your network</div>
+                    </div>
+                    <div class="hh-badge">Fixing</div>
+                  </div>
+                </div>
+                <div class="heal-resolved">
+                  <div class="hr-icon">✅</div>
+                  <div>
+                    <div class="hr-title">DNS resolved automatically</div>
+                    <div class="hr-sub">No action needed</div>
+                  </div>
+                </div>
+                <div class="heal-alert">
+                  <div class="ha-top">
+                    <div class="ha-icon">🔄</div>
+                    <div class="ha-text">
+                      <div class="ha-title">Router restart needed</div>
+                      <div class="ha-sub">Will take about 90 seconds</div>
+                    </div>
+                  </div>
+                  <div class="ha-action">
+                    <span class="ha-act-label">Restart now</span>
+                    <span class="ha-act-icon">→</span>
+                  </div>
+                </div>
+                <div class="heal-history">
+                  <div class="hhi-label">Diagnostic log</div>
+                  <div class="hhi-row"><div class="hhi-dot" style="background:#1a7a3c;"></div><span class="hhi-text">Internet signal detected</span><span class="hhi-time">0s</span></div>
+                  <div class="hhi-row"><div class="hhi-dot" style="background:#1a7a3c;"></div><span class="hhi-text">DNS auto-fixed</span><span class="hhi-time">2s</span></div>
+                  <div class="hhi-row"><div class="hhi-dot" style="background:#d4660a;"></div><span class="hhi-text">Router state stale</span><span class="hhi-time">4s</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-label" style="font-size:6pt;color:var(--accent);">After</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- FEATURE 4: ONBOARDING -->
+    <div class="feature-item flip r">
+      <div class="fi-copy">
+        <div class="fi-num">04</div>
+        <div class="fi-label">Onboarding Redesign</div>
+        <h3 class="fi-title">The first 3 minutes<br>set everything</h3>
+        <p class="fi-body">The original onboarding was a form. Router credentials, account linking, terms. It treated activation as a task to complete, not a relationship to establish.</p>
+        <p class="fi-body">The redesign opens with <strong>what the product will do for you</strong> — not what it needs from you. Device detection is automatic. Preferences are set conversationally. By the end, customers have a personalized network without feeling like they filled out paperwork.</p>
+        <div class="fi-why">
+          <strong>Key insight from research:</strong> Customers who completed the original onboarding couldn't recall a single feature three days later. First impressions shape memory. We redesigned onboarding to be the product's first act of usefulness — not its first ask.
+        </div>
+      </div>
+      <div class="r d2">
+        <div class="onboard-strip">
+          <!-- Step 1 -->
+          <div class="phone-mini">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="ob-screen">
+                <div class="ob-progress">
+                  <div class="ob-step active"></div>
+                  <div class="ob-step"></div>
+                  <div class="ob-step"></div>
+                </div>
+                <div class="ob1">
+                  <div class="ob1-icon">🏠</div>
+                  <div class="ob1-title">Your home,<br>fully connected</div>
+                  <div class="ob1-sub">We'll set up your network, learn your devices, and keep everything running smoothly — automatically.</div>
+                  <div class="ob1-btn">Get started</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Step 2 -->
+          <div class="phone-mini" style="transform:translateY(-18px);">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="ob-screen">
+                <div class="ob-progress">
+                  <div class="ob-step done"></div>
+                  <div class="ob-step active"></div>
+                  <div class="ob-step"></div>
+                </div>
+                <div class="ob2">
+                  <div class="ob2-title">Detecting your devices automatically</div>
+                  <div class="ob2-sub">We found 12 devices on your network. Review and name them to get personalized insights.</div>
+                  <div class="ob2-devices">
+                    <div class="ob2-dev"><div class="ob2-dev-icon">📱</div><div class="ob2-dev-label">Phones · 3</div></div>
+                    <div class="ob2-dev"><div class="ob2-dev-icon">💻</div><div class="ob2-dev-label">Laptops · 4</div></div>
+                    <div class="ob2-dev"><div class="ob2-dev-icon">📺</div><div class="ob2-dev-label">TVs · 2</div></div>
+                    <div class="ob2-dev"><div class="ob2-dev-icon">🎮</div><div class="ob2-dev-label">Gaming · 1</div></div>
+                  </div>
+                  <div class="ob2-btn">Review devices →</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Step 3 -->
+          <div class="phone-mini">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="ob-screen">
+                <div class="ob-progress">
+                  <div class="ob-step done"></div>
+                  <div class="ob-step done"></div>
+                  <div class="ob-step active"></div>
+                </div>
+                <div class="ob3">
+                  <div class="ob3-title">How do you use your network?</div>
+                  <div class="ob3-pref sel">
+                    <div class="ob3-pref-dot">✓</div>
+                    <span class="ob3-pref-label">Streaming &amp; video calls</span>
+                  </div>
+                  <div class="ob3-pref sel">
+                    <div class="ob3-pref-dot">✓</div>
+                    <span class="ob3-pref-label">Gaming</span>
+                  </div>
+                  <div class="ob3-pref">
+                    <div class="ob3-pref-dot"></div>
+                    <span class="ob3-pref-label">Smart home devices</span>
+                  </div>
+                  <div class="ob3-pref">
+                    <div class="ob3-pref-dot"></div>
+                    <span class="ob3-pref-label">Work from home</span>
+                  </div>
+                  <div class="ob3-btn">Set up my network →</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:7pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-xlight);text-align:center;margin-top:.5rem;">Three-step onboarding flow</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     06 · DESIGN SYSTEM
+══════════════════════════════════════════ -->
+<section class="sec ds-sec">
+  <div class="sec-inner">
+    <div class="r"><div class="ch" style="color:var(--accent-mid);">06 · Design System</div></div>
+    <h2 class="st-light r d1">900+ components.<br>One <em>shared language</em>.</h2>
+    <p class="body-p-light r d2" style="max-width:560px;margin-bottom:.5rem;">The design system wasn't a nice-to-have. It was the infrastructure that made everything else possible. Before it existed, 11 teams were solving the same problems 11 different ways.</p>
+    <div class="ds-grid r d1">
+      <div class="ds-card">
+        <div class="ds-card-label">Foundations</div>
+        <div class="ds-card-title">Color &amp; Typography</div>
+        <p class="ds-card-body">A single token system spanning light/dark, accessibility states, and brand. Every decision traced to a principle, not a preference.</p>
+        <div class="ds-swatch-row">
+          <div class="ds-swatch" style="background:#3C49FF;"></div>
+          <div class="ds-swatch" style="background:#8D94FF;"></div>
+          <div class="ds-swatch" style="background:#f4f4ff;"></div>
+          <div class="ds-swatch" style="background:#1a7a3c;"></div>
+          <div class="ds-swatch" style="background:#d4660a;"></div>
+          <div class="ds-swatch" style="background:#181820;"></div>
+        </div>
+        <div class="ds-type-row">
+          <span class="ds-type" style="font-family:'Outfit',sans-serif;font-size:12pt;font-weight:600;letter-spacing:-.01em;">Display · Outfit 600</span>
+          <span class="ds-type" style="font-family:'Outfit',sans-serif;font-size:9pt;font-weight:300;">Body · Outfit 300</span>
+          <span class="ds-type" style="font-size:7pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(141,148,255,.6);">Label · 600 · Tracked</span>
+        </div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-label">Components</div>
+        <div class="ds-card-title">900+ Responsive Elements</div>
+        <p class="ds-card-body">Atomic components from status chips to full-screen modals — all responsive, all accessible, all connected to the same token layer. Reduced design-to-dev time by 85%.</p>
+        <div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="background:rgba(60,73,255,.12);color:#8D94FF;border-radius:6px;padding:3px 9px;font-size:7.5pt;font-weight:500;">Cards</span>
+          <span style="background:rgba(60,73,255,.12);color:#8D94FF;border-radius:6px;padding:3px 9px;font-size:7.5pt;font-weight:500;">Navigation</span>
+          <span style="background:rgba(60,73,255,.12);color:#8D94FF;border-radius:6px;padding:3px 9px;font-size:7.5pt;font-weight:500;">Modals</span>
+          <span style="background:rgba(60,73,255,.12);color:#8D94FF;border-radius:6px;padding:3px 9px;font-size:7.5pt;font-weight:500;">Forms</span>
+          <span style="background:rgba(60,73,255,.12);color:#8D94FF;border-radius:6px;padding:3px 9px;font-size:7.5pt;font-weight:500;">Status</span>
+          <span style="background:rgba(60,73,255,.12);color:#8D94FF;border-radius:6px;padding:3px 9px;font-size:7.5pt;font-weight:500;">Charts</span>
+          <span style="background:rgba(60,73,255,.12);color:#8D94FF;border-radius:6px;padding:3px 9px;font-size:7.5pt;font-weight:500;">AI surfaces</span>
+        </div>
+      </div>
+      <div class="ds-card">
+        <div class="ds-card-label">Principles</div>
+        <div class="ds-card-title">The rules behind the rules</div>
+        <p class="ds-card-body">Systems work when everyone internalizes the principles, not just the components. These three anchored every decision.</p>
+        <ul style="margin-top:1rem;list-style:none;display:flex;flex-direction:column;gap:.6rem;">
+          <li style="font-size:8pt;font-weight:300;color:rgba(255,255,255,.5);padding-left:.9rem;position:relative;"><span style="position:absolute;left:0;top:.25rem;width:4px;height:4px;background:#8D94FF;border-radius:50%;display:block;"></span>Trust before delight</li>
+          <li style="font-size:8pt;font-weight:300;color:rgba(255,255,255,.5);padding-left:.9rem;position:relative;"><span style="position:absolute;left:0;top:.25rem;width:4px;height:4px;background:#8D94FF;border-radius:50%;display:block;"></span>Invisible when working, clear when not</li>
+          <li style="font-size:8pt;font-weight:300;color:rgba(255,255,255,.5);padding-left:.9rem;position:relative;"><span style="position:absolute;left:0;top:.25rem;width:4px;height:4px;background:#8D94FF;border-radius:50%;display:block;"></span>Right thing inevitable, wrong thing effortful</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     07 · OUTCOMES
+══════════════════════════════════════════ -->
+<section class="sec" style="background:var(--accent-soft);border-top:1px solid var(--rule);">
+  <div class="sec-inner">
+    <div class="r"><div class="ch">07 · Outcomes</div></div>
+    <h2 class="st r d1">What actually <em>moved</em></h2>
+    <p class="body-p r d2" style="max-width:540px;margin-bottom:2.5rem;">The metrics that matter aren't just the ones on a dashboard. A 4.5 App Store rating means customers chose to say something positive unprompted. That's trust. That's the product.</p>
+    <div class="g4">
+      <div class="oc r d1"><div class="oc-num">1M+</div><div class="oc-label">Customers at Launch · Aug 2024</div></div>
+      <div class="oc r d2"><div class="oc-num">4.5★</div><div class="oc-label">App Store · Google Play 4.4</div></div>
+      <div class="oc r d3"><div class="oc-num">71%</div><div class="oc-label">Fewer "App Unusable" Tickets</div></div>
+      <div class="oc r d4"><div class="oc-num">85%</div><div class="oc-label">Faster Design-to-Dev Velocity</div></div>
+    </div>
+    <div class="g4" style="margin-top:1.2rem;">
+      <div class="oc r d1"><div class="oc-num">10+</div><div class="oc-label">Releases Shipped · v1.0–v2.2.1</div></div>
+      <div class="oc r d2"><div class="oc-num">900+</div><div class="oc-label">Design System Components</div></div>
+      <div class="oc r d3"><div class="oc-num">11</div><div class="oc-label">Teams on Shared Design Language</div></div>
+      <div class="oc r d4"><div class="oc-num">12%</div><div class="oc-label">Feature Adoption Increase</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     08 · REFLECTION
+══════════════════════════════════════════ -->
+<section class="sec" style="background:var(--warm);">
+  <div class="sec-inner">
+    <div class="g2">
+      <div>
+        <div class="r"><div class="ch">08 · Reflection</div></div>
+        <h2 class="st r d1">What I'd tell<br>my <em>earlier self</em></h2>
+        <p class="body-p r d2">The most important design work on this project happened before any screen existed. Defining what problem we were actually solving, and making the case for that definition — that's what made everything else possible.</p>
+        <p class="body-p r d3">The most important resource I had wasn't craft. It was trust. Trust from PMs to challenge scope. From engineers to push back on timelines. From designers to tell me when I was wrong. That trust was built slowly, through consistency, through being right sometimes and wrong gracefully the rest.</p>
+      </div>
+      <div>
+        <ul class="ll">
+          <li class="r d1"><strong>Reframe before you redesign.</strong> The prettiest solution to the wrong problem is a beautiful failure.</li>
+          <li class="r d2"><strong>Infrastructure is the work.</strong> A design system feels like overhead until it doesn't — and then it multiplies everything.</li>
+          <li class="r d3"><strong>Trust is the only metric that compounds.</strong> Every withdrawal takes ten deposits to rebuild.</li>
+          <li class="r d4"><strong>Good design is invisible.</strong> If customers notice the interface, something went wrong. Success looks like nothing at all.</li>
+          <li class="r d5"><strong>Lead toward independence.</strong> The goal is a team that doesn't need you in every room.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     CTA
+══════════════════════════════════════════ -->
+<section class="cta-sec">
+  <div class="cta-dots"></div>
+  <div class="cta-glow"></div>
+  <h2 class="cta-title r">Want the full story?<br><em>Let's talk.</em></h2>
+  <p class="cta-sub r d1">I'm happy to walk through the strategy, the system, or the process in depth.</p>
+  <a href="mailto:refaelima.work@gmail.com" class="cta-btn r d2">refaelima.work@gmail.com</a>
+</section>
+
+
+<script>
+const prog = document.getElementById('prog');
+const nav  = document.getElementById('nav');
+const dot  = document.getElementById('cur-dot');
+const ring = document.getElementById('cur-ring');
+
+let mx=0,my=0,rx=0,ry=0;
+
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  dot.style.left=(mx-2.5)+'px';
+  dot.style.top=(my-2.5)+'px';
+});
+(function lerp(){
+  rx+=(mx-rx-14)*.1;
+  ry+=(my-ry-14)*.1;
+  ring.style.left=rx+'px';
+  ring.style.top=ry+'px';
+  requestAnimationFrame(lerp);
+})();
+
+document.querySelectorAll('a,.ic,.sc,.oc,.phone-frame,.phone-mini').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='46px';ring.style.height='46px';ring.style.opacity='.7';dot.style.transform='scale(2)';});
+  el.addEventListener('mouseleave',()=>{ring.style.width='28px';ring.style.height='28px';ring.style.opacity='.45';dot.style.transform='scale(1)';});
+});
+
+window.addEventListener('scroll',()=>{
+  const t=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;
+  prog.style.width=(t/h*100)+'%';
+  nav.classList.toggle('scrolled',t>60);
+});
+
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('on'); });
+},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.r').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

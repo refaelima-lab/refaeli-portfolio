@@ -1,0 +1,467 @@
+﻿Featured Work — Verizon Home App Specification
+CASE STUDY PAGE SPECIFICATION
+Overall Purpose
+This case study is extremely important.
+It should demonstrate:
+* systems leadership
+* organizational clarity
+* operational restructuring
+* product thinking
+* ecosystem strategy
+* AI-driven vision
+* execution depth
+* interface craftsmanship
+* cross-functional alignment
+The key narrative:
+strategy grounded in execution.
+This case study should clearly communicate:
+“I’m not only defining the future. I know how to build systems that can actually land.”
+This is not:
+* speculative concept work
+* surface-level product vision
+It is:
+* operational systems design
+* product transformation
+* scalable execution
+* organizational design thinking
+* intelligent experience architecture
+________________
+
+
+STRUCTURE OVERVIEW
+This case study should be divided into TWO major chapters.
+________________
+
+
+PART 1
+FROM CHAOS TO CADENCE
+Purpose
+This chapter focuses on:
+* operational transformation
+* leadership
+* systems organization
+* design process maturity
+* scaling structure
+* solving fragmentation
+This is the:
+execution + operational leadership chapter.
+It should feel:
+* grounded
+* systematic
+* real
+* complex
+* highly operational
+________________
+
+
+PART 2
+FROM REACTIVE TO PROACTIVE
+Purpose
+This chapter focuses on:
+* product vision
+* ecosystem thinking
+* AI experience
+* household intelligence
+* emotional product positioning
+* future-state experience strategy
+This is the:
+systems vision + intelligent ecosystem chapter.
+It should feel:
+* cinematic
+* ambitious
+* emotionally intelligent
+* future-oriented
+* deeply strategic
+The pacing should intentionally slow down and breathe more here.
+This section needs:
+* larger spacing
+* visual resets
+* bold quote moments
+* immersive storytelling
+* conceptual visual support
+________________
+
+
+HERO SECTION
+Assets
+Use:
+home-banner
+________________
+
+
+Hero Requirements
+Title
+VERIZON HOME APP
+Intro Copy
+Keep short and restrained.
+Potential direction:
+Rebuilding trust inside a product users only opened when something went wrong.
+Transforming a fragmented utility into a more intelligent, proactive household experience.
+________________
+
+
+App Download Buttons
+Include:
+* iOS download button
+* Google Play download button
+Assets:
+* download_ios
+* download-google-play
+Links:
+iOS:
+ Download on the App Store
+Google Play:
+ Get it on Google Play
+________________
+
+
+Visual Direction
+The hero should feel:
+* premium
+* atmospheric
+* connected-home oriented
+* calm
+* intelligent
+* trustworthy
+Avoid:
+* overloaded dashboards
+* overly technical first impression
+* excessive metrics immediately
+________________
+
+
+PART 1 — FROM CHAOS TO CADENCE
+Core Narrative
+This section should adapt and reference:
+* the Figma presentation
+* the Home App 1.0 vision video
+* supporting assets
+* operational restructuring story
+Figma presentation:
+ Verizon Home App Presentation
+Vision video:
+assets/verizon-home-app/home-vision-video-1.mp4
+________________
+
+
+Purpose
+This chapter explains:
+* what the product environment looked like
+* where the fragmentation existed
+* how the systems were reorganized
+* how operational clarity was established
+* how design became organizational infrastructure
+________________
+
+
+Narrative Themes
+This section should heavily emphasize:
+* operational systems
+* design leadership
+* ambiguity management
+* roadmap coordination
+* design systems
+* accessibility
+* legal coordination
+* engineering collaboration
+* prioritization clarity
+* organizational cadence
+________________
+
+
+Visual Direction
+This section should feel:
+* structured
+* operational
+* layered
+* process-driven
+* system-oriented
+Potential visual treatments:
+* roadmap visualizations
+* organizational diagrams
+* workflow systems
+* design operation visuals
+* product ecosystem maps
+* review analysis visualizations
+* cadence systems
+* team alignment visuals
+________________
+
+
+Important Requirement
+Claude should reference the structure, hierarchy, and pacing from the Figma presentation.
+The goal is NOT to replicate the slides directly.
+The goal is to:
+* reinterpret
+* restructure
+* elevate
+* cinematicize
+* integrate into the portfolio system
+The case study should feel:
+designed for web immersion, not slide presentation.
+________________
+
+
+PART 2 — FROM REACTIVE TO PROACTIVE
+Purpose
+This chapter is the future-state vision.
+It explains:
+* product positioning evolution
+* ecosystem strategy
+* AI-assisted experience
+* emotional relationship design
+* household intelligence architecture
+* proactive interaction philosophy
+This section should feel:
+* visionary
+* calm
+* highly intentional
+* emotionally intelligent
+* believable
+* operationally grounded
+NOT:
+* speculative futurism
+* AI hype
+* conceptual fantasy
+________________
+
+
+Important Direction
+This section requires:
+* pacing
+* breathing room
+* large quote moments
+* cinematic transitions
+* immersive typography
+* conceptual visualization
+The emotional rhythm should slow down intentionally.
+________________
+
+
+Reference Video
+Reference:
+from-reactive-to-proactive-vision-video
+The pacing, framing, and narrative style from this video should heavily influence:
+* storytelling rhythm
+* emotional arc
+* visual pacing
+* strategic framing
+________________
+
+
+Core Mission Section
+From a Network Utility → to a Trusted Household Systems Operator
+This should become a major cinematic section.
+Potential treatment:
+* oversized typography
+* layered motion systems
+* ambient ecosystem visuals
+* gradual reveal transitions
+________________
+
+
+Dual Mission Section
+Narrative Goal
+This section explains:
+* the customer mission
+* the business mission
+* why the Home App matters strategically
+Reference visual:
+mission-reference-only
+DO NOT directly reuse visuals from the strategy deck.
+Instead:
+* reinterpret visually
+* preserve conceptual direction
+* elevate aesthetically
+________________
+
+
+Refined Core Copy
+For the Customer
+We are building an Intelligent Home OS. Not simply a connectivity utility, but a system capable of understanding, guiding, and supporting the rhythms of the household.
+For the Business
+The Home App becomes a primary gateway into the Verizon ecosystem, transforming the network from a background utility into a trusted daily companion.
+________________
+
+
+“The Real Problem” Section
+This should become a major emotional + strategic moment.
+________________
+
+
+Quote Moment
+Verizon Home App is not broken.
+It is invisible.
+This should be treated as:
+* oversized typography
+* isolated cinematic moment
+* high visual emphasis
+________________
+
+
+Supporting Narrative
+Structure these ideas into:
+* progressive storytelling blocks
+* insight systems
+* strategic reframing
+NOT giant text walls.
+________________
+
+
+Key Themes to Emphasize
+Utility products succeed quietly
+Trust matters more than engagement
+Meaning per launch > DAU
+Verizon should own intelligence, not gadget control
+The app should speak first when necessary
+Reliability builds emotional trust
+________________
+
+
+Important Quote Section
+Potential cinematic typography moment:
+“I chose Verizon because my home just works, and when it doesn’t, someone competent is watching.”
+This should become:
+* emotionally resonant
+* spacious
+* immersive
+________________
+
+
+Product Pillars Section
+Requirement
+The 4 pillars are extremely strong strategic content.
+DO NOT compress them into generic cards.
+This section should feel:
+* structured
+* executive-level
+* highly intentional
+* visually differentiated
+Potential treatments:
+* sequential reveal
+* sticky-scroll system
+* layered pillar architecture
+* animated ecosystem diagrams
+* expandable strategy modules
+________________
+
+
+Pillars
+1. Home Reliability & Resilience
+2. Household Control
+3. Invisible Security & Privacy
+4. Value Visibility & Unlocks
+Each pillar should contain:
+* what it includes
+* what it excludes
+* why it matters
+The “what it excludes” portion is especially important because it demonstrates:
+* strategic restraint
+* positioning clarity
+* product maturity
+________________
+
+
+Metrics Section
+This section is important.
+The distinction between:
+* churn reduction
+* trust preservation
+* cost-to-serve reduction
+* retention buffering
+is extremely sophisticated.
+This content should feel:
+* executive
+* analytical
+* operationally credible
+Potential treatment:
+* strategic metrics dashboard
+* layered insight visualization
+* narrative metric architecture
+Avoid:
+* startup KPI aesthetic
+________________
+
+
+Important Strategic Quote
+Potential typography moment:
+“The Home App does not prevent churn.
+It raises the bar for leaving.”
+This should be visually emphasized.
+________________
+
+
+Home App 2.0 Proposal Section
+Requirement
+This section demonstrates:
+* execution capability
+* IA thinking
+* interface systems
+* AI-assisted interaction
+* intelligent experience architecture
+________________
+
+
+Important Requirement
+Assets:
+* ia-restructure-user-intent
+* new-ia-stracture-navigation
+* problem-statement
+ARE REFERENCE MATERIAL ONLY.
+Do NOT directly place raw strategy screenshots into the portfolio.
+Instead:
+* reinterpret
+* redesign
+* cinematicize
+* simplify visually
+* integrate into the new portfolio language
+________________
+
+
+UI Showcase Section
+Assets:
+* home
+* home-assistant-default
+* devices
+* services
+Video:
+* home-assistant-prototype
+________________
+
+
+Narrative Focus
+This section proves:
+* interface execution
+* product systems thinking
+* intelligent IA
+* AI integration
+* interaction craftsmanship
+The UI should feel:
+* calm
+* trustworthy
+* assistive
+* proactive
+* intelligent
+NOT:
+* futuristic gimmick
+* AI overload
+* feature clutter
+________________
+
+
+AI Assistant Section
+This section is critical.
+The assistant should feel:
+* helpful
+* context-aware
+* trustworthy
+* operational
+* calm
+The narrative should reinforce:
+the app becoming a household advisor, not a utility dashboard.
+________________
+
+
+Emotional Goal
+The viewer should leave this case study feeling:
+“This designer can operate at every layer simultaneously: execution, systems, operations, product strategy, organizational alignment, and future-state experience vision.”

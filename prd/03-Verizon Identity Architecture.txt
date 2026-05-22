@@ -1,0 +1,100 @@
+﻿Featured Work — Verizon Identity Architecture Specification
+Homepage Featured
+Purpose
+This homepage section introduces a different kind of work.
+Unlike the BlueJeans or Verizon Home App case studies, this project is not centered around visible interfaces or polished feature execution.
+This work is about:
+* systems architecture
+* behavioral infrastructure
+* organizational thinking
+* identity systems
+* ecosystem relationships
+* AI readiness
+* invisible experience design
+The challenge is:
+making strategic systems thinking feel tangible and emotionally understandable.
+The homepage version should feel:
+* intelligent
+* architectural
+* ambitious
+* highly intentional
+* future-oriented
+* calm and confident
+________________
+
+
+Homepage Content
+Title
+VERIZON IDENTITY ARCHITECTURE
+________________
+
+
+Body Copy
+Leading the evolution of Verizon’s Identity & Profile ecosystem, designing the invisible architecture that connects households, devices, behaviors, and services into one intelligent system.
+Built to power personalization, behavioral intelligence, and AI-driven experiences across Home and Mobile, this work shifts Verizon from managing products to understanding relationships, transforming a traditional utility platform into a connected operating system for modern households.
+This work spans Unified Parental Controls, Authentication, Profile Architecture, Device Attribution, Personalization Systems, and AI-powered synthetic user frameworks, shaping the infrastructure future Verizon experiences will be built upon.
+________________
+
+
+Tags
+* EXPERIENCE ARCHITECTURE
+* IDENTITY SYSTEM
+* PLATFORM STRATEGY
+* BEHAVIORAL ARCHITECTURE
+* CONNECTED ECOSYSTEMS
+* HUMAN-CENTERED AI
+* CONTEXT-AWARE DESIGN
+* INTELLIGENT INTERFACE
+________________
+
+
+CTA
+Potential directions:
+Explore the system beneath the ecosystem →
+or
+See how identity becomes infrastructure →
+The CTA should feel:
+* conceptual
+* immersive
+* intelligent
+* curiosity-driven
+Avoid:
+* generic “View Case Study”
+* overly technical CTA wording
+________________
+
+
+Homepage Asset Direction
+Primary asset:
+assets/verizon-identity-architecture/idarch-cover
+________________
+
+
+Important Visual Requirement
+This project should NOT rely on:
+* flashy UI mockups
+* fake dashboards
+* over-rendered concept interfaces
+The strength of this work is:
+* strategic depth
+* systems thinking
+* organizational architecture
+* invisible infrastructure
+Visuals should support:
+systems relationships, not interface spectacle.
+Potential visual language:
+* connected node systems
+* household relationship maps
+* identity graphs
+* ambient data structures
+* layered profile ecosystems
+* behavioral flows
+* household intelligence diagrams
+* subtle AI ecosystem visuals
+The atmosphere should feel:
+* intelligent
+* calm
+* infrastructural
+* architectural
+* quietly futuristic
+________________

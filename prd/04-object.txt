@@ -1,0 +1,309 @@
+﻿Objects / Physical Works Section Specification
+Purpose
+This section reveals the broader creative dimension behind the digital work.
+It exists to show:
+* material thinking
+* industrial design background
+* visual experimentation
+* physical form exploration
+* emotional and aesthetic sensibility
+This section should feel less structured than the digital product work.
+The emphasis is:
+* atmosphere
+* craft
+* form
+* mood
+* physicality
+This is not a technical case study section.
+It should feel:
+* cinematic
+* tactile
+* artistic
+* immersive
+* emotionally driven
+The viewer should feel:
+“This designer thinks beyond interfaces.”
+________________
+
+
+Intro Breaker Section
+This section should begin similarly to the “MADE REAL” transition section.
+Minimal.
+Spacious.
+Atmospheric.
+________________
+
+
+Section Title
+OTHER THINGS I MAKE
+Typography should feel:
+* editorial
+* restrained
+* confident
+Avoid:
+* playful styling
+* overly artistic typography
+* decorative treatments
+________________
+
+
+Supporting Copy
+Not everything lives on a screen.
+Some ideas take shape in materials, form, and experiments.
+Tone:
+* reflective
+* calm
+* understated
+* human
+________________
+
+
+Background Direction
+Keep the atmosphere minimal and cinematic.
+Potential visual elements:
+* geometric line systems
+* subtle particle movement
+* soft gradients
+* slow ambient motion
+* abstract structural forms
+The visual system should feel connected to the rest of the portfolio while becoming:
+* softer
+* more tactile
+* more emotional
+Avoid:
+* heavy UI aesthetics
+* loud futuristic visuals
+* chaotic animation
+________________
+
+
+Gallery Experience Requirements
+Asset Location
+assets/objects/
+This section should function more like:
+* a cinematic gallery
+* a curated exhibition
+* a moving moodboard
+rather than:
+* a standard portfolio grid
+________________
+
+
+Gallery Interaction Direction
+The gallery should feel:
+* immersive
+* premium
+* scroll-driven
+* atmospheric
+* highly visual
+Potential interaction directions:
+Sticky Scroll (Preferred)
+As the user scrolls:
+* one project locks/sticks in place
+* imagery becomes immersive and large-scale
+* the next project gradually transitions upward
+* projects reveal sequentially
+This creates:
+* pacing
+* focus
+* cinematic immersion
+The scroll should feel:
+* deliberate
+* smooth
+* elegant
+Avoid:
+* abrupt snapping
+* fast transitions
+* carousel-like behavior
+________________
+
+
+
+
+Visual Composition Requirements
+This section is heavily mood-driven.
+The imagery should not simply appear on plain backgrounds.
+Instead:
+* integrate supporting atmospheric visuals
+* create cinematic environments
+* use lighting and depth
+* create emotional tone around the work
+Potential techniques:
+* layered background imagery
+* gradients
+* spatial textures
+* blurred environment references
+* reflective lighting
+* shadows and depth
+The goal is:
+make the work feel iconic and emotionally charged.
+________________
+
+
+Motion Requirements
+Motion should feel:
+* slow
+* immersive
+* premium
+* gallery-like
+Potential motion:
+* image scaling
+* depth transitions
+* layered parallax
+* atmospheric drifting
+* fade transitions
+* subtle motion blur
+Avoid:
+* aggressive interaction
+* flashy animation
+* rapid movement
+* distracting effects
+________________
+
+
+Project Structure
+Each project should contain:
+* project title
+* role
+* category
+* year
+* optional award logos
+* large cinematic visual treatment
+The typography should remain minimal so the visuals dominate.
+________________
+
+
+Projects
+LEIRA LOUNGE CHAIR
+(Add award logos from:
+assets/award-logos)
+Metadata
+Creative Director | Product Design
+2016
+Visual tone:
+* sculptural
+* premium
+* furniture editorial
+* architectural
+________________
+
+
+ACCIAIO DOLCE TOPOLOGY JEWELRY
+Metadata
+Creative Director | Product Design
+2017
+Visual tone:
+* metallic
+* experimental
+* elegant
+* tactile
+* luxurious
+________________
+
+
+NIKE AIR
+Metadata
+Creative Director | Product Design
+2019
+Visual tone:
+* energetic
+* conceptual
+* futuristic sportswear
+* dynamic materiality
+________________
+
+
+FILICO LUXURY WATER
+Metadata
+Creative Director | Product Design
+2015
+Visual tone:
+* luxury branding
+* crystalline
+* atmospheric
+* refined
+* premium packaging
+________________
+
+
+WALDEN FLOOR CHAIR
+Metadata
+Creative Director | Product Design
+2017
+Visual tone:
+* calm
+* minimal
+* furniture design
+* Japanese-inspired restraint
+* material-focused
+________________
+
+
+LAXMI
+Metadata
+Creative Director | Product Design
+2014
+Visual tone:
+* conceptual
+* sculptural
+* emotional
+* artistic
+________________
+
+
+PILOT HELMET
+Metadata
+Creative Director | Product Design
+2014
+Visual tone:
+* industrial
+* futuristic
+* engineered
+* cinematic
+________________
+
+
+ADIDAS Y-3 NEUE
+Metadata
+Creative Director | Product Design
+2016
+Visual tone:
+* fashion-forward
+* architectural
+* monochromatic
+* experimental sportswear
+________________
+
+
+Award Logo Requirements
+Award logos should feel:
+* subtle
+* integrated
+* premium
+Avoid:
+* oversized badge treatment
+* loud placement
+* clutter
+Potential direction:
+* low-opacity monochrome
+* editorial alignment
+* subtle row beneath metadata
+________________
+
+
+Responsive Requirements
+On mobile:
+* preserve cinematic pacing
+* avoid overcrowding
+* maintain immersive imagery
+* prioritize visual hierarchy
+The gallery should still feel:
+* intentional
+* premium
+* emotionally paced
+________________
+
+
+Emotional Goal
+The viewer should leave this section feeling:
+“This designer’s thinking extends beyond digital products into material, spatial, and emotional form.”

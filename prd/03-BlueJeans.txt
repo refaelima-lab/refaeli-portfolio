@@ -1,0 +1,79 @@
+﻿Featured Work — BlueJeans by Verizon Specification
+Homepage Featured
+Purpose
+This homepage section serves as:
+* a cinematic preview
+* a narrative teaser
+* an invitation into the deeper case study
+The goal is not to explain the entire project.
+It should create:
+* intrigue
+* emotional context
+* technical credibility
+* curiosity
+The homepage version should feel:
+* concise
+* immersive
+* atmospheric
+* intelligent
+________________
+
+
+Homepage Content
+Title
+BLUEJEANS BY VERIZON
+(Add BlueJeans by Verizon logo)
+________________
+
+
+Body Copy
+In the middle of the pandemic, a collaboration platform became something more. A space where work, communication, and human behavior converged.
+This was a technical chapter. Where engineering expanded the possibilities, and design made them legible. Not just shaping interfaces, but reshaping habits through structure and intent.
+________________
+
+
+Tags
+* DIGITAL PRODUCT DESIGN
+* DESIGN SYSTEM
+* UNIFIED COMMUNICATION
+* CROSS-PLATFORM COLLABORATION PLATFORM
+* CLOUD-BASED VIDEO CONFERENCING
+* DESKTOP APP (WINDOWS / MACOS)
+* MOBILE APPLICATION
+________________
+
+
+CTA
+See what happened behind the screen →
+The CTA should feel:
+* cinematic
+* intriguing
+* narrative-driven
+Avoid:
+* generic “View Case Study”
+* overly corporate CTA language
+The interaction should subtly invite curiosity.
+
+
+Asset: blue-hero
+________________
+
+
+Homepage Visual Direction
+Use:
+assets/bluejeans-by-verizon
+The homepage version should feel:
+* emotional
+* human-centered
+* technical but warm
+* pandemic-era digital atmosphere
+Potential visual treatments:
+* layered meeting windows
+* remote collaboration moments
+* blurred interface overlays
+* soft glow systems
+* subtle motion
+* video snippets
+The atmosphere should communicate:
+digital products becoming human infrastructure.
+________________

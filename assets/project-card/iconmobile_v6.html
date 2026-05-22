@@ -1,0 +1,108 @@
+
+<h2 class="sr-only">In-car experience design — speedometer with three experience nodes</h2>
+<style>
+@keyframes sweep{0%{transform:rotate(-110deg)}70%{transform:rotate(30deg)}85%{transform:rotate(20deg)}100%{transform:rotate(24deg)}}
+@keyframes needle2{0%{transform:rotate(-110deg)}70%{transform:rotate(28deg)}85%{transform:rotate(18deg)}100%{transform:rotate(22deg)}}
+@keyframes arc-breathe{0%,100%{opacity:.5}50%{opacity:.85}}
+@keyframes dot-pulse{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes node-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.needle-g{animation:sweep 2.8s cubic-bezier(0.34,1.1,0.64,1) forwards;transform-origin:340px 300px;}
+.needle2-g{animation:needle2 2.8s cubic-bezier(0.34,1.1,0.64,1) forwards;transform-origin:340px 300px;opacity:.18;}
+.ab{animation:arc-breathe 4s ease-in-out infinite;}
+.ab.d2{animation-delay:1.4s}
+.dp{animation:dot-pulse 2.5s ease-in-out infinite;}
+.dp.d2{animation-delay:.8s}.dp.d3{animation-delay:1.6s}
+.nf{animation:node-float 4s ease-in-out infinite;}
+.nf.d2{animation-delay:1.4s}.nf.d3{animation-delay:2.8s}
+</style>
+<svg width="100%" viewBox="0 0 680 580" role="img">
+  <title>In-car experience design</title>
+  <desc>Speedometer dial with animated needle and three experience nodes positioned around it without overlapping.</desc>
+
+  <!-- ── DIAL ── centered at 340,300 r=180 -->
+
+  <!-- outer bezel -->
+  <circle cx="340" cy="300" r="188" fill="#e8e9ff" stroke="#DFE1FF" stroke-width="1"/>
+
+  <!-- dark face -->
+  <circle cx="340" cy="300" r="178" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+
+  <!-- colored arc band — teal left half (low range) -->
+  <!-- arc from -130deg to -10deg (left side) as teal -->
+  <path d="M 175 378 A 178 178 0 0 1 327 123" fill="none" stroke="#8D94FF" stroke-width="22" stroke-linecap="butt" opacity=".35"/>
+  <!-- arc from -10deg to +110deg (right side) darker -->
+  <path d="M 327 123 A 178 178 0 0 1 505 378" fill="none" stroke="#3C49FF" stroke-width="22" stroke-linecap="butt" opacity=".18"/>
+
+  <!-- inner ring -->
+  <circle cx="340" cy="300" r="154" fill="none" stroke="#DFE1FF" stroke-width="1"/>
+  <circle cx="340" cy="300" r="140" fill="#fafafa" stroke="#DFE1FF" stroke-width="0.6"/>
+
+  <!-- tick marks — 11 ticks, no numbers -->
+  <!-- from -120deg to +120deg -->
+  <g stroke="#8D94FF" stroke-linecap="round">
+    <!-- -120 --> <line x1="250" y1="444" x2="258" y2="431" stroke-width="2"/>
+    <!-- -96  --> <line x1="196" y1="388" x2="207" y2="380" stroke-width="1.2"/>
+    <!-- -72  --> <line x1="165" y1="316" x2="178" y2="313" stroke-width="1.2"/>
+    <!-- -48  --> <line x1="175" y1="242" x2="186" y2="244" stroke-width="1.2"/>
+    <!-- -24  --> <line x1="222" y1="180" x2="230" y2="188" stroke-width="1.2"/>
+    <!-- 0    --> <line x1="340" y1="122" x2="340" y2="136" stroke-width="2.5" stroke="#3C49FF"/>
+    <!-- +24  --> <line x1="458" y1="180" x2="450" y2="188" stroke-width="1.2"/>
+    <!-- +48  --> <line x1="505" y1="242" x2="494" y2="244" stroke-width="1.2"/>
+    <!-- +72  --> <line x1="515" y1="316" x2="502" y2="313" stroke-width="1.2"/>
+    <!-- +96  --> <line x1="484" y1="388" x2="473" y2="380" stroke-width="1.2"/>
+    <!-- +120 --> <line x1="430" y1="444" x2="422" y2="431" stroke-width="2"/>
+  </g>
+
+  <!-- dot trail at bottom (like reference gif) -->
+  <circle class="dp"    cx="294" cy="476" r="2.5" fill="#8D94FF"/>
+  <circle class="dp d2" cx="310" cy="484" r="2.5" fill="#8D94FF"/>
+  <circle class="dp"    cx="326" cy="488" r="2.5" fill="#8D94FF"/>
+  <circle class="dp d3" cx="340" cy="490" r="2.5" fill="#8D94FF"/>
+  <circle class="dp"    cx="354" cy="488" r="2.5" fill="#8D94FF"/>
+  <circle class="dp d2" cx="370" cy="484" r="2.5" fill="#8D94FF"/>
+  <circle class="dp d3" cx="386" cy="476" r="2.5" fill="#8D94FF"/>
+
+  <!-- needle glow/shadow -->
+  <g class="needle2-g">
+    <line x1="340" y1="300" x2="340" y2="148" stroke="#3C49FF" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  <!-- needle -->
+  <g class="needle-g">
+    <polygon points="337,300 343,300 341.5,150 338.5,150" fill="#3C49FF" opacity=".9"/>
+    <line x1="340" y1="300" x2="340" y2="318" stroke="#3C49FF" stroke-width="2" stroke-linecap="round" opacity=".3"/>
+  </g>
+
+  <!-- hub -->
+  <circle cx="340" cy="300" r="14" fill="#e8e9ff" stroke="#8D94FF" stroke-width="1.2"/>
+  <circle cx="340" cy="300" r="6"  fill="#3C49FF" opacity=".8"/>
+
+  <!-- ── THREE NODES — NO OVERLAP ── -->
+  <!-- LEFT node — clear of dial -->
+  <g class="nf">
+    <rect x="30" y="270" width="170" height="58" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="115" y="294" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">ENVIRONMENT</text>
+    <text x="115" y="311" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">physical context</text>
+    <!-- connector dot -->
+    <circle cx="200" cy="299" r="3" fill="#DFE1FF" stroke="#8D94FF" stroke-width="0.8"/>
+  </g>
+  <line x1="200" y1="299" x2="228" y2="299" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="3 3"/>
+
+  <!-- RIGHT node — clear of dial -->
+  <g class="nf d2">
+    <rect x="480" y="270" width="170" height="58" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="565" y="294" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">INTERACTION</text>
+    <text x="565" y="311" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">beyond the screen</text>
+    <circle cx="480" cy="299" r="3" fill="#DFE1FF" stroke="#8D94FF" stroke-width="0.8"/>
+  </g>
+  <line x1="452" y1="299" x2="480" y2="299" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="3 3"/>
+
+  <!-- BOTTOM node — below dial, centered -->
+  <g class="nf d3">
+    <rect x="255" y="510" width="170" height="58" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="340" y="534" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">SYSTEM</text>
+    <text x="340" y="551" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">one language, every surface</text>
+    <circle cx="340" cy="510" r="3" fill="#DFE1FF" stroke="#8D94FF" stroke-width="0.8"/>
+  </g>
+  <line x1="340" y1="488" x2="340" y2="510" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="3 3"/>
+
+</svg>

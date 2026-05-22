@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verizon Identity Architecture · Refaeli Ma</title>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div id="prog"></div>
+
+<!-- CURSOR -->
+<div id="cur-dot"></div>
+<div id="cur-ring"><span id="cur-label">View</span></div>
+
+<!-- BACK TO TOP -->
+<button id="back-top" aria-label="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <path d="M7 11V3M3 6.5L7 3l4 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+
+<!-- ══════════════════════════════════════
+     NAV — case study variant
+══════════════════════════════════════ -->
+<nav id="nav" class="nav--light">
+  <a href="index.html" class="nav-logo">Refaeli Ma</a>
+
+  <div class="cs-nav-switcher" role="navigation" aria-label="Case studies">
+    <a href="cs-vz-id-arch.html" class="cs-nav-pill active" aria-current="page">
+      <span class="cs-pill-num">01</span>
+      <span class="cs-pill-sep">/</span>
+      <span class="cs-pill-name">Verizon Identity Architecture</span>
+    </a>
+    <a href="cs-vz-home.html"    class="cs-nav-pill" data-label="Verizon Home App">02</a>
+    <a href="cs-bluejeans.html"  class="cs-nav-pill" data-label="BlueJeans by Verizon">03</a>
+    <a href="cs-iconmobile.html" class="cs-nav-pill" data-label="Iconmobile">04</a>
+  </div>
+
+  <a href="index.html" class="nav-back">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2L4 6l4 4"/></svg>
+    Portfolio
+  </a>
+
+  <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Mobile nav overlay -->
+<div class="mob-nav" id="mob-nav" aria-hidden="true">
+  <div class="mob-nav-bg"></div>
+  <ul class="mob-nav-links">
+    <li><a href="cs-vz-id-arch.html">01 · VZ Identity Architecture</a></li>
+    <li><a href="cs-vz-home.html">02 · Verizon Home App</a></li>
+    <li><a href="cs-bluejeans.html">03 · BlueJeans</a></li>
+    <li><a href="cs-iconmobile.html">04 · Iconmobile</a></li>
+  </ul>
+  <a href="index.html" class="mob-nav-cta">← Back to Portfolio</a>
+  <div class="mob-nav-foot">01 of 04 · Verizon Identity Architecture</div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     IN-PAGE SIDE NAV
+══════════════════════════════════════ -->
+<nav class="cs-sidenav" id="cs-sidenav" aria-label="Page sections">
+  <button class="cs-sidenav-dot active" data-label="Overview"  data-target="overview"></button>
+  <button class="cs-sidenav-dot"        data-label="Diagnosis" data-target="diagnosis"></button>
+  <button class="cs-sidenav-dot"        data-label="Challenge" data-target="challenge"></button>
+  <button class="cs-sidenav-dot"        data-label="Vision"    data-target="vision"></button>
+  <button class="cs-sidenav-dot"        data-label="Execution" data-target="execution"></button>
+  <button class="cs-sidenav-dot"        data-label="Impact"    data-target="impact"></button>
+</nav>
+
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero-cs" id="overview">
+  <div class="hero-cs-inner">
+    <div class="hero-cs-split">
+
+      <!-- Left: text -->
+      <div>
+        <div class="hero-cs-kicker">Verizon · Experience Architecture · 2026–Present</div>
+        <h1 class="hero-cs-h1">Verizon Identity<br><em>Architecture</em></h1>
+        <p class="hero-cs-subtitle">The invisible structure behind connected lives at scale.</p>
+        <p class="hero-cs-desc">Most people never see this work. That's the point. Leading Verizon's identity and profile ecosystem, creating the infrastructure that connects households, devices, behaviors, and services into one coherent, intelligent system.</p>
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:2rem; opacity:0; animation:fu 0.6s var(--ease-reveal) 0.9s both;">
+          <span style="font-size:var(--text-caption); font-weight:var(--weight-light); color:var(--white-a38); letter-spacing:var(--tracking-normal);">Role: Principal Product Designer</span>
+          <span style="color:var(--white-a18);">·</span>
+          <span style="font-size:var(--text-caption); font-weight:var(--weight-light); color:var(--white-a38); letter-spacing:var(--tracking-normal);">Timeline: 2026–Present</span>
+          <span style="color:var(--white-a18);">·</span>
+          <span style="font-size:var(--text-caption); font-weight:var(--weight-light); color:var(--white-a38); letter-spacing:var(--tracking-normal);">Status: Active</span>
+        </div>
+      </div>
+
+      <!-- Right: cover image -->
+      <div class="hero-cs-cover">
+        <img src="assets/verizon-identity-architecture/idarch-cover.png"
+             alt="Verizon Identity Architecture — ecosystem diagram showing households, devices, behaviors, services, and relationships orbiting a central identity core">
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CORE DIAGNOSIS
+══════════════════════════════════════ -->
+<section class="cs-sec bg-page" id="diagnosis">
+  <div class="sec-inner">
+    <div class="ch r d1">Core Diagnosis</div>
+    <h2 class="st r d2" style="max-width:640px;">How did we get <em>here?</em></h2>
+    <p class="bp r d3" style="max-width:600px;">Verizon's identity ecosystem grew through acquisition and parallel product development, not design. Dozens of product lines, separate account models, and inconsistent data definitions left customers navigating a fragmented experience, and teams building on unstable ground.</p>
+    <div class="cs-img-frame r d4">
+      <img src="assets/verizon-identity-architecture/core-diagnosis.png"
+           alt="Core diagnosis: fragmentation across Verizon's identity systems and product lines">
+      <div class="cs-img-caption">Core diagnosis — fragmentation across product lines, account models, and data definitions</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     THE CHALLENGE
+══════════════════════════════════════ -->
+<section class="cs-sec bg-warm" id="challenge">
+  <div class="sec-inner">
+    <div class="ch r d1">The Challenge</div>
+    <h2 class="st r d2" style="max-width:640px;">Why this is so <em>hard.</em></h2>
+    <p class="bp r d3" style="max-width:600px;">When the surface area spans consumer, small business, enterprise, and IoT, coherent decision-making requires shared infrastructure. Every team is doing the right thing locally. The system still fails globally. And the consequences of doing nothing compound quietly, year over year.</p>
+    <div class="cs-2col r d4">
+      <div class="cs-img-frame" style="margin:0;">
+        <img src="assets/verizon-identity-architecture/why-this-is-so-hard-at-verizon.png"
+             alt="Why identity architecture change is uniquely hard at Verizon's scale">
+        <div class="cs-img-caption">Why this is uniquely hard at Verizon's scale</div>
+      </div>
+      <div class="cs-img-frame" style="margin:0;">
+        <img src="assets/verizon-identity-architecture/if-we-do-not-fix-this.png"
+             alt="The compounding consequences if identity fragmentation continues">
+        <div class="cs-img-caption">What's at risk if fragmentation continues</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     STRATEGIC VISION
+══════════════════════════════════════ -->
+<section class="cs-sec bg-page" id="vision">
+  <div class="sec-inner">
+    <div class="ch r d1">Strategic Vision</div>
+    <h2 class="st r d2" style="max-width:640px;">From fragmentation to a<br><em>unified identity core.</em></h2>
+    <p class="bp r d3" style="max-width:600px;">The work begins with shared language. Defining what identity means across every product surface, and building the architecture that allows individual teams to operate independently while contributing to a coherent whole. Less integration tax. More compound value over time.</p>
+    <div class="cs-img-frame r d4">
+      <img src="assets/verizon-identity-architecture/current-state-strategic-vision.png"
+           alt="Current state vs strategic vision for Verizon's identity and profile architecture">
+      <div class="cs-img-caption">Current state to strategic vision — the architecture transition model</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     EXECUTION
+══════════════════════════════════════ -->
+<section class="cs-sec bg-warm" id="execution">
+  <div class="sec-inner">
+    <div class="ch r d1">Execution</div>
+    <h2 class="st r d2" style="max-width:640px;">Sequence over <em>speed.</em></h2>
+    <p class="bp r d3" style="max-width:600px;">A phased model that respects organizational reality. The first 30 days establish vocabulary and identify the highest-leverage integration points. The next 60 validate the model against live products. By day 90, the architecture is de-risked, documented, and adopted by the first wave of product teams.</p>
+    <div class="cs-img-frame r d4">
+      <img src="assets/verizon-identity-architecture/execution-strategy-30-60-90-plan.png"
+           alt="30-60-90 day execution strategy for identity architecture rollout across product lines">
+      <div class="cs-img-caption">30–60–90 execution plan — phased adoption designed around organizational constraints</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     IMPACT
+══════════════════════════════════════ -->
+<section class="cs-sec bg-page" id="impact">
+  <div class="sec-inner">
+    <div class="ch r d1">Business &amp; Customer Impact</div>
+    <h2 class="st r d2" style="max-width:640px;">Infrastructure that <em>earns its keep.</em></h2>
+    <p class="bp r d3" style="max-width:600px;">When identity architecture works, it disappears. Customers move between Verizon products without friction. Teams build faster on a shared foundation. And the business gains the intelligence layer needed to deliver genuinely personalized experiences at scale, across every product and surface.</p>
+    <div class="cs-img-frame r d4">
+      <img src="assets/verizon-identity-architecture/business-customer-impact.png"
+           alt="Business and customer impact of unified identity architecture at Verizon">
+      <div class="cs-img-caption">Business and customer impact — how coherent identity creates compounding value across the ecosystem</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     NEXT CASE STUDY
+══════════════════════════════════════ -->
+<section class="cta-sec">
+  <div class="cta-d"></div>
+  <div class="cta-g"></div>
+  <div style="font-size:var(--text-micro); font-weight:var(--weight-semibold); letter-spacing:var(--tracking-widest); text-transform:uppercase; color:var(--accent-mid); margin-bottom:1.2rem; position:relative; z-index:2;">Next Case Study</div>
+  <h2 class="cta-title"><em>02 /</em> Verizon Home App</h2>
+  <p class="cta-sub">From a reactive utility into a proactive, intelligent home experience.</p>
+  <div style="display:flex; gap:0.75rem; justify-content:center; align-items:center; flex-wrap:wrap; position:relative; z-index:2;">
+    <a href="cs-vz-home.html" class="cz-book-btn">See the case study</a>
+    <a href="index.html" class="cz-ghost-btn">Back to portfolio</a>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════ -->
+<script>
+/* ── PROGRESS BAR + NAV SCROLL STATE ── */
+const prog = document.getElementById('prog');
+const nav  = document.getElementById('nav');
+
+window.addEventListener('scroll', () => {
+  const t = window.scrollY;
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  prog.style.width = (t / h * 100) + '%';
+  nav.classList.toggle('scrolled', t > 60);
+  nav.classList.toggle('nav--light', t < 80);
+
+  const bt = document.getElementById('back-top');
+  bt.classList.toggle('visible', t > 400);
+});
+
+/* ── BACK TO TOP ── */
+document.getElementById('back-top').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* ── MOBILE BURGER ── */
+const burger  = document.getElementById('nav-burger');
+const mobNav  = document.getElementById('mob-nav');
+
+burger.addEventListener('click', () => {
+  const open = mobNav.classList.toggle('open');
+  burger.classList.toggle('open', open);
+  burger.setAttribute('aria-expanded', open);
+  mobNav.setAttribute('aria-hidden', !open);
+  document.body.style.overflow = open ? 'hidden' : '';
+});
+
+mobNav.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    mobNav.classList.remove('open');
+    burger.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+    mobNav.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  });
+});
+
+/* ── SCROLL REVEAL ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
+
+/* ── CS SIDE NAV SCROLL-SPY ── */
+const snavDots = document.querySelectorAll('.cs-sidenav-dot');
+
+snavDots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    const target = document.getElementById(dot.dataset.target);
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+const secObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      snavDots.forEach(d => d.classList.remove('active'));
+      const match = document.querySelector(`.cs-sidenav-dot[data-target="${e.target.id}"]`);
+      if (match) match.classList.add('active');
+    }
+  });
+}, { threshold: 0.4 });
+
+document.querySelectorAll('section[id]').forEach(s => secObs.observe(s));
+
+/* ── CUSTOM CURSOR ── */
+const dot  = document.getElementById('cur-dot');
+const ring = document.getElementById('cur-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+let raf;
+
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+function lerp(a, b, t) { return a + (b - a) * t; }
+function animCursor() {
+  rx = lerp(rx, mx, 0.14);
+  ry = lerp(ry, my, 0.14);
+  dot.style.transform  = `translate(${mx}px,${my}px)`;
+  ring.style.transform = `translate(${rx}px,${ry}px)`;
+  raf = requestAnimationFrame(animCursor);
+}
+animCursor();
+
+document.querySelectorAll('a, button, [role="button"]').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+});
+
+document.addEventListener('mouseleave', () => {
+  dot.style.opacity  = '0';
+  ring.style.opacity = '0';
+});
+document.addEventListener('mouseenter', () => {
+  dot.style.opacity  = '1';
+  ring.style.opacity = '1';
+});
+</script>
+
+</body>
+</html>

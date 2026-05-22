@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verizon Home App · From Chaos to Cadence · Refaeli Ma</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#181820; --ink-mid:#3a3a48; --ink-light:#888; --ink-xlight:#bbc;
+  --rule:#DFE1FF; --accent:#3C49FF; --accent-mid:#8D94FF; --accent-soft:#f4f4ff;
+  --page:#fafafa; --warm:#f7f6f2; --dark:#0f0f17;
+  --sans:'Outfit',system-ui,sans-serif; --serif:'DM Serif Display',Georgia,serif;
+}
+html{background:var(--dark);scroll-behavior:smooth;}
+body{font-family:var(--sans);color:var(--ink);background:var(--page);font-size:10pt;line-height:1.6;overflow-x:hidden;}
+a{color:var(--accent);text-decoration:none;}
+
+/* PROGRESS */
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--accent);width:0%;z-index:200;transition:width .08s linear;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:180;padding:.9rem 3rem;display:flex;justify-content:space-between;align-items:center;transition:background .3s,border-color .3s;border-bottom:1px solid transparent;}
+nav.scrolled{background:rgba(250,250,250,.93);backdrop-filter:blur(14px);border-bottom-color:var(--rule);}
+.nav-back{font-size:7.5pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.45);transition:color .2s;}
+nav.scrolled .nav-back{color:var(--ink-light);}
+.nav-back:hover{color:var(--accent);}
+.nav-right{display:flex;gap:2rem;}
+.nav-right a{font-size:7pt;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.3);transition:color .2s;}
+nav.scrolled .nav-right a{color:var(--ink-xlight);}
+.nav-right a:hover{color:var(--accent);}
+
+/* CURSOR */
+#cur-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:999;transition:transform .12s;}
+#cur-ring{width:28px;height:28px;border:1px solid var(--accent-mid);border-radius:50%;position:fixed;pointer-events:none;z-index:998;opacity:.4;transition:width .22s,height .22s,opacity .22s;}
+
+/* SCROLL REVEAL */
+.r{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+.r.on{opacity:1;transform:none;}
+.d1{transition-delay:.07s;} .d2{transition-delay:.14s;} .d3{transition-delay:.21s;} .d4{transition-delay:.28s;} .d5{transition-delay:.35s;}
+
+/* ═══════════════════ HERO ═══════════════════ */
+.hero{min-height:100vh;background:var(--dark);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:8rem 3rem 6rem;}
+.hero-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(141,148,255,.2) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;}
+.hero-glow{position:absolute;top:35%;left:50%;transform:translate(-50%,-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(60,73,255,.15) 0%,transparent 68%);pointer-events:none;}
+.hero-inner{position:relative;z-index:2;max-width:960px;width:100%;margin:0 auto;}
+.hero-kicker{font-size:7pt;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:1.8rem;opacity:0;transform:translateY(14px);animation:fu .6s .1s forwards;}
+.hero-h1{font-family:var(--serif);font-size:clamp(36pt,5.8vw,62pt);font-weight:400;color:#fff;line-height:1.04;margin-bottom:.6rem;opacity:0;transform:translateY(22px);animation:fu .8s .25s forwards;}
+.hero-h1 em{font-style:italic;color:var(--accent-mid);}
+.hero-subtitle{font-family:var(--serif);font-size:clamp(14pt,2.2vw,20pt);font-weight:400;font-style:italic;color:rgba(141,148,255,.55);margin-bottom:2rem;opacity:0;transform:translateY(16px);animation:fu .7s .4s forwards;}
+.hero-desc{font-size:10.5pt;font-weight:300;color:rgba(255,255,255,.42);max-width:520px;line-height:1.75;margin-bottom:3rem;opacity:0;transform:translateY(14px);animation:fu .7s .55s forwards;}
+.hero-chips{display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:3.5rem;opacity:0;animation:fu .6s .68s forwards;}
+.chip{padding:.32rem 1rem;border:1px solid rgba(141,148,255,.25);border-radius:100px;font-size:7pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(141,148,255,.65);}
+.hero-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(141,148,255,.1);border-radius:14px;overflow:hidden;border:1px solid rgba(141,148,255,.1);opacity:0;animation:fu .7s .82s forwards;}
+.hs{background:var(--dark);padding:1.6rem 1rem;text-align:center;transition:background .25s;cursor:default;}
+.hs:hover{background:#181828;}
+.hs-n{font-family:var(--serif);font-size:22pt;color:#fff;line-height:1;margin-bottom:.35rem;}
+.hs-l{font-size:6.5pt;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:rgba(141,148,255,.5);line-height:1.4;}
+
+/* ═══════════════════ SECTION SHELLS ═══════════════════ */
+.sec{padding:6.5rem 3rem;}
+.sec-inner{max-width:980px;margin:0 auto;}
+.sec-wide{max-width:1080px;margin:0 auto;}
+.ch{font-size:6.8pt;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:.7rem;display:flex;align-items:center;gap:.55rem;}
+.ch::after{content:'';display:block;height:1px;width:34px;background:var(--rule);}
+.ch-dark{color:rgba(141,148,255,.6);}
+.ch-dark::after{background:rgba(141,148,255,.2);}
+h2.st{font-family:var(--serif);font-size:clamp(20pt,2.8vw,29pt);font-weight:400;color:var(--ink);line-height:1.18;margin-bottom:1.3rem;}
+h2.st em{font-style:italic;color:var(--accent);}
+h2.st-d{font-family:var(--serif);font-size:clamp(20pt,2.8vw,29pt);font-weight:400;color:#fff;line-height:1.18;margin-bottom:1.3rem;}
+h2.st-d em{font-style:italic;color:var(--accent-mid);}
+.bp{font-size:9.8pt;font-weight:300;color:var(--ink-mid);line-height:1.8;margin-bottom:1.1rem;}
+.bp strong{font-weight:500;color:var(--ink);}
+.bp-d{font-size:9.8pt;font-weight:300;color:rgba(255,255,255,.48);line-height:1.8;margin-bottom:1.1rem;}
+
+/* PULLQUOTE */
+.pq{border-left:3px solid var(--accent);background:var(--accent-soft);padding:1.3rem 1.8rem;border-radius:0 10px 10px 0;margin:2.2rem 0;}
+.pq p{font-family:var(--serif);font-size:13pt;font-style:italic;color:var(--ink-mid);line-height:1.55;}
+.pq cite{display:block;font-size:6.8pt;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-mid);margin-top:.65rem;font-style:normal;}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;}
+
+/* TIMELINE ARC (for the release history) */
+.release-arc{display:flex;align-items:flex-end;gap:4px;height:56px;margin:2rem 0 .5rem;flex-wrap:nowrap;overflow:hidden;}
+.ra-bar{flex:1;border-radius:3px 3px 0 0;min-height:6px;transition:opacity .2s;}
+.ra-bar:hover{opacity:.65;}
+.ra-label{font-size:6pt;font-weight:500;color:var(--ink-xlight);text-align:center;margin-top:4px;}
+
+/* INSIGHT CARDS */
+.ic{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:1.6rem;cursor:default;transition:transform .3s cubic-bezier(.34,1.56,.64,1),border-color .3s,box-shadow .3s;}
+.ic:hover{transform:translateY(-5px);border-color:var(--accent-mid);box-shadow:0 10px 32px rgba(60,73,255,.08);}
+.ic-icon{width:32px;height:32px;border-radius:8px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;margin-bottom:.85rem;font-size:15px;}
+.ic-label{font-size:6.5pt;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:.4rem;}
+.ic-title{font-size:9.5pt;font-weight:600;color:var(--ink);margin-bottom:.4rem;}
+.ic-body{font-size:8.5pt;font-weight:300;color:var(--ink-mid);line-height:1.62;}
+.ic-bullets{list-style:none;margin-top:.7rem;}
+.ic-bullets li{font-size:8.2pt;font-weight:300;color:var(--ink-mid);line-height:1.55;padding:.2rem 0 .2rem .9rem;position:relative;}
+.ic-bullets li::before{content:'';position:absolute;left:0;top:.55rem;width:4px;height:4px;border-radius:50%;background:var(--accent-mid);}
+
+/* MOVE CARDS (dark) */
+.mc{background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.14);border-radius:14px;padding:2rem;position:relative;overflow:hidden;cursor:default;transition:border-color .3s,background .3s;}
+.mc:hover{border-color:rgba(141,148,255,.38);background:rgba(60,73,255,.05);}
+.mc-num{font-family:var(--serif);font-size:52pt;color:rgba(141,148,255,.08);line-height:1;position:absolute;top:0;right:1rem;transition:color .3s;pointer-events:none;}
+.mc:hover .mc-num{color:rgba(141,148,255,.16);}
+.mc-move{font-size:6.5pt;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:rgba(141,148,255,.5);margin-bottom:.4rem;}
+.mc-title{font-size:10pt;font-weight:600;color:#fff;margin-bottom:.6rem;}
+.mc-body{font-size:8.5pt;font-weight:300;color:rgba(255,255,255,.45);line-height:1.65;}
+
+/* MOVE DETAIL PANELS */
+.move-panel{background:var(--warm);border:1px solid var(--rule);border-radius:16px;overflow:hidden;margin-bottom:1.5rem;}
+.mp-head{padding:1.4rem 2rem;border-bottom:1px solid var(--rule);display:flex;align-items:baseline;gap:1rem;}
+.mp-num{font-family:var(--serif);font-size:18pt;color:var(--accent-mid);line-height:1;}
+.mp-title{font-size:11pt;font-weight:600;color:var(--ink);}
+.mp-sub{font-size:8pt;font-weight:400;color:var(--ink-light);margin-left:auto;}
+.mp-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;}
+.mp-col{padding:1.4rem 1.8rem;border-right:1px solid var(--rule);}
+.mp-col:last-child{border-right:none;}
+.mp-col-label{font-size:6.5pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.8rem;}
+.mp-col-label.prob{color:#c75b00;}
+.mp-col-label.act{color:var(--accent);}
+.mp-col-label.res{color:#1a7a3c;}
+.mp-col ul{list-style:none;}
+.mp-col ul li{font-size:8.2pt;font-weight:300;color:var(--ink-mid);padding:.28rem 0 .28rem .85rem;position:relative;line-height:1.5;border-bottom:1px dotted var(--rule);}
+.mp-col ul li:last-child{border-bottom:none;}
+.mp-col ul li::before{content:'';position:absolute;left:0;top:.65rem;width:4px;height:4px;border-radius:50%;}
+.mp-col.prob-col li::before{background:#c75b00;}
+.mp-col.act-col li::before{background:var(--accent-mid);}
+.mp-col.res-col li::before{background:#1a7a3c;}
+
+/* ROLE VENN (three circles text) */
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2rem;}
+.role-card{border-radius:14px;padding:1.8rem;text-align:center;cursor:default;transition:transform .3s cubic-bezier(.34,1.56,.64,1);}
+.role-card:hover{transform:translateY(-5px);}
+.rc-icon{font-size:28px;margin-bottom:.8rem;}
+.rc-title{font-size:9.5pt;font-weight:600;color:var(--ink);margin-bottom:.5rem;}
+.rc-body{font-size:8.2pt;font-weight:300;color:var(--ink-mid);line-height:1.6;}
+
+/* OUTCOME CARDS */
+.oc{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:1.6rem 1.1rem;text-align:center;cursor:default;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;}
+.oc:hover{transform:translateY(-5px);box-shadow:0 14px 38px rgba(60,73,255,.1);}
+.oc-num{font-family:var(--serif);font-size:24pt;color:var(--accent);line-height:1;margin-bottom:.4rem;}
+.oc-label{font-size:7pt;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-light);line-height:1.5;}
+.oc-sub{font-size:7pt;font-weight:300;color:var(--ink-xlight);margin-top:.3rem;line-height:1.4;}
+
+/* LESSONS */
+.lesson-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem;}
+.lesson-card{background:#fff;border:1px solid var(--rule);border-radius:12px;padding:1.4rem 1.6rem;cursor:default;transition:border-color .3s,transform .3s cubic-bezier(.34,1.56,.64,1);}
+.lesson-card:hover{border-color:var(--accent-mid);transform:translateY(-3px);}
+.lc-title{font-size:9.5pt;font-weight:600;color:var(--ink);margin-bottom:.4rem;}
+.lc-body{font-size:8.2pt;font-weight:300;color:var(--ink-mid);line-height:1.6;}
+
+/* FUTURE FOCUS */
+.ff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2rem;}
+.ff-card{background:rgba(255,255,255,.05);border:1px solid rgba(141,148,255,.14);border-radius:12px;padding:1.6rem;cursor:default;transition:border-color .3s;}
+.ff-card:hover{border-color:rgba(141,148,255,.35);}
+.ff-title{font-size:9.5pt;font-weight:600;color:#fff;margin-bottom:.5rem;}
+.ff-body{font-size:8.2pt;font-weight:300;color:rgba(255,255,255,.42);line-height:1.6;}
+
+/* JANUS HIGHLIGHT */
+.janus-strip{background:var(--accent);border-radius:14px;padding:2rem 2.5rem;margin:2rem 0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;position:relative;overflow:hidden;}
+.js-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.12) 1px,transparent 1px);background-size:18px 18px;pointer-events:none;}
+.js-item{position:relative;z-index:2;}
+.js-label{font-size:6.5pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:.4rem;}
+.js-val{font-family:var(--serif);font-size:20pt;color:#fff;line-height:1;margin-bottom:.3rem;}
+.js-sub{font-size:8pt;font-weight:300;color:rgba(255,255,255,.6);line-height:1.4;}
+
+/* PHONE FRAMES */
+.phone-scene{display:flex;gap:2.5rem;align-items:flex-start;justify-content:center;padding:2rem 0;flex-wrap:wrap;}
+.phone-frame{width:220px;flex-shrink:0;background:#1a1a24;border-radius:36px;padding:9px;box-shadow:0 36px 72px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.06);transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+.phone-frame:hover{transform:translateY(-8px) scale(1.02);}
+.phone-frame.up{transform:translateY(-20px);}
+.phone-frame.up:hover{transform:translateY(-28px) scale(1.02);}
+.pf-notch{width:72px;height:20px;background:#0f0f17;border-radius:0 0 12px 12px;margin:0 auto;}
+.pf-screen{background:#fff;border-radius:28px;overflow:hidden;}
+.pf-label{font-size:6.5pt;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-xlight);text-align:center;margin-top:.85rem;}
+
+/* STATUS BAR */
+.sb{background:#f5f6ff;padding:5px 13px 4px;display:flex;justify-content:space-between;align-items:center;}
+.sb-time{font-size:7.5pt;font-weight:600;color:#1a1a2e;}
+.sb-icons{display:flex;gap:3px;align-items:center;}
+
+/* ── BEFORE SCREEN (broken error) ── */
+.s-before{background:#fff;padding:24px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;text-align:center;}
+.s-before-emoji{font-size:30px;margin-bottom:10px;opacity:.25;}
+.s-before-title{font-size:10pt;font-weight:600;color:#181820;margin-bottom:6px;}
+.s-before-body{font-size:8pt;font-weight:300;color:#aab;line-height:1.5;margin-bottom:14px;max-width:160px;}
+.s-before-btn{background:#f0f0f8;border-radius:8px;padding:7px 18px;font-size:7.5pt;font-weight:600;color:#8D94FF;letter-spacing:.08em;}
+
+/* ── AFTER SCREEN (Janus auth) ── */
+.s-janus{background:#fff;}
+.sj-header{background:#3C49FF;padding:14px 15px 18px;position:relative;overflow:hidden;}
+.sjh-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.1) 1px,transparent 1px);background-size:14px 14px;pointer-events:none;}
+.sjh-back{font-size:7pt;font-weight:500;color:rgba(255,255,255,.5);margin-bottom:8px;position:relative;z-index:2;}
+.sjh-title{font-size:13pt;font-weight:600;color:#fff;position:relative;z-index:2;margin-bottom:2px;}
+.sjh-sub{font-size:7.5pt;font-weight:300;color:rgba(255,255,255,.6);position:relative;z-index:2;}
+.sj-form{padding:14px 14px 10px;}
+.sj-field{margin-bottom:10px;}
+.sj-label{font-size:6.5pt;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#888;margin-bottom:4px;}
+.sj-input{background:#f5f6ff;border:1.5px solid #DFE1FF;border-radius:9px;padding:9px 12px;font-size:9pt;font-weight:400;color:#181820;width:100%;}
+.sj-input.focus{border-color:#3C49FF;background:#f4f4ff;}
+.sj-error{background:#fff5f5;border:1px solid #ffcdd2;border-radius:8px;padding:8px 10px;display:flex;align-items:flex-start;gap:7px;margin-bottom:10px;}
+.sje-icon{font-size:13px;flex-shrink:0;}
+.sje-text{font-size:7.5pt;font-weight:400;color:#c62828;line-height:1.4;}
+.sje-cta{font-size:7pt;font-weight:600;color:#3C49FF;text-decoration:underline;display:block;margin-top:3px;}
+.sj-btn{background:#3C49FF;border-radius:10px;padding:11px;text-align:center;font-size:9pt;font-weight:600;color:#fff;margin-bottom:8px;}
+.sj-alt{font-size:7.5pt;font-weight:300;color:#888;text-align:center;line-height:1.5;}
+.sj-alt a{color:#3C49FF;font-weight:500;}
+
+/* ── HOME SCREEN ── */
+.s-home{background:#f5f6ff;}
+.sh-header{padding:12px 14px 8px;background:#f5f6ff;}
+.sh-greeting{font-size:7.5pt;font-weight:300;color:#888;}
+.sh-name{font-size:12.5pt;font-weight:600;color:#181820;letter-spacing:-.01em;}
+.sh-status{margin:0 9px 9px;background:#fff;border-radius:14px;padding:11px 13px;box-shadow:0 2px 12px rgba(60,73,255,.07);}
+.shs-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.shs-label{font-size:6pt;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#8D94FF;}
+.shs-badge{font-size:5.5pt;font-weight:600;background:#e8ffef;color:#1a7a3c;border-radius:100px;padding:2px 6px;}
+.shs-speed{font-size:20pt;font-weight:200;color:#181820;line-height:1;letter-spacing:-.02em;}
+.shs-unit{font-size:7pt;font-weight:400;color:#888;margin-left:2px;}
+.shs-bar{background:#eef;border-radius:3px;height:2.5px;margin-top:7px;}
+.shs-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#3C49FF,#8D94FF);width:74%;}
+.sh-ai{margin:0 9px 9px;background:linear-gradient(135deg,#3C49FF,#6B74FF);border-radius:14px;padding:11px 13px;position:relative;overflow:hidden;}
+.sha-glow{position:absolute;right:-16px;top:-16px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.07);pointer-events:none;}
+.sha-label{font-size:6pt;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:4px;}
+.sha-msg{font-size:8pt;font-weight:400;color:#fff;line-height:1.4;margin-bottom:7px;}
+.sha-cta{font-size:6.5pt;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.3);border-radius:5px;padding:3px 8px;display:inline-block;}
+.sh-quick{margin:0 9px 9px;}
+.shq-label{font-size:6pt;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#bbc;margin-bottom:6px;}
+.shq-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.shq-btn{background:#fff;border-radius:10px;padding:9px;border:1px solid #eef;display:flex;align-items:center;gap:6px;}
+.shq-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.shq-text{font-size:7pt;font-weight:500;color:#181820;}
+.sh-nav{display:flex;justify-content:space-around;padding:7px 4px 9px;background:#fff;border-top:1px solid #eef;}
+.shn-item{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.shn-label{font-size:5.5pt;font-weight:500;letter-spacing:.06em;text-transform:uppercase;}
+
+/* CTA */
+.cta-sec{background:var(--dark);padding:6rem 3rem;text-align:center;position:relative;overflow:hidden;}
+.cta-d{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(141,148,255,.14) 1px,transparent 1px);background-size:22px 22px;pointer-events:none;}
+.cta-g{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:300px;background:radial-gradient(ellipse,rgba(60,73,255,.12) 0%,transparent 70%);pointer-events:none;}
+.cta-title{font-family:var(--serif);font-size:clamp(20pt,3vw,30pt);color:#fff;margin-bottom:.9rem;position:relative;z-index:2;}
+.cta-title em{font-style:italic;color:var(--accent-mid);}
+.cta-sub{font-size:9.5pt;font-weight:300;color:rgba(255,255,255,.38);margin-bottom:2.5rem;position:relative;z-index:2;}
+.cta-btn{display:inline-block;padding:.8rem 2.4rem;border:1px solid rgba(141,148,255,.28);border-radius:4px;font-size:7.5pt;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent-mid);position:relative;z-index:2;transition:background .25s,color .25s,border-color .25s;}
+.cta-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+@keyframes fu{to{opacity:1;transform:none;}}
+
+/* RESPONSIVE */
+@media(max-width:860px){
+  .g2,.g3,.g4,.ff-grid,.lesson-grid,.role-grid,.mp-body{grid-template-columns:1fr;}
+  .hero-stats{grid-template-columns:repeat(3,1fr);}
+  .janus-strip{grid-template-columns:1fr;}
+  .phone-scene{gap:1.5rem;}
+  .phone-frame{width:180px;}
+  .sec{padding:4.5rem 1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<nav id="nav">
+  <a href="#" class="nav-back">← Refaeli Ma</a>
+  <div class="nav-right">
+    <a href="#context">Context</a>
+    <a href="#problems">Problems</a>
+    <a href="#moves">4 Moves</a>
+    <a href="#outcomes">Outcomes</a>
+    <a href="#lessons">Lessons</a>
+  </div>
+</nav>
+
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-kicker">Principal Experience Designer · Verizon · Dec 2023 – Present</div>
+    <h1 class="hero-h1">From Chaos<br>to <em>Cadence</em></h1>
+    <p class="hero-subtitle">Designing Experience at Verizon</p>
+    <p class="hero-desc">Fifteen releases. A rating that crashed to 1.7. An org with ten teams and ten roadmaps. This is how a product went from crisis to one of Verizon's highest-rated consumer apps.</p>
+    <div class="hero-chips">
+      <span class="chip">Product Strategy</span>
+      <span class="chip">Design Leadership</span>
+      <span class="chip">Systems Design</span>
+      <span class="chip">AI Experience</span>
+      <span class="chip">Cross-functional Alignment</span>
+      <span class="chip">Mobile · iOS · Android</span>
+    </div>
+    <div class="hero-stats">
+      <div class="hs">
+        <div class="hs-n">1.7→4.5</div>
+        <div class="hs-l">iOS Rating</div>
+      </div>
+      <div class="hs">
+        <div class="hs-n">860k+</div>
+        <div class="hs-l">Total Customers</div>
+      </div>
+      <div class="hs">
+        <div class="hs-n">55M+</div>
+        <div class="hs-l">Total Sessions</div>
+      </div>
+      <div class="hs">
+        <div class="hs-n">72%</div>
+        <div class="hs-l">Fewer Unusable Tickets</div>
+      </div>
+      <div class="hs">
+        <div class="hs-n">15+</div>
+        <div class="hs-l">Releases in 18 Months</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════ CONTEXT ══════════════ -->
+<section class="sec" id="context" style="background:#fff;">
+  <div class="sec-inner">
+    <div class="r"><div class="ch">01 · Context</div></div>
+    <h2 class="st r d1">MVP to crisis.<br>Crisis to <em>system change</em>.</h2>
+    <div class="g2" style="margin-top:2rem;">
+      <div>
+        <p class="bp r d1">The Verizon Home App launched as an MVP — a half-built product pushed to market before it was ready. By version 1.9, the iOS rating had <strong>dropped to 1.7.</strong> The app was functionally broken for a significant portion of customers, and nobody had a clear owner for fixing it.</p>
+        <p class="bp r d2">I joined mid-crisis, transitioning from BlueJeans by Verizon. What I found wasn't a design problem. It was an organizational problem: <strong>10 teams, 10 roadmaps,</strong> agency handoffs with missing PRDs, late feasibility checks, and a feedback loop that was generating noise instead of signal.</p>
+        <p class="bp r d3">Nobody was working on the wrong things intentionally. They were just working without a shared picture of what "right" looked like.</p>
+        <div class="pq r d4">
+          <p>I design for the problem beneath the problem. Most products fail because they solve the wrong thing beautifully. I design systems that resolve what matters, not interfaces that mask it. Good design is invisible. It shapes behavior, until the right thing feels inevitable.</p>
+          <cite>Design Philosophy · Refaeli Ma</cite>
+        </div>
+      </div>
+      <div>
+        <!-- Release arc visualization -->
+        <div class="r d2">
+          <div class="ch" style="margin-bottom:1.2rem;">15+ releases · MVP → Crisis → Stabilization → Scale</div>
+          <div class="release-arc">
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#DFE1FF;height:12px;width:100%;"></div><div class="ra-label">1.0.0</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#DFE1FF;height:14px;width:100%;"></div><div class="ra-label">1.0.1</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#ffcdd2;height:18px;width:100%;"></div><div class="ra-label">1.0.2</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#ef9a9a;height:30px;width:100%;"></div><div class="ra-label">1.0.3</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#e57373;height:38px;width:100%;"></div><div class="ra-label">1.0.4<br><span style="color:#c62828;font-size:5.5pt;font-weight:600;">1.7★</span></div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#ef9a9a;height:30px;width:100%;"></div><div class="ra-label">1.0.5</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#ffcdd2;height:22px;width:100%;"></div><div class="ra-label">1.1.0</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#DFE1FF;height:16px;width:100%;"></div><div class="ra-label">1.3.0</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#c5cae9;height:18px;width:100%;"></div><div class="ra-label">1.4.0</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#9fa8da;height:24px;width:100%;"></div><div class="ra-label">1.6.0</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#7986cb;height:32px;width:100%;"></div><div class="ra-label">1.7.0</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#5c6bc0;height:38px;width:100%;"></div><div class="ra-label">1.8.0</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#3C49FF;height:46px;width:100%;"></div><div class="ra-label">1.9.0</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#3C49FF;height:50px;width:100%;"></div><div class="ra-label">2.0.0</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div class="ra-bar" style="background:#3C49FF;height:56px;width:100%;"></div><div class="ra-label">2.1.0<br><span style="color:var(--accent);font-size:5.5pt;font-weight:600;">4.5★</span></div></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:.8rem;">
+            <span style="font-size:6.5pt;font-weight:500;color:#e57373;">← Crisis</span>
+            <span style="font-size:6.5pt;font-weight:500;color:#9fa8da;">Stabilization</span>
+            <span style="font-size:6.5pt;font-weight:500;color:var(--accent);">Scale →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════ PROBLEMS ══════════════ -->
+<section class="sec" id="problems" style="background:var(--warm);">
+  <div class="sec-inner">
+    <div class="r"><div class="ch">02 · Problem Blocking Value</div></div>
+    <h2 class="st r d1">Three failures.<br>None of them <em>were about pixels</em>.</h2>
+    <p class="bp r d2" style="max-width:580px;margin-bottom:2.5rem;">The surface problems were obvious — bad ratings, broken flows, frustrated customers. The underlying problems were organizational. Until those were named, no design work would stick.</p>
+    <div class="g3">
+      <div class="ic r d1">
+        <div class="ic-icon">🔀</div>
+        <div class="ic-label">Fragmented Delivery</div>
+        <div class="ic-title">No process, no ownership</div>
+        <ul class="ic-bullets">
+          <li>Agency handoffs with missing PRDs</li>
+          <li>No intake → feasibility → design → QA flow</li>
+          <li>Late feasibility checks causing constant churn</li>
+          <li>Teams reacting instead of planning</li>
+        </ul>
+      </div>
+      <div class="ic r d2">
+        <div class="ic-icon">🎯</div>
+        <div class="ic-label">Misaligned Success</div>
+        <div class="ic-title">DAU/MAU ≠ real success</div>
+        <ul class="ic-bullets">
+          <li>KPI drift across 10 separate roadmaps</li>
+          <li>Tech-driven product decisions, not user-driven</li>
+          <li>Endless meetings, no shared prioritization model</li>
+          <li>No agreed definition of what "better" looked like</li>
+        </ul>
+      </div>
+      <div class="ic r d3">
+        <div class="ic-icon">🔇</div>
+        <div class="ic-label">Missing Feedback Loop</div>
+        <div class="ic-title">Feedback without signal</div>
+        <ul class="ic-bullets">
+          <li>Customer pain existed, but it was noise — unstructured</li>
+          <li>Blind spots at every touchpoint</li>
+          <li>Teams working on assumptions, not insights</li>
+          <li>Solutions shipped before problems were defined</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════ MY POSITION ══════════════ -->
+<section class="sec" style="background:#fff;">
+  <div class="sec-inner">
+    <div class="r"><div class="ch">03 · Finding My Position</div></div>
+    <h2 class="st r d1">Not just filling gaps.<br><em>Bridging them</em>.</h2>
+    <p class="bp r d2" style="max-width:560px;margin-bottom:.5rem;">Principal-level design means operating across three registers simultaneously — and knowing which one the moment calls for.</p>
+    <div class="role-grid">
+      <div class="role-card r d1" style="background:var(--accent-soft);border:1px solid var(--rule);">
+        <div class="rc-icon">🎨</div>
+        <div class="rc-title">Design Craft</div>
+        <p class="rc-body">Raising the quality bar on every surface — systems, interactions, error states, onboarding. Craft is credibility. Without it, strategy is just talk.</p>
+      </div>
+      <div class="role-card r d2" style="background:#f0fff4;border:1px solid #c3e6cb;">
+        <div class="rc-icon">🌉</div>
+        <div class="rc-title">Bridge & Alignment</div>
+        <p class="rc-body">Connecting product, engineering, support, and leadership around a shared picture of the problem. Not translating between teams — building the language they could all use.</p>
+      </div>
+      <div class="role-card r d3" style="background:#fff8f0;border:1px solid #ffe0b2;">
+        <div class="rc-icon">🧭</div>
+        <div class="rc-title">Leadership & Strategy</div>
+        <p class="rc-body">Defining what success meant from the customer's perspective — then building the process, the team culture, and the operating model to pursue it consistently.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════ 4 MOVES OVERVIEW ══════════════ -->
+<section class="sec" id="moves" style="background:var(--dark);">
+  <div class="sec-inner">
+    <div class="r"><div class="ch ch-dark">04 · 4 Moves</div></div>
+    <h2 class="st-d r d1">From chaos to clarity<br>in <em>four moves</em></h2>
+    <p class="bp-d r d2" style="max-width:540px;margin-bottom:2.5rem;">The sequence mattered as much as the strategy. Each move built the conditions for the next one. You can't systemize what you haven't aligned. You can't instrument what you haven't built. You can't deliver what you haven't measured.</p>
+    <div class="g2" style="gap:1.2rem;">
+      <div class="mc r d1">
+        <div class="mc-num">01</div>
+        <div class="mc-move">Move 1 · Align</div>
+        <div class="mc-title">Build Clarity</div>
+        <p class="mc-body">Established structure, ownership, and focus. Grouped 10 roadmaps into 3 priority buckets. Gave teams one language for decisions.</p>
+      </div>
+      <div class="mc r d2">
+        <div class="mc-num">02</div>
+        <div class="mc-move">Move 2 · Systemize</div>
+        <div class="mc-title">Create Cadence</div>
+        <p class="mc-body">Designed an end-to-end framework from intake to handoff. Brought rhythm through sprint planning and design ops. Turned chaos into predictability.</p>
+      </div>
+      <div class="mc r d3">
+        <div class="mc-num">03</div>
+        <div class="mc-move">Move 3 · Instrument</div>
+        <div class="mc-title">Guide with Evidence</div>
+        <p class="mc-body">Built a shared decision pipeline. Mapped review data to UI touchpoints. Shifted the org from tech-driven to user-informed decision-making.</p>
+      </div>
+      <div class="mc r d4">
+        <div class="mc-num">04</div>
+        <div class="mc-move">Move 4 · Deliver</div>
+        <div class="mc-title">Deliver System Change</div>
+        <p class="mc-body">Scaled alignment and trust through Project Janus — a cross-product auth initiative that became a model for future collaboration across the org.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════ MOVES IN DETAIL ══════════════ -->
+<section class="sec" style="background:var(--page);">
+  <div class="sec-wide">
+    <div class="r"><div class="ch">04 · Moves in Detail</div></div>
+    <h2 class="st r d1">Problem, action, <em>result</em>.</h2>
+    <p class="bp r d2" style="max-width:520px;margin-bottom:2.5rem;">Each move followed the same structure: name the real problem, take deliberate action, measure what changed. No move was about features. All four were about changing how the organization worked.</p>
+
+    <!-- MOVE 1 -->
+    <div class="move-panel r d1">
+      <div class="mp-head">
+        <div class="mp-num">01</div>
+        <div class="mp-title">Align — Build Clarity</div>
+        <div class="mp-sub">Priority · Process · Language</div>
+      </div>
+      <div class="mp-body">
+        <div class="mp-col prob-col">
+          <div class="mp-col-label prob">Problem → Chaos</div>
+          <ul>
+            <li>10 teams, 10 roadmaps — no shared language</li>
+            <li>Endless debates, last-minute scope changes</li>
+            <li>No criteria for what actually mattered</li>
+          </ul>
+        </div>
+        <div class="mp-col act-col">
+          <div class="mp-col-label act">Action → Create Clarity</div>
+          <ul>
+            <li>Introduced Priority Query rhythm: decisions vs. exploration</li>
+            <li>Grouped 10 roadmaps into P1 / Debate / Defer buckets</li>
+            <li>Ran Kano study with product + engineering to align on user value</li>
+          </ul>
+        </div>
+        <div class="mp-col res-col">
+          <div class="mp-col-label res">Result → Momentum</div>
+          <ul>
+            <li>Teams spoke one language — decisions became predictable</li>
+            <li>Release cadence stabilized into consistent quarterly rhythm</li>
+            <li>Focus shifted from urgency to impact</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOVE 2 -->
+    <div class="move-panel r d1">
+      <div class="mp-head">
+        <div class="mp-num">02</div>
+        <div class="mp-title">Systemize — Create Cadence</div>
+        <div class="mp-sub">Framework · Rhythm · Ownership</div>
+      </div>
+      <div class="mp-body">
+        <div class="mp-col prob-col">
+          <div class="mp-col-label prob">Problem → No Structure</div>
+          <ul>
+            <li>No flow from intake → feasibility → design → QA → handoff</li>
+            <li>Meetings without conclusions or owners</li>
+            <li>Last-minute churn from missing feasibility checks</li>
+            <li>Design lacked ownership in the process</li>
+          </ul>
+        </div>
+        <div class="mp-col act-col">
+          <div class="mp-col-label act">Action → Build the System</div>
+          <ul>
+            <li>Designed end-to-end framework: Intake → Feasibility → Design → QA → Handoff</li>
+            <li>Structured meeting rhythms: decisions and actions, not discussions</li>
+            <li>Established Jira schema + RACI chart for clarity on roles and gates</li>
+            <li>Taught cross-functional partners to treat design as a strategic function</li>
+          </ul>
+        </div>
+        <div class="mp-col res-col">
+          <div class="mp-col-label res">Result → Trust</div>
+          <ul>
+            <li>Reduced rework and last-minute churn significantly</li>
+            <li>Meetings became faster and action-driven</li>
+            <li>Designers spent more time designing, less firefighting</li>
+            <li>Partners saw design as a trusted collaborator — not a bottleneck</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOVE 3 -->
+    <div class="move-panel r d1">
+      <div class="mp-head">
+        <div class="mp-num">03</div>
+        <div class="mp-title">Instrument — Guide with Evidence</div>
+        <div class="mp-sub">Data · Signal · Authority</div>
+      </div>
+      <div class="mp-body">
+        <div class="mp-col prob-col">
+          <div class="mp-col-label prob">Problem → Tech-Driven</div>
+          <ul>
+            <li>Product decisions driven by feasibility, not user needs</li>
+            <li>No shared visibility into customer pain points</li>
+            <li>Feedback was noise — unstructured, unprioritized</li>
+            <li>Design decisions lacked credibility without data</li>
+          </ul>
+        </div>
+        <div class="mp-col act-col">
+          <div class="mp-col-label act">Action → Evidence Pipeline</div>
+          <ul>
+            <li>Built review tracker: categorized feedback by sentiment + root cause</li>
+            <li>Mapped message logs → UI → support tickets to connect issues with design touchpoints</li>
+            <li>Introduced visibility dashboards so design, support, and engineering shared the same facts</li>
+            <li>Led root-cause workshops: signal vs. noise, first principles</li>
+          </ul>
+        </div>
+        <div class="mp-col res-col">
+          <div class="mp-col-label res">Result → User Focus</div>
+          <ul>
+            <li>Teams could see real user pain instead of guessing</li>
+            <li>Auth/login identified as first measurable UX priority</li>
+            <li>Design gained authority in decision-making</li>
+            <li>Org mindset shifted from tech-driven to user-informed</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOVE 4 / PROJECT JANUS -->
+    <div class="move-panel r d1">
+      <div class="mp-head">
+        <div class="mp-num">04</div>
+        <div class="mp-title">Deliver — Project Janus</div>
+        <div class="mp-sub">Authentication · Cross-product · System Change</div>
+      </div>
+      <div class="mp-body">
+        <div class="mp-col prob-col">
+          <div class="mp-col-label prob">Insight → "The Front Door Was Broken"</div>
+          <ul>
+            <li>Auth flow was #1 user pain: unclear errors, generic CTAs, inconsistent UI</li>
+            <li>Support teams overwhelmed with repetitive, contextless tickets</li>
+            <li>The experience gap eroded trust with every login attempt</li>
+            <li>Fixing login wasn't cosmetic — it was foundational</li>
+          </ul>
+        </div>
+        <div class="mp-col act-col">
+          <div class="mp-col-label act">Action → Craft to System</div>
+          <ul>
+            <li>Launched Project Janus: cross-product auth initiative across app, web, and support</li>
+            <li>Redesigned login and error flows — from "Something went wrong" to clear, actionable CTAs</li>
+            <li>Integrated support: personalized replies, SMS confirmations, dedicated help lines</li>
+            <li>Same design principles applied across UI, support scripts, and telemetry</li>
+          </ul>
+        </div>
+        <div class="mp-col res-col">
+          <div class="mp-col-label res">Result → Trust Restored</div>
+          <ul>
+            <li>iOS rating: 1.7 → 4.5 ⭐</li>
+            <li>Support tickets: ↓ 72% (1,613 → 451)</li>
+            <li>422K households impacted, 9.2M sessions stabilized</li>
+            <li>Auth redesign became a model for future cross-product collaboration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════ UI: BEFORE / AFTER ══════════════ -->
+<section class="sec" style="background:var(--warm);">
+  <div class="sec-inner">
+    <div class="r"><div class="ch">05 · Design Work — Project Janus</div></div>
+    <h2 class="st r d1">The front door,<br><em>redesigned from the ground up</em>.</h2>
+    <p class="bp r d2" style="max-width:580px;margin-bottom:.5rem;">The auth screens were the highest-traffic surface in the app. Every customer saw them. Most of them saw them when something was already wrong. Silence and generic error messages eroded trust at the exact moment it mattered most.</p>
+
+    <div class="janus-strip r d2">
+      <div class="js-dots"></div>
+      <div class="js-item">
+        <div class="js-label">Before → After</div>
+        <div class="js-val">1.7 → 4.5</div>
+        <div class="js-sub">iOS App Store rating. The auth redesign was the single biggest driver of this recovery.</div>
+      </div>
+      <div class="js-item">
+        <div class="js-label">Ticket Reduction</div>
+        <div class="js-val">↓ 72%</div>
+        <div class="js-sub">1,613 unusable tickets per release cycle down to 451. Same codebase, different experience.</div>
+      </div>
+      <div class="js-item">
+        <div class="js-label">Scale</div>
+        <div class="js-val">422K</div>
+        <div class="js-sub">Households impacted. 9.2M sessions stabilized. This wasn't a design sprint — it was a platform decision.</div>
+      </div>
+    </div>
+
+    <div class="phone-scene r d3">
+      <!-- BEFORE -->
+      <div>
+        <div class="phone-frame">
+          <div class="pf-notch"></div>
+          <div class="pf-screen">
+            <div class="sb"><span class="sb-time">9:41</span></div>
+            <div class="s-before">
+              <div class="s-before-emoji">⚠️</div>
+              <div class="s-before-title">Something went wrong</div>
+              <div class="s-before-body">We couldn't sign you in. Please try again later.</div>
+              <div class="s-before-btn">Retry</div>
+            </div>
+          </div>
+        </div>
+        <div class="pf-label" style="color:#e57373;">Before · Generic error</div>
+      </div>
+
+      <!-- AFTER: JANUS LOGIN -->
+      <div class="up">
+        <div class="phone-frame">
+          <div class="pf-notch"></div>
+          <div class="pf-screen">
+            <div class="sb"><span class="sb-time">9:41</span></div>
+            <div class="s-janus">
+              <div class="sj-header">
+                <div class="sjh-dots"></div>
+                <div class="sjh-back">← Verizon Home</div>
+                <div class="sjh-title">Sign in</div>
+                <div class="sjh-sub">Enter your Verizon credentials</div>
+              </div>
+              <div class="sj-form">
+                <div class="sj-field">
+                  <div class="sj-label">Email or User ID</div>
+                  <div class="sj-input">refaeli@verizon.net</div>
+                </div>
+                <div class="sj-field">
+                  <div class="sj-label">Password</div>
+                  <div class="sj-input focus">••••••••••</div>
+                </div>
+                <div class="sj-error">
+                  <div class="sje-icon">🔑</div>
+                  <div class="sje-text">Password doesn't match our records. Try again, or reset it below.<span class="sje-cta">Reset my password →</span></div>
+                </div>
+                <div class="sj-btn">Sign in</div>
+                <div class="sj-alt">Need help? <a>Get a one-time code via SMS</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pf-label" style="color:var(--accent);">After · Project Janus</div>
+      </div>
+
+      <!-- HOME SCREEN -->
+      <div>
+        <div class="phone-frame">
+          <div class="pf-notch"></div>
+          <div class="pf-screen">
+            <div class="sb" style="background:#f5f6ff;"><span class="sb-time">9:41</span></div>
+            <div class="s-home">
+              <div class="sh-header">
+                <div class="sh-greeting">Good morning,</div>
+                <div class="sh-name">Refaeli</div>
+              </div>
+              <div class="sh-status">
+                <div class="shs-top">
+                  <span class="shs-label">Network Status</span>
+                  <span class="shs-badge">● Excellent</span>
+                </div>
+                <div><span class="shs-speed">847</span><span class="shs-unit">Mbps</span></div>
+                <div class="shs-bar"><div class="shs-fill"></div></div>
+              </div>
+              <div class="sh-ai">
+                <div class="sha-glow"></div>
+                <div class="sha-label">✦ AI Advisor</div>
+                <div class="sha-msg">Peak usage at 9–11 PM. Want me to prioritize your streaming devices?</div>
+                <div class="sha-cta">Review suggestion →</div>
+              </div>
+              <div class="sh-quick">
+                <div class="shq-label">Quick access</div>
+                <div class="shq-grid">
+                  <div class="shq-btn"><div class="shq-icon" style="background:#f0f4ff;">📱</div><span class="shq-text">Devices</span></div>
+                  <div class="shq-btn"><div class="shq-icon" style="background:#f0fff4;">⚡</div><span class="shq-text">Speed Test</span></div>
+                  <div class="shq-btn"><div class="shq-icon" style="background:#fff8f0;">🏠</div><span class="shq-text">Guest Wi-Fi</span></div>
+                  <div class="shq-btn"><div class="shq-icon" style="background:#fff0f6;">🔒</div><span class="shq-text">Security</span></div>
+                </div>
+              </div>
+              <div class="sh-nav">
+                <div class="shn-item"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#3C49FF" stroke-width="1.8" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><span class="shn-label" style="color:var(--accent);">Home</span></div>
+                <div class="shn-item"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#bbc" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/></svg><span class="shn-label" style="color:#bbc;">Devices</span></div>
+                <div class="shn-item"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#bbc" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="shn-label" style="color:#bbc;">Security</span></div>
+                <div class="shn-item"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#bbc" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg><span class="shn-label" style="color:#bbc;">Account</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pf-label">Home Dashboard</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════ OUTCOMES ══════════════ -->
+<section class="sec" id="outcomes" style="background:var(--accent-soft);border-top:1px solid var(--rule);">
+  <div class="sec-inner">
+    <div class="r"><div class="ch">06 · Outcomes</div></div>
+    <h2 class="st r d1">What <em>actually moved</em></h2>
+    <p class="bp r d2" style="max-width:540px;margin-bottom:2.5rem;">These aren't just metrics — they're evidence that the system changed. A 4.5 App Store rating means 860,000 customers chose to say something positive, unprompted. That's trust. That's the product.</p>
+    <div class="g4">
+      <div class="oc r d1"><div class="oc-num">1.7→4.5</div><div class="oc-label">iOS Rating</div><div class="oc-sub">From crisis to best-in-class</div></div>
+      <div class="oc r d2"><div class="oc-num">2.1→4.4</div><div class="oc-label">Android Rating</div><div class="oc-sub">Consistent across platforms</div></div>
+      <div class="oc r d3"><div class="oc-num">860k+</div><div class="oc-label">Total Customers</div><div class="oc-sub">At launch · Aug 2024</div></div>
+      <div class="oc r d4"><div class="oc-num">55M+</div><div class="oc-label">Total Sessions</div><div class="oc-sub">Active engagement, not just installs</div></div>
+    </div>
+    <div class="g4" style="margin-top:1.1rem;">
+      <div class="oc r d1"><div class="oc-num">72%</div><div class="oc-label">Fewer Unusable Tickets</div><div class="oc-sub">1,613 → 451 per release</div></div>
+      <div class="oc r d2"><div class="oc-num">422K</div><div class="oc-label">Households Impacted</div><div class="oc-sub">Project Janus scope</div></div>
+      <div class="oc r d3"><div class="oc-num">9.2M</div><div class="oc-label">Sessions Stabilized</div><div class="oc-sub">Post-auth redesign</div></div>
+      <div class="oc r d4"><div class="oc-num">15+</div><div class="oc-label">Releases in 18 Months</div><div class="oc-sub">Consistent quarterly cadence</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════ LESSONS ══════════════ -->
+<section class="sec" id="lessons" style="background:var(--warm);">
+  <div class="sec-inner">
+    <div class="r"><div class="ch">07 · Lessons Learned</div></div>
+    <h2 class="st r d1">What this work<br>actually <em>taught me</em></h2>
+    <div class="lesson-grid">
+      <div class="lesson-card r d1">
+        <div class="lc-title">Objectives &gt; Operations</div>
+        <p class="lc-body">Purpose guides process. When teams don't know why they're building something, they optimize for the wrong things. Clarity of objective is the highest-leverage design work.</p>
+      </div>
+      <div class="lesson-card r d2">
+        <div class="lc-title">Design Leadership = Bridging, not Filling Gaps</div>
+        <p class="lc-body">The job isn't to patch holes. It's to connect people — product, engineering, support — around a shared picture. Gaps fill themselves when alignment exists.</p>
+      </div>
+      <div class="lesson-card r d3">
+        <div class="lc-title">Evidence &gt; Opinion</div>
+        <p class="lc-body">Data aligns faster than debate. Building the evidence pipeline wasn't a research exercise — it was a political one. Shared facts remove the need for persuasion.</p>
+      </div>
+      <div class="lesson-card r d4">
+        <div class="lc-title">Problem &gt; Solution</div>
+        <p class="lc-body">The right question matters more than quick answers. Every time we slowed down to define the problem precisely, we shipped something that actually worked.</p>
+      </div>
+      <div class="lesson-card r d1">
+        <div class="lc-title">Clarity &amp; Cadence unlock Creativity</div>
+        <p class="lc-body">Structure creates space for ideas to thrive. When teams aren't firefighting, they design. When they're not in triage, they think. The system change wasn't administrative — it was creative infrastructure.</p>
+      </div>
+      <div class="lesson-card r d2">
+        <div class="lc-title">Sustainability &gt; Efficiency</div>
+        <p class="lc-body">Lasting impact over short-term speed. Moving fast on the wrong thing is expensive. The 4 Moves framework was slow to establish and fast to compound.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════ FUTURE FOCUS ══════════════ -->
+<section class="sec" style="background:var(--dark);">
+  <div class="sec-inner">
+    <div class="r"><div class="ch ch-dark">08 · Future Focus</div></div>
+    <h2 class="st-d r d1">What I'm<br><em>building toward</em></h2>
+    <div class="ff-grid r d1">
+      <div class="ff-card">
+        <div class="ff-title">Craft &amp; Care</div>
+        <p class="ff-body">Design with intention. Every detail respects the user. The work is only done when the experience feels inevitable — not when it's shipped.</p>
+      </div>
+      <div class="ff-card">
+        <div class="ff-title">System &amp; Scale</div>
+        <p class="ff-body">Build frameworks that multiply value across millions. Trust empowers speed. Accountability drives impact. The two aren't in tension — they're the same thing.</p>
+      </div>
+      <div class="ff-card">
+        <div class="ff-title">Freedom &amp; Responsibility</div>
+        <p class="ff-body">Lead toward independence. The goal is a team that doesn't need me in every room — not because I left, but because I built something that works without me.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════ CTA ══════════════ -->
+<section class="cta-sec">
+  <div class="cta-d"></div>
+  <div class="cta-g"></div>
+  <h2 class="cta-title r">Ready to drive?<br><em>Let's talk.</em></h2>
+  <p class="cta-sub r d1">Happy to walk through the research, the system, or the process in depth.</p>
+  <a href="mailto:refaelima.work@gmail.com" class="cta-btn r d2">refaelima.work@gmail.com</a>
+</section>
+
+
+<script>
+const prog=document.getElementById('prog');
+const nav=document.getElementById('nav');
+const dot=document.getElementById('cur-dot');
+const ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  dot.style.left=(mx-2.5)+'px';
+  dot.style.top=(my-2.5)+'px';
+});
+(function lerp(){
+  rx+=(mx-rx-14)*.1;ry+=(my-ry-14)*.1;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(lerp);
+})();
+
+document.querySelectorAll('a,.ic,.mc,.oc,.lesson-card,.ff-card,.hs,.phone-frame,.role-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='44px';ring.style.height='44px';ring.style.opacity='.7';dot.style.transform='scale(2)';});
+  el.addEventListener('mouseleave',()=>{ring.style.width='28px';ring.style.height='28px';ring.style.opacity='.4';dot.style.transform='scale(1)';});
+});
+
+window.addEventListener('scroll',()=>{
+  const t=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;
+  prog.style.width=(t/h*100)+'%';
+  nav.classList.toggle('scrolled',t>60);
+});
+
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});
+},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.r').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

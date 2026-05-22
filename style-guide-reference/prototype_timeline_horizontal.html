@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Experience Journey · Refaeli Ma</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#181820;--ink-mid:#3a3a48;--ink-light:#888;--ink-xlight:#bbc;
+  --rule:#DFE1FF;--accent:#3C49FF;--accent-mid:#8D94FF;
+  --bg:#eef0f8;
+  --sans:'Outfit',system-ui,sans-serif;--serif:'DM Serif Display',Georgia,serif;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);}
+body{font-family:var(--sans);color:var(--ink);cursor:none;}
+
+/* ── CURSOR ── */
+#cur-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:999;transition:transform .12s;}
+#cur-ring{width:28px;height:28px;border:1px solid var(--accent-mid);border-radius:50%;position:fixed;pointer-events:none;z-index:998;opacity:.4;transition:width .22s,height .22s,opacity .22s;}
+
+/* ── PROGRESS ── */
+#prog{position:fixed;bottom:0;left:0;height:2px;background:var(--accent);width:0%;z-index:200;}
+
+/* ── FIXED UI ── */
+.fixed-ui{position:fixed;inset:0;z-index:100;pointer-events:none;}
+.ui-label{
+  position:absolute;top:2.2rem;left:3rem;
+  font-size:7pt;font-weight:600;letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(60,73,255,.3);display:flex;align-items:center;gap:.5rem;
+}
+.ui-label::before{content:'';display:block;width:18px;height:1px;background:rgba(60,73,255,.2);}
+.ui-counter{
+  position:absolute;top:2rem;right:3rem;
+  font-family:var(--serif);display:flex;align-items:baseline;gap:.3rem;
+}
+.ui-cur{font-size:18pt;color:var(--ink-mid);transition:all .4s;}
+.ui-sep,.ui-tot{font-size:10pt;color:var(--ink-xlight);}
+.ui-dots{
+  position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);
+  display:flex;gap:.8rem;align-items:center;pointer-events:auto;
+}
+.ui-dot{width:5px;height:5px;border-radius:50%;background:rgba(60,73,255,.15);cursor:pointer;transition:background .3s,transform .3s cubic-bezier(.34,1.56,.64,1);}
+.ui-dot.active{background:var(--accent);transform:scale(1.6);}
+.ui-hint{
+  position:absolute;bottom:2.2rem;right:3rem;
+  display:flex;align-items:center;gap:.5rem;
+  font-size:6.5pt;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(60,73,255,.28);transition:opacity .5s;
+}
+.hint-line{width:36px;height:1px;background:rgba(60,73,255,.18);position:relative;overflow:visible;}
+.hint-line::after{content:'';position:absolute;right:-1px;top:-3px;width:6px;height:6px;border-right:1px solid rgba(60,73,255,.18);border-top:1px solid rgba(60,73,255,.18);transform:rotate(45deg);}
+.hint-pulse{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:hint-run 1.8s ease-in-out infinite;position:absolute;top:50%;transform:translateY(-50%);}
+@keyframes hint-run{0%{left:0;opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{left:100%;opacity:0;}}
+
+/* ══════════════════════════════════════
+   JOURNEY STRIP
+══════════════════════════════════════ */
+.journey{
+  display:flex;
+  width:calc(6 * 100vw);
+  height:100vh;
+  will-change:transform;
+  position:relative;
+}
+
+/* continuous dot grid */
+.journey::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(60,73,255,.065) 1px,transparent 1px);
+  background-size:26px 26px;
+  pointer-events:none;z-index:0;
+}
+
+/* canvas sits behind everything */
+#wave-canvas{
+  position:absolute;top:0;left:0;
+  z-index:1;pointer-events:none;
+}
+
+/* ══════════════════════════════════════
+   CHAPTER
+   Each is 100vw wide, full height.
+   Content uses % positioning so it works
+   regardless of viewport size.
+══════════════════════════════════════ */
+.chapter{
+  width:100vw;height:100vh;
+  position:relative;flex-shrink:0;
+  overflow:hidden;
+}
+
+/* ── BIG YEAR — parallax layer ── */
+.ch-year{
+  position:absolute;
+  font-family:var(--serif);
+  font-size:clamp(90pt,14vw,160pt);
+  font-weight:400;
+  color:rgba(60,73,255,.05);
+  line-height:1;
+  pointer-events:none;
+  z-index:2;
+  white-space:nowrap;
+  letter-spacing:-.03em;
+  will-change:transform;
+  /* positioned per chapter via class */
+}
+/* Year placement alternates top/bottom per chapter */
+.ch-0 .ch-year{bottom:8vh;left:6vw;}
+.ch-1 .ch-year{top:6vh;right:5vw;}
+.ch-2 .ch-year{bottom:10vh;left:8vw;}
+.ch-3 .ch-year{top:8vh;right:6vw;}
+.ch-4 .ch-year{bottom:7vh;left:6vw;}
+.ch-5 .ch-year{top:5vh;right:5vw;}
+
+/* ── TEXT BLOCK ── */
+.ch-text-wrap{
+  position:absolute;
+  z-index:10;
+  will-change:transform;
+  max-width:400px;
+}
+/* Text positions — anchor near line height, offset per chapter */
+/* Line runs through vertical center of viewport ~50% */
+/* Text alternates above/below the line */
+.ch-0 .ch-text-wrap{left:8vw; top:18vh;}
+.ch-1 .ch-text-wrap{left:8vw; bottom:16vh;}
+.ch-2 .ch-text-wrap{left:8vw; top:16vh;}
+.ch-3 .ch-text-wrap{left:8vw; bottom:18vh;}
+.ch-4 .ch-text-wrap{left:8vw; top:16vh;}
+.ch-5 .ch-text-wrap{left:8vw; bottom:16vh;}
+
+/* ── VISUAL BLOCK ── */
+.ch-visual-wrap{
+  position:absolute;
+  z-index:10;
+  will-change:transform;
+}
+/* Visuals on opposite side of text */
+.ch-0 .ch-visual-wrap{right:8vw; bottom:14vh;}
+.ch-1 .ch-visual-wrap{right:8vw; top:14vh;}
+.ch-2 .ch-visual-wrap{right:8vw; bottom:16vh;}
+.ch-3 .ch-visual-wrap{right:8vw; top:14vh;}
+.ch-4 .ch-visual-wrap{right:8vw; bottom:14vh;}
+.ch-5 .ch-visual-wrap{right:8vw; top:14vh;}
+
+/* ── ENTRANCE ANIMATIONS ── */
+/* Elements flow in from their natural direction */
+.ch-text-wrap{
+  opacity:0;
+  transition:opacity .65s ease, transform .65s cubic-bezier(.22,1,.36,1);
+}
+.ch-text-wrap.above-line{transform:translateY(-28px);}
+.ch-text-wrap.below-line{transform:translateY(28px);}
+.ch-text-wrap.visible{opacity:1;transform:translateY(0);}
+
+.ch-visual-wrap{
+  opacity:0;
+  transition:opacity .65s .12s ease, transform .65s .12s cubic-bezier(.22,1,.36,1);
+}
+.ch-visual-wrap.from-right{transform:translateX(32px);}
+.ch-visual-wrap.from-left{transform:translateX(-32px);}
+.ch-visual-wrap.visible{opacity:1;transform:translate(0);}
+
+/* ── TYPOGRAPHY ── */
+.ch-kicker{
+  font-size:7pt;font-weight:600;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--accent-mid);margin-bottom:.8rem;
+  display:flex;align-items:center;gap:.45rem;
+}
+.ch-kicker::after{content:'';display:block;height:1px;width:22px;background:rgba(60,73,255,.18);}
+.ch-title{
+  font-family:var(--serif);
+  font-size:clamp(22pt,2.8vw,34pt);
+  font-weight:400;color:var(--ink);line-height:1.1;
+  margin-bottom:1rem;
+}
+.ch-title em{font-style:italic;color:var(--accent);}
+.ch-body{
+  font-size:10pt;font-weight:300;color:var(--ink-mid);
+  line-height:1.8;margin-bottom:1.1rem;max-width:380px;
+}
+.ch-body strong{font-weight:500;color:var(--ink);}
+.ch-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.9rem;}
+.ch-tag{
+  font-size:6.2pt;font-weight:500;letter-spacing:.11em;text-transform:uppercase;
+  padding:.25rem .75rem;border:1px solid rgba(60,73,255,.12);
+  border-radius:100px;color:rgba(60,73,255,.42);
+}
+.ch-cta{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:7.5pt;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--accent);text-decoration:none;
+  transition:gap .2s,color .2s;
+}
+.ch-cta::after{content:'→';}
+.ch-cta:hover{gap:.7rem;color:var(--ink);}
+
+/* ── VISUAL COMPONENTS ── */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;width:270px;}
+.stat-card{
+  background:rgba(255,255,255,.72);border:1px solid rgba(60,73,255,.1);
+  border-radius:12px;padding:1.4rem 1rem;text-align:center;
+  backdrop-filter:blur(8px);cursor:default;
+  transition:border-color .22s,transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
+}
+.stat-card:hover{border-color:var(--accent-mid);transform:translateY(-4px);box-shadow:0 8px 22px rgba(60,73,255,.08);}
+.stat-num{font-family:var(--serif);font-size:20pt;color:var(--accent);line-height:1;margin-bottom:.35rem;}
+.stat-label{font-size:6pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-light);line-height:1.45;}
+
+.award-list{display:flex;flex-direction:column;gap:.45rem;width:290px;}
+.award-item{
+  display:flex;align-items:center;gap:.8rem;
+  padding:.7rem 1rem;
+  background:rgba(255,255,255,.72);border:1px solid rgba(60,73,255,.08);
+  border-radius:9px;backdrop-filter:blur(8px);cursor:default;
+  transition:border-color .22s,transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.award-item:hover{border-color:var(--accent-mid);transform:translateX(4px);}
+.award-icon{font-size:13px;flex-shrink:0;}
+.award-text{font-size:8.5pt;font-weight:300;color:var(--ink-mid);}
+
+.logo-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;width:250px;}
+.logo-card{
+  background:rgba(255,255,255,.72);border:1px solid rgba(60,73,255,.08);
+  border-radius:11px;padding:1.2rem;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.5rem;min-height:80px;backdrop-filter:blur(8px);cursor:default;
+  transition:border-color .22s,transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.logo-card:hover{border-color:var(--accent-mid);transform:translateY(-4px);}
+.logo-icon{font-size:22px;}
+.logo-label{font-size:6.2pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-light);}
+</style>
+</head>
+<body>
+
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+<div id="prog"></div>
+
+<div class="fixed-ui">
+  <div class="ui-label">Experience</div>
+  <div class="ui-counter">
+    <span class="ui-cur" id="ui-cur">01</span>
+    <span class="ui-sep">/</span>
+    <span class="ui-tot">06</span>
+  </div>
+  <div class="ui-dots" id="ui-dots"></div>
+  <div class="ui-hint" id="ui-hint">
+    Scroll to explore
+    <div class="hint-line"><div class="hint-pulse"></div></div>
+  </div>
+</div>
+
+<div class="journey" id="journey">
+  <canvas id="wave-canvas"></canvas>
+
+  <!-- ══ CH 0 — 2011 ══ -->
+  <div class="chapter ch-0" id="ch-0">
+    <div class="ch-year">2011</div>
+    <div class="ch-text-wrap above-line">
+      <div class="ch-kicker">Chapter 01 &nbsp;·&nbsp; 2011–2013</div>
+      <h2 class="ch-title">Finding<br><em>Product Thinking</em></h2>
+      <p class="ch-body">My journey began in <strong>product management</strong> — not making things look better. Understanding <strong>how systems work, how decisions are made, and how behavior is shaped.</strong></p>
+      <div class="ch-tags">
+        <span class="ch-tag">Product Management</span>
+        <span class="ch-tag">Systems Thinking</span>
+        <span class="ch-tag">W.A.S Technology</span>
+      </div>
+    </div>
+    <div class="ch-visual-wrap from-right">
+      <div style="text-align:center;">
+        <div style="font-family:var(--serif);font-size:80pt;color:rgba(60,73,255,.06);line-height:1;letter-spacing:-.02em;margin-bottom:.6rem;">PM</div>
+        <div style="font-family:var(--serif);font-size:12pt;font-style:italic;color:var(--ink-light);line-height:1.65;max-width:210px;">"Not how it looks.<br>How it <em style='color:var(--accent);'>works.</em>"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CH 1 — 2013 ══ -->
+  <div class="chapter ch-1" id="ch-1">
+    <div class="ch-year">2013</div>
+    <div class="ch-text-wrap below-line">
+      <div class="ch-kicker">Chapter 02 &nbsp;·&nbsp; 2013–2018</div>
+      <h2 class="ch-title">ArtCenter<br><em>College of Design</em></h2>
+      <p class="ch-body">Studied, failed, rebuilt. Collaborated with <strong>Amazon Echo</strong> on future vision. Studied at <strong>IDA Italy.</strong> Exhibited at ICFF NYC. Later invited back as <strong>guest professor.</strong></p>
+      <div class="ch-tags">
+        <span class="ch-tag">B.S. Industrial Design</span>
+        <span class="ch-tag">Amazon / Echo</span>
+        <span class="ch-tag">IDA Italy</span>
+        <span class="ch-tag">Guest Professor</span>
+      </div>
+    </div>
+    <div class="ch-visual-wrap from-right">
+      <div class="award-list">
+        <div class="award-item"><span class="award-icon">🏆</span><span class="award-text">A' Design Award — Winner & Jury Member</span></div>
+        <div class="award-item"><span class="award-icon">🌍</span><span class="award-text">European Product Design Award</span></div>
+        <div class="award-item"><span class="award-icon">🗽</span><span class="award-text">29th Annual ICFF NYC Show</span></div>
+        <div class="award-item"><span class="award-icon">📐</span><span class="award-text">ArtCenter — Guest Professor '16–17</span></div>
+        <div class="award-item"><span class="award-icon">🔊</span><span class="award-text">Amazon Echo — Future Vision</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CH 2 — 2018 ══ -->
+  <div class="chapter ch-2" id="ch-2">
+    <div class="ch-year">2018</div>
+    <div class="ch-text-wrap above-line">
+      <div class="ch-kicker">Chapter 03 &nbsp;·&nbsp; 2018–2021</div>
+      <h2 class="ch-title">Building<br><em>Range</em></h2>
+      <p class="ch-body">Founded <strong>13 Orphans Design Studio.</strong> Then entered automotive — where digital and physical collide. In-car interfaces that must survive motion, culture, and context.</p>
+      <div class="ch-tags">
+        <span class="ch-tag">13 Orphans Studio</span>
+        <span class="ch-tag">BMW · KIA · Ford</span>
+        <span class="ch-tag">HMI Design</span>
+      </div>
+    </div>
+    <div class="ch-visual-wrap from-right">
+      <div class="logo-grid">
+        <div class="logo-card"><div class="logo-icon">🚗</div><div class="logo-label">BMW</div></div>
+        <div class="logo-card"><div class="logo-icon">🚙</div><div class="logo-label">KIA</div></div>
+        <div class="logo-card"><div class="logo-icon">🏎</div><div class="logo-label">Ford</div></div>
+        <div class="logo-card"><div class="logo-icon">✦</div><div class="logo-label">13 Orphans</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CH 3 — 2021 ══ -->
+  <div class="chapter ch-3" id="ch-3">
+    <div class="ch-year">2021</div>
+    <div class="ch-text-wrap below-line">
+      <div class="ch-kicker">Chapter 04 &nbsp;·&nbsp; 2021–2023</div>
+      <h2 class="ch-title">BlueJeans<br><em>by Verizon</em></h2>
+      <p class="ch-body">Pandemic era. Led Remote Learning platform. Built <strong>900+ component system</strong> in Figma — enterprise-scale atomic design. Feature adoption <strong>+12%.</strong> Dev time <strong>−85%.</strong></p>
+      <a href="#" class="ch-cta">View Case Study</a>
+    </div>
+    <div class="ch-visual-wrap from-right">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num">900+</div><div class="stat-label">Components</div></div>
+        <div class="stat-card"><div class="stat-num">85%</div><div class="stat-label">Faster Dev</div></div>
+        <div class="stat-card"><div class="stat-num">12%</div><div class="stat-label">Adoption</div></div>
+        <div class="stat-card"><div class="stat-num">11</div><div class="stat-label">Teams</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CH 4 — 2023 ══ -->
+  <div class="chapter ch-4" id="ch-4">
+    <div class="ch-year">2023</div>
+    <div class="ch-text-wrap above-line">
+      <div class="ch-kicker">Chapter 05 &nbsp;·&nbsp; 2023–2024</div>
+      <h2 class="ch-title">Verizon<br><em>Home App</em></h2>
+      <p class="ch-body">Complexity at full scale. Process, alignment, NPS, accessibility, legal, systems, ops. <strong>From Chaos to Cadence.</strong> Rating recovered: <strong>1.7 → 4.5.</strong></p>
+      <div class="ch-tags">
+        <span class="ch-tag">4 Moves</span>
+        <span class="ch-tag">Project Janus</span>
+        <span class="ch-tag">Design Operations</span>
+      </div>
+      <a href="#" class="ch-cta">View Case Study</a>
+    </div>
+    <div class="ch-visual-wrap from-right">
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num" style="font-size:14pt;">1.7→4.5</div><div class="stat-label">iOS Rating</div></div>
+        <div class="stat-card"><div class="stat-num">860k+</div><div class="stat-label">Customers</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:#1a7a3c;">72%</div><div class="stat-label">Fewer Tickets</div></div>
+        <div class="stat-card"><div class="stat-num">15+</div><div class="stat-label">Releases</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CH 5 — 2026 ══ -->
+  <div class="chapter ch-5" id="ch-5">
+    <div class="ch-year">2026</div>
+    <div class="ch-text-wrap below-line">
+      <div class="ch-kicker">Chapter 06 &nbsp;·&nbsp; Now</div>
+      <h2 class="ch-title">Identity<br><em>Architecture</em></h2>
+      <p class="ch-body">Verizon's Identity & Profile ecosystem. The invisible architecture connecting <strong>households, devices, behaviors, services</strong> — one intelligent system. Beyond products.</p>
+      <div class="ch-tags">
+        <span class="ch-tag">Identity Architecture</span>
+        <span class="ch-tag">AI Readiness</span>
+        <span class="ch-tag">Ecosystem Design</span>
+      </div>
+      <a href="#" class="ch-cta">Explore the System</a>
+    </div>
+    <div class="ch-visual-wrap from-right">
+      <svg viewBox="0 0 230 210" style="width:210px;">
+        <circle cx="115" cy="105" r="3" fill="var(--accent)" opacity=".55"/>
+        <circle cx="115" cy="105" r="34" fill="none" stroke="rgba(60,73,255,.13)" stroke-width="1.5"/>
+        <circle cx="115" cy="105" r="68" fill="none" stroke="rgba(60,73,255,.07)" stroke-width="1"/>
+        <circle cx="115" cy="105" r="100" fill="none" stroke="rgba(60,73,255,.04)" stroke-width="1"/>
+        <circle cx="115" cy="71" r="4" fill="var(--accent-mid)" opacity=".5"><animate attributeName="opacity" values=".5;.8;.5" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="149" cy="105" r="4" fill="var(--accent-mid)" opacity=".45"><animate attributeName="opacity" values=".45;.75;.45" dur="3s" repeatCount="indefinite"/></circle>
+        <circle cx="115" cy="139" r="4" fill="var(--accent-mid)" opacity=".5"><animate attributeName="opacity" values=".5;.8;.5" dur="2.7s" repeatCount="indefinite"/></circle>
+        <circle cx="81" cy="105" r="4" fill="var(--accent-mid)" opacity=".45"><animate attributeName="opacity" values=".45;.75;.45" dur="2.2s" repeatCount="indefinite"/></circle>
+        <line x1="115" y1="105" x2="115" y2="71" stroke="rgba(60,73,255,.14)" stroke-width="1"/>
+        <line x1="115" y1="105" x2="149" y2="105" stroke="rgba(60,73,255,.14)" stroke-width="1"/>
+        <line x1="115" y1="105" x2="115" y2="139" stroke="rgba(60,73,255,.14)" stroke-width="1"/>
+        <line x1="115" y1="105" x2="81" y2="105" stroke="rgba(60,73,255,.14)" stroke-width="1"/>
+        <text x="115" y="25" text-anchor="middle" font-size="7" fill="rgba(60,73,255,.4)" font-family="Outfit,sans-serif">Auth</text>
+        <text x="184" y="68" text-anchor="middle" font-size="7" fill="rgba(60,73,255,.35)" font-family="Outfit,sans-serif">Mobile</text>
+        <text x="184" y="148" text-anchor="middle" font-size="7" fill="rgba(60,73,255,.35)" font-family="Outfit,sans-serif">Devices</text>
+        <text x="46" y="68" text-anchor="middle" font-size="7" fill="rgba(60,73,255,.35)" font-family="Outfit,sans-serif">Profile</text>
+        <text x="46" y="148" text-anchor="middle" font-size="7" fill="rgba(60,73,255,.35)" font-family="Outfit,sans-serif">Home</text>
+        <text x="115" y="110" text-anchor="middle" font-size="7" fill="var(--accent)" font-family="Outfit,sans-serif" font-weight="500">Identity</text>
+      </svg>
+    </div>
+  </div>
+
+</div><!-- end journey -->
+
+<script>
+const N=6;
+const VH=window.innerHeight;
+const VW=window.innerWidth;
+
+/* ══════════════════════════════════════
+   CURSOR
+══════════════════════════════════════ */
+const curDot=document.getElementById('cur-dot');
+const curRing=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  curDot.style.left=(mx-2.5)+'px';curDot.style.top=(my-2.5)+'px';
+});
+(function rl(){rx+=(mx-rx-14)*.1;ry+=(my-ry-14)*.1;curRing.style.left=rx+'px';curRing.style.top=ry+'px';requestAnimationFrame(rl);})();
+document.querySelectorAll('a,.stat-card,.award-item,.logo-card,.ui-dot').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{curRing.style.width='44px';curRing.style.height='44px';curRing.style.opacity='.7';curDot.style.transform='scale(2)';});
+  el.addEventListener('mouseleave',()=>{curRing.style.width='28px';curRing.style.height='28px';curRing.style.opacity='.4';curDot.style.transform='scale(1)';});
+});
+
+/* ══════════════════════════════════════
+   SETUP
+══════════════════════════════════════ */
+const journey=document.getElementById('journey');
+const chapters=document.querySelectorAll('.chapter');
+const prog=document.getElementById('prog');
+const uiCur=document.getElementById('ui-cur');
+const uiHint=document.getElementById('ui-hint');
+const dotsWrap=document.getElementById('ui-dots');
+
+for(let i=0;i<N;i++){
+  const d=document.createElement('div');
+  d.className='ui-dot'+(i===0?' active':'');
+  d.onclick=()=>goTo(i);
+  dotsWrap.appendChild(d);
+}
+const navDots=document.querySelectorAll('.ui-dot');
+
+/* ══════════════════════════════════════
+   WAVE MATH — heartbeat
+   Long flat baseline, dramatic spikes
+   at each chapter, each spike unique
+══════════════════════════════════════ */
+const BASELINE=0.5; // fraction of VH
+const TW=N*VW;
+
+/* Heartbeat events — cx is fraction of TW */
+const beats=[
+  /* CH0 entry: subtle first beat */
+  {cx:0.06, amp:-0.20, w:0.022},
+  {cx:0.08, amp: 0.12, w:0.014},
+  /* CH0→CH1: medium spike */
+  {cx:0.16, amp:-0.30, w:0.020},
+  {cx:0.18, amp: 0.18, w:0.013},
+  /* CH1: bigger double beat */
+  {cx:0.26, amp:-0.16, w:0.018},
+  {cx:0.30, amp:-0.38, w:0.018},
+  {cx:0.32, amp: 0.24, w:0.014},
+  /* CH1→CH2: deep dip first then spike */
+  {cx:0.40, amp: 0.22, w:0.020},
+  {cx:0.43, amp:-0.44, w:0.020},
+  {cx:0.45, amp: 0.16, w:0.013},
+  /* CH2→CH3: dramatic — biggest */
+  {cx:0.54, amp:-0.48, w:0.022},
+  {cx:0.57, amp: 0.30, w:0.016},
+  {cx:0.59, amp:-0.18, w:0.013},
+  /* CH3: medium sustained */
+  {cx:0.65, amp: 0.20, w:0.025},
+  {cx:0.68, amp:-0.28, w:0.020},
+  {cx:0.70, amp: 0.15, w:0.015},
+  /* CH4→CH5: gentle winding down */
+  {cx:0.79, amp:-0.22, w:0.022},
+  {cx:0.81, amp: 0.14, w:0.016},
+  /* CH5 final: soft */
+  {cx:0.90, amp:-0.14, w:0.025},
+  {cx:0.93, amp: 0.08, w:0.018},
+];
+
+function waveY(x){
+  const t=x/TW;
+  let y=BASELINE*VH;
+  beats.forEach(b=>{
+    const d=t-b.cx;
+    y+=b.amp*VH*Math.exp(-(d*d)/(2*b.w*b.w));
+  });
+  return Math.max(VH*0.12,Math.min(VH*0.88,y));
+}
+
+/* Pre-cache */
+const STEP=4;
+const cacheLen=Math.ceil(TW/STEP)+2;
+const wCache=new Float32Array(cacheLen);
+for(let i=0;i<cacheLen;i++) wCache[i]=waveY(i*STEP);
+function getY(x){
+  const i=Math.max(0,Math.min(cacheLen-2,Math.floor(x/STEP)));
+  const f=(x/STEP)-i;
+  return wCache[i]*(1-f)+wCache[i+1]*f;
+}
+
+/* ══════════════════════════════════════
+   CANVAS
+══════════════════════════════════════ */
+const canvas=document.getElementById('wave-canvas');
+const ctx=canvas.getContext('2d');
+
+function resizeCanvas(){
+  canvas.width=TW;
+  canvas.height=VH;
+  canvas.style.width=TW+'px';
+  canvas.style.height=VH+'px';
+}
+resizeCanvas();
+
+/* Node positions — at chapter midpoints on wave */
+const nodeXFracs=[0.07, 0.24, 0.41, 0.57, 0.73, 0.90];
+
+/* Pulse particles */
+const pulses=[
+  {t:0.02,  spd:1/(TW*14), r:2.2, a:0.32},
+  {t:0.4,   spd:1/(TW*22), r:1.5, a:0.20},
+  {t:0.7,   spd:1/(TW*18), r:1.8, a:0.26},
+  {t:0.55,  spd:1/(TW*30), r:1.2, a:0.16},
+  {t:0.15,  spd:1/(TW*12), r:2.5, a:0.18},
+];
+
+function drawFrame(scrollPct,dt,ts){
+  ctx.clearRect(0,0,TW,VH);
+  const revX=scrollPct*TW;
+
+  /* Ghost wave — full length, very subtle dashed */
+  ctx.beginPath();
+  ctx.strokeStyle='rgba(60,73,255,0.09)';
+  ctx.lineWidth=0.8;
+  ctx.setLineDash([4,11]);
+  for(let x=0;x<=TW;x+=STEP){
+    const y=getY(x);
+    x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  /* Revealed wave */
+  if(revX>1){
+    ctx.beginPath();
+    ctx.strokeStyle='rgba(60,73,255,0.32)';
+    ctx.lineWidth=1.3;
+    ctx.lineCap='round';
+    ctx.lineJoin='round';
+    for(let x=0;x<=revX;x+=STEP){
+      const y=getY(x);
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  }
+
+  /* Chapter nodes */
+  nodeXFracs.forEach((f,i)=>{
+    const nx=f*TW;
+    const ny=getY(nx);
+    const reached=nx<=revX+100;
+    const t=ts*0.001;
+
+    if(reached){
+      /* Breathing pulse ring */
+      const pr=9+Math.sin(t*1.8+i)*3;
+      const pa=0.06+Math.sin(t*1.8+i)*0.03;
+      ctx.beginPath();
+      ctx.arc(nx,ny,pr,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(60,73,255,${pa})`;
+      ctx.lineWidth=0.8;
+      ctx.stroke();
+    }
+
+    /* Outer ring */
+    ctx.beginPath();
+    ctx.arc(nx,ny,reached?6:4,0,Math.PI*2);
+    ctx.strokeStyle=reached?'rgba(60,73,255,0.48)':'rgba(60,73,255,0.14)';
+    ctx.lineWidth=1;
+    ctx.stroke();
+
+    /* Inner fill */
+    ctx.beginPath();
+    ctx.arc(nx,ny,reached?3:2,0,Math.PI*2);
+    ctx.fillStyle=reached?'rgba(60,73,255,0.55)':'rgba(60,73,255,0.18)';
+    ctx.fill();
+
+    /* Connector to text block — thin dashed */
+    if(reached){
+      const chI=i;
+      const ch=chapters[chI];
+      const txt=ch.querySelector('.ch-text-wrap');
+      if(txt){
+        const r=txt.getBoundingClientRect();
+        /* Convert screen rect to canvas coords for this chapter */
+        const chOffX=chI*VW;
+        const tcx=chOffX+r.left+(r.width*0.1);
+        const tcy=r.top+(r.height*0.5);
+        ctx.beginPath();
+        ctx.moveTo(nx,ny);
+        const mid_x=(nx+tcx)*0.5;
+        ctx.bezierCurveTo(mid_x,ny,mid_x,tcy,tcx,tcy);
+        ctx.strokeStyle='rgba(60,73,255,0.06)';
+        ctx.lineWidth=0.7;
+        ctx.setLineDash([2,6]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+  });
+
+  /* Pulse particles */
+  pulses.forEach(p=>{
+    p.t=(p.t+p.spd*dt)%1;
+    const px=p.t*TW;
+    const py=getY(px);
+    ctx.beginPath();
+    ctx.arc(px,py,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(60,73,255,${p.a})`;
+    ctx.fill();
+  });
+}
+
+/* ══════════════════════════════════════
+   PARALLAX
+   Year text and title float at different
+   speeds as you scroll through each chapter.
+══════════════════════════════════════ */
+function applyParallax(scrollX){
+  chapters.forEach((ch,i)=>{
+    /* How far into this chapter are we? -1=not started, 0=entering, 1=leaving */
+    const chX=i*VW;
+    const localProgress=(scrollX-chX)/VW; /* -1 to 2 */
+
+    /* Year — moves faster (parallax factor 0.35) */
+    const yr=ch.querySelector('.ch-year');
+    if(yr){
+      const yOffset=localProgress*VW*0.35;
+      yr.style.transform=`translateX(${-yOffset}px)`;
+    }
+
+    /* Text — slight parallax (factor 0.12) */
+    const txt=ch.querySelector('.ch-text-wrap');
+    if(txt&&txt.classList.contains('visible')){
+      const tOffset=localProgress*VW*0.12;
+      txt.style.transform=`translateX(${-tOffset}px)`;
+    }
+
+    /* Visual — opposite direction, slower (factor 0.08) */
+    const vis=ch.querySelector('.ch-visual-wrap');
+    if(vis&&vis.classList.contains('visible')){
+      const vOffset=localProgress*VW*0.08;
+      vis.style.transform=`translateX(${vOffset}px)`;
+    }
+  });
+}
+
+/* ══════════════════════════════════════
+   SCROLL STATE + MAIN LOOP
+══════════════════════════════════════ */
+let curX=0, tgtX=0, maxX=(N-1)*VW;
+let hasScrolled=false, lastT=0;
+
+function loop(ts){
+  const dt=Math.min(ts-lastT,50); lastT=ts;
+
+  /* Smooth scroll */
+  const diff=tgtX-curX;
+  curX+=diff*(Math.abs(diff)>0.1?0.085:1);
+  journey.style.transform=`translateX(${-curX}px)`;
+
+  const pct=Math.max(0,Math.min(1,curX/maxX));
+  prog.style.width=(pct*100)+'%';
+
+  /* Chapter index */
+  const ci=Math.max(0,Math.min(N-1,Math.round(curX/VW)));
+  uiCur.textContent=String(ci+1).padStart(2,'0');
+  navDots.forEach((d,i)=>d.classList.toggle('active',i===ci));
+
+  /* Visibility + entrance animation */
+  chapters.forEach((ch,i)=>{
+    const dist=Math.abs(curX-i*VW);
+    const entering=dist<VW*0.65;
+
+    const txt=ch.querySelector('.ch-text-wrap');
+    const vis=ch.querySelector('.ch-visual-wrap');
+
+    if(entering){
+      if(txt&&!txt.classList.contains('visible')){
+        txt.classList.add('visible');
+        /* Reset parallax transform to allow transition */
+        txt.style.transition='opacity .65s ease, transform .65s cubic-bezier(.22,1,.36,1)';
+      }
+      if(vis&&!vis.classList.contains('visible')){
+        vis.classList.add('visible');
+        vis.style.transition='opacity .65s .12s ease, transform .65s .12s cubic-bezier(.22,1,.36,1)';
+      }
+    } else {
+      if(txt) txt.classList.remove('visible');
+      if(vis) vis.classList.remove('visible');
+    }
+  });
+
+  /* Parallax */
+  applyParallax(curX);
+
+  /* Draw wave */
+  drawFrame(pct,dt,ts);
+
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ══════════════════════════════════════
+   INPUT
+══════════════════════════════════════ */
+window.addEventListener('wheel',e=>{
+  e.preventDefault();
+  if(!hasScrolled){
+    hasScrolled=true;
+    uiHint.style.opacity='0';
+    setTimeout(()=>uiHint.style.display='none',500);
+  }
+  tgtX=Math.max(0,Math.min(maxX,tgtX+e.deltaY*1.2));
+},{passive:false});
+
+let tx=0,tt=0;
+window.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;tt=tgtX;},{passive:true});
+window.addEventListener('touchmove',e=>{tgtX=Math.max(0,Math.min(maxX,tt+(tx-e.touches[0].clientX)*1.5));},{passive:true});
+
+window.addEventListener('keydown',e=>{
+  const s=VW*.8;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') tgtX=Math.min(maxX,tgtX+s);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')    tgtX=Math.max(0,tgtX-s);
+});
+
+function goTo(i){ tgtX=i*VW; }
+
+window.addEventListener('resize',()=>{
+  const nm=(N-1)*window.innerWidth;
+  tgtX=(tgtX/maxX)*nm; curX=tgtX; maxX=nm;
+  resizeCanvas();
+});
+
+/* First chapter in on load */
+setTimeout(()=>{
+  const ch=chapters[0];
+  ch.querySelector('.ch-text-wrap')?.classList.add('visible');
+  ch.querySelector('.ch-visual-wrap')?.classList.add('visible');
+},200);
+</script>
+</body>
+</html>

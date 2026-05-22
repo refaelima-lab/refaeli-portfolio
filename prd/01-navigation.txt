@@ -1,0 +1,181 @@
+﻿Navigation System Specification
+Purpose
+Provide orientation without disrupting immersion.
+The navigation should feel:
+* architectural
+* lightweight
+* intelligent
+* quietly responsive
+It should never dominate the experience or compete with the content.
+The navigation exists to:
+* maintain spatial awareness
+* support smooth exploration
+* reinforce pacing and structure
+* subtly communicate progression through the narrative
+________________
+
+
+Navigation Structure
+Left Side
+Brand / Home Link
+REFAELI MA
+Behavior:
+* Functions as return-to-top interaction
+* Text-link only
+* Minimal styling
+* No logo mark required
+* Should feel understated and confident
+________________
+
+
+Right Side
+Navigation Items
+Right-aligned navigation structure.
+Section names may evolve slightly based on narrative refinement, but the current structure is:
+* Philosophy
+* Experience
+* Work
+* Object
+* Contact
+Navigation labels should prioritize:
+* clarity
+* rhythm
+* narrative consistency
+* concise language
+Avoid overly clever naming.
+The structure should feel intentional and editorial.
+________________
+
+
+Visual Direction
+Style
+The navigation should integrate naturally into the environment rather than feeling like a separate UI layer.
+Visual tone:
+* minimal
+* elegant
+* refined
+* low-noise
+* slightly cinematic
+Avoid:
+* heavy borders
+* oversized navigation
+* loud active states
+* excessive blur or glow
+* startup-style pill navigation
+________________
+
+
+Layout Requirements
+Container
+* Full-width horizontal layout
+* Left/right balanced composition
+* Generous horizontal spacing
+* Vertical padding should feel breathable but compact
+Alignment
+* Left: site name
+* Right: navigation items
+* Navigation items remain consistently right-aligned across responsive breakpoints
+________________
+
+
+Navigation States
+Navigation states must feel clearly differentiated while remaining subtle and refined.
+Regular State
+* Low-to-medium emphasis
+* Slightly muted appearance
+* Integrated into page atmosphere
+Hover State
+* Increased clarity and contrast
+* Smooth transition behavior
+* Minimal motion or opacity shift
+* No exaggerated scaling or animation
+Hover should feel:
+responsive, not decorative
+Active / Current Section State
+The currently active section should feel clearly grounded and intentional.
+Potential indicators:
+* brighter text
+* underline or indicator line
+* opacity shift
+* slight weight adjustment
+* subtle motion cue
+Avoid:
+* aggressive color changes
+* oversized indicators
+* bouncing transitions
+________________
+
+
+Scroll Behavior
+Initial State
+Navigation should initially feel almost embedded into the page.
+Very light visual presence.
+________________
+
+
+On Scroll
+As the user scrolls, the navigation container should gradually transition into a subtle glass-like surface.
+Glass Effect Requirements
+* soft transparency
+* restrained blur
+* minimal opacity
+* elegant edge definition
+* atmospheric rather than futuristic
+The effect should feel:
+* calm
+* premium
+* spatially integrated
+Avoid:
+* strong frosted blur
+* overly glossy surfaces
+* neon effects
+* “tech demo” aesthetics
+________________
+
+
+Sticky Behavior
+The navigation should remain accessible without feeling rigid or overly persistent.
+Requirements:
+* soft sticky behavior
+* smooth transitions
+* no snapping
+* no aggressive motion
+The navigation should feel:
+gently present, not locked in place
+________________
+
+
+Interaction Requirements
+Section Navigation
+* Smooth scroll transitions between sections
+* Scroll movement should feel cinematic and paced
+* Avoid abrupt anchor jumping
+Transition Feel
+Movement should reinforce immersion and continuity throughout the page.
+Scrolling between sections should feel:
+* fluid
+* intentional
+* uninterrupted
+________________
+
+
+Responsive Behavior
+On smaller screens:
+* preserve minimal aesthetic
+* maintain right-side navigation logic where possible
+* prioritize readability and spacing
+* avoid cluttered mobile nav patterns
+Potential direction:
+* elegant collapsed navigation
+* minimal overlay interaction
+* subtle transition system
+Mobile should maintain the same emotional tone as desktop:
+* restrained
+* premium
+* calm
+________________
+
+
+Emotional Goal
+The navigation should make the user feel:
+“This experience is carefully designed, highly controlled, and confident enough to stay quiet.”

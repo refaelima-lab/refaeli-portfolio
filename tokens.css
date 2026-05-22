@@ -26,10 +26,10 @@
   --text-quote:        clamp(15pt, 2.2vw, 22pt);   /* was 12–15pt — hero tagline, phi quote */
 
   /* Fixed UI scale (sans) — readable but still refined */
-  --text-body:         11pt;    /* was 9.8pt  → ~15px */
-  --text-body-sm:      10pt;    /* was 9pt    → ~13px */
-  --text-body-base:    11pt;    /* was 10pt   → ~15px */
-  --text-body-lg:      12pt;    /* was 10.5pt → ~16px */
+  --text-body:         13pt;
+  --text-body-sm:      12pt;
+  --text-body-base:    13pt;
+  --text-body-lg:      14pt;
   --text-label:        10pt;    /* was 9.5pt */
   --text-ui:           9pt;     /* was 8.5pt */
   --text-ui-sm:        8.5pt;   /* was 8.2pt */
@@ -230,26 +230,27 @@
   --dur-fast:          0.12s;
   --dur-quick:         0.2s;
   --dur-base:          0.3s;
-  --dur-reveal:        0.95s;
-  --dur-reveal-slow:   1.1s;
-  --dur-long:          1.2s;
+  --dur-reveal:        1.6s;
+  --dur-reveal-slow:   1.9s;
+  --dur-long:          2.0s;
 
   /* Easing */
   --ease-linear:       linear;
   --ease-base:         ease;
   --ease-spring:       cubic-bezier(0.34, 1.56, 0.64, 1);   /* card hover lift */
+  --ease-reveal:       cubic-bezier(0.16, 1, 0.3, 1);       /* content reveals — fast-out */
 
   /* Scroll reveal stagger delays */
-  --delay-d1:          0.07s;
-  --delay-d2:          0.14s;
-  --delay-d3:          0.21s;
-  --delay-d4:          0.28s;
-  --delay-d5:          0.35s;
-  --delay-d6:          0.42s;
+  --delay-d1:          0.12s;
+  --delay-d2:          0.40s;
+  --delay-d3:          0.62s;
+  --delay-d4:          0.84s;
+  --delay-d5:          1.04s;
+  --delay-d6:          1.24s;
 
   /* Scroll reveal initial state */
-  --reveal-offset-y:   22px;
-  --reveal-offset-sm:  14px;
+  --reveal-offset-y:   30px;
+  --reveal-offset-sm:  16px;
   --reveal-offset-xs:  10px;
 
   /* Specific transitions */

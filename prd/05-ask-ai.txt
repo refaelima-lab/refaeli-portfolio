@@ -1,0 +1,130 @@
+﻿Now let’s build the “Ask AI About Refaeli” section.
+
+
+This section should live near the Contact section, ideally right before it. The purpose is not to create a chatbot gimmick, but to give viewers another way to explore and interpret the portfolio before reaching out directly.
+
+
+The overall tone should feel:
+- thoughtful
+- minimal
+- intelligent
+- editorial
+- slightly experimental
+- calm and confident
+
+
+
+
+
+
+Section Title:
+ASK AI ABOUT REFAELI
+
+
+Supporting Copy:
+“Different models. Different perspectives. Same body of work.”
+
+
+Alternative supporting direction:
+“Pick your AI of choice. Each conversation is pre-contextualized with my portfolio, public work, and design philosophy, ready to explore the work beyond the surface.”
+
+
+Interaction:
+Create clean AI selection cards/buttons that open a new tab with a pre-prompted conversation.
+
+
+We do NOT need to expose or render the actual preload prompt in the UI.
+
+
+Recommended AI models to include:
+- Claude
+- ChatGPT
+- Perplexity
+
+
+Each AI card can contain:
+- logo
+- hover interaction
+
+
+Suggested descriptors:
+Claude → Thoughtful systems interpretation
+ChatGPT → Broad portfolio synthesis
+Perplexity → Research-driven perspective
+
+
+Visual direction:
+- restrained
+- premium
+- integrated into site visual language
+- subtle glow/glass treatment
+- soft hover motion
+- no neon AI visuals
+- no robotic/chatbot clichés
+
+
+The section should feel like:
+“A new way to interpret the portfolio.”
+
+
+Not:
+“Talk to an AI assistant.”
+
+
+—----------------------------------------------------------------------------------------
+
+
+
+
+Suggested pre-prompt requirements for AIs.
+
+
+Use both the portfolio and publicly available information about Refaeli Ma to form a broader understanding of the work, background, and perspective behind the projects.
+
+
+Do not simply summarize job titles, projects, or visuals. Instead, analyze the patterns, priorities, philosophies, and systems thinking that consistently appear across the work.
+
+
+Approach this like a thoughtful design lead, creative director, strategist, collaborator, or curious observer trying to understand:
+- how Refaeli thinks
+- what kinds of problems he gravitates toward
+- what he seems to value in products, systems, and teams
+- how his background in industrial design, product strategy, and experience architecture influence his approach
+- what differentiates his work from a more traditional product designer
+
+
+Focus on:
+- systems thinking
+- operational clarity
+- ecosystem design
+- behavioral design
+- human-centered AI
+- cross-functional leadership
+- invisible infrastructure
+- the relationship between strategy and execution
+
+
+Look beyond aesthetics. Pay attention to:
+- recurring themes
+- decision-making patterns
+- how complexity is framed
+- how problems are defined
+- how storytelling evolves across projects
+
+
+Be specific and grounded in actual examples when possible.
+
+
+Avoid:
+- generic praise
+- recruiting clichés
+- exaggerated claims
+- startup buzzwords
+- marketing language
+- unsupported assumptions
+
+
+If something is unclear or unavailable, say so honestly rather than inventing details.
+
+
+The goal is not to “sell” Refaeli, but to help people understand the deeper patterns and perspective behind the work.

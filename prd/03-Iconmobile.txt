@@ -1,0 +1,228 @@
+﻿In-Car Experience Section Specification
+cs-icon-in-car: homepage card only. No separate case study page.
+Work is confidential — card links to NDA notice.
+
+
+Purpose
+This section showcases a different dimension of Refaeli Ma’s design background through automotive and in-car experience work.
+The goal is not to present detailed case studies or process documentation.
+Instead, this section should communicate:
+* systems thinking across physical and digital environments
+* transportation UX understanding
+* interaction beyond the screen
+* premium product sensibility
+* lifestyle-oriented design thinking
+This section should feel:
+* cinematic
+* immersive
+* premium
+* atmospheric
+* emotionally driven
+The emphasis is on:
+* experience
+* interaction
+* environment
+* physical-digital integration
+not dense UX explanation.
+________________
+
+
+Section Title
+IN-CAR EXPERIENCE
+Optional supporting line:
+Designing interaction beyond the screen.
+Or:
+Where physical environments and digital systems become one experience.
+________________
+
+
+Visual Direction
+This section should feel distinctly different from the more structured systems-focused portfolio sections.
+Tone:
+* cinematic
+* premium
+* lifestyle-oriented
+* immersive
+* tactile
+The composition should feel inspired by:
+* automotive launch films
+* luxury vehicle campaigns
+* spatial interaction design
+* ambient product cinematography
+Avoid:
+* grid-heavy UI gallery
+* traditional UX case study layouts
+* excessive text density
+* technical presentation formatting
+________________
+
+
+Layout Direction
+Each automotive project should feel like:
+* a cinematic feature panel
+* a visual moment
+* a curated experience
+Potential layout behaviors:
+* large immersive visuals
+* alternating asymmetrical layouts
+* layered typography over imagery
+* motion-based transitions
+* ambient image movement
+* subtle parallax or depth
+Spacing should remain generous.
+The viewer should feel like they are moving through:
+moments of interaction and atmosphere.
+________________
+
+
+Asset Requirements
+Use image selections from the following folders:
+KIA
+assets/iconmobile/kia
+FORD
+assets/iconmobile/ford
+BMW
+assets/iconmobile/bmw
+Requirements:
+* select strongest cinematic visuals
+* prioritize high-quality renders
+* prioritize lifestyle/environment shots when possible
+* preserve premium visual tone
+* use depth, scale, and layering
+________________
+
+
+Motion Requirements
+Motion should feel:
+* smooth
+* atmospheric
+* premium
+* automotive-inspired
+Potential behaviors:
+* slow cinematic image movement
+* layered reveal transitions
+* hover image shifts
+* ambient glow reflections
+* subtle motion tied to scroll
+Avoid:
+* flashy animation
+* rapid movement
+* exaggerated transitions
+* overly “tech demo” interaction
+________________
+
+
+Confidentiality Requirement
+Include the following note within the section in a subtle, refined style:
+Final design renderings are confidential; visuals shown are for illustrative purposes only.
+This should remain visible but visually understated.
+________________
+
+
+Project Specifications
+KIA NEW ERA
+Asset Location
+assets/iconmobile/kia
+Description
+KIA New Era explored how a brand identity extends beyond form into a unified digital ecosystem, where mobile, web, and in-car experiences shape one coherent expression.
+Tags
+* HMI DESIGN
+* DESIGN SYSTEM
+* AUTOMOTIVE
+* CROSS-PLATFORM EXPERIENCE
+* DIGITAL INTERFACE DESIGN
+* IN-CAR INTERFACE
+* MOBILE & WEB
+Visual Direction
+This section should feel:
+* futuristic but restrained
+* connected
+* ecosystem-oriented
+* design-system-driven
+Potential focus:
+* continuity between platforms
+* connected digital surfaces
+* transportation + lifestyle integration
+* coherent visual language
+________________
+
+
+FORD MUSTANG MACH-E
+Asset Location
+assets/iconmobile/ford
+Important Requirement
+Use the GIF assets in this section.
+Description
+The Mustang Mach-E demonstrates how digital interfaces and physical controls can work together, using a hybrid touchscreen and rotary dial to create intuitive, tactile interaction within a minimalist system.
+Tags
+* HMI DESIGN
+* AUTOMOTIVE
+* IN-CAR INTERFACE
+* INTEGRATED TOUCHSCREEN
+* DIGITAL INTERFACE DESIGN
+* PHYSICAL ROTARY DIAL INTERFACE
+Visual Direction
+This section should emphasize:
+* tactile interaction
+* physical-digital integration
+* motion
+* control surfaces
+* responsiveness
+The rotary dial interaction should feel like:
+interaction becoming physical again.
+Use cinematic motion and interaction-focused framing.
+________________
+
+
+BMW ID 7.0
+Asset Location
+assets/iconmobile/bmw
+Description
+The BMW i7 elevates this further, positioning digital experience as a core part of luxury, where technology, space, and interaction redefine what a flagship vehicle feels like.
+Tags
+* ADVANCED DIGITAL HMI
+* AUTOMOTIVE
+* IN-CAR INTERFACE
+* INTEGRATED CURVED DISPLAY COCKPIT
+* INTERACTION BAR
+* REAR THEATER SCREEN
+* LUXURY ELECTRIC SEDAN
+Visual Direction
+This section should feel:
+* luxurious
+* spatial
+* futuristic
+* calm
+* premium
+Focus on:
+* immersive display environments
+* lighting
+* spatial interaction
+* seamless integration
+* digital luxury experience
+The emotional tone should feel:
+technology disappearing into atmosphere.
+________________
+
+
+Tag Styling Requirements
+Project tags should feel:
+* editorial
+* refined
+* lightweight
+* system-oriented
+Avoid:
+* loud chip components
+* oversized badges
+* colorful UI pills
+Potential direction:
+* uppercase typography
+* thin outlined tags
+* subtle separators
+* low-contrast styling
+________________
+
+
+Emotional Goal
+The viewer should leave this section feeling:
+“This designer understands interaction not just as interface design, but as part of a larger physical, emotional, and environmental experience.”

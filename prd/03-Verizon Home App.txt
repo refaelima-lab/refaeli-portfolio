@@ -1,0 +1,75 @@
+﻿Featured Work — Verizon Home App Specification
+Homepage Featured
+Purpose
+The homepage version should act as:
+* a concise narrative preview
+* a strategic teaser
+* an emotional framing moment
+The goal is to communicate:
+* scale
+* systems complexity
+* operational transformation
+* product vision evolution
+without overwhelming the viewer.
+This section should feel:
+* intelligent
+* restrained
+* operationally grounded
+* systems-oriented
+* quietly ambitious
+________________
+
+
+Homepage Content
+Title
+VERIZON HOME APP
+________________
+
+
+Body Copy
+A product people only opened when something went wrong. Low trust, low engagement, and a system that felt fragmented.
+We reframed it. From a reactive utility into a more proactive, intelligent experience. One that surfaces what matters, guides action, and earns trust over time.
+________________
+
+
+Tags
+* DIGITAL PRODUCT DESIGN
+* DESIGN SYSTEM
+* CROSS-PLATFORM MOBILE APPLICATION
+* SMART HOME / IOT
+* HOME CONNECTIVITY
+* INTELLIGENT ECOSYSTEM
+* 0-1 PRODUCT DEVELOPMENT
+________________
+
+
+CTA
+The CTA should feel:
+* narrative-driven
+* immersive
+* curiosity-inducing
+Potential direction:
+Explore the system behind the experience →
+or
+See how chaos became cadence →
+Avoid generic:
+* View Case Study
+* Learn More
+________________
+
+
+Homepage Asset
+Use:
+hero-shot-with-hand
+Visual direction:
+* cinematic
+* human-centered
+* intelligent-home atmosphere
+* calm technology
+* premium ecosystem feel
+Potential treatment:
+* layered UI + environmental composition
+* soft lighting
+* atmospheric gradients
+* subtle motion overlays
+________________

@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refaeli Ma · Experience Architect</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#181820; --ink-mid:#3a3a48; --ink-light:#888; --ink-xlight:#bbc;
+  --rule:#DFE1FF; --accent:#3C49FF; --accent-mid:#8D94FF; --accent-soft:#f4f4ff;
+  --page:#fafafa; --warm:#f7f6f2; --dark:#0f0f17;
+  --sans:'Outfit',system-ui,sans-serif; --serif:'DM Serif Display',Georgia,serif;
+}
+html{background:var(--dark);scroll-behavior:smooth;}
+body{font-family:var(--sans);color:var(--ink);background:var(--page);font-size:10pt;line-height:1.6;overflow-x:hidden;}
+a{color:var(--accent);text-decoration:none;}
+
+/* ── PROGRESS ── */
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--accent);width:0%;z-index:200;transition:width .08s linear;}
+
+/* ── CURSOR ── */
+#cur-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:999;transition:transform .12s;}
+#cur-ring{width:28px;height:28px;border:1px solid var(--accent-mid);border-radius:50%;position:fixed;pointer-events:none;z-index:998;opacity:.4;transition:width .22s,height .22s,opacity .22s;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:180;padding:.9rem 3rem;display:flex;justify-content:space-between;align-items:center;transition:background .3s,border-color .3s;border-bottom:1px solid transparent;}
+nav.scrolled{background:rgba(250,250,250,.94);backdrop-filter:blur(14px);border-bottom-color:var(--rule);}
+.nav-logo{font-size:8pt;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.5);transition:color .2s;}
+nav.scrolled .nav-logo{color:var(--ink);}
+.nav-logo:hover{color:var(--accent);}
+.nav-links{display:flex;gap:2.2rem;list-style:none;}
+.nav-links a{font-size:7pt;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.3);transition:color .2s;}
+nav.scrolled .nav-links a{color:var(--ink-xlight);}
+.nav-links a:hover{color:var(--accent);}
+.nav-cta{font-size:7pt;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:.45rem 1.3rem;border:1px solid rgba(141,148,255,.3);border-radius:4px;color:var(--accent-mid);transition:background .2s,color .2s,border-color .2s;}
+.nav-cta:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+/* ── SCROLL REVEAL ── */
+.r{opacity:0;transform:translateY(22px);transition:opacity .72s ease,transform .72s ease;}
+.r.on{opacity:1;transform:none;}
+.d1{transition-delay:.07s;}.d2{transition-delay:.14s;}.d3{transition-delay:.21s;}.d4{transition-delay:.28s;}.d5{transition-delay:.35s;}.d6{transition-delay:.42s;}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+.hero{min-height:100vh;background:var(--dark);position:relative;overflow:hidden;display:flex;align-items:center;padding:8rem 3rem 5rem;}
+
+/* Animated dot canvas */
+#hero-canvas{position:absolute;inset:0;z-index:0;pointer-events:none;}
+
+/* Central glow */
+.hero-glow{position:absolute;top:40%;left:35%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(ellipse,rgba(60,73,255,.14) 0%,transparent 66%);pointer-events:none;z-index:1;}
+
+/* Animated orbit ring */
+.orbit{position:absolute;top:50%;left:38%;transform:translate(-50%,-50%);width:480px;height:480px;border:1px solid rgba(141,148,255,.06);border-radius:50%;z-index:1;animation:spin 28s linear infinite;}
+.orbit2{position:absolute;top:50%;left:38%;transform:translate(-50%,-50%);width:700px;height:700px;border:1px dashed rgba(141,148,255,.04);border-radius:50%;z-index:1;animation:spin 48s linear infinite reverse;}
+.orbit-dot{position:absolute;width:5px;height:5px;background:var(--accent-mid);border-radius:50%;top:-2.5px;left:50%;margin-left:-2.5px;opacity:.6;}
+.orbit-dot2{position:absolute;width:3px;height:3px;background:rgba(141,148,255,.5);border-radius:50%;top:-1.5px;left:50%;margin-left:-1.5px;}
+
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg);}}
+
+.hero-inner{position:relative;z-index:2;max-width:1100px;width:100%;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
+
+.hero-left{}
+.hero-kicker{font-size:7pt;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:1.5rem;opacity:0;transform:translateY(14px);animation:fu .6s .1s forwards;display:flex;align-items:center;gap:.6rem;}
+.hero-kicker::before{content:'';display:block;width:24px;height:1px;background:var(--accent-mid);}
+.hero-name{font-family:var(--serif);font-size:clamp(42pt,6vw,72pt);font-weight:400;color:#fff;line-height:.95;margin-bottom:.4rem;opacity:0;transform:translateY(22px);animation:fu .85s .22s forwards;letter-spacing:-.01em;}
+.hero-name-sub{font-family:var(--serif);font-size:clamp(42pt,6vw,72pt);font-weight:400;color:transparent;-webkit-text-stroke:1px rgba(141,148,255,.25);line-height:.95;margin-bottom:1.6rem;opacity:0;transform:translateY(22px);animation:fu .85s .32s forwards;letter-spacing:-.01em;}
+.hero-title{font-size:9pt;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(141,148,255,.65);margin-bottom:2rem;opacity:0;transform:translateY(12px);animation:fu .6s .46s forwards;}
+.hero-tagline{font-family:var(--serif);font-size:clamp(12pt,1.6vw,15pt);font-style:italic;color:rgba(255,255,255,.38);line-height:1.6;max-width:380px;margin-bottom:2.5rem;opacity:0;transform:translateY(12px);animation:fu .7s .58s forwards;}
+.hero-actions{display:flex;gap:1.2rem;align-items:center;opacity:0;transform:translateY(10px);animation:fu .6s .72s forwards;}
+.btn-primary{padding:.75rem 2rem;background:var(--accent);border-radius:4px;font-size:7.5pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#fff;transition:background .2s,transform .2s;}
+.btn-primary:hover{background:#2a36e8;transform:translateY(-1px);}
+.btn-ghost{padding:.75rem 1.8rem;border:1px solid rgba(141,148,255,.25);border-radius:4px;font-size:7.5pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(141,148,255,.7);transition:border-color .2s,color .2s;}
+.btn-ghost:hover{border-color:var(--accent-mid);color:var(--accent-mid);}
+
+.hero-right{opacity:0;transform:translateY(16px);animation:fu .8s .85s forwards;}
+.hero-stats-grid{display:flex;flex-direction:column;gap:1px;background:rgba(141,148,255,.08);border-radius:14px;overflow:hidden;border:1px solid rgba(141,148,255,.08);}
+.hs-row{background:var(--dark);padding:1.3rem 1.6rem;display:flex;align-items:center;justify-content:space-between;transition:background .2s;cursor:default;}
+.hs-row:hover{background:#181828;}
+.hs-num{font-family:var(--serif);font-size:20pt;color:#fff;line-height:1;}
+.hs-label{font-size:7.5pt;font-weight:300;color:rgba(255,255,255,.4);text-align:right;max-width:160px;line-height:1.4;}
+.hs-divider{width:1px;height:24px;background:rgba(141,148,255,.1);}
+.hero-location{display:flex;align-items:center;gap:.5rem;margin-top:1rem;font-size:7.5pt;font-weight:400;color:rgba(141,148,255,.4);letter-spacing:.06em;}
+.hero-location::before{content:'';width:6px;height:6px;border-radius:50%;background:rgba(60,73,255,.5);display:block;animation:pulse-dot 2.4s ease-in-out infinite;}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(60,73,255,.5);}50%{box-shadow:0 0 0 6px rgba(60,73,255,0);}}
+
+@keyframes fu{to{opacity:1;transform:none;}}
+
+/* ═══════════════════════════════════════
+   SECTION SCAFFOLDING
+═══════════════════════════════════════ */
+.sec{padding:7rem 3rem;}
+.sec-inner{max-width:980px;margin:0 auto;}
+.sec-wide{max-width:1100px;margin:0 auto;}
+
+.ch{font-size:6.8pt;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:.75rem;display:flex;align-items:center;gap:.55rem;}
+.ch::after{content:'';display:block;height:1px;width:34px;background:var(--rule);}
+.ch-d{color:rgba(141,148,255,.55);}
+.ch-d::after{background:rgba(141,148,255,.18);}
+
+h2.st{font-family:var(--serif);font-size:clamp(20pt,2.8vw,30pt);font-weight:400;color:var(--ink);line-height:1.16;margin-bottom:1.3rem;}
+h2.st em{font-style:italic;color:var(--accent);}
+h2.st-d{font-family:var(--serif);font-size:clamp(20pt,2.8vw,30pt);font-weight:400;color:#fff;line-height:1.16;margin-bottom:1.3rem;}
+h2.st-d em{font-style:italic;color:var(--accent-mid);}
+
+.bp{font-size:9.8pt;font-weight:300;color:var(--ink-mid);line-height:1.82;margin-bottom:1rem;}
+.bp strong{font-weight:500;color:var(--ink);}
+.bp-d{font-size:9.8pt;font-weight:300;color:rgba(255,255,255,.45);line-height:1.82;margin-bottom:1rem;}
+
+/* ═══════════════════════════════════════
+   ANIMATED DIVIDER
+═══════════════════════════════════════ */
+.anim-divider{height:2px;position:relative;overflow:visible;margin:0;}
+.anim-divider-line{position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--accent) 30%,var(--accent-mid) 60%,transparent);background-size:200% 100%;animation:slide-line 3s ease-in-out infinite;}
+@keyframes slide-line{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.anim-divider-dot{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:8px;height:8px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 12px var(--accent);
+  animation:travel-dot 3s ease-in-out infinite;
+}
+@keyframes travel-dot{0%{left:0%;opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{left:100%;opacity:0;}}
+
+/* ═══════════════════════════════════════
+   PHILOSOPHY SECTION
+═══════════════════════════════════════ */
+.philosophy-sec{background:var(--dark);position:relative;overflow:hidden;}
+.phi-bg-lines{position:absolute;inset:0;pointer-events:none;z-index:0;}
+.phi-inner{position:relative;z-index:2;}
+
+.phi-quote-wrap{margin:2.5rem 0 3.5rem;}
+.phi-quote{font-family:var(--serif);font-size:clamp(14pt,2.2vw,19pt);font-weight:400;color:#fff;line-height:1.55;max-width:720px;}
+.phi-quote em{font-style:italic;color:var(--accent-mid);}
+.phi-body{font-size:10pt;font-weight:300;color:rgba(255,255,255,.42);line-height:1.85;max-width:640px;margin-bottom:1rem;}
+
+.principles-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-top:3rem;}
+.principle-card{
+  border:1px solid rgba(141,148,255,.12);border-radius:14px;
+  padding:1.8rem 1.5rem;cursor:default;position:relative;overflow:hidden;
+  transition:border-color .3s,background .3s,transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.principle-card:hover{border-color:rgba(141,148,255,.35);background:rgba(60,73,255,.05);transform:translateY(-4px);}
+.pc-bar{position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:background .3s;}
+.principle-card:hover .pc-bar{background:linear-gradient(90deg,var(--accent),var(--accent-mid));}
+.pc-big{font-family:var(--serif);font-size:13pt;font-weight:400;color:rgba(141,148,255,.18);line-height:1;margin-bottom:.6rem;transition:color .3s;}
+.principle-card:hover .pc-big{color:rgba(141,148,255,.35);}
+.pc-title{font-size:9.5pt;font-weight:600;color:#fff;margin-bottom:.4rem;}
+.pc-sub{font-size:7.5pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(141,148,255,.5);margin-bottom:.6rem;}
+.pc-body{font-size:8.2pt;font-weight:300;color:rgba(255,255,255,.38);line-height:1.6;}
+
+/* ═══════════════════════════════════════
+   WORK SECTION
+═══════════════════════════════════════ */
+.work-sec{background:var(--page);}
+
+.work-grid{display:flex;flex-direction:column;gap:1.5rem;margin-top:2.5rem;}
+
+.work-card{
+  border:1px solid var(--rule);border-radius:16px;overflow:hidden;background:#fff;
+  display:grid;grid-template-columns:1fr 2fr;
+  transition:border-color .3s,box-shadow .3s,transform .3s cubic-bezier(.34,1.56,.64,1);
+  cursor:pointer;
+  position:relative;
+}
+.work-card:hover{border-color:var(--accent-mid);box-shadow:0 16px 48px rgba(60,73,255,.08);transform:translateY(-3px);}
+.work-card.featured{grid-template-columns:1fr 1fr;}
+
+.wc-visual{
+  background:var(--dark);min-height:220px;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.wc-visual-bg{
+  position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(141,148,255,.15) 1px,transparent 1px);
+  background-size:20px 20px;
+}
+.wc-visual-glow{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(60,73,255,.2) 0%,transparent 70%);}
+.wc-visual-label{
+  position:relative;z-index:2;text-align:center;
+}
+.wc-year{font-size:6.5pt;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:rgba(141,148,255,.4);margin-bottom:.5rem;}
+.wc-icon{font-family:var(--serif);font-size:32pt;color:rgba(255,255,255,.12);line-height:1;}
+.wc-icon-large{font-family:var(--serif);font-size:48pt;color:rgba(255,255,255,.1);line-height:1;}
+
+/* Animated placeholder visuals */
+.wc-dots-anim{position:absolute;inset:0;pointer-events:none;}
+
+.wc-body{padding:2rem 2.2rem;display:flex;flex-direction:column;justify-content:space-between;}
+.wc-meta{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem;}
+.wc-company{font-size:7pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-mid);}
+.wc-dot-sep{width:3px;height:3px;border-radius:50%;background:var(--ink-xlight);}
+.wc-year-tag{font-size:7pt;font-weight:300;color:var(--ink-xlight);}
+.wc-title{font-family:var(--serif);font-size:clamp(14pt,2vw,18pt);font-weight:400;color:var(--ink);line-height:1.2;margin-bottom:.8rem;}
+.wc-desc{font-size:9pt;font-weight:300;color:var(--ink-mid);line-height:1.7;margin-bottom:1.2rem;flex:1;}
+.wc-tags{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.2rem;}
+.wc-tag{font-size:6.2pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:.28rem .75rem;border:1px solid var(--rule);border-radius:100px;color:var(--ink-light);}
+.wc-link{font-size:7.5pt;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:.4rem;transition:gap .2s;}
+.wc-link:hover{gap:.7rem;}
+.wc-link::after{content:'→';}
+
+.work-card .store-row{display:flex;gap:.6rem;margin-top:.6rem;}
+.store-btn{padding:.3rem .9rem;border:1px solid var(--rule);border-radius:6px;font-size:6.5pt;font-weight:500;color:var(--ink-light);transition:border-color .2s,color .2s;}
+.store-btn:hover{border-color:var(--accent-mid);color:var(--accent);}
+
+/* ═══════════════════════════════════════
+   OBJECT SECTION (physical work)
+═══════════════════════════════════════ */
+.object-sec{background:var(--warm);}
+.object-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.object-visual{
+  background:var(--dark);border-radius:16px;min-height:320px;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.ov-bg{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(141,148,255,.12) 1px,transparent 1px);background-size:18px 18px;}
+.ov-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 60%,rgba(60,73,255,.15) 0%,transparent 60%);}
+.ov-label{position:relative;z-index:2;text-align:center;}
+.ov-title{font-family:var(--serif);font-size:22pt;color:rgba(255,255,255,.15);line-height:1.1;}
+.ov-sub{font-size:7pt;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(141,148,255,.3);margin-top:.5rem;}
+
+.object-content{}
+.obj-title{font-family:var(--serif);font-size:16pt;font-weight:400;color:var(--ink);line-height:1.2;margin-bottom:.3rem;}
+.obj-year{font-size:7pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:.7rem;}
+.obj-role{font-size:8pt;font-weight:300;color:var(--ink-light);margin-bottom:1rem;}
+.obj-body{font-size:9pt;font-weight:300;color:var(--ink-mid);line-height:1.75;}
+.obj-awards{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1.2rem;}
+.obj-award{font-size:6.2pt;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:.28rem .75rem;border-radius:100px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--rule);}
+
+/* ═══════════════════════════════════════
+   CONTACT SECTION
+═══════════════════════════════════════ */
+.contact-sec{background:var(--dark);position:relative;overflow:hidden;padding:7rem 3rem;}
+.contact-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(141,148,255,.13) 1px,transparent 1px);background-size:22px 22px;pointer-events:none;}
+.contact-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(60,73,255,.12) 0%,transparent 70%);pointer-events:none;}
+
+/* Animated line decoration */
+.contact-lines{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+
+.contact-inner{position:relative;z-index:2;max-width:680px;margin:0 auto;text-align:center;}
+.contact-title{font-family:var(--serif);font-size:clamp(24pt,4vw,42pt);font-weight:400;color:#fff;line-height:1.1;margin-bottom:1rem;}
+.contact-title em{font-style:italic;color:var(--accent-mid);}
+.contact-sub{font-size:10.5pt;font-weight:300;color:rgba(255,255,255,.38);line-height:1.7;max-width:460px;margin:0 auto 2.5rem;}
+.contact-form{display:flex;flex-direction:column;gap:.8rem;margin-bottom:2rem;}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.cf-input{
+  background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.15);
+  border-radius:8px;padding:.9rem 1.2rem;
+  font-family:var(--sans);font-size:9pt;font-weight:300;color:#fff;
+  transition:border-color .2s,background .2s;outline:none;width:100%;
+}
+.cf-input::placeholder{color:rgba(255,255,255,.25);}
+.cf-input:focus{border-color:rgba(141,148,255,.4);background:rgba(60,73,255,.05);}
+.cf-textarea{resize:vertical;min-height:110px;}
+.cf-submit{
+  background:var(--accent);border:none;border-radius:8px;padding:1rem;
+  font-family:var(--sans);font-size:8pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:#fff;cursor:pointer;transition:background .2s,transform .15s;
+}
+.cf-submit:hover{background:#2a36e8;transform:translateY(-1px);}
+.contact-social{display:flex;gap:1.5rem;justify-content:center;align-items:center;}
+.social-link{font-size:7pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(141,148,255,.45);transition:color .2s;}
+.social-link:hover{color:var(--accent-mid);}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{background:#080810;padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(141,148,255,.06);}
+.footer-copy{font-size:7.5pt;font-weight:300;color:rgba(255,255,255,.18);line-height:1.5;}
+.footer-resume{font-size:7pt;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(141,148,255,.35);border:1px solid rgba(141,148,255,.12);border-radius:4px;padding:.4rem 1rem;transition:border-color .2s,color .2s;}
+.footer-resume:hover{border-color:rgba(141,148,255,.3);color:var(--accent-mid);}
+
+/* ═══════════════════════════════════════
+   ANIMATED LINE SVG HELPERS
+═══════════════════════════════════════ */
+.draw-path{stroke-dasharray:1000;stroke-dashoffset:1000;transition:stroke-dashoffset 1.8s ease;}
+.draw-path.on{stroke-dashoffset:0;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-right{display:none;}
+  .principles-grid{grid-template-columns:1fr 1fr;}
+  .work-card,.work-card.featured{grid-template-columns:1fr;}
+  .wc-visual{min-height:160px;}
+  .object-inner{grid-template-columns:1fr;}
+  .cf-row{grid-template-columns:1fr;}
+  .sec{padding:5rem 1.5rem;}
+  nav{padding:.9rem 1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Refaeli Ma</a>
+  <ul class="nav-links">
+    <li><a href="#philosophy">Philosophy</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#object">Object</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Let's Talk</a>
+</nav>
+
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-glow"></div>
+  <div class="orbit"><div class="orbit-dot"></div></div>
+  <div class="orbit2"><div class="orbit-dot2"></div></div>
+
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-kicker">Experience Architect · Los Angeles</div>
+      <div class="hero-name">Refaeli</div>
+      <div class="hero-name-sub">Ma</div>
+      <div class="hero-title">Principal Product Designer &nbsp;·&nbsp; Design Leadership &nbsp;·&nbsp; AI Experience</div>
+      <p class="hero-tagline">Designing clarity in complex systems. Turning ambiguity into structure, shaping the right problems, until the right thing feels inevitable.</p>
+      <div class="hero-actions">
+        <a href="#work" class="btn-primary">View Work</a>
+        <a href="#contact" class="btn-ghost">Let's Talk</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-stats-grid">
+        <div class="hs-row">
+          <div class="hs-num">10+</div>
+          <div class="hs-divider"></div>
+          <div class="hs-label">Years designing complex systems</div>
+        </div>
+        <div class="hs-row">
+          <div class="hs-num">40+</div>
+          <div class="hs-divider"></div>
+          <div class="hs-label">Products shipped across platforms</div>
+        </div>
+        <div class="hs-row">
+          <div class="hs-num">20M+</div>
+          <div class="hs-divider"></div>
+          <div class="hs-label">Users impacted by this work</div>
+        </div>
+        <div class="hs-row">
+          <div class="hs-num">1.7→4.5</div>
+          <div class="hs-divider"></div>
+          <div class="hs-label">App rating recovered, VZ Home</div>
+        </div>
+        <div class="hs-row">
+          <div class="hs-num">860k+</div>
+          <div class="hs-divider"></div>
+          <div class="hs-label">Customers at product launch</div>
+        </div>
+      </div>
+      <div class="hero-location">📍 &nbsp;Based in Los Angeles, CA &nbsp;·&nbsp; Working everywhere</div>
+    </div>
+  </div>
+</section>
+
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
+<!-- ══════════════════════════════════════════
+     PHILOSOPHY
+══════════════════════════════════════════ -->
+<section class="sec philosophy-sec" id="philosophy">
+  <!-- SVG animated background lines -->
+  <svg class="phi-bg-lines" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="120" x2="1200" y2="320" stroke="rgba(141,148,255,.04)" stroke-width="1"/>
+    <line x1="0" y1="280" x2="1200" y2="80" stroke="rgba(141,148,255,.03)" stroke-width="1"/>
+    <circle cx="960" cy="200" r="180" fill="none" stroke="rgba(141,148,255,.03)" stroke-width="1"/>
+    <circle cx="960" cy="200" r="100" fill="none" stroke="rgba(60,73,255,.04)" stroke-width="1"/>
+    <path class="draw-path" id="phi-path" d="M 100 400 Q 400 100 700 300 T 1100 150" fill="none" stroke="rgba(141,148,255,.12)" stroke-width="1"/>
+  </svg>
+
+  <div class="sec-inner phi-inner">
+    <div class="r"><div class="ch ch-d">Design Philosophy</div></div>
+    <div class="phi-quote-wrap r d1">
+      <p class="phi-quote">I design for the problem <em>beneath the problem.</em> Most products fail not in execution, but in definition — solving the wrong thing, beautifully.</p>
+    </div>
+    <p class="phi-body r d2">My work begins before the interface — in the tensions and misalignments no one has named yet. I don't start with screens. I start with structure. Then I build systems that resolve what actually matters, shaping behavior until the right action feels natural, almost inevitable.</p>
+    <p class="phi-body r d3">Good design, to me, is invisible. Not because it lacks craft, but because it removes the need for attention. Everything works as it should: quietly, precisely, on purpose.</p>
+
+    <div class="principles-grid">
+      <div class="principle-card r d1">
+        <div class="pc-bar"></div>
+        <div class="pc-big">P &gt; S</div>
+        <div class="pc-title">Problem &gt; Solution</div>
+        <div class="pc-sub">The right question first</div>
+        <p class="pc-body">Most work rushes to answers. I don't. A well-crafted solution to the wrong problem is still failure. I spend time where it matters — defining the real tension beneath the surface.</p>
+      </div>
+      <div class="principle-card r d2">
+        <div class="pc-bar"></div>
+        <div class="pc-big">O &gt; O</div>
+        <div class="pc-title">Objectives &gt; Operations</div>
+        <div class="pc-sub">Purpose guides process</div>
+        <p class="pc-body">Busy work can look like progress. It rarely is. I anchor teams in outcomes, not activity. Process exists to support direction — not replace it.</p>
+      </div>
+      <div class="principle-card r d3">
+        <div class="pc-bar"></div>
+        <div class="pc-big">E &gt; O</div>
+        <div class="pc-title">Evidence &gt; Opinion</div>
+        <div class="pc-sub">Data aligns faster than debate</div>
+        <p class="pc-body">Design is full of strong opinions. Only some are right. I prioritize signals over assumptions — not to remove intuition, but to sharpen it. Good judgment is informed, not guessed.</p>
+      </div>
+      <div class="principle-card r d4">
+        <div class="pc-bar"></div>
+        <div class="pc-big">S &gt; N</div>
+        <div class="pc-title">Space &gt; Noise</div>
+        <div class="pc-sub">Clarity lives in the pause</div>
+        <p class="pc-body">More is not better. Clarity comes from restraint. I remove what competes for attention so what matters can stand on its own. Space is what allows meaning to emerge.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
+<!-- ══════════════════════════════════════════
+     WORK
+══════════════════════════════════════════ -->
+<section class="sec work-sec" id="work">
+  <div class="sec-inner">
+    <div class="r"><div class="ch">Made Real</div></div>
+    <h2 class="st r d1">A selection of<br>recent <em>work</em></h2>
+    <p class="bp r d2" style="max-width:540px;">Digital product and interaction design, focused on clarity, systems, and intelligent experiences. Not just what shipped — but what it took to get there.</p>
+
+    <div class="work-grid">
+
+      <!-- VZ IDENTITY ARCHITECTURE -->
+      <div class="work-card featured r d1" onclick="">
+        <div class="wc-visual" style="background:#0a0a14;">
+          <div class="wc-visual-bg"></div>
+          <div class="wc-visual-glow" style="background:radial-gradient(ellipse at center,rgba(60,73,255,.25) 0%,transparent 70%);"></div>
+          <!-- Animated SVG: identity system constellation -->
+          <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.55;" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice">
+            <circle cx="200" cy="130" r="3" fill="#3C49FF" opacity=".8"/>
+            <circle cx="200" cy="130" r="40" fill="none" stroke="rgba(141,148,255,.2)" stroke-width="1"/>
+            <circle cx="200" cy="130" r="80" fill="none" stroke="rgba(141,148,255,.1)" stroke-width="1"/>
+            <circle cx="200" cy="130" r="120" fill="none" stroke="rgba(141,148,255,.06)" stroke-width="1"/>
+            <!-- nodes -->
+            <circle cx="200" cy="90" r="4" fill="#8D94FF" opacity=".7"><animate attributeName="opacity" values=".7;1;.7" dur="2.4s" repeatCount="indefinite"/></circle>
+            <circle cx="240" cy="130" r="4" fill="#8D94FF" opacity=".6"><animate attributeName="opacity" values=".6;.9;.6" dur="3.1s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="170" r="4" fill="#8D94FF" opacity=".5"><animate attributeName="opacity" values=".5;.8;.5" dur="2.7s" repeatCount="indefinite"/></circle>
+            <circle cx="160" cy="130" r="4" fill="#8D94FF" opacity=".7"><animate attributeName="opacity" values=".7;1;.7" dur="2.2s" repeatCount="indefinite"/></circle>
+            <!-- outer ring nodes -->
+            <circle cx="200" cy="50" r="3" fill="rgba(141,148,255,.5)"><animate attributeName="opacity" values=".5;.8;.5" dur="3.5s" repeatCount="indefinite"/></circle>
+            <circle cx="280" cy="90" r="3" fill="rgba(141,148,255,.4)"><animate attributeName="opacity" values=".4;.7;.4" dur="2.9s" repeatCount="indefinite"/></circle>
+            <circle cx="280" cy="170" r="3" fill="rgba(141,148,255,.4)"><animate attributeName="opacity" values=".4;.7;.4" dur="3.3s" repeatCount="indefinite"/></circle>
+            <circle cx="120" cy="90" r="3" fill="rgba(141,148,255,.4)"><animate attributeName="opacity" values=".4;.7;.4" dur="2.6s" repeatCount="indefinite"/></circle>
+            <circle cx="120" cy="170" r="3" fill="rgba(141,148,255,.4)"><animate attributeName="opacity" values=".4;.7;.4" dur="3.8s" repeatCount="indefinite"/></circle>
+            <!-- connecting lines -->
+            <line x1="200" y1="130" x2="200" y2="90" stroke="rgba(141,148,255,.25)" stroke-width=".5"/>
+            <line x1="200" y1="130" x2="240" y2="130" stroke="rgba(141,148,255,.25)" stroke-width=".5"/>
+            <line x1="200" y1="130" x2="200" y2="170" stroke="rgba(141,148,255,.25)" stroke-width=".5"/>
+            <line x1="200" y1="130" x2="160" y2="130" stroke="rgba(141,148,255,.25)" stroke-width=".5"/>
+            <line x1="200" y1="90" x2="200" y2="50" stroke="rgba(141,148,255,.12)" stroke-width=".5"/>
+            <line x1="240" y1="130" x2="280" y2="90" stroke="rgba(141,148,255,.12)" stroke-width=".5"/>
+            <line x1="240" y1="130" x2="280" y2="170" stroke="rgba(141,148,255,.12)" stroke-width=".5"/>
+            <line x1="160" y1="130" x2="120" y2="90" stroke="rgba(141,148,255,.12)" stroke-width=".5"/>
+            <line x1="160" y1="130" x2="120" y2="170" stroke="rgba(141,148,255,.12)" stroke-width=".5"/>
+          </svg>
+          <div class="wc-visual-label">
+            <div class="wc-year">2024 — Present</div>
+            <div class="wc-icon-large">ID</div>
+          </div>
+        </div>
+        <div class="wc-body">
+          <div>
+            <div class="wc-meta">
+              <span class="wc-company">Verizon</span>
+              <span class="wc-dot-sep"></span>
+              <span class="wc-year-tag">Identity Architecture</span>
+            </div>
+            <h3 class="wc-title">Verizon Identity & Profile Ecosystem</h3>
+            <p class="wc-desc">Leading the evolution of Verizon's Identity & Profile ecosystem — the invisible architecture that connects households, devices, behaviors, and services into one intelligent system. This work spans Unified Parental Controls, Authentication, Profile Architecture, Device Attribution, and AI-powered synthetic user frameworks. Shifting Verizon from managing products to understanding relationships.</p>
+          </div>
+          <div>
+            <div class="wc-tags">
+              <span class="wc-tag">Experience Architect</span>
+              <span class="wc-tag">Identity System</span>
+              <span class="wc-tag">Platform Strategy</span>
+              <span class="wc-tag">Behavioral Architecture</span>
+              <span class="wc-tag">Human-Centered AI</span>
+              <span class="wc-tag">Connected Ecosystems</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VZ HOME APP -->
+      <div class="work-card r d2" onclick="">
+        <div class="wc-visual">
+          <div class="wc-visual-bg"></div>
+          <!-- Animated: rating arc -->
+          <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.6;" viewBox="0 0 300 220" preserveAspectRatio="xMidYMid slice">
+            <path d="M 60 170 Q 90 60 150 110 Q 210 160 240 50" fill="none" stroke="rgba(141,148,255,.2)" stroke-width="1.5" stroke-linecap="round">
+              <animate attributeName="stroke-dasharray" values="0,400;300,400" dur="2s" begin="0.5s" fill="freeze"/>
+            </path>
+            <circle cx="240" cy="50" r="5" fill="#3C49FF" opacity="0"><animate attributeName="opacity" values="0;1" dur="0.3s" begin="2s" fill="freeze"/></circle>
+            <text x="46" y="168" font-size="9" fill="rgba(141,148,255,.4)" font-family="Georgia">1.7</text>
+            <text x="228" y="45" font-size="9" fill="rgba(60,73,255,.8)" font-family="Georgia">4.5</text>
+            <!-- star dots along path -->
+            <circle cx="150" cy="110" r="2" fill="rgba(141,148,255,.4)"/>
+            <circle cx="100" cy="140" r="2" fill="rgba(141,148,255,.3)"/>
+            <circle cx="195" cy="90" r="2" fill="rgba(141,148,255,.4)"/>
+          </svg>
+          <div class="wc-visual-label">
+            <div class="wc-year">2023 — 2024</div>
+            <div class="wc-icon">VH</div>
+          </div>
+        </div>
+        <div class="wc-body">
+          <div>
+            <div class="wc-meta">
+              <span class="wc-company">Verizon</span>
+              <span class="wc-dot-sep"></span>
+              <span class="wc-year-tag">Mobile · iOS · Android</span>
+            </div>
+            <h3 class="wc-title">Verizon Home App</h3>
+            <p class="wc-desc">A product people only opened when something went wrong. Low trust, low engagement, a system that felt fragmented. Reframed it — from reactive utility to proactive, intelligent experience. Rating recovered from 1.7 to 4.5. 860k+ customers. 72% fewer support escalations.</p>
+          </div>
+          <div>
+            <div class="wc-tags">
+              <span class="wc-tag">Product Design</span>
+              <span class="wc-tag">Design System</span>
+              <span class="wc-tag">AI Experience</span>
+              <span class="wc-tag">Smart Home</span>
+              <span class="wc-tag">Cross-Platform Mobile</span>
+            </div>
+            <div class="store-row">
+              <a href="https://apps.apple.com/us/app/verizon-home/id6478310386" class="store-btn" target="_blank">App Store</a>
+              <a href="https://play.google.com/store/apps/details?id=com.verizon.homeapp" class="store-btn" target="_blank">Google Play</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLUEJEANS -->
+      <div class="work-card r d1" onclick="">
+        <div class="wc-visual" style="background:#080c14;">
+          <div class="wc-visual-bg"></div>
+          <!-- Animated: grid of meeting participants -->
+          <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.5;" viewBox="0 0 300 220" preserveAspectRatio="xMidYMid slice">
+            <rect x="20" y="20" width="78" height="54" rx="6" fill="rgba(60,73,255,.15)" stroke="rgba(141,148,255,.2)" stroke-width="1"/>
+            <rect x="111" y="20" width="78" height="54" rx="6" fill="rgba(60,73,255,.1)" stroke="rgba(141,148,255,.15)" stroke-width="1"/>
+            <rect x="202" y="20" width="78" height="54" rx="6" fill="rgba(60,73,255,.12)" stroke="rgba(141,148,255,.2)" stroke-width="1"/>
+            <rect x="20" y="87" width="78" height="54" rx="6" fill="rgba(60,73,255,.1)" stroke="rgba(141,148,255,.15)" stroke-width="1"/>
+            <rect x="111" y="87" width="78" height="54" rx="6" fill="rgba(60,73,255,.2)" stroke="rgba(60,73,255,.5)" stroke-width="1.5"><animate attributeName="stroke-opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/></rect>
+            <rect x="202" y="87" width="78" height="54" rx="6" fill="rgba(60,73,255,.1)" stroke="rgba(141,148,255,.15)" stroke-width="1"/>
+            <circle cx="59" cy="47" r="12" fill="rgba(141,148,255,.2)"/>
+            <circle cx="150" cy="47" r="12" fill="rgba(141,148,255,.18)"/>
+            <circle cx="241" cy="47" r="12" fill="rgba(141,148,255,.2)"/>
+            <circle cx="59" cy="114" r="12" fill="rgba(141,148,255,.18)"/>
+            <circle cx="150" cy="114" r="14" fill="rgba(60,73,255,.4)"/>
+            <circle cx="241" cy="114" r="12" fill="rgba(141,148,255,.18)"/>
+            <!-- speaking indicator -->
+            <circle cx="150" cy="114" r="18" fill="none" stroke="rgba(60,73,255,.4)" stroke-width="1"><animate attributeName="r" values="14;22;14" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite"/></circle>
+          </svg>
+          <div class="wc-visual-label">
+            <div class="wc-year">2021 — 2023</div>
+            <div class="wc-icon">BJ</div>
+          </div>
+        </div>
+        <div class="wc-body">
+          <div>
+            <div class="wc-meta">
+              <span class="wc-company">BlueJeans by Verizon</span>
+              <span class="wc-dot-sep"></span>
+              <span class="wc-year-tag">Collaboration Platform</span>
+            </div>
+            <h3 class="wc-title">BlueJeans by Verizon</h3>
+            <p class="wc-desc">In the middle of the pandemic, a collaboration platform became something more. A space where work, communication, and human behavior converged. This was a technical chapter — where engineering expanded the possibilities, and design made them legible. Not just shaping interfaces, but reshaping habits through structure and intent.</p>
+          </div>
+          <div>
+            <div class="wc-tags">
+              <span class="wc-tag">Product Design</span>
+              <span class="wc-tag">Design System · 900+ Components</span>
+              <span class="wc-tag">Unified Communications</span>
+              <span class="wc-tag">Desktop App</span>
+              <span class="wc-tag">Web</span>
+            </div>
+            <a href="#" class="wc-link">View case study</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- KIA + BMW / AUTOMOTIVE ROW -->
+      <div class="work-card r d2" onclick="">
+        <div class="wc-visual" style="background:#0a0814;">
+          <div class="wc-visual-bg" style="background-image:radial-gradient(circle,rgba(141,148,255,.1) 1px,transparent 1px);background-size:16px 16px;"></div>
+          <!-- Animated: dashboard arc / speedometer feel -->
+          <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.55;" viewBox="0 0 300 220" preserveAspectRatio="xMidYMid slice">
+            <path d="M 50 180 A 100 100 0 0 1 250 180" fill="none" stroke="rgba(141,148,255,.12)" stroke-width="1.5"/>
+            <path d="M 50 180 A 100 100 0 0 1 250 180" fill="none" stroke="rgba(60,73,255,.35)" stroke-width="2" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="80"/>
+            <!-- tick marks -->
+            <line x1="50" y1="180" x2="60" y2="170" stroke="rgba(141,148,255,.2)" stroke-width="1"/>
+            <line x1="80" y1="113" x2="88" y2="122" stroke="rgba(141,148,255,.2)" stroke-width="1"/>
+            <line x1="150" y1="80" x2="150" y2="92" stroke="rgba(141,148,255,.3)" stroke-width="1"/>
+            <line x1="220" y1="113" x2="212" y2="122" stroke="rgba(141,148,255,.2)" stroke-width="1"/>
+            <line x1="250" y1="180" x2="240" y2="170" stroke="rgba(141,148,255,.2)" stroke-width="1"/>
+            <!-- needle -->
+            <line x1="150" y1="180" x2="195" y2="115" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".6">
+              <animateTransform attributeName="transform" type="rotate" from="-30 150 180" to="30 150 180" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1" keyTimes="0;0.5;1"/>
+            </line>
+            <circle cx="150" cy="180" r="6" fill="rgba(141,148,255,.4)"/>
+            <text x="50" y="200" font-size="8" fill="rgba(141,148,255,.3)" font-family="Georgia">Kia · BMW · Peterbilt · Kenworth</text>
+          </svg>
+          <div class="wc-visual-label">
+            <div class="wc-year">2020 — 2021</div>
+          </div>
+        </div>
+        <div class="wc-body">
+          <div>
+            <div class="wc-meta">
+              <span class="wc-company">iconmobile Group</span>
+              <span class="wc-dot-sep"></span>
+              <span class="wc-year-tag">Automotive HMI</span>
+            </div>
+            <h3 class="wc-title">Automotive HMI — Kia, BMW, Ford</h3>
+            <p class="wc-desc">How a brand identity extends beyond form into a unified digital ecosystem — where mobile, web, and in-car experiences shape one coherent expression. Led design across Kia New Era, BMW ID 7.0, and Ford Mustang Mach-E, shaping next-generation interaction models and scalable design systems for digital-physical interfaces.</p>
+          </div>
+          <div>
+            <div class="wc-tags">
+              <span class="wc-tag">HMI Design</span>
+              <span class="wc-tag">Automotive</span>
+              <span class="wc-tag">In-Car Interface</span>
+              <span class="wc-tag">Design System</span>
+              <span class="wc-tag">Cross-Platform</span>
+            </div>
+            <p style="font-size:7pt;font-weight:300;color:var(--ink-xlight);margin-top:.5rem;font-style:italic;">Final renderings confidential · illustrative visuals only</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
+<!-- ══════════════════════════════════════════
+     OBJECT
+══════════════════════════════════════════ -->
+<section class="sec object-sec" id="object">
+  <div class="sec-inner">
+    <div class="r"><div class="ch">Other Things I Make</div></div>
+    <h2 class="st r d1">Not everything<br>lives on a <em>screen</em></h2>
+    <p class="bp r d2" style="max-width:500px;margin-bottom:3rem;">Some ideas take shape in materials, form, and experiments. The studio practice deepens a systems-thinking approach to product and experience design.</p>
+
+    <div class="object-inner r">
+      <div class="object-visual">
+        <div class="ov-bg"></div>
+        <div class="ov-glow"></div>
+        <!-- Animated chair form lines -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.4;" viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice">
+          <path class="draw-path" id="chair-path" d="M 140 280 L 140 160 Q 140 80 200 70 Q 260 60 260 160 L 260 280" fill="none" stroke="rgba(141,148,255,.5)" stroke-width="1.5"/>
+          <path class="draw-path" d="M 120 200 L 280 200" fill="none" stroke="rgba(141,148,255,.3)" stroke-width="1"/>
+          <path class="draw-path" d="M 110 160 Q 200 140 290 160" fill="none" stroke="rgba(141,148,255,.25)" stroke-width="1"/>
+          <circle cx="140" cy="280" r="4" fill="rgba(141,148,255,.4)"/>
+          <circle cx="260" cy="280" r="4" fill="rgba(141,148,255,.4)"/>
+          <circle cx="200" cy="70" r="3" fill="rgba(60,73,255,.6)"/>
+        </svg>
+        <div class="ov-label">
+          <div class="ov-title">Leira Lounge</div>
+          <div class="ov-sub">13 Orphans Design Studio</div>
+        </div>
+      </div>
+      <div class="object-content">
+        <div class="obj-year">2016</div>
+        <h3 class="obj-title">Leira Lounge Chair</h3>
+        <div class="obj-role">Creative Director &nbsp;·&nbsp; Product Design &nbsp;·&nbsp; 13 Orphans Design Studio</div>
+        <p class="obj-body">Independent studio at the intersection of material, form, and meaning — translating abstract ideas into tangible artifacts. The Leira Lounge Chair is a study in structural honesty: every joint visible, every material chosen for behavior as much as appearance. This practice deepens a systems-thinking approach to product and experience design.</p>
+        <p class="obj-body" style="margin-top:.8rem;">The same questions that drive screen design — what is this resisting, what does it want to do, what happens at the edge of the system — apply here. Materials just answer differently.</p>
+        <div class="obj-awards">
+          <span class="obj-award">A' Design Award Winner · 2017 &amp; 2022</span>
+          <span class="obj-award">European Product Design Award · 2017</span>
+          <span class="obj-award">29th Annual ICFF NYC · 2017</span>
+          <span class="obj-award">A' Design Award Jury Member · 2018</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
+<!-- ══════════════════════════════════════════
+     CONTACT
+══════════════════════════════════════════ -->
+<section class="contact-sec" id="contact">
+  <div class="contact-dots"></div>
+  <div class="contact-glow"></div>
+
+  <!-- Animated converging lines -->
+  <svg class="contact-lines" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="0" x2="600" y2="250" stroke="rgba(141,148,255,.04)" stroke-width="1"/>
+    <line x1="1200" y1="0" x2="600" y2="250" stroke="rgba(141,148,255,.04)" stroke-width="1"/>
+    <line x1="0" y1="500" x2="600" y2="250" stroke="rgba(141,148,255,.03)" stroke-width="1"/>
+    <line x1="1200" y1="500" x2="600" y2="250" stroke="rgba(141,148,255,.03)" stroke-width="1"/>
+    <line x1="0" y1="250" x2="1200" y2="250" stroke="rgba(141,148,255,.03)" stroke-width="1"/>
+    <circle cx="600" cy="250" r="2" fill="rgba(60,73,255,.4)"><animate attributeName="r" values="2;8;2" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="3s" repeatCount="indefinite"/></circle>
+  </svg>
+
+  <div class="contact-inner">
+    <div class="r"><div class="ch ch-d" style="justify-content:center;margin-bottom:1.5rem;">Contact</div></div>
+    <h2 class="contact-title r d1">Let's make something<br><em>worth keeping.</em></h2>
+    <p class="contact-sub r d2">Whether you have a role, a project, or just want to talk design — I'm always up for a good conversation. Based in LA, working everywhere.</p>
+    <div class="contact-form r d3">
+      <div class="cf-row">
+        <input class="cf-input" type="text" placeholder="First name">
+        <input class="cf-input" type="email" placeholder="Email">
+      </div>
+      <input class="cf-input" type="text" placeholder="Subject">
+      <textarea class="cf-input cf-textarea" placeholder="Write a message..."></textarea>
+      <button class="cf-submit" onclick="this.textContent='Sent ✓';this.style.background='#1a7a3c';">Let's Connect</button>
+    </div>
+    <div class="contact-social r d4">
+      <a href="https://www.linkedin.com/in/refaelima/" class="social-link" target="_blank">LinkedIn</a>
+      <span style="color:rgba(141,148,255,.18);font-size:7pt;">·</span>
+      <a href="https://www.instagram.com/refaelimmmmma/" class="social-link" target="_blank">Instagram</a>
+      <span style="color:rgba(141,148,255,.18);font-size:7pt;">·</span>
+      <a href="mailto:refaelima.work@gmail.com" class="social-link">Email</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-copy">
+    © 2026 Refaeli Yaofei Ma. All rights reserved.<br>
+    <span style="color:rgba(255,255,255,.08);">Because lorem ipsum deserves better.</span>
+  </div>
+  <a href="https://www.refaeli-yfma.com/_files/ugd/8f26e0_d16b355bd087421a9d68c90925ad3eaa.pdf" class="footer-resume" target="_blank">Résumé →</a>
+</footer>
+
+
+<script>
+/* ── PROGRESS + NAV ── */
+const prog=document.getElementById('prog');
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  const t=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;
+  prog.style.width=(t/h*100)+'%';
+  nav.classList.toggle('scrolled',t>60);
+});
+
+/* ── CURSOR ── */
+const dot=document.getElementById('cur-dot'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  dot.style.left=(mx-2.5)+'px';dot.style.top=(my-2.5)+'px';
+});
+(function lerp(){rx+=(mx-rx-14)*.1;ry+=(my-ry-14)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(lerp);})();
+document.querySelectorAll('a,button,.work-card,.principle-card,.hs-row').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='44px';ring.style.height='44px';ring.style.opacity='.7';dot.style.transform='scale(2)';});
+  el.addEventListener('mouseleave',()=>{ring.style.width='28px';ring.style.height='28px';ring.style.opacity='.4';dot.style.transform='scale(1)';});
+});
+
+/* ── SCROLL REVEAL ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('on');
+      /* Also trigger SVG draw paths inside */
+      e.target.querySelectorAll('.draw-path').forEach(p=>p.classList.add('on'));
+    }
+  });
+},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.r').forEach(el=>obs.observe(el));
+
+/* ── HERO CANVAS: floating particle field ── */
+const canvas=document.getElementById('hero-canvas');
+const ctx=canvas.getContext('2d');
+let W,H,particles=[];
+
+function resize(){
+  W=canvas.width=canvas.offsetWidth;
+  H=canvas.height=canvas.offsetHeight;
+}
+resize();
+window.addEventListener('resize',resize);
+
+class Particle{
+  constructor(){this.reset();}
+  reset(){
+    this.x=Math.random()*W;
+    this.y=Math.random()*H;
+    this.r=Math.random()*1.5+.4;
+    this.vx=(Math.random()-.5)*.22;
+    this.vy=(Math.random()-.5)*.22;
+    this.a=Math.random()*.5+.1;
+    this.life=Math.random()*200+100;
+    this.age=0;
+  }
+  update(){
+    this.x+=this.vx;this.y+=this.vy;this.age++;
+    if(this.age>this.life||this.x<0||this.x>W||this.y<0||this.y>H)this.reset();
+  }
+  draw(){
+    const fade=Math.min(this.age/30,(this.life-this.age)/30,1);
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(141,148,255,${this.a*fade})`;
+    ctx.fill();
+  }
+}
+
+for(let i=0;i<90;i++)particles.push(new Particle());
+
+/* draw connecting lines between nearby particles */
+function drawConnections(){
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x;
+      const dy=particles[i].y-particles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<90){
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`rgba(141,148,255,${.06*(1-dist/90)})`;
+        ctx.lineWidth=.5;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  drawConnections();
+  particles.forEach(p=>{p.update();p.draw();});
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* ── PHI SVG PATH TRIGGER ── */
+document.querySelector('#phi-path')?.classList.add('draw-path');
+</script>
+</body>
+</html>

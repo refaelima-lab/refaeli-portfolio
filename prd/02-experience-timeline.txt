@@ -1,0 +1,313 @@
+﻿Experience Section Specification
+Purpose
+This section is not a resume duplication.
+It is a narrative timeline showing:
+* growth
+* transformation
+* perspective shifts
+* interdisciplinary exposure
+* leadership evolution
+* how each chapter shaped Refaeli Ma as a designer
+The goal is to communicate:
+how the journey formed the thinking.
+This section should feel:
+* personal
+* reflective
+* cinematic
+* highly intentional
+* concise but emotionally rich
+The writing should remain:
+* precise
+* grounded
+* mature
+* restrained
+Avoid:
+* long resume-style descriptions
+* bullet-point responsibilities
+* overly corporate language
+* excessive detail
+Each timeline event should answer:
+Why does this chapter matter?
+How did it shape the designer?
+________________
+
+
+Section Title
+EXPERIENCE
+Potential supporting line:
+The journey that shaped how I think, build, and lead.
+________________
+
+
+Metrics Introduction
+Purpose
+Provide immediate credibility and scale before entering the timeline narrative.
+These metrics should feel:
+* elegant
+* understated
+* integrated into the atmosphere
+Avoid:
+* dashboard-style presentation
+* loud stat cards
+* startup vanity metrics
+Metrics
+10+
+Years Experience
+40+
+Products Shipped
+20M+
+Users Impacted
+________________
+
+
+Visual Direction
+Overall Structure
+Render the experience section as a cinematic vertical timeline.
+The experience should feel:
+* immersive
+* progressive
+* reflective
+* layered
+Potential behaviors:
+* scroll-linked progression
+* active timeline states
+* subtle motion transitions
+* fading previous chapters
+* highlighted current chapter
+________________
+
+
+Timeline Composition
+Each timeline chapter should contain:
+* year range
+* title / phase
+* concise narrative
+* supporting logos/icons
+* optional CTA if linked to case study
+The layout should balance:
+* editorial storytelling
+* visual rhythm
+* breathing room
+________________
+
+
+Timeline Content
+2011–2013
+Finding Product Thinking
+The beginning of my journey started in product management, where I first became fascinated by how ideas evolve into real experiences.
+This was the moment I realized I wasn’t only interested in making things look better, I was deeply interested in how products work, how decisions are made, and how systems shape behavior.
+That curiosity eventually led me toward design.
+________________
+
+
+2013–2018
+ArtCenter College of Design
+Industrial & Product Design
+(Add ArtCenter logo)
+Some of the most formative years of my life.
+I studied, interned, experimented, failed, rebuilt, and learned what it truly means to care deeply about craft and ideas. These years shaped both my discipline and my ambition as a designer.
+During this time, I also attended a short study program at IDA International Design Academy in Italy, where I explored design through a more global and cultural perspective.
+In 2016, I had the opportunity to collaborate with the Amazon Echo team on future vision concepts for the Echo ecosystem.
+(Add Amazon / Echo visual treatment)
+My design  work later received recognition through:
+* European Product Design Award
+* A’ Design Award
+* Bienenstock Furniture Library
+I was also honored to exhibit work at the 29th Annual ICFF NYC show.
+(Add award logos)
+Later, I became a Jury Member for the A’ Design Award.
+Between 2016–2017, I was invited back to ArtCenter as a guest professor for the Product Design studio class, a surreal and meaningful full-circle moment.
+________________
+
+
+2018–2021
+Building Perspective
+The first major step after graduation was founding my own design studio:
+13 Orphans
+(Add 13 Orphans logo)
+13 Orphans became my creative anchor, a place to freely explore ideas, experiment across disciplines, and define my own relationship with design beyond school or industry expectations.
+Separate from 13 orphans studio - During these years, I worked across agencies, startups, and fast-moving client environments.
+I collaborated with teams including:
+* Phenomenon Product Design
+* Unicorns & Unicorns
+These experiences taught me:
+* how to communicate ideas clearly
+* how to balance craft with timelines
+* how to manage multiple complex projects
+* how to present and defend design decisions
+* how to adapt design thinking across industries and business models
+Separate from 13 orphans studio - During these years, Working within startups also pushed me closer to the full product lifecycle.
+I learned the importance of asking difficult questions early, understanding product strategy, and thinking beyond the interface itself.
+This was the period where I stopped seeing designers as isolated creators and started seeing design as part of a larger business and operational ecosystem.
+________________
+
+
+In-Car Experience Design
+In 2021, I entered the automotive and in-car experience industry.
+(Add automotive brand logos/icons:
+BMW, KIA, Ford, Porsche)
+This became one of the most transformative chapters of my career.
+It allowed me to combine:
+* industrial design
+* digital product design
+* systems thinking
+* physical interaction design
+Working across transportation ecosystems taught me that digital experiences never exist in isolation. Every interface lives inside a physical environment shaped by motion, context, accessibility, culture, and hardware constraints.
+One of the most meaningful experiences during this time was collaborating with the KIA team in Korea to help develop a scalable design system spanning multiple screen sizes and vehicle environments.
+This work reshaped how I think about:
+* accessibility
+* responsive systems
+* transportation UX
+* physical-to-digital interaction
+* ecosystem consistency
+It was also the period where I began leading and mentoring more designers.
+________________
+
+
+2021–2023
+BlueJeans by Verizon
+(Add BlueJeans logo)
+Joined BlueJeans by Verizon as Principal Designer during one of the most defining moments in modern digital communication.
+I led work across the Remote Learning platform during the pandemic, helping support millions of users navigating a rapidly changing world of remote interaction and education.
+This became the second-largest design system I had built at the time:
+* 900+ components
+* scalable cross-platform infrastructure
+* enterprise-level consistency
+(CTA → View Case Study)
+This chapter fundamentally reshaped how I think about digital behavior, communication, and the emotional role products play during moments of global uncertainty.
+It made me realize we were entering a new era of human-computer interaction, where digital products were no longer supporting life in the background, they were becoming part of how people learn, connect, and exist daily.
+________________
+
+
+Mentorship & Leadership
+Around this time, I also became a business mentor at Institute for Entrepreneurial Leadership and design career coach at the 4A’s Foundation..
+(add IFEL and 4As logo)
+After receiving so much from this industry, I wanted to give something back.
+Working with founders, business owners, and emerging designers helped me better understand leadership, communication, and the responsibility of helping others grow.
+This experience played a major role in shaping who I became as a design manager and mentor.
+________________
+
+
+Learning to Code
+On the side, I began learning front-end development.
+Not to become a full-time engineer, but to better understand:
+* feasibility
+* collaboration
+* implementation thinking
+* naming systems
+* handoff quality
+* developer communication
+That investment later became incredibly valuable in the AI era, where design and implementation are becoming increasingly interconnected.
+________________
+
+
+2023–Present
+Verizon Home
+(Add Verizon logo)
+Joining the Verizon Home App marked a new chapter in scale and complexity.
+This became one of the most operationally challenging and system-heavy projects I had ever worked on.
+Everything intersected here:
+* process
+* roadmap alignment
+* NPS
+* accessibility
+* legal
+* design systems
+* cross-functional operations
+* organizational structure
+It pushed me beyond interface design and deeper into systems leadership.
+This project taught me how much design depends on clarity, alignment, communication, and organizational structure, not just execution quality.
+(CTA → View Case Study)
+________________
+
+
+2026 New Mission
+Verizon Identity Architecture
+Leading the evolution of Verizon’s Identity & Profile ecosystem.
+Designing the invisible architecture that connects:
+* households
+* devices
+* behaviors
+* services
+* relationships
+into one intelligent system.
+This is where my work expanded beyond designing individual products into designing ecosystems, environments where users move fluidly across multiple products, services, and contexts.
+This chapter introduced a new level of ambiguity and systems complexity, requiring deeper thinking around:
+* behavioral intelligence
+* ecosystem relationships
+* AI readiness
+* personalization
+* connected experiences
+(CTA → View Case Study)
+
+
+Additional Experience Timeline Entry
+2026
+Add this as the latest milestone in the EXPERIENCE timeline section.
+The tone should feel:
+* reflective
+* earned
+* future-facing
+* connected to the evolution of leadership, systems thinking, and AI-driven design
+________________
+
+
+2026
+As my work evolved further into systems, AI, and experience architecture, I was honored to receive the BYAA American Art Elite Award — Winner of the Year, recognizing the intersection of design, innovation, and cross-disciplinary thinking in my practice.
+Add BYAA logo
+During this time, I was also invited to serve as a judge for the Claude AI Hackathon at UCLA, sponsored by Anthropic, Supabase, and Fetch.ai. It was a meaningful opportunity to evaluate emerging ideas at the intersection of AI, product thinking, engineering, and human-centered design, while engaging directly with the next generation of builders shaping the future of intelligent systems.
+Add Claude, UCLA, Anthropic, Supabase, and Fetch.ai logo here. 
+________________
+
+
+Narrative Purpose
+This milestone should reinforce:
+* leadership credibility
+* AI-forward positioning
+* recognition from the broader design and technology community
+* transition from product execution → ecosystem and systems influence
+Emotional Goal
+The viewer should feel:
+“This designer is not only building products, but actively participating in shaping the future direction of AI, systems, and experience design.”
+
+
+________________
+
+
+Interaction Requirements
+Timeline Motion
+The timeline should feel:
+* immersive
+* paced
+* reflective
+Potential interactions:
+* subtle chapter activation while scrolling
+* progressive line animation
+* logo reveals
+* ambient motion
+* layered transitions
+* expandable CTA moments
+Avoid:
+* overwhelming animation
+* timeline clutter
+* excessive interaction complexity
+________________
+
+
+CTA Requirements
+For sections connected to larger case studies:
+* BlueJeans
+* Verizon Home
+* Identity Architecture
+Include subtle CTA links.
+Examples:
+* View Case Study
+* Explore the System
+* Read the Full Story
+CTA styling should remain minimal and elegant.
+________________
+
+
+Emotional Goal
+The viewer should leave this section feeling:
+“This designer was shaped through systems, industries, mentorship, ambiguity, scale, and real-world complexity, not just screens.”

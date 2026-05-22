@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sticky Scroll + Ask AI · Prototype · Refaeli Ma</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#181820;--ink-mid:#3a3a48;--ink-light:#888;--ink-xlight:#bbc;
+  --rule:#DFE1FF;--accent:#3C49FF;--accent-mid:#8D94FF;--accent-soft:#f4f4ff;
+  --page:#fafafa;--warm:#f7f6f2;--dark:#0f0f17;
+  --sans:'Outfit',system-ui,sans-serif;--serif:'DM Serif Display',Georgia,serif;
+}
+html{background:var(--dark);scroll-behavior:smooth;}
+body{font-family:var(--sans);color:var(--ink);background:var(--page);overflow-x:hidden;}
+
+/* ── PROGRESS ── */
+#prog{position:fixed;top:0;left:0;height:2px;background:var(--accent);width:0%;z-index:200;transition:width .08s linear;}
+
+/* ── CURSOR ── */
+#cur-dot{width:5px;height:5px;background:var(--accent);border-radius:50%;position:fixed;pointer-events:none;z-index:999;transition:transform .12s;}
+#cur-ring{width:28px;height:28px;border:1px solid var(--accent-mid);border-radius:50%;position:fixed;pointer-events:none;z-index:998;opacity:.4;transition:width .22s,height .22s,opacity .22s;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:180;padding:.9rem 3rem;display:flex;justify-content:space-between;align-items:center;transition:background .3s,border-color .3s;border-bottom:1px solid transparent;}
+nav.scrolled{background:rgba(250,250,250,.94);backdrop-filter:blur(14px);border-bottom-color:var(--rule);}
+.nav-logo{font-size:8pt;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.5);transition:color .2s;text-decoration:none;}
+nav.scrolled .nav-logo{color:var(--ink);}
+.nav-tag{font-size:7pt;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.2);}
+nav.scrolled .nav-tag{color:var(--ink-xlight);}
+
+/* ── INTRO HERO (mini) ── */
+.intro{min-height:100vh;background:var(--dark);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:8rem 3rem 5rem;}
+.intro-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(141,148,255,.18) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;}
+.intro-glow{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(60,73,255,.14) 0%,transparent 68%);pointer-events:none;}
+.intro-inner{position:relative;z-index:2;text-align:center;max-width:700px;}
+.intro-kicker{font-size:7pt;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:1.5rem;opacity:0;animation:fu .6s .1s forwards;}
+.intro-h1{font-family:var(--serif);font-size:clamp(32pt,5vw,56pt);font-weight:400;color:#fff;line-height:1.06;margin-bottom:1rem;opacity:0;animation:fu .8s .25s forwards;}
+.intro-h1 em{font-style:italic;color:var(--accent-mid);}
+.intro-sub{font-size:10.5pt;font-weight:300;color:rgba(255,255,255,.38);line-height:1.75;margin-bottom:2.5rem;opacity:0;animation:fu .7s .42s forwards;}
+.intro-scroll{font-size:7pt;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(141,148,255,.35);display:flex;align-items:center;justify-content:center;gap:.5rem;opacity:0;animation:fu .6s .65s forwards;}
+.intro-scroll::after{content:'↓';font-size:9pt;}
+@keyframes fu{to{opacity:1;transform:none;}}
+
+/* ── ANIMATED DIVIDER ── */
+.adiv{height:2px;position:relative;overflow:visible;background:transparent;}
+.adiv-line{position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--accent) 30%,var(--accent-mid) 60%,transparent);animation:slide-line 3s ease-in-out infinite;}
+.adiv-dot{position:absolute;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:travel 3s ease-in-out infinite;}
+@keyframes slide-line{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+@keyframes travel{0%{left:0%;opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{left:100%;opacity:0;}}
+
+/* ════════════════════════════════════════
+   STICKY SCROLL SECTION
+════════════════════════════════════════ */
+.sticky-section{background:var(--dark);}
+
+/* Each project is a tall scroll window */
+.sticky-project{
+  height:400vh; /* scrolling distance per project */
+  position:relative;
+}
+
+/* The sticky container locks in viewport */
+.sticky-container{
+  position:sticky;
+  top:0;
+  height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  overflow:hidden;
+}
+
+/* LEFT: text panels stack and fade */
+.sticky-left{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:5rem 4rem 5rem 10vw;
+  position:relative;
+}
+
+/* Individual text panels inside left */
+.text-panel{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  left:10vw;
+  right:4rem;
+  opacity:0;
+  transition:opacity .5s ease,transform .5s ease;
+  transform:translateY(calc(-50% + 30px));
+  pointer-events:none;
+}
+.text-panel.active{
+  opacity:1;
+  transform:translateY(-50%);
+  pointer-events:auto;
+}
+.text-panel.past{
+  opacity:0;
+  transform:translateY(calc(-50% - 30px));
+}
+
+.tp-kicker{font-size:6.8pt;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem;}
+.tp-kicker::after{content:'';display:block;height:1px;width:32px;background:rgba(141,148,255,.25);}
+.tp-num{font-family:var(--serif);font-size:72pt;color:rgba(141,148,255,.06);line-height:1;position:absolute;top:-1rem;left:-1rem;pointer-events:none;}
+.tp-title{font-family:var(--serif);font-size:clamp(22pt,3vw,32pt);font-weight:400;color:#fff;line-height:1.12;margin-bottom:1rem;}
+.tp-title em{font-style:italic;color:var(--accent-mid);}
+.tp-desc{font-size:9.5pt;font-weight:300;color:rgba(255,255,255,.45);line-height:1.8;margin-bottom:1.4rem;max-width:420px;}
+.tp-tags{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.5rem;}
+.tp-tag{font-size:6.2pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:.28rem .8rem;border:1px solid rgba(141,148,255,.18);border-radius:100px;color:rgba(141,148,255,.55);}
+.tp-link{font-size:7.5pt;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-mid);display:inline-flex;align-items:center;gap:.4rem;transition:gap .2s,color .2s;}
+.tp-link:hover{gap:.7rem;color:#fff;}
+.tp-link::after{content:'→';}
+
+/* RIGHT: visual panels */
+.sticky-right{
+  position:relative;
+  background:var(--dark);
+  border-left:1px solid rgba(141,148,255,.07);
+}
+
+.visual-panel{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:3rem;
+  opacity:0;
+  transition:opacity .5s ease;
+}
+.visual-panel.active{opacity:1;}
+
+/* Progress dots on left edge */
+.sticky-nav{
+  position:fixed;
+  left:2.5rem;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  flex-direction:column;
+  gap:.7rem;
+  z-index:100;
+  opacity:0;
+  transition:opacity .3s;
+}
+.sticky-nav.visible{opacity:1;}
+.sn-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(141,148,255,.2);
+  transition:background .3s,transform .3s cubic-bezier(.34,1.56,.64,1);
+  cursor:pointer;
+}
+.sn-dot.active{background:var(--accent);transform:scale(1.5);}
+.sn-label{
+  position:absolute;
+  left:18px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:6.5pt;
+  font-weight:600;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:rgba(141,148,255,.4);
+  white-space:nowrap;
+  opacity:0;
+  transition:opacity .2s;
+  pointer-events:none;
+}
+.sn-dot:hover .sn-label{opacity:1;}
+
+/* ── VISUAL MOCKUPS (SVG placeholders) ── */
+.vm-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(141,148,255,.12);
+  border-radius:20px;
+  width:100%;max-width:400px;
+  overflow:hidden;
+  box-shadow:0 40px 80px rgba(0,0,0,.4);
+}
+.vm-header{
+  background:var(--accent);
+  padding:16px 20px 20px;
+  position:relative;overflow:hidden;
+}
+.vmh-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.1) 1px,transparent 1px);background-size:14px 14px;}
+.vmh-title{font-size:13pt;font-weight:600;color:#fff;position:relative;z-index:2;margin-bottom:2px;}
+.vmh-sub{font-size:8pt;font-weight:300;color:rgba(255,255,255,.6);position:relative;z-index:2;}
+.vm-body{padding:16px 18px;}
+.vm-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.vm-stat{background:rgba(255,255,255,.06);border-radius:10px;padding:10px 8px;text-align:center;}
+.vm-stat-num{font-family:var(--serif);font-size:14pt;color:#fff;line-height:1;margin-bottom:3px;}
+.vm-stat-l{font-size:6pt;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(141,148,255,.5);}
+.vm-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(141,148,255,.08);}
+.vm-item:last-child{border-bottom:none;}
+.vm-item-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.vm-item-title{font-size:8.5pt;font-weight:500;color:rgba(255,255,255,.8);margin-bottom:1px;}
+.vm-item-sub{font-size:7pt;font-weight:300;color:rgba(255,255,255,.35);}
+.vm-item-cta{margin-left:auto;font-size:6.5pt;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-mid);flex-shrink:0;}
+
+/* identity visual */
+.vm-identity{
+  width:100%;max-width:400px;
+  position:relative;
+}
+
+/* bluejeans visual */
+.vm-bj{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(141,148,255,.12);
+  border-radius:20px;
+  width:100%;max-width:400px;
+  padding:20px;
+  box-shadow:0 40px 80px rgba(0,0,0,.4);
+}
+.vm-bj-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.vm-bj-title{font-size:10pt;font-weight:600;color:rgba(255,255,255,.8);}
+.vm-bj-badge{font-size:6.5pt;font-weight:600;background:rgba(26,122,60,.3);color:#4ade80;border-radius:100px;padding:3px 9px;letter-spacing:.08em;}
+.vm-bj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;}
+.vm-bj-cell{background:rgba(255,255,255,.05);border-radius:10px;padding:10px 6px;text-align:center;position:relative;border:1px solid rgba(141,148,255,.08);}
+.vm-bj-cell.speaking{border-color:rgba(60,73,255,.5);background:rgba(60,73,255,.12);}
+.vm-bj-avatar{width:32px;height:32px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:10pt;font-weight:600;}
+.vm-bj-name{font-size:6.5pt;font-weight:400;color:rgba(255,255,255,.5);}
+.vm-bj-controls{display:flex;justify-content:center;gap:8px;}
+.vm-bj-btn{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;}
+
+/* ════════════════════════════════════════
+   SCROLL REVEAL (non-sticky sections)
+════════════════════════════════════════ */
+.r{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+.r.on{opacity:1;transform:none;}
+.d1{transition-delay:.07s;}.d2{transition-delay:.14s;}.d3{transition-delay:.21s;}
+
+/* ════════════════════════════════════════
+   ASK AI SECTION
+════════════════════════════════════════ */
+.ask-sec{
+  background:var(--dark);
+  padding:7rem 3rem;
+  position:relative;
+  overflow:hidden;
+}
+.ask-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(141,148,255,.13) 1px,transparent 1px);background-size:22px 22px;pointer-events:none;}
+.ask-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:300px;background:radial-gradient(ellipse,rgba(60,73,255,.1) 0%,transparent 70%);pointer-events:none;}
+
+/* converging lines */
+.ask-lines{position:absolute;inset:0;pointer-events:none;}
+
+.ask-inner{position:relative;z-index:2;max-width:680px;margin:0 auto;text-align:center;}
+.ask-kicker{font-size:7pt;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.ask-kicker::before,.ask-kicker::after{content:'';display:block;height:1px;width:28px;background:rgba(141,148,255,.25);}
+.ask-title{font-family:var(--serif);font-size:clamp(18pt,2.8vw,28pt);font-weight:400;color:#fff;line-height:1.15;margin-bottom:.8rem;}
+.ask-title em{font-style:italic;color:var(--accent-mid);}
+.ask-sub{font-size:9.5pt;font-weight:300;color:rgba(255,255,255,.35);line-height:1.7;max-width:460px;margin:0 auto 2.5rem;}
+
+/* The AI buttons */
+.ask-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.75rem;
+  justify-content:center;
+  margin-bottom:2rem;
+}
+.ask-btn{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.7rem 1.4rem;
+  border:1px solid rgba(141,148,255,.15);
+  border-radius:100px;
+  background:rgba(255,255,255,.03);
+  font-family:var(--sans);
+  font-size:8.5pt;
+  font-weight:500;
+  color:rgba(255,255,255,.6);
+  cursor:pointer;
+  text-decoration:none;
+  transition:border-color .25s,background .25s,color .25s,transform .25s cubic-bezier(.34,1.56,.64,1);
+  letter-spacing:.02em;
+}
+.ask-btn:hover{
+  border-color:rgba(141,148,255,.4);
+  background:rgba(60,73,255,.08);
+  color:#fff;
+  transform:translateY(-2px);
+}
+.ask-btn-icon{
+  width:22px;height:22px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;
+}
+.ask-btn-label{white-space:nowrap;}
+
+/* custom AI logos as CSS shapes */
+.ai-logo{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* Prompt preview */
+.ask-prompt{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(141,148,255,.1);
+  border-radius:12px;
+  padding:1.2rem 1.5rem;
+  text-align:left;
+  max-width:500px;
+  margin:0 auto;
+}
+.ap-label{font-size:6.5pt;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(141,148,255,.4);margin-bottom:.6rem;}
+.ap-text{font-size:8.8pt;font-weight:300;color:rgba(255,255,255,.45);line-height:1.65;font-style:italic;}
+.ap-text strong{font-weight:500;color:rgba(255,255,255,.65);font-style:normal;}
+
+/* ════════════════════════════════════════
+   CONTACT + FOOTER
+════════════════════════════════════════ */
+.contact-sec{background:#080810;padding:5rem 3rem;text-align:center;border-top:1px solid rgba(141,148,255,.06);}
+.contact-title{font-family:var(--serif);font-size:clamp(18pt,2.5vw,26pt);color:#fff;margin-bottom:.8rem;}
+.contact-title em{font-style:italic;color:var(--accent-mid);}
+.contact-sub{font-size:9pt;font-weight:300;color:rgba(255,255,255,.3);margin-bottom:2rem;}
+.contact-btn{display:inline-block;padding:.8rem 2.2rem;background:var(--accent);border-radius:4px;font-size:7.5pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#fff;transition:background .2s;}
+.contact-btn:hover{background:#2a36e8;}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<nav id="nav">
+  <a href="#" class="nav-logo">Refaeli Ma</a>
+  <span class="nav-tag">Prototype · Sticky Scroll + Ask AI</span>
+</nav>
+
+<!-- ── INTRO ── -->
+<section class="intro">
+  <div class="intro-dots"></div>
+  <div class="intro-glow"></div>
+  <div class="intro-inner">
+    <div class="intro-kicker">Prototype · Two new components</div>
+    <h1 class="intro-h1">Sticky scroll<br>& <em>Ask AI</em></h1>
+    <p class="intro-sub">Scroll down to see the sticky project navigation in action, then the Ask AI section at the bottom. Both are ready to drop into the portfolio.</p>
+    <div class="intro-scroll">Scroll to explore</div>
+  </div>
+</section>
+
+<div class="adiv"><div class="adiv-line"></div><div class="adiv-dot"></div></div>
+
+<!-- ── SECTION LABEL ── -->
+<div style="background:var(--dark);padding:4rem 3rem 2rem;text-align:center;">
+  <div style="font-size:7pt;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:rgba(141,148,255,.4);margin-bottom:.6rem;">Made Real</div>
+  <div style="font-family:var(--serif);font-size:clamp(18pt,2.5vw,26pt);color:#fff;line-height:1.15;">A selection of work in digital product<br>and <em style="font-style:italic;color:var(--accent-mid);">experience design</em></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     STICKY SCROLL — WORK SECTION
+════════════════════════════════════════ -->
+<div class="sticky-section" id="work">
+
+  <!-- Side nav dots -->
+  <div class="sticky-nav" id="sticky-nav">
+    <div class="sn-dot" data-index="0" data-label="VZ Identity" onclick="scrollToProject(0)"></div>
+    <div class="sn-dot" data-index="1" data-label="VZ Home App" onclick="scrollToProject(1)"></div>
+    <div class="sn-dot" data-index="2" data-label="BlueJeans" onclick="scrollToProject(2)"></div>
+  </div>
+
+  <!-- PROJECT 1: VZ IDENTITY -->
+  <div class="sticky-project" id="proj-0">
+    <div class="sticky-container">
+      <!-- LEFT -->
+      <div class="sticky-left">
+        <!-- Panel A: Overview -->
+        <div class="text-panel active" data-panel="0-0">
+          <div class="tp-num">01</div>
+          <div class="tp-kicker">Verizon · 2024 – Present</div>
+          <h2 class="tp-title">Identity &<br><em>Profile Ecosystem</em></h2>
+          <p class="tp-desc">The invisible architecture that connects households, devices, behaviors, and services into one intelligent system. Shifting Verizon from managing products to understanding relationships.</p>
+          <div class="tp-tags">
+            <span class="tp-tag">Experience Architect</span>
+            <span class="tp-tag">Identity System</span>
+            <span class="tp-tag">Platform Strategy</span>
+            <span class="tp-tag">Human-Centered AI</span>
+          </div>
+        </div>
+        <!-- Panel B: Problem -->
+        <div class="text-panel" data-panel="0-1">
+          <div class="tp-num">01</div>
+          <div class="tp-kicker">The Problem</div>
+          <h2 class="tp-title">Millions of accounts.<br><em>No connected picture.</em></h2>
+          <p class="tp-desc">Verizon had rich data on devices, services, and usage — but no unified model of the household. Every product team operated on its own slice. The result: experiences that felt isolated, not intelligent.</p>
+          <div class="tp-tags">
+            <span class="tp-tag">Behavioral Architecture</span>
+            <span class="tp-tag">Unified Parental Controls</span>
+            <span class="tp-tag">Device Attribution</span>
+          </div>
+        </div>
+        <!-- Panel C: Impact -->
+        <div class="text-panel" data-panel="0-2">
+          <div class="tp-num">01</div>
+          <div class="tp-kicker">Impact</div>
+          <h2 class="tp-title">The infrastructure<br><em>future products</em><br>are built on.</h2>
+          <p class="tp-desc">This work spans authentication, profile architecture, device attribution, personalization systems, and AI-powered synthetic user frameworks. The platform that makes everything else possible.</p>
+          <a href="#" class="tp-link">View case study</a>
+        </div>
+      </div>
+      <!-- RIGHT -->
+      <div class="sticky-right">
+        <div class="visual-panel active" data-visual="0-0">
+          <svg viewBox="0 0 400 360" style="width:85%;max-width:380px;opacity:.75;">
+            <circle cx="200" cy="180" r="4" fill="#3C49FF"/>
+            <circle cx="200" cy="180" r="50" fill="none" stroke="rgba(141,148,255,.2)" stroke-width="1"/>
+            <circle cx="200" cy="180" r="100" fill="none" stroke="rgba(141,148,255,.12)" stroke-width="1"/>
+            <circle cx="200" cy="180" r="155" fill="none" stroke="rgba(141,148,255,.07)" stroke-width="1"/>
+            <!-- inner nodes -->
+            <circle cx="200" cy="130" r="5" fill="#8D94FF" opacity=".8"><animate attributeName="opacity" values=".8;1;.8" dur="2.4s" repeatCount="indefinite"/></circle>
+            <circle cx="250" cy="180" r="5" fill="#8D94FF" opacity=".65"><animate attributeName="opacity" values=".65;.9;.65" dur="3s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="230" r="5" fill="#8D94FF" opacity=".7"><animate attributeName="opacity" values=".7;1;.7" dur="2.7s" repeatCount="indefinite"/></circle>
+            <circle cx="150" cy="180" r="5" fill="#8D94FF" opacity=".6"><animate attributeName="opacity" values=".6;.85;.6" dur="2.2s" repeatCount="indefinite"/></circle>
+            <!-- outer nodes -->
+            <circle cx="200" cy="80" r="4" fill="rgba(141,148,255,.5)"><animate attributeName="opacity" values=".5;.8;.5" dur="3.5s" repeatCount="indefinite"/></circle>
+            <circle cx="290" cy="115" r="4" fill="rgba(141,148,255,.4)"><animate attributeName="opacity" values=".4;.7;.4" dur="2.9s" repeatCount="indefinite"/></circle>
+            <circle cx="320" cy="210" r="4" fill="rgba(141,148,255,.4)"><animate attributeName="opacity" values=".4;.7;.4" dur="3.3s" repeatCount="indefinite"/></circle>
+            <circle cx="245" cy="290" r="4" fill="rgba(141,148,255,.4)"><animate attributeName="opacity" values=".4;.7;.4" dur="2.6s" repeatCount="indefinite"/></circle>
+            <circle cx="110" cy="115" r="3" fill="rgba(141,148,255,.35)"><animate attributeName="opacity" values=".35;.6;.35" dur="3.1s" repeatCount="indefinite"/></circle>
+            <circle cx="80" cy="210" r="3" fill="rgba(141,148,255,.35)"><animate attributeName="opacity" values=".35;.6;.35" dur="2.8s" repeatCount="indefinite"/></circle>
+            <!-- lines -->
+            <line x1="200" y1="180" x2="200" y2="130" stroke="rgba(141,148,255,.3)" stroke-width=".8"/>
+            <line x1="200" y1="180" x2="250" y2="180" stroke="rgba(141,148,255,.3)" stroke-width=".8"/>
+            <line x1="200" y1="180" x2="200" y2="230" stroke="rgba(141,148,255,.3)" stroke-width=".8"/>
+            <line x1="200" y1="180" x2="150" y2="180" stroke="rgba(141,148,255,.3)" stroke-width=".8"/>
+            <line x1="200" y1="130" x2="200" y2="80" stroke="rgba(141,148,255,.15)" stroke-width=".6"/>
+            <line x1="250" y1="180" x2="290" y2="115" stroke="rgba(141,148,255,.15)" stroke-width=".6"/>
+            <line x1="250" y1="180" x2="320" y2="210" stroke="rgba(141,148,255,.15)" stroke-width=".6"/>
+            <line x1="200" y1="230" x2="245" y2="290" stroke="rgba(141,148,255,.15)" stroke-width=".6"/>
+            <line x1="150" y1="180" x2="110" y2="115" stroke="rgba(141,148,255,.15)" stroke-width=".6"/>
+            <line x1="150" y1="180" x2="80" y2="210" stroke="rgba(141,148,255,.15)" stroke-width=".6"/>
+            <!-- labels -->
+            <text x="196" y="68" text-anchor="middle" font-size="8" fill="rgba(141,148,255,.4)" font-family="Outfit,sans-serif">Auth</text>
+            <text x="305" y="110" text-anchor="middle" font-size="8" fill="rgba(141,148,255,.4)" font-family="Outfit,sans-serif">Devices</text>
+            <text x="338" y="218" text-anchor="middle" font-size="8" fill="rgba(141,148,255,.4)" font-family="Outfit,sans-serif">Mobile</text>
+            <text x="258" y="305" text-anchor="middle" font-size="8" fill="rgba(141,148,255,.4)" font-family="Outfit,sans-serif">AI</text>
+            <text x="88" y="110" text-anchor="middle" font-size="8" fill="rgba(141,148,255,.4)" font-family="Outfit,sans-serif">Profile</text>
+            <text x="58" y="218" text-anchor="middle" font-size="8" fill="rgba(141,148,255,.4)" font-family="Outfit,sans-serif">Home</text>
+          </svg>
+        </div>
+        <div class="visual-panel" data-visual="0-1">
+          <div style="text-align:center;max-width:340px;">
+            <div style="font-family:var(--serif);font-size:48pt;color:rgba(141,148,255,.1);line-height:1;margin-bottom:1rem;">10+</div>
+            <div style="font-size:8pt;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(141,148,255,.35);margin-bottom:2rem;">Product teams operating in silos</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.1);border-radius:8px;padding:10px 14px;text-align:left;display:flex;justify-content:space-between;">
+                <span style="font-size:8pt;color:rgba(255,255,255,.4);">Home App team</span>
+                <span style="font-size:7pt;color:rgba(255,80,80,.4);letter-spacing:.08em;text-transform:uppercase;">no shared identity</span>
+              </div>
+              <div style="background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.1);border-radius:8px;padding:10px 14px;text-align:left;display:flex;justify-content:space-between;">
+                <span style="font-size:8pt;color:rgba(255,255,255,.4);">Mobile team</span>
+                <span style="font-size:7pt;color:rgba(255,80,80,.4);letter-spacing:.08em;text-transform:uppercase;">isolated data</span>
+              </div>
+              <div style="background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.1);border-radius:8px;padding:10px 14px;text-align:left;display:flex;justify-content:space-between;">
+                <span style="font-size:8pt;color:rgba(255,255,255,.4);">Auth team</span>
+                <span style="font-size:7pt;color:rgba(255,80,80,.4);letter-spacing:.08em;text-transform:uppercase;">fragmented flows</span>
+              </div>
+              <div style="background:rgba(60,73,255,.1);border:1px solid rgba(60,73,255,.3);border-radius:8px;padding:10px 14px;text-align:center;">
+                <span style="font-size:8pt;font-weight:500;color:rgba(141,148,255,.8);">Identity & Profile layer connects all</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="visual-panel" data-visual="0-2">
+          <div style="text-align:center;">
+            <div style="font-family:var(--serif);font-size:36pt;color:#fff;opacity:.15;line-height:1;margin-bottom:.5rem;">Foundation</div>
+            <svg viewBox="0 0 300 200" style="width:280px;opacity:.6;">
+              <rect x="10" y="150" width="280" height="40" rx="6" fill="rgba(60,73,255,.3)" stroke="rgba(141,148,255,.3)" stroke-width="1"/>
+              <text x="150" y="175" text-anchor="middle" font-size="9" fill="rgba(141,148,255,.8)" font-family="Outfit,sans-serif" font-weight="500">Identity & Profile Platform</text>
+              <rect x="20" y="100" width="120" height="35" rx="6" fill="rgba(255,255,255,.05)" stroke="rgba(141,148,255,.2)" stroke-width="1"/>
+              <text x="80" y="121" text-anchor="middle" font-size="8" fill="rgba(255,255,255,.5)" font-family="Outfit,sans-serif">Personalization</text>
+              <rect x="160" y="100" width="120" height="35" rx="6" fill="rgba(255,255,255,.05)" stroke="rgba(141,148,255,.2)" stroke-width="1"/>
+              <text x="220" y="121" text-anchor="middle" font-size="8" fill="rgba(255,255,255,.5)" font-family="Outfit,sans-serif">Behavioral AI</text>
+              <rect x="20" y="50" width="80" height="35" rx="6" fill="rgba(255,255,255,.04)" stroke="rgba(141,148,255,.15)" stroke-width="1"/>
+              <text x="60" y="71" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,.4)" font-family="Outfit,sans-serif">Home App</text>
+              <rect x="110" y="50" width="80" height="35" rx="6" fill="rgba(255,255,255,.04)" stroke="rgba(141,148,255,.15)" stroke-width="1"/>
+              <text x="150" y="71" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,.4)" font-family="Outfit,sans-serif">Mobile</text>
+              <rect x="200" y="50" width="80" height="35" rx="6" fill="rgba(255,255,255,.04)" stroke="rgba(141,148,255,.15)" stroke-width="1"/>
+              <text x="240" y="71" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,.4)" font-family="Outfit,sans-serif">Support</text>
+              <line x1="80" y1="100" x2="80" y2="85" stroke="rgba(141,148,255,.15)" stroke-width=".6"/>
+              <line x1="80" y1="100" x2="150" y2="85" stroke="rgba(141,148,255,.15)" stroke-width=".6"/>
+              <line x1="80" y1="100" x2="240" y2="85" stroke="rgba(141,148,255,.15)" stroke-width=".6"/>
+              <line x1="80" y1="150" x2="80" y2="135" stroke="rgba(141,148,255,.2)" stroke-width=".6"/>
+              <line x1="220" y1="150" x2="220" y2="135" stroke="rgba(141,148,255,.2)" stroke-width=".6"/>
+              <rect x="20" y="10" width="260" height="28" rx="4" fill="rgba(141,148,255,.06)" stroke="rgba(141,148,255,.1)" stroke-width=".5"/>
+              <text x="150" y="28" text-anchor="middle" font-size="7.5" fill="rgba(141,148,255,.5)" font-family="Outfit,sans-serif" letter-spacing="2">FUTURE VERIZON EXPERIENCES</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT 2: VZ HOME -->
+  <div class="sticky-project" id="proj-1">
+    <div class="sticky-container">
+      <div class="sticky-left">
+        <div class="text-panel active" data-panel="1-0">
+          <div class="tp-num">02</div>
+          <div class="tp-kicker">Verizon · 2023–2024</div>
+          <h2 class="tp-title">Verizon<br><em>Home App</em></h2>
+          <p class="tp-desc">A product people only opened when something went wrong. Reframed from a reactive utility into a proactive, intelligent experience that earns trust over time.</p>
+          <div class="tp-tags">
+            <span class="tp-tag">Product Design</span>
+            <span class="tp-tag">AI Experience</span>
+            <span class="tp-tag">Design System</span>
+            <span class="tp-tag">Smart Home</span>
+          </div>
+        </div>
+        <div class="text-panel" data-panel="1-1">
+          <div class="tp-num">02</div>
+          <div class="tp-kicker">From Chaos to Cadence</div>
+          <h2 class="tp-title">Rating crashed<br>to <em>1.7.</em><br>We fixed the system.</h2>
+          <p class="tp-desc">Not just the screens — the operating model. 4 moves: Align, Systemize, Instrument, Deliver. Project Janus redesigned the authentication layer that was breaking trust at the front door.</p>
+          <div class="tp-tags">
+            <span class="tp-tag">Design Operations</span>
+            <span class="tp-tag">Cross-functional Leadership</span>
+            <span class="tp-tag">Project Janus</span>
+          </div>
+        </div>
+        <div class="text-panel" data-panel="1-2">
+          <div class="tp-num">02</div>
+          <div class="tp-kicker">Outcomes</div>
+          <h2 class="tp-title"><em>1.7 → 4.5.</em><br>860k customers.<br>72% fewer tickets.</h2>
+          <p class="tp-desc">55M+ sessions. 15+ releases in 18 months. Authentication redesign became a model for future cross-product collaboration across the organization.</p>
+          <a href="#" class="tp-link">Read full case study</a>
+        </div>
+      </div>
+      <div class="sticky-right">
+        <div class="visual-panel active" data-visual="1-0">
+          <div class="vm-card">
+            <div class="vm-header">
+              <div class="vmh-dots"></div>
+              <div class="vmh-title">Verizon Home</div>
+              <div class="vmh-sub">Good morning, Refaeli</div>
+            </div>
+            <div class="vm-body">
+              <div class="vm-stat-row">
+                <div class="vm-stat"><div class="vm-stat-num" style="color:#4ade80;">847</div><div class="vm-stat-l">Mbps</div></div>
+                <div class="vm-stat"><div class="vm-stat-num">12</div><div class="vm-stat-l">Devices</div></div>
+                <div class="vm-stat"><div class="vm-stat-num" style="color:#facc15;">4.5★</div><div class="vm-stat-l">Rating</div></div>
+              </div>
+              <div class="vm-item">
+                <div class="vm-item-icon" style="background:rgba(60,73,255,.15);">✦</div>
+                <div><div class="vm-item-title">AI Advisor</div><div class="vm-item-sub">Peak usage 9–11 PM · Optimize streaming?</div></div>
+                <div class="vm-item-cta">Review →</div>
+              </div>
+              <div class="vm-item">
+                <div class="vm-item-icon" style="background:rgba(74,222,128,.1);">📡</div>
+                <div><div class="vm-item-title">Network healthy</div><div class="vm-item-sub">All 12 devices connected</div></div>
+              </div>
+              <div class="vm-item">
+                <div class="vm-item-icon" style="background:rgba(250,204,21,.1);">🔒</div>
+                <div><div class="vm-item-title">New device detected</div><div class="vm-item-sub">Smart TV · Review access</div></div>
+                <div class="vm-item-cta">Review →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="visual-panel" data-visual="1-1">
+          <div style="max-width:360px;width:100%;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+              <div style="background:rgba(255,80,80,.08);border:1px solid rgba(255,80,80,.2);border-radius:12px;padding:16px;text-align:center;">
+                <div style="font-family:var(--serif);font-size:28pt;color:rgba(255,80,80,.7);line-height:1;margin-bottom:4px;">1.7</div>
+                <div style="font-size:7pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,80,80,.5);">Before</div>
+              </div>
+              <div style="background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:12px;padding:16px;text-align:center;">
+                <div style="font-family:var(--serif);font-size:28pt;color:rgba(74,222,128,.7);line-height:1;margin-bottom:4px;">4.5</div>
+                <div style="font-size:7pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(74,222,128,.5);">After</div>
+              </div>
+            </div>
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.1);border-radius:12px;padding:14px;">
+              <div style="font-size:6.5pt;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(141,148,255,.4);margin-bottom:10px;">4 Moves</div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;align-items:center;gap:8px;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(60,73,255,.3);display:flex;align-items:center;justify-content:center;font-size:8pt;font-weight:600;color:var(--accent-mid);flex-shrink:0;">1</div><span style="font-size:8pt;font-weight:300;color:rgba(255,255,255,.5);">Align — Build clarity</span></div>
+                <div style="display:flex;align-items:center;gap:8px;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(60,73,255,.3);display:flex;align-items:center;justify-content:center;font-size:8pt;font-weight:600;color:var(--accent-mid);flex-shrink:0;">2</div><span style="font-size:8pt;font-weight:300;color:rgba(255,255,255,.5);">Systemize — Create cadence</span></div>
+                <div style="display:flex;align-items:center;gap:8px;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(60,73,255,.3);display:flex;align-items:center;justify-content:center;font-size:8pt;font-weight:600;color:var(--accent-mid);flex-shrink:0;">3</div><span style="font-size:8pt;font-weight:300;color:rgba(255,255,255,.5);">Instrument — Guide with evidence</span></div>
+                <div style="display:flex;align-items:center;gap:8px;"><div style="width:20px;height:20px;border-radius:50%;background:rgba(60,73,255,.4);border:1px solid rgba(60,73,255,.6);display:flex;align-items:center;justify-content:center;font-size:8pt;font-weight:600;color:#fff;flex-shrink:0;">4</div><span style="font-size:8pt;font-weight:400;color:rgba(255,255,255,.8);">Deliver — Project Janus</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="visual-panel" data-visual="1-2">
+          <div style="max-width:360px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.1);border-radius:12px;padding:16px;text-align:center;">
+              <div style="font-family:var(--serif);font-size:24pt;color:#fff;line-height:1;margin-bottom:4px;">860k+</div>
+              <div style="font-size:6.5pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(141,148,255,.45);">Customers</div>
+            </div>
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.1);border-radius:12px;padding:16px;text-align:center;">
+              <div style="font-family:var(--serif);font-size:24pt;color:#fff;line-height:1;margin-bottom:4px;">55M+</div>
+              <div style="font-size:6.5pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(141,148,255,.45);">Sessions</div>
+            </div>
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.1);border-radius:12px;padding:16px;text-align:center;">
+              <div style="font-family:var(--serif);font-size:24pt;color:rgba(74,222,128,.7);line-height:1;margin-bottom:4px;">72%</div>
+              <div style="font-size:6.5pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(141,148,255,.45);">Fewer Tickets</div>
+            </div>
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.1);border-radius:12px;padding:16px;text-align:center;">
+              <div style="font-family:var(--serif);font-size:24pt;color:#fff;line-height:1;margin-bottom:4px;">15+</div>
+              <div style="font-size:6.5pt;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(141,148,255,.45);">Releases</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT 3: BLUEJEANS -->
+  <div class="sticky-project" id="proj-2">
+    <div class="sticky-container">
+      <div class="sticky-left">
+        <div class="text-panel active" data-panel="2-0">
+          <div class="tp-num">03</div>
+          <div class="tp-kicker">BlueJeans by Verizon · 2021–2023</div>
+          <h2 class="tp-title">Where work<br>became <em>human</em><br>again.</h2>
+          <p class="tp-desc">In the middle of the pandemic, a collaboration platform became something more. A space where work, communication, and human behavior converged.</p>
+          <div class="tp-tags">
+            <span class="tp-tag">Product Design</span>
+            <span class="tp-tag">Design System</span>
+            <span class="tp-tag">Unified Communications</span>
+            <span class="tp-tag">Desktop App</span>
+          </div>
+        </div>
+        <div class="text-panel" data-panel="2-1">
+          <div class="tp-num">03</div>
+          <div class="tp-kicker">The System</div>
+          <h2 class="tp-title">900+ components.<br><em>85% faster</em><br>design-to-dev.</h2>
+          <p class="tp-desc">Built an atomic design system in Figma that let 11 teams speak one visual language. Not just components — a shared vocabulary that changed how product decisions got made.</p>
+          <div class="tp-tags">
+            <span class="tp-tag">Figma Design System</span>
+            <span class="tp-tag">900+ Components</span>
+            <span class="tp-tag">Atomic Design</span>
+          </div>
+          <a href="#" class="tp-link">View case study</a>
+        </div>
+      </div>
+      <div class="sticky-right">
+        <div class="visual-panel active" data-visual="2-0">
+          <div class="vm-bj">
+            <div class="vm-bj-header">
+              <div class="vm-bj-title">Team Meeting · Design Review</div>
+              <div class="vm-bj-badge">● Live</div>
+            </div>
+            <div class="vm-bj-grid">
+              <div class="vm-bj-cell"><div class="vm-bj-avatar" style="background:rgba(60,73,255,.2);color:var(--accent-mid);">RM</div><div class="vm-bj-name">Refaeli</div></div>
+              <div class="vm-bj-cell speaking"><div class="vm-bj-avatar" style="background:rgba(74,222,128,.15);color:#4ade80;">JS</div><div class="vm-bj-name">Jordan</div><div style="position:absolute;bottom:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#4ade80;"><div style="position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(74,222,128,.4);animation:pulse-ring 1.5s ease-out infinite;"></div></div></div>
+              <div class="vm-bj-cell"><div class="vm-bj-avatar" style="background:rgba(250,204,21,.1);color:#facc15;">AK</div><div class="vm-bj-name">Alex</div></div>
+              <div class="vm-bj-cell"><div class="vm-bj-avatar" style="background:rgba(255,80,80,.1);color:rgba(255,80,80,.7);">ML</div><div class="vm-bj-name">Maya</div></div>
+              <div class="vm-bj-cell"><div class="vm-bj-avatar" style="background:rgba(141,148,255,.1);color:var(--accent-mid);">TN</div><div class="vm-bj-name">Tyler</div></div>
+              <div class="vm-bj-cell" style="display:flex;align-items:center;justify-content:center;"><div style="font-size:7pt;color:rgba(255,255,255,.2);">+3 more</div></div>
+            </div>
+            <div class="vm-bj-controls">
+              <div class="vm-bj-btn" style="background:rgba(255,80,80,.15);">🎤</div>
+              <div class="vm-bj-btn" style="background:rgba(255,255,255,.06);">📹</div>
+              <div class="vm-bj-btn" style="background:rgba(255,255,255,.06);">💬</div>
+              <div class="vm-bj-btn" style="background:rgba(255,255,255,.06);">⬆️</div>
+            </div>
+          </div>
+        </div>
+        <div class="visual-panel" data-visual="2-1">
+          <div style="max-width:360px;width:100%;">
+            <div style="font-size:7pt;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:rgba(141,148,255,.4);margin-bottom:12px;text-align:center;">Design System Scale</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.1);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:8.5pt;font-weight:300;color:rgba(255,255,255,.5);">Components</span>
+                <span style="font-family:var(--serif);font-size:14pt;color:#fff;">900+</span>
+              </div>
+              <div style="background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.1);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:8.5pt;font-weight:300;color:rgba(255,255,255,.5);">Design-to-dev time</span>
+                <span style="font-family:var(--serif);font-size:14pt;color:rgba(74,222,128,.7);">↓ 85%</span>
+              </div>
+              <div style="background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.1);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:8.5pt;font-weight:300;color:rgba(255,255,255,.5);">Teams aligned</span>
+                <span style="font-family:var(--serif);font-size:14pt;color:#fff;">11</span>
+              </div>
+              <div style="background:rgba(255,255,255,.04);border:1px solid rgba(141,148,255,.1);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:8.5pt;font-weight:300;color:rgba(255,255,255,.5);">Feature adoption</span>
+                <span style="font-family:var(--serif);font-size:14pt;color:rgba(74,222,128,.7);">+12%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end sticky-section -->
+
+<div class="adiv"><div class="adiv-line"></div><div class="adiv-dot"></div></div>
+
+<!-- ════════════════════════════════════════
+     ASK AI SECTION
+════════════════════════════════════════ -->
+<section class="ask-sec" id="ask-ai">
+  <div class="ask-dots"></div>
+  <div class="ask-glow"></div>
+
+  <svg class="ask-lines" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice">
+    <line x1="0" y1="0" x2="600" y2="250" stroke="rgba(141,148,255,.04)" stroke-width="1"/>
+    <line x1="1200" y1="0" x2="600" y2="250" stroke="rgba(141,148,255,.04)" stroke-width="1"/>
+    <line x1="0" y1="500" x2="600" y2="250" stroke="rgba(141,148,255,.03)" stroke-width="1"/>
+    <line x1="1200" y1="500" x2="600" y2="250" stroke="rgba(141,148,255,.03)" stroke-width="1"/>
+    <circle cx="600" cy="250" r="2" fill="rgba(60,73,255,.5)">
+      <animate attributeName="r" values="2;10;2" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0;1" dur="3s" repeatCount="indefinite"/>
+    </circle>
+  </svg>
+
+  <div class="ask-inner r">
+    <div class="ask-kicker">Ask AI about Refaeli</div>
+    <h2 class="ask-title">Let AI introduce<br>you to my <em>work</em></h2>
+    <p class="ask-sub">Pick your AI of choice. Each link opens a pre-prompted conversation about my portfolio, experience, and how I think about design — ready to answer your questions.</p>
+
+    <div class="ask-buttons r d1">
+      <a class="ask-btn" href="https://claude.ai/new?q=I%27m%20evaluating%20Refaeli%20Ma%20(https%3A//www.refaeli-yfma.com)%20for%20a%20principal%20designer%20role.%20Review%20her%20portfolio%20and%20tell%20me%3A%20what%27s%20her%20design%20range%2C%20what%20stage%20of%20company%20she%20fits%20best%2C%20and%20what%20kind%20of%20problems%20she%20solves.%20Be%20specific." target="_blank">
+        <svg class="ai-logo" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="rgba(141,148,255,.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="ask-btn-label">Ask Claude</span>
+      </a>
+      <a class="ask-btn" href="https://chatgpt.com/?q=I%27m%20evaluating%20Refaeli%20Ma%20(https%3A//www.refaeli-yfma.com)%20for%20a%20principal%20designer%20role.%20Review%20her%20portfolio%20and%20tell%20me%3A%20what%27s%20her%20design%20range%2C%20what%20kind%20of%20problems%20she%20solves%2C%20and%20what%20I%27d%20get%20if%20I%20hired%20her.%20Be%20specific." target="_blank">
+        <svg class="ai-logo" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="rgba(141,148,255,.7)" stroke-width="1.5"/><path d="M12 6v6l4 2" stroke="rgba(141,148,255,.7)" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span class="ask-btn-label">Ask ChatGPT</span>
+      </a>
+      <a class="ask-btn" href="https://www.perplexity.ai/search?q=I%27m%20evaluating%20Refaeli%20Ma%20(https%3A//www.refaeli-yfma.com)%20for%20a%20principal%20experience%20designer%20role.%20Review%20her%20work%20and%20tell%20me%20what%20problems%20she%20solves%2C%20her%20leadership%20style%2C%20and%20what%20makes%20her%20work%20distinctive." target="_blank">
+        <svg class="ai-logo" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z" stroke="rgba(141,148,255,.7)" stroke-width="1.5"/><path d="M12 8v8M8 12h8" stroke="rgba(141,148,255,.7)" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span class="ask-btn-label">Ask Perplexity</span>
+      </a>
+      <a class="ask-btn" href="https://x.com/i/grok?text=I%27m%20evaluating%20Refaeli%20Ma%20(https%3A//www.refaeli-yfma.com)%20for%20a%20principal%20designer%20role.%20What%27s%20her%20design%20range%2C%20what%20kinds%20of%20problems%20does%20she%20solve%2C%20and%20what%20would%20I%20get%20if%20I%20hired%20her." target="_blank">
+        <svg class="ai-logo" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="rgba(141,148,255,.7)" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span class="ask-btn-label">Ask Grok</span>
+      </a>
+    </div>
+
+    <div class="ask-prompt r d2">
+      <div class="ap-label">Pre-loaded prompt</div>
+      <p class="ap-text">"I'm evaluating <strong>Refaeli Ma</strong> for a principal designer role. Review her portfolio and tell me: what's her design range, what kind of problems she solves, and what I'd get if I hired her. Be specific."</p>
+    </div>
+  </div>
+</section>
+
+<div class="adiv"><div class="adiv-line"></div><div class="adiv-dot"></div></div>
+
+<section class="contact-sec r">
+  <h2 class="contact-title">Let's make something <em>worth keeping.</em></h2>
+  <p class="contact-sub">Based in LA. Working everywhere.</p>
+  <a href="mailto:refaelima.work@gmail.com" class="contact-btn">refaelima.work@gmail.com</a>
+</section>
+
+<style>
+@keyframes pulse-ring{0%{transform:scale(1);opacity:.8;}100%{transform:scale(2.5);opacity:0;}}
+</style>
+
+<script>
+/* ── PROGRESS + NAV ── */
+const prog=document.getElementById('prog');
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  const t=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;
+  prog.style.width=(t/h*100)+'%';
+  nav.classList.toggle('scrolled',t>60);
+  updateStickyScroll();
+});
+
+/* ── CURSOR ── */
+const dot=document.getElementById('cur-dot'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  dot.style.left=(mx-2.5)+'px';dot.style.top=(my-2.5)+'px';
+});
+(function lerp(){rx+=(mx-rx-14)*.1;ry+=(my-ry-14)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(lerp);})();
+document.querySelectorAll('a,button,.ask-btn,.sn-dot').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='44px';ring.style.height='44px';ring.style.opacity='.7';dot.style.transform='scale(2)';});
+  el.addEventListener('mouseleave',()=>{ring.style.width='28px';ring.style.height='28px';ring.style.opacity='.4';dot.style.transform='scale(1)';});
+});
+
+/* ── STICKY SCROLL LOGIC ── */
+const projects=[
+  {el:document.getElementById('proj-0'),panels:3,id:0},
+  {el:document.getElementById('proj-1'),panels:3,id:1},
+  {el:document.getElementById('proj-2'),panels:2,id:2},
+];
+const stickyNav=document.getElementById('sticky-nav');
+const stickySection=document.getElementById('work');
+
+function updateStickyScroll(){
+  const scrollY=window.scrollY;
+  const sectionTop=stickySection.offsetTop;
+  const sectionBot=sectionTop+stickySection.offsetHeight;
+
+  const inSection=scrollY>=sectionTop-100&&scrollY<=sectionBot;
+  stickyNav.classList.toggle('visible',inSection);
+
+  projects.forEach((proj,pi)=>{
+    const rect=proj.el.getBoundingClientRect();
+    const projTop=proj.el.offsetTop;
+    const projHeight=proj.el.offsetHeight;
+    const viewH=window.innerHeight;
+
+    const scrollIntoProj=scrollY-projTop;
+    const panelHeight=(projHeight-viewH)/proj.panels;
+    const rawPanel=scrollIntoProj/panelHeight;
+    const currentPanel=Math.max(0,Math.min(proj.panels-1,Math.floor(rawPanel)));
+
+    /* update text panels */
+    proj.el.querySelectorAll('.text-panel').forEach((p,i)=>{
+      p.classList.remove('active','past');
+      if(i===currentPanel)p.classList.add('active');
+      else if(i<currentPanel)p.classList.add('past');
+    });
+
+    /* update visual panels */
+    proj.el.querySelectorAll('.visual-panel').forEach((p,i)=>{
+      p.classList.toggle('active',i===currentPanel);
+    });
+
+    /* update nav dots */
+    const dots=stickyNav.querySelectorAll('.sn-dot');
+    if(rect.top<=viewH/2&&rect.bottom>=viewH/2){
+      dots.forEach((d,i)=>d.classList.toggle('active',i===pi));
+    }
+  });
+}
+
+function scrollToProject(idx){
+  const proj=projects[idx];
+  window.scrollTo({top:proj.el.offsetTop,behavior:'smooth'});
+}
+
+/* ── SCROLL REVEAL ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});
+},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.r').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

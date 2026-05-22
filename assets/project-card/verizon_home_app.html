@@ -1,0 +1,95 @@
+
+<h2 class="sr-only">Verizon Home App — connected system diagram showing process, design systems, NPS, accessibility, legal, and cross-functional operations nodes</h2>
+<style>
+.vh-wrap { display:flex; justify-content:center; padding:2rem 0; }
+@keyframes flow-dash { from{stroke-dashoffset:20} to{stroke-dashoffset:0} }
+@keyframes node-pulse { 0%,100%{opacity:.9;transform:scale(1)} 50%{opacity:1;transform:scale(1.04)} }
+@keyframes badge-blink { 0%,100%{opacity:.5} 60%{opacity:1} }
+.flow-line { stroke-dasharray:5 4; animation: flow-dash 1.8s linear infinite; }
+.flow-line.d2 { animation-delay:.4s }
+.flow-line.d3 { animation-delay:.8s }
+.flow-line.d4 { animation-delay:1.2s }
+.flow-line.d5 { animation-delay:1.6s }
+.flow-line.d6 { animation-delay:.6s }
+.sat-node { animation: node-pulse 3.5s ease-in-out infinite; transform-origin:center; }
+.sat-node:nth-child(2){animation-delay:.6s}
+.sat-node:nth-child(3){animation-delay:1.2s}
+.sat-node:nth-child(4){animation-delay:1.8s}
+.sat-node:nth-child(5){animation-delay:2.4s}
+.sat-node:nth-child(6){animation-delay:3s}
+.badge { animation: badge-blink 2.5s ease-in-out infinite; }
+</style>
+<div class="vh-wrap">
+<svg width="100%" viewBox="0 0 680 420" role="img">
+  <title>Verizon Home App system diagram</title>
+  <desc>Central Home App core connected to six operational nodes: Process, Design Systems, NPS, Accessibility, Legal, and Cross-functional Ops.</desc>
+
+  <!-- connecting lines -->
+  <line class="flow-line"    x1="340" y1="195" x2="170" y2="100" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+  <line class="flow-line d2" x1="340" y1="195" x2="520" y2="100" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+  <line class="flow-line d3" x1="340" y1="195" x2="580" y2="240" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+  <line class="flow-line d4" x1="340" y1="195" x2="480" y2="350" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+  <line class="flow-line d5" x1="340" y1="195" x2="200" y2="350" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+  <line class="flow-line d6" x1="340" y1="195" x2="100" y2="240" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+
+  <!-- junction dots on lines -->
+  <circle cx="255" cy="147" r="3" fill="#DFE1FF"/>
+  <circle cx="430" cy="147" r="3" fill="#DFE1FF"/>
+  <circle cx="460" cy="217" r="3" fill="#DFE1FF"/>
+  <circle cx="410" cy="272" r="3" fill="#DFE1FF"/>
+  <circle cx="270" cy="272" r="3" fill="#DFE1FF"/>
+  <circle cx="220" cy="217" r="3" fill="#DFE1FF"/>
+
+  <!-- core unit — device-style like reference -->
+  <rect x="258" y="130" width="164" height="130" rx="16" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1.2"/>
+  <rect x="270" y="142" width="80" height="106" rx="10" fill="#e8e9ff" stroke="#DFE1FF" stroke-width="0.8"/>
+  <circle cx="310" cy="178" r="18" fill="#d0d3ff" stroke="#8D94FF" stroke-width="1"/>
+  <circle cx="310" cy="178" r="10" fill="#f4f4ff"/>
+  <!-- smiley dot -->
+  <circle cx="310" cy="177" r="5" fill="#3C49FF" opacity=".6"/>
+  <!-- data lines right panel -->
+  <rect x="362" y="152" width="48" height="5" rx="2" fill="#DFE1FF"/>
+  <rect x="362" y="163" width="38" height="5" rx="2" fill="#DFE1FF"/>
+  <rect x="362" y="174" width="44" height="5" rx="2" fill="#DFE1FF"/>
+  <rect x="362" y="185" width="30" height="5" rx="2" fill="#DFE1FF"/>
+  <rect x="362" y="196" width="42" height="5" rx="2" fill="#DFE1FF"/>
+  <rect x="362" y="207" width="36" height="5" rx="2" fill="#DFE1FF"/>
+  <rect x="362" y="218" width="40" height="5" rx="2" fill="#DFE1FF"/>
+  <text x="340" y="275" text-anchor="middle" font-size="8.5" font-weight="600" letter-spacing="0.12em" fill="#3C49FF" font-family="'Outfit',system-ui">VERIZON HOME</text>
+  <circle class="badge" cx="406" cy="142" r="7" fill="#3C49FF"/>
+  <text x="406" y="146" text-anchor="middle" font-size="7" font-weight="600" fill="white" font-family="'Outfit',system-ui">1M</text>
+
+  <!-- satellite nodes -->
+  <g class="sat-node">
+    <rect x="108" y="62" width="124" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="170" y="84" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">PROCESS</text>
+    <text x="170" y="99" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">roadmap alignment</text>
+  </g>
+  <g class="sat-node">
+    <rect x="458" y="62" width="124" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="520" y="84" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">DESIGN SYS</text>
+    <text x="520" y="99" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">10+ releases</text>
+  </g>
+  <g class="sat-node">
+    <rect x="524" y="210" width="112" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="580" y="232" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">NPS</text>
+    <text x="580" y="247" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">4.5 App Store</text>
+  </g>
+  <g class="sat-node">
+    <rect x="420" y="322" width="120" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="480" y="344" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">LEGAL</text>
+    <text x="480" y="359" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">org structure</text>
+  </g>
+  <g class="sat-node">
+    <rect x="140" y="322" width="120" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="200" y="344" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">CROSS-FUNC</text>
+    <text x="200" y="359" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">operations</text>
+  </g>
+  <g class="sat-node">
+    <rect x="44" y="210" width="112" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+    <text x="100" y="232" text-anchor="middle" font-size="9" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">ACCESS</text>
+    <text x="100" y="247" text-anchor="middle" font-size="8" fill="#8D94FF" font-family="'Outfit',system-ui">standards</text>
+  </g>
+
+</svg>
+</div>
