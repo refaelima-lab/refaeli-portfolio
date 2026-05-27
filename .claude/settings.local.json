@@ -3,7 +3,10 @@
     "allow": [
       "Bash(python)",
       "Bash(python3 -c ' *)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Bash(open *)",
+      "Bash(echo \"Server PID: $!\")",
+      "Bash(grep -E \"\\\\.\\(jpg|png|mp4|mov\\)$\")"
     ]
   }
 }

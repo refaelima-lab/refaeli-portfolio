@@ -41,6 +41,7 @@
 | 11 | Hero location letter-spacing: `--tracking-normal`→`--tracking-wider` (matches nav links) |
 | 11 | HOW I WORK hover face: padding-left/right 1.2rem→2.2rem; expand text 13pt→12pt |
 | 11 | Project card copy: VZ Home, BlueJeans, Iconmobile — body, tags, title updated; CTAs and NDA line removed |
+| 12 | cs-vz-home.html: full Verizon Home App case study built — 2-part structure, 15+ sections, all assets wired, cinematic quote moments, product pillars, IA viz, phone frames, videos |
 
 ---
 
@@ -87,7 +88,7 @@
 ## Not Started
 
 ### Case Study Pages
-- [ ] **`cs-vz-home.html`** — Verizon Home App. Reference: `casestudy_verizon_home.html`
+- [x] **`cs-vz-home.html`** — Verizon Home App. Full 2-chapter build: Part 1 (From Chaos to Cadence) + Part 2 (From Reactive to Proactive). All assets wired. Videos, phone frames, pillar cards, IA visualization, cinematic sections.
 - [ ] **`cs-bluejeans.html`** — BlueJeans by Verizon. Reference: `casestudy_vz_fromchaosfinal.html`
 - [ ] **`cs-vz-id-arch.html`** — Verizon Identity Architecture
 - [ ] **`cs-iconmobile.html`** — Iconmobile In-Car Experience

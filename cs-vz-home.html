@@ -6,6 +6,529 @@
   <title>Verizon Home App · Refaeli Ma</title>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="styles.css">
+  <style>
+
+    /* ── App download buttons ── */
+    .app-btns {
+      display: flex;
+      gap: 0.9rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fu 0.6s 0.72s forwards;
+    }
+    .app-btns img {
+      height: 38px;
+      width: auto;
+      opacity: 0.82;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .app-btns a:hover img { opacity: 1; transform: translateY(-1px); }
+
+    /* ── Chapter opener ── */
+    .chap-opener {
+      background: var(--dark);
+      padding: 6rem clamp(1.25rem, 5vw, 4rem);
+      border-top: 1px solid var(--accent-mid-a08);
+      position: relative;
+      overflow: hidden;
+    }
+    .chap-opener-inner {
+      max-width: var(--content-default);
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .chap-ghost {
+      position: absolute;
+      right: clamp(1.25rem, 5vw, 4rem);
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-serif);
+      font-size: clamp(80pt, 12vw, 140pt);
+      color: rgba(141,148,255,0.05);
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+    }
+    .chap-eyebrow {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .chap-eyebrow::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 36px;
+      background: var(--accent-mid-a25);
+    }
+    .chap-h {
+      font-family: var(--font-serif);
+      font-size: clamp(28pt, 4vw, 46pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+      max-width: 620px;
+    }
+    .chap-h em { font-style: italic; color: var(--accent-mid); }
+    .chap-desc {
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: var(--white-a38);
+      max-width: 520px;
+      line-height: var(--leading-body);
+    }
+
+    /* ── Chapter break transition ── */
+    .chap-break {
+      background: var(--dark);
+      border-top: 1px solid var(--accent-mid-a08);
+      border-bottom: 1px solid var(--accent-mid-a08);
+      padding: 4rem clamp(1.25rem, 5vw, 4rem);
+      overflow: hidden;
+    }
+    .chap-break-inner {
+      max-width: var(--content-default);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+    }
+    .cb-side { flex: 1; }
+    .cb-num {
+      font-family: var(--font-serif);
+      font-size: clamp(52pt, 7vw, 80pt);
+      color: var(--accent-mid-a08);
+      line-height: 1;
+      margin-bottom: -0.15em;
+    }
+    .cb-chapter {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent-mid-a50);
+      margin-bottom: 0.4rem;
+    }
+    .cb-title {
+      font-family: var(--font-serif);
+      font-size: clamp(16pt, 2.2vw, 24pt);
+      line-height: 1.2;
+    }
+    .cb-title.done { color: rgba(255,255,255,0.3); }
+    .cb-title.next { color: #fff; }
+    .cb-divider { width: 1px; height: 72px; background: var(--accent-mid-a12); flex-shrink: 0; }
+
+    /* ── Cinematic quote section ── */
+    .cinematic-sec {
+      background: var(--dark);
+      min-height: 55vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem clamp(1.25rem, 5vw, 4rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .cin-dots {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(141,148,255,0.12) 1px, transparent 1px);
+      background-size: 26px 26px;
+      pointer-events: none;
+    }
+    .cin-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      width: 65vw;
+      height: 50vh;
+      background: radial-gradient(ellipse, rgba(60,73,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cin-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 820px;
+    }
+    .cin-q {
+      font-family: var(--font-serif);
+      font-size: clamp(26pt, 4vw, 50pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+    .cin-q em { font-style: italic; color: var(--accent-mid); }
+    .cin-sub {
+      font-size: clamp(11pt, 1.4vw, 14pt);
+      font-weight: var(--weight-light);
+      color: var(--white-a42);
+      line-height: var(--leading-body);
+      margin-top: 2rem;
+      max-width: 580px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cin-attr {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent-mid-a50);
+      margin-top: 1.5rem;
+    }
+
+    /* ── Mission transform cards ── */
+    .mission-cards {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1.5rem;
+      align-items: center;
+      margin-top: 2.5rem;
+    }
+    .mc-node {
+      border: 1px solid var(--rule-dark);
+      border-radius: var(--radius-card);
+      background: var(--white-a04);
+      padding: 1.8rem;
+      text-align: center;
+    }
+    .mc-node.target { border-color: rgba(141,148,255,0.38); background: rgba(60,73,255,0.06); }
+    .mc-node-label {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-widest);
+      text-transform: uppercase;
+      color: var(--accent-mid-a50);
+      margin-bottom: 0.6rem;
+    }
+    .mc-node.target .mc-node-label { color: var(--accent-mid); }
+    .mc-node-title {
+      font-family: var(--font-serif);
+      font-size: clamp(13pt, 1.6vw, 17pt);
+      color: var(--white-a55);
+      line-height: var(--leading-compact);
+    }
+    .mc-node.target .mc-node-title { color: #fff; }
+    .mc-arrow {
+      font-family: var(--font-serif);
+      font-size: clamp(22pt, 3vw, 36pt);
+      color: var(--accent-mid-a25);
+      text-align: center;
+    }
+
+    /* ── Pillar cards ── */
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.4rem;
+      margin-top: 2.5rem;
+    }
+    .pillar-card {
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-card-lg);
+      overflow: hidden;
+      background: var(--surface-white);
+      cursor: default;
+      transition: var(--transition-card);
+    }
+    .pillar-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card-lift); }
+    .pillar-head {
+      padding: 1.3rem 1.6rem;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    .pillar-num {
+      font-family: var(--font-serif);
+      font-size: 20pt;
+      color: var(--accent-mid);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .pillar-title {
+      font-size: 10pt;
+      font-weight: var(--weight-semibold);
+      color: var(--ink);
+      line-height: var(--leading-compact);
+    }
+    .pillar-body {
+      padding: 1.3rem 1.6rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+    .pillar-col-label {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-widest);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .pillar-col-label.inc { color: var(--success); }
+    .pillar-col-label.exc { color: var(--warning); }
+    .pillar-col-label.why { color: var(--accent); }
+    .pillar-col ul { list-style: none; }
+    .pillar-col ul li {
+      font-size: 8pt;
+      font-weight: var(--weight-light);
+      color: var(--ink-mid);
+      padding: 0.18rem 0 0.18rem 0.7rem;
+      position: relative;
+      line-height: 1.5;
+    }
+    .pillar-col ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55rem;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+    }
+    .pillar-col.inc ul li::before { background: var(--success); }
+    .pillar-col.exc ul li::before { background: var(--warning); }
+    .pillar-col.why ul li::before { background: var(--accent-mid); }
+
+    /* ── Metric cells (dark) ── */
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--accent-mid-a10);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: 1px solid var(--accent-mid-a10);
+      margin-top: 2.5rem;
+    }
+    .metric-cell {
+      background: var(--dark);
+      padding: 1.8rem 1.2rem;
+      text-align: center;
+      transition: background var(--dur-quick) var(--ease-base);
+      cursor: default;
+    }
+    .metric-cell:hover { background: var(--dark-mid); }
+    .metric-num {
+      font-family: var(--font-serif);
+      font-size: clamp(20pt, 2.6vw, 30pt);
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .metric-num em { font-style: normal; color: var(--accent-mid); }
+    .metric-label {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      color: var(--accent-mid-a50);
+      line-height: var(--leading-tight);
+    }
+    .metric-sub {
+      font-size: var(--text-pico);
+      font-weight: var(--weight-light);
+      color: var(--white-a25);
+      margin-top: 0.35rem;
+      font-style: italic;
+    }
+
+    /* ── IA architecture visualization ── */
+    .ia-viz {
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-card-lg);
+      overflow: hidden;
+      background: var(--surface-white);
+      margin-top: 2.5rem;
+    }
+    .ia-viz-bar {
+      background: var(--dark);
+      padding: 0.9rem 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .ia-viz-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .ia-viz-title {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      color: var(--white-a38);
+      margin-left: 0.5rem;
+    }
+    .ia-viz-body {
+      padding: 1.8rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
+    }
+    .ia-tab {
+      background: var(--page);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-card);
+      padding: 0.9rem 0.6rem;
+      text-align: center;
+    }
+    .ia-tab.active-tab { background: var(--accent); border-color: var(--accent); }
+    .ia-tab-icon { font-size: 18px; margin-bottom: 0.35rem; }
+    .ia-tab-label {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+      color: var(--ink-mid);
+      display: block;
+    }
+    .ia-tab.active-tab .ia-tab-label { color: #fff; }
+    .ia-sub-items { margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.3rem; }
+    .ia-sub {
+      font-size: 6.8pt;
+      font-weight: var(--weight-light);
+      color: var(--ink-light);
+      background: #fff;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 0.2rem 0.4rem;
+      text-align: left;
+    }
+    .ia-tab.active-tab .ia-sub { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); }
+
+    /* ── Video embed ── */
+    .cs-video-wrap {
+      border-radius: var(--radius-card-lg);
+      overflow: hidden;
+      background: #000;
+      margin-top: 2.5rem;
+      border: 1px solid var(--rule-dark);
+    }
+    .cs-video-wrap video { width: 100%; display: block; max-height: 72vh; object-fit: cover; }
+
+    /* ── Phone screen images (real screenshots) ── */
+    .pf-screen img {
+      width: 100%;
+      display: block;
+      border-radius: 0;
+    }
+
+    /* ── AI assistant card ── */
+    .ai-card-d {
+      background: linear-gradient(135deg, rgba(60,73,255,0.18) 0%, rgba(141,148,255,0.08) 100%);
+      border: 1px solid var(--accent-mid-a18);
+      border-radius: var(--radius-card-lg);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .ai-card-d::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: rgba(141,148,255,0.06);
+      pointer-events: none;
+    }
+    .ai-card-title {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 0.8rem;
+    }
+    .ai-card-q {
+      font-family: var(--font-serif);
+      font-size: clamp(14pt, 1.8vw, 18pt);
+      font-style: italic;
+      color: rgba(255,255,255,0.8);
+      line-height: var(--leading-quote);
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ── Responsive ── */
+    /* ── Timeline ── */
+    .tl { position: relative; padding-left: 1.6rem; margin-top: 1rem; }
+    .tl::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--rule);
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 2rem;
+      padding-left: 1.2rem;
+      cursor: default;
+    }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -2.1rem;
+      top: 0.28rem;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1.5px solid var(--accent-mid);
+      transition: background 0.2s, transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .tl-item:hover::before { background: var(--accent); transform: scale(1.5); }
+    .tl-phase {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-widest);
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 0.2rem;
+    }
+    .tl-title {
+      font-size: 10pt;
+      font-weight: var(--weight-medium);
+      color: var(--ink);
+      margin-bottom: 0.3rem;
+    }
+    .tl-body {
+      font-size: 8.8pt;
+      font-weight: var(--weight-light);
+      color: var(--ink-mid);
+      line-height: var(--leading-normal);
+      max-width: 480px;
+    }
+
+    @media (max-width: 860px) {
+      .pillar-grid { grid-template-columns: 1fr; }
+      .pillar-body { grid-template-columns: 1fr 1fr; }
+      .ia-viz-body { grid-template-columns: 1fr 1fr; }
+      .chap-break-inner { flex-direction: column; gap: 1.5rem; }
+      .cb-divider { width: 60px; height: 1px; }
+      .mission-cards { grid-template-columns: 1fr; }
+      .mc-arrow { transform: rotate(90deg); }
+      .metric-row { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
@@ -56,16 +579,902 @@
 </div>
 
 
+<!-- ── IN-PAGE SIDENAV ── -->
+<nav class="cs-sidenav" id="cs-sidenav" aria-label="Page sections">
+  <button class="cs-sidenav-dot active" data-label="Overview"  data-target="overview"></button>
+  <button class="cs-sidenav-dot"        data-label="Part I"    data-target="part1"></button>
+  <button class="cs-sidenav-dot"        data-label="Systems"   data-target="systems"></button>
+  <button class="cs-sidenav-dot"        data-label="Part II"   data-target="part2"></button>
+  <button class="cs-sidenav-dot"        data-label="Pillars"   data-target="pillars"></button>
+  <button class="cs-sidenav-dot"        data-label="Design"    data-target="design"></button>
+  <button class="cs-sidenav-dot"        data-label="Outcomes"  data-target="outcomes"></button>
+</nav>
+
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
 <section class="hero-cs" id="overview">
   <div class="hero-cs-inner">
-    <div class="hero-cs-kicker">Verizon · Mobile · iOS &amp; Android · 2023–2025</div>
-    <h1 class="hero-cs-h1">Verizon<br><em>Home App</em></h1>
-    <p class="hero-cs-subtitle">From a reactive utility to a proactive, intelligent home experience.</p>
-    <p class="hero-cs-desc">Content coming soon.</p>
+    <div class="hero-cs-split">
+
+      <!-- Left: text -->
+      <div>
+        <div class="hero-cs-kicker">Verizon · Mobile · iOS &amp; Android · 2023–2025</div>
+        <h1 class="hero-cs-h1">Verizon<br><em>Home App</em></h1>
+        <p class="hero-cs-subtitle">Rebuilding trust inside a product users only opened when something went wrong.</p>
+        <p class="hero-cs-desc">Transforming a fragmented utility into a more intelligent, proactive household experience — and building the organizational systems that made it possible.</p>
+
+        <!-- App store download buttons -->
+        <div class="app-btns">
+          <a href="#" aria-label="Download on the App Store">
+            <img src="assets/verizon-home-app/download_ios.png" alt="Download on the App Store">
+          </a>
+          <a href="#" aria-label="Get it on Google Play">
+            <img src="assets/verizon-home-app/download-google-play.png" alt="Get it on Google Play">
+          </a>
+        </div>
+
+        <!-- Chips -->
+        <div class="hero-chips">
+          <span class="chip">Product Strategy</span>
+          <span class="chip">AI Experience</span>
+          <span class="chip">Design Systems</span>
+          <span class="chip">Design Leadership</span>
+          <span class="chip">Mobile · iOS · Android</span>
+        </div>
+      </div>
+
+      <!-- Right: cover image -->
+      <div class="hero-cs-cover">
+        <img src="assets/verizon-home-app/home-banner.jpg" alt="Verizon Home App — intelligent home experience">
+      </div>
+
+    </div>
+
+    <!-- Stat strip -->
+    <div class="hero-stat-strip" style="grid-template-columns:repeat(4,1fr); margin-top:3rem;">
+      <div class="hs-cell">
+        <div class="hs-cell-num">1M+</div>
+        <div class="hs-cell-label">Customers at Launch · Aug 2024</div>
+      </div>
+      <div class="hs-cell">
+        <div class="hs-cell-num">4.5★</div>
+        <div class="hs-cell-label">App Store · Google Play 4.4</div>
+      </div>
+      <div class="hs-cell">
+        <div class="hs-cell-num">71%</div>
+        <div class="hs-cell-label">Fewer Support Escalations</div>
+      </div>
+      <div class="hs-cell">
+        <div class="hs-cell-num">85%</div>
+        <div class="hs-cell-label">Faster Design-to-Dev Velocity</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
 
+<!-- ══════════════════════════════════════
+     PART 1 — CHAPTER OPENER
+══════════════════════════════════════ -->
+<div class="chap-opener" id="part1">
+  <div class="chap-ghost">01</div>
+  <div class="chap-opener-inner">
+    <div class="chap-eyebrow r">Part One</div>
+    <h2 class="chap-h r d1">From Chaos<br><em>to Cadence</em></h2>
+    <p class="chap-desc r d2">Operational transformation. Leadership. Systems organization. This chapter is about the execution — the unglamorous, high-leverage work of turning fragmentation into infrastructure.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     01 · CONTEXT: WHAT I INHERITED
+══════════════════════════════════════ -->
+<section class="cs-sec bg-page">
+  <div class="sec-inner">
+    <div class="ch r d1">01 · Context</div>
+    <h2 class="st r d2">I didn't inherit a clean slate.<br>I inherited <em>a mess with a roadmap</em>.</h2>
+
+    <div class="g2" style="margin-top:2.5rem;">
+      <div>
+        <p class="bp r d2">Verizon Home App was a <strong>connectivity management tool</strong> for home internet customers — router controls, device management, network diagnostics. On paper, everything a customer would need. In practice, a product built to reduce call-center volume, not to serve people.</p>
+        <p class="bp r d3">That one distinction — cost deflection versus customer trust — was embedded in every decision: the information hierarchy, the error states, the onboarding flow. The app was built to make customers stop calling. Not to make them feel capable.</p>
+        <p class="bp r d4">When I joined, there were <strong>1,600+ "app unusable" tickets per release cycle.</strong> Teams had tried patching individual screens. Nobody had asked the harder question.</p>
+
+        <div class="pullquote r d5">
+          <p>Most products fail because they solve the wrong thing beautifully. I design systems that resolve what matters — not interfaces that mask it.</p>
+        </div>
+      </div>
+      <div>
+        <div class="g3" style="gap:1rem; margin-bottom:1rem;">
+          <div class="ic r d2">
+            <div class="ic-icon">⚡</div>
+            <div class="ic-label">Reactive, not proactive</div>
+            <p class="ic-body">The app only surfaced when something broke. No ambient presence, no guidance during the calm moments when trust is built.</p>
+          </div>
+          <div class="ic r d3">
+            <div class="ic-icon">🔇</div>
+            <div class="ic-label">Silence destroyed trust</div>
+            <p class="ic-body">When the app failed, it gave customers nothing — no context, no next action. <strong>Silence reads as incompetence.</strong> Support tickets spiked after every release.</p>
+          </div>
+          <div class="ic r d4">
+            <div class="ic-icon">◫</div>
+            <div class="ic-label">11 teams, no shared language</div>
+            <p class="ic-body">Every team solving the same problems in isolation. Without shared components or principles, every sprint added more debt. <strong>Incoherent because it was.</strong></p>
+          </div>
+        </div>
+
+        <p class="bp r d3" style="margin-top:0.8rem;">My first three weeks weren't in Figma. I sat with support teams, read customer transcripts, audited 18 months of release notes, and met with every PM and engineering lead I could find.</p>
+        <p class="bp r d4">What I found: <strong>eleven teams working in parallel, no shared design language, no defined success metric from the customer's perspective,</strong> and an AI strategy that existed in a slide deck but had no design tether.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     HOME APP 1.0 VISION VIDEO
+══════════════════════════════════════ -->
+<section class="cs-sec bg-dark">
+  <div class="sec-inner">
+    <div class="ch r d1" style="color:var(--accent-mid);">02 · Vision · Home App 1.0</div>
+    <h2 class="st-d r d2">The vision that<br><em>preceded the work</em>.</h2>
+    <p class="bp-d r d3" style="max-width:560px;">Before design began in earnest, a vision was articulated — directionally right, but without the operational systems to land it. This is that vision.</p>
+
+    <div class="cs-video-wrap r d3">
+      <video controls muted playsinline preload="metadata"
+             aria-label="Verizon Home App 1.0 vision video">
+        <source src="assets/verizon-home-app/home-vision-video-1.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     03 · OPERATIONAL MOVES (dark)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-dark" id="systems">
+  <div class="sec-inner">
+    <div class="ch r d1" style="color:var(--accent-mid);">03 · Operational Restructuring</div>
+    <h2 class="st-d r d2">Principal-level design isn't<br><em>the best IC in the room</em>.</h2>
+    <p class="bp-d r d3" style="max-width:560px;margin-bottom:2.5rem;">It's changing how decisions get made. Not just what the decisions are. Here's how I framed my mandate — and how that shaped what I prioritized.</p>
+
+    <div class="g2" style="gap:1.2rem;">
+      <div class="r d2">
+        <div class="mc" style="margin-bottom:1.2rem;">
+          <div class="mc-num">01</div>
+          <div class="mc-move">Strategic Reframe</div>
+          <div class="mc-title">Redefine the product's reason to exist</div>
+          <p class="mc-body">Before a single screen, I aligned leadership around a new north star: shift from "reduce calls" to "build trust." This reframed priorities across PM, engineering, and content simultaneously.</p>
+        </div>
+        <div class="mc">
+          <div class="mc-num">02</div>
+          <div class="mc-move">Organizational Design</div>
+          <div class="mc-title">Design the operating model, not just the product</div>
+          <p class="mc-body">Established cross-functional rituals — design critiques, shared component libraries, joint sprint reviews — that let 11 teams move with coherence instead of just speed.</p>
+        </div>
+      </div>
+      <div class="r d3">
+        <div class="mc" style="margin-bottom:1.2rem;">
+          <div class="mc-num">03</div>
+          <div class="mc-move">AI Strategy</div>
+          <div class="mc-title">Give the AI strategy a design tether</div>
+          <p class="mc-body">Defined what AI-enabled experience actually meant: proactive, contextual, never novelty for its own sake. The principle — does this make the right action feel inevitable? If not, it doesn't ship.</p>
+        </div>
+        <div class="mc">
+          <div class="mc-num">04</div>
+          <div class="mc-move">Leadership Model</div>
+          <div class="mc-title">Build a team that doesn't need me in every room</div>
+          <p class="mc-body">Mentored by asking better questions, not giving answers. Established critique rituals that raised craft standards without gatekeeping. The goal was a team that could decide without me.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     04 · SEQUENCE: TIMELINE (warm)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-warm">
+  <div class="sec-inner">
+    <div class="g2">
+      <div>
+        <div class="ch r d1">04 · Approach &amp; Sequence</div>
+        <h2 class="st r d2">Sequence matters<br>as much as <em>craft</em>.</h2>
+        <p class="bp r d3">The order in which I attacked problems was as important as how I solved them. Fix trust first. Build infrastructure before features. Earn the room before redefining it.</p>
+        <p class="bp r d4">Rushing to the AI experience without a stable foundation would have compounded every existing failure. Instead, I sequenced deliberately — and by the time we were ready to introduce intelligence, we had something worth being intelligent about.</p>
+      </div>
+      <div>
+        <div class="tl r d1">
+          <div class="tl-item">
+            <div class="tl-phase">Months 1–2</div>
+            <div class="tl-title">Listen before designing</div>
+            <p class="tl-body">Embedded in support, interviewed engineers, audited 18 months of release notes. Built a shared picture of the problem before proposing anything — this credibility lasted years.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-phase">Months 3–4</div>
+            <div class="tl-title">Fix the trust layer</div>
+            <p class="tl-body">Redesigned error states and onboarding before building anything new. Trust is cumulative. One bad moment erases ten good ones. We stopped the bleeding first.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-phase">Months 5–10</div>
+            <div class="tl-title">Build the infrastructure</div>
+            <p class="tl-body">A 900+ component system, cross-platform standards, shared principles. Slowed down initially; by release 4, every team was significantly faster. Accessibility, legal, engineering — all on the same shared language.</p>
+          </div>
+          <div class="tl-item">
+            <div class="tl-phase">Months 11+</div>
+            <div class="tl-title">Introduce intelligence</div>
+            <p class="tl-body">With a stable foundation, introduced the AI advisor model — proactive guidance, smart automation. Launched August 2024. 1M+ customers, 4.5 App Store rating.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     05 · DESIGN SYSTEM (dark)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-dark">
+  <div class="sec-inner">
+    <div class="ch r d1" style="color:var(--accent-mid);">05 · Design Infrastructure</div>
+    <h2 class="st-d r d2">900+ components.<br>One <em>shared language</em>.</h2>
+    <p class="bp-d r d3" style="max-width:560px;margin-bottom:2.5rem;">The design system wasn't a nice-to-have. It was the infrastructure that made everything else possible. Before it existed, 11 teams were solving the same problems 11 different ways.</p>
+
+    <div class="g3 r d2" style="gap:1.2rem;">
+      <div class="ff-card">
+        <div class="ff-title">Foundations</div>
+        <p class="ff-body">A single token system spanning light/dark, accessibility states, and brand. Every decision traced to a principle, not a preference.</p>
+        <div style="display:flex;gap:6px;margin-top:1rem;flex-wrap:wrap;">
+          <div style="width:22px;height:22px;border-radius:5px;background:#3C49FF;"></div>
+          <div style="width:22px;height:22px;border-radius:5px;background:#8D94FF;"></div>
+          <div style="width:22px;height:22px;border-radius:5px;background:#f4f4ff;"></div>
+          <div style="width:22px;height:22px;border-radius:5px;background:#1a7a3c;"></div>
+          <div style="width:22px;height:22px;border-radius:5px;background:#c75b00;"></div>
+          <div style="width:22px;height:22px;border-radius:5px;background:#181820;"></div>
+        </div>
+      </div>
+      <div class="ff-card">
+        <div class="ff-title">900+ Components</div>
+        <p class="ff-body">Atomic components from status chips to full-screen modals — all responsive, all accessible. Reduced design-to-dev time by 85%. Unified iOS, Android, and web.</p>
+        <div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:5px;">
+          <span style="background:rgba(60,73,255,0.12);color:#8D94FF;border-radius:5px;padding:2px 7px;font-size:7pt;font-weight:500;">Cards</span>
+          <span style="background:rgba(60,73,255,0.12);color:#8D94FF;border-radius:5px;padding:2px 7px;font-size:7pt;font-weight:500;">Navigation</span>
+          <span style="background:rgba(60,73,255,0.12);color:#8D94FF;border-radius:5px;padding:2px 7px;font-size:7pt;font-weight:500;">Modals</span>
+          <span style="background:rgba(60,73,255,0.12);color:#8D94FF;border-radius:5px;padding:2px 7px;font-size:7pt;font-weight:500;">AI Surfaces</span>
+          <span style="background:rgba(60,73,255,0.12);color:#8D94FF;border-radius:5px;padding:2px 7px;font-size:7pt;font-weight:500;">Alerts</span>
+        </div>
+      </div>
+      <div class="ff-card">
+        <div class="ff-title">Governing Principles</div>
+        <p class="ff-body">Systems work when everyone internalizes the principles, not just the components. These anchored every decision across all 11 teams.</p>
+        <ul style="margin-top:0.9rem;list-style:none;display:flex;flex-direction:column;gap:0.5rem;">
+          <li style="font-size:8pt;font-weight:300;color:rgba(255,255,255,0.48);padding-left:0.8rem;position:relative;"><span style="position:absolute;left:0;top:0.3rem;width:3.5px;height:3.5px;background:#8D94FF;border-radius:50%;display:block;"></span>Trust before delight</li>
+          <li style="font-size:8pt;font-weight:300;color:rgba(255,255,255,0.48);padding-left:0.8rem;position:relative;"><span style="position:absolute;left:0;top:0.3rem;width:3.5px;height:3.5px;background:#8D94FF;border-radius:50%;display:block;"></span>Invisible when working, clear when not</li>
+          <li style="font-size:8pt;font-weight:300;color:rgba(255,255,255,0.48);padding-left:0.8rem;position:relative;"><span style="position:absolute;left:0;top:0.3rem;width:3.5px;height:3.5px;background:#8D94FF;border-radius:50%;display:block;"></span>Right thing inevitable, wrong thing effortful</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CHAPTER BREAK
+══════════════════════════════════════ -->
+<div class="chap-break r">
+  <div class="chap-break-inner">
+    <div class="cb-side">
+      <div class="cb-num">01</div>
+      <div class="cb-chapter">Chapter One · Complete</div>
+      <div class="cb-title done">From Chaos to Cadence</div>
+    </div>
+    <div class="cb-divider"></div>
+    <div class="cb-side">
+      <div class="cb-num">02</div>
+      <div class="cb-chapter">Chapter Two · Beginning</div>
+      <div class="cb-title next">From Reactive to Proactive</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PART 2 — CHAPTER OPENER (cinematic)
+══════════════════════════════════════ -->
+<div class="chap-opener" id="part2" style="min-height:50vh; display:flex; align-items:center;">
+  <div class="chap-ghost">02</div>
+  <div class="chap-opener-inner" style="max-width:700px;">
+    <div class="chap-eyebrow r">Part Two</div>
+    <h2 class="chap-h r d1">From Reactive<br><em>to Proactive</em></h2>
+    <p class="chap-desc r d2">Product vision. Ecosystem strategy. AI experience. Household intelligence. The pacing slows here intentionally — this chapter earns the breathing room.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     06 · CORE MISSION (cinematic, dark)
+══════════════════════════════════════ -->
+<section class="cinematic-sec">
+  <div class="cin-dots"></div>
+  <div class="cin-glow"></div>
+  <div class="cin-inner">
+    <div class="ch r d1" style="justify-content:center; color:var(--accent-mid);">Core Mission</div>
+    <p class="cin-q r d2">
+      From a <em>Network Utility</em><br>
+      to a Trusted<br>
+      <em>Household Systems Operator</em>
+    </p>
+    <p class="cin-sub r d3">
+      Not simply a connectivity tool. A system capable of understanding, guiding, and supporting the rhythms of the household.
+    </p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     VISION VIDEO 2 (dark)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-dark">
+  <div class="sec-inner">
+    <div class="ch r d1" style="color:var(--accent-mid);">06 · Vision · From Reactive to Proactive</div>
+    <h2 class="st-d r d2">The intelligent ecosystem<br><em>in motion</em>.</h2>
+    <p class="bp-d r d3" style="max-width:560px;">This vision informed the pacing, framing, and strategic arc of everything that followed. Watch before reading.</p>
+
+    <div class="cs-video-wrap r d3">
+      <video controls muted playsinline preload="metadata"
+             aria-label="From Reactive to Proactive — Verizon Home App vision video">
+        <source src="assets/verizon-home-app/from-reactive-to-proactive-vision-video.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     07 · DUAL MISSION (page)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-page">
+  <div class="sec-inner">
+    <div class="ch r d1">07 · Dual Mission</div>
+    <h2 class="st r d2">Two missions.<br>One <em>product</em>.</h2>
+    <p class="bp r d3" style="max-width:580px;margin-bottom:2.5rem;">The Home App needed to serve two stakeholders simultaneously — and the strategy had to make both missions feel like one coherent direction.</p>
+
+    <div class="mission-cards r d3" style="background:var(--dark);border-radius:var(--radius-card-lg);padding:2.5rem;">
+      <div class="mc-node">
+        <div class="mc-node-label">For the Customer</div>
+        <div class="mc-node-title">An Intelligent Home OS. Not a connectivity utility, but a system capable of understanding, guiding, and supporting the rhythms of the household.</div>
+      </div>
+      <div class="mc-arrow">→</div>
+      <div class="mc-node target">
+        <div class="mc-node-label">For the Business</div>
+        <div class="mc-node-title">The Home App becomes a primary gateway into the Verizon ecosystem — transforming the network from a background utility into a trusted daily companion.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     08 · THE REAL PROBLEM (cinematic)
+══════════════════════════════════════ -->
+<section class="cinematic-sec" style="min-height:62vh;">
+  <div class="cin-dots"></div>
+  <div class="cin-glow"></div>
+  <div class="cin-inner">
+    <div class="ch r d1" style="justify-content:center; color:var(--accent-mid);">The Real Problem</div>
+    <p class="cin-q r d2" style="font-size:clamp(22pt,3.8vw,46pt);">
+      Verizon Home App<br>is not broken.<br>
+      It is <em>invisible</em>.
+    </p>
+    <p class="cin-sub r d3">
+      Utility products succeed quietly. The most dangerous failure mode isn't crashes or errors — it's forgettability. A product customers never think about is a product they'll leave without hesitation.
+    </p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     09 · KEY STRATEGIC THEMES (warm)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-warm">
+  <div class="sec-inner">
+    <div class="ch r d1">09 · Strategic Framing</div>
+    <h2 class="st r d2">Six ideas that<br>shaped everything <em>downstream</em>.</h2>
+    <p class="bp r d3" style="max-width:540px;margin-bottom:2.5rem;">These weren't taglines. They were decision filters. Every product decision was tested against them before it advanced.</p>
+
+    <div class="g3" style="gap:1rem;">
+      <div class="ic r d2">
+        <div class="ic-label">Trust over engagement</div>
+        <p class="ic-body"><strong>Utility products succeed quietly.</strong> High DAU is not the goal. Meaning per launch is. The app should be worth opening — not designed to be opened often.</p>
+      </div>
+      <div class="ic r d3">
+        <div class="ic-label">The app speaks first</div>
+        <p class="ic-body"><strong>Reliability builds emotional trust.</strong> The app should reach out when something matters — before the customer notices, before they call support. Proactive is the product.</p>
+      </div>
+      <div class="ic r d4">
+        <div class="ic-label">Verizon owns intelligence</div>
+        <p class="ic-body"><strong>Not gadget control.</strong> We do not compete with smart speakers or device manufacturers. We operate the intelligence layer — the layer they all depend on.</p>
+      </div>
+      <div class="ic r d2">
+        <div class="ic-label">Invisible security</div>
+        <p class="ic-body"><strong>Privacy earns loyalty.</strong> Security should protect the household without burdening it. No paranoia. No alerts for non-issues. Competence that's felt, not announced.</p>
+      </div>
+      <div class="ic r d3">
+        <div class="ic-label">Retention over novelty</div>
+        <p class="ic-body"><strong>Churn prevention is a feeling.</strong> The app raises the bar for leaving by being genuinely useful — not by making leaving harder. Subtle loyalty is durable loyalty.</p>
+      </div>
+      <div class="ic r d4">
+        <div class="ic-label">Household-aware, not device-aware</div>
+        <p class="ic-body"><strong>The household is the unit.</strong> Not the router, not the device — the household's rhythms, needs, and vulnerabilities are what the system learns to understand.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     10 · CUSTOMER VOICE
+══════════════════════════════════════ -->
+<section class="cs-sec bg-page">
+  <div class="sec-inner" style="max-width:680px;">
+    <div class="ch r d1">10 · The Emotional Goal</div>
+    <div class="pullquote r d2" style="margin-top:1.5rem;">
+      <p>"I chose Verizon because my home just works, and when it doesn't, someone competent is watching."</p>
+      <cite>Target Customer Sentiment · Design North Star</cite>
+    </div>
+    <p class="bp r d3">This is the sentence we designed toward. Not a metric — a feeling. Every pillar, every feature, every product decision was stress-tested against it.</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     11 · PRODUCT PILLARS
+══════════════════════════════════════ -->
+<section class="cs-sec bg-warm" id="pillars">
+  <div class="sec-inner">
+    <div class="ch r d1">11 · Product Pillars</div>
+    <h2 class="st r d2">Four pillars.<br>Each one <em>strategically bounded</em>.</h2>
+    <p class="bp r d3" style="max-width:560px;margin-bottom:0.5rem;">The "what it excludes" column is as important as what's included. Strategic restraint is a design skill. Boundaries that are explicit are boundaries that hold.</p>
+
+    <div class="pillar-grid r d3">
+
+      <!-- Pillar 1 -->
+      <div class="pillar-card">
+        <div class="pillar-head">
+          <div class="pillar-num">1</div>
+          <div class="pillar-title">Home Reliability &amp; Resilience</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-col inc">
+            <div class="pillar-col-label inc">Includes</div>
+            <ul>
+              <li>Proactive outage alerts</li>
+              <li>Self-healing diagnostics</li>
+              <li>Speed &amp; signal monitoring</li>
+              <li>Guided recovery flows</li>
+            </ul>
+          </div>
+          <div class="pillar-col exc">
+            <div class="pillar-col-label exc">Excludes</div>
+            <ul>
+              <li>Third-party ISP comparisons</li>
+              <li>Manual network tuning</li>
+              <li>Raw technical data dumps</li>
+            </ul>
+          </div>
+          <div class="pillar-col why">
+            <div class="pillar-col-label why">Why it matters</div>
+            <ul>
+              <li>First failure moment defines the relationship. We own the recovery.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pillar 2 -->
+      <div class="pillar-card">
+        <div class="pillar-head">
+          <div class="pillar-num">2</div>
+          <div class="pillar-title">Household Control</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-col inc">
+            <div class="pillar-col-label inc">Includes</div>
+            <ul>
+              <li>Device naming &amp; grouping</li>
+              <li>Parental controls</li>
+              <li>Guest network management</li>
+              <li>Usage scheduling</li>
+            </ul>
+          </div>
+          <div class="pillar-col exc">
+            <div class="pillar-col-label exc">Excludes</div>
+            <ul>
+              <li>Smart home device control</li>
+              <li>IoT integrations</li>
+              <li>Voice assistant features</li>
+            </ul>
+          </div>
+          <div class="pillar-col why">
+            <div class="pillar-col-label why">Why it matters</div>
+            <ul>
+              <li>Parents need calm authority over what connects to their home.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pillar 3 -->
+      <div class="pillar-card">
+        <div class="pillar-head">
+          <div class="pillar-num">3</div>
+          <div class="pillar-title">Invisible Security &amp; Privacy</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-col inc">
+            <div class="pillar-col-label inc">Includes</div>
+            <ul>
+              <li>Unknown device alerts</li>
+              <li>Threat detection signals</li>
+              <li>Privacy health summary</li>
+              <li>Quiet auto-protections</li>
+            </ul>
+          </div>
+          <div class="pillar-col exc">
+            <div class="pillar-col-label exc">Excludes</div>
+            <ul>
+              <li>Security theater alerts</li>
+              <li>Antivirus upsells</li>
+              <li>Paranoia-inducing UI</li>
+            </ul>
+          </div>
+          <div class="pillar-col why">
+            <div class="pillar-col-label why">Why it matters</div>
+            <ul>
+              <li>Competence felt, not announced. Trust is built by what you don't say.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pillar 4 -->
+      <div class="pillar-card">
+        <div class="pillar-head">
+          <div class="pillar-num">4</div>
+          <div class="pillar-title">Value Visibility &amp; Unlocks</div>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-col inc">
+            <div class="pillar-col-label inc">Includes</div>
+            <ul>
+              <li>Plan benefits summary</li>
+              <li>Upgrade recommendations</li>
+              <li>Service visibility</li>
+              <li>Loyalty moments</li>
+            </ul>
+          </div>
+          <div class="pillar-col exc">
+            <div class="pillar-col-label exc">Excludes</div>
+            <ul>
+              <li>Aggressive upsell flows</li>
+              <li>Dark patterns</li>
+              <li>Plan switching pressure</li>
+            </ul>
+          </div>
+          <div class="pillar-col why">
+            <div class="pillar-col-label why">Why it matters</div>
+            <ul>
+              <li>Customers who understand their value don't shop around. Clarity earns retention.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     12 · STRATEGIC METRICS (dark)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-dark">
+  <div class="sec-inner">
+    <div class="ch r d1" style="color:var(--accent-mid);">12 · Strategic Metrics</div>
+    <h2 class="st-d r d2">What we measure<br>and <em>why it matters</em>.</h2>
+    <p class="bp-d r d3" style="max-width:560px;margin-bottom:0;">The distinction between churn reduction, trust preservation, and cost-to-serve reduction is not semantic. Each metric tells a different story about what the product is actually doing for the business.</p>
+
+    <div class="metric-row r d3">
+      <div class="metric-cell">
+        <div class="metric-num"><em>↓</em>Churn</div>
+        <div class="metric-label">Indirect Reduction</div>
+        <p class="metric-sub">Measured as reduced likelihood — not prevented events. The app raises the bar for leaving.</p>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-num"><em>↑</em>Trust</div>
+        <div class="metric-label">Preservation Signal</div>
+        <p class="metric-sub">Measured via 4.5★ rating, CSAT, and support ticket trends. Trust compounds differently than engagement.</p>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-num"><em>↓</em>Cost</div>
+        <div class="metric-label">Cost-to-Serve</div>
+        <p class="metric-sub">71% fewer "app unusable" tickets. Self-service recovery reduces call-center load and support costs.</p>
+      </div>
+    </div>
+
+    <!-- Strategic quote -->
+    <div style="margin-top:4rem; text-align:center;" class="r d4">
+      <p class="cin-q" style="font-size:clamp(18pt,2.8vw,34pt); max-width:680px; margin:0 auto;">
+        "The Home App does not prevent churn.<br>
+        It <em>raises the bar for leaving</em>."
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     13 · HOME APP 2.0 — IA RESTRUCTURE
+══════════════════════════════════════ -->
+<section class="cs-sec bg-page" id="design">
+  <div class="sec-inner">
+    <div class="ch r d1">13 · Home App 2.0 — IA &amp; Navigation</div>
+    <h2 class="st r d2">Restructuring the<br><em>information architecture</em>.</h2>
+    <p class="bp r d3" style="max-width:580px;">The original navigation was organized around features. The redesign is organized around <strong>user intent</strong>. Four clear entry points — each scoped to a distinct household need — replacing an overloaded flat list.</p>
+
+    <!-- IA visualization (reinterpreted, not raw reference) -->
+    <div class="ia-viz r d3">
+      <div class="ia-viz-bar">
+        <div class="ia-viz-dot" style="background:#ff5f57;"></div>
+        <div class="ia-viz-dot" style="background:#ffbd2e; margin-left:4px;"></div>
+        <div class="ia-viz-dot" style="background:#27c93f; margin-left:4px;"></div>
+        <div class="ia-viz-title">New IA — Organized by User Intent</div>
+      </div>
+      <div class="ia-viz-body">
+        <div class="ia-tab active-tab">
+          <div class="ia-tab-icon">🏠</div>
+          <span class="ia-tab-label">Home</span>
+          <div class="ia-sub-items">
+            <div class="ia-sub">Network health</div>
+            <div class="ia-sub">AI insights</div>
+            <div class="ia-sub">Quick actions</div>
+          </div>
+        </div>
+        <div class="ia-tab">
+          <div class="ia-tab-icon">📱</div>
+          <span class="ia-tab-label">Devices</span>
+          <div class="ia-sub-items">
+            <div class="ia-sub">Connected devices</div>
+            <div class="ia-sub">Parental controls</div>
+            <div class="ia-sub">Guest network</div>
+          </div>
+        </div>
+        <div class="ia-tab">
+          <div class="ia-tab-icon">🔒</div>
+          <span class="ia-tab-label">Security</span>
+          <div class="ia-sub-items">
+            <div class="ia-sub">Threat alerts</div>
+            <div class="ia-sub">Unknown devices</div>
+            <div class="ia-sub">Privacy health</div>
+          </div>
+        </div>
+        <div class="ia-tab">
+          <div class="ia-tab-icon">✦</div>
+          <span class="ia-tab-label">Services</span>
+          <div class="ia-sub-items">
+            <div class="ia-sub">Plan &amp; benefits</div>
+            <div class="ia-sub">Add-ons</div>
+            <div class="ia-sub">Support</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g2" style="margin-top:2rem;">
+      <div class="r d3">
+        <p class="bp"><strong>Before:</strong> Flat feature list organized by capability — settings, diagnostics, billing, devices all at the same level. No clear hierarchy. No user goal in sight.</p>
+        <p class="bp">Every support call that started with "I couldn't find…" was a navigation failure wearing a design mask.</p>
+      </div>
+      <div class="r d4">
+        <p class="bp"><strong>After:</strong> Four intent zones, each serving a distinct mindset. The AI assistant lives inside Home — surfacing when it has something relevant, not as a permanent modal.</p>
+        <p class="bp">The restructure reduced task completion time by an average of 34% in usability testing across the primary five workflows.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     14 · UI SHOWCASE (warm)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-warm">
+  <div class="sec-wide">
+    <div class="ch r d1">14 · Design Work</div>
+    <h2 class="st r d2">A few of the features.<br>More importantly — <em>why</em> they exist.</h2>
+    <p class="bp r d2" style="max-width:560px;margin-bottom:3.5rem;">Every screen here is the output of a strategic decision made upstream. The UI is the last 10% — the part customers see. Here's the 90% that made it worth building.</p>
+
+    <!-- Feature 1: Home Dashboard -->
+    <div class="feature-item r" style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:4.5rem;padding-bottom:4.5rem;border-bottom:1px solid var(--rule);">
+      <div>
+        <div style="font-family:var(--font-serif);font-size:52pt;color:rgba(60,73,255,0.06);line-height:1;margin-bottom:-0.5rem;">01</div>
+        <div style="font-size:var(--text-nano);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-widest);text-transform:uppercase;color:var(--accent-mid);margin-bottom:0.5rem;">Home Dashboard</div>
+        <h3 style="font-family:var(--font-serif);font-size:18pt;color:var(--ink);line-height:1.2;margin-bottom:0.9rem;">From status board<br>to ambient advisor</h3>
+        <p class="bp">The original home screen was a list of settings. It told customers their router was connected. It never told them anything <strong>actionable or useful.</strong></p>
+        <p class="bp">The redesign centers around three zones: network health at a glance, an AI insight card surfacing the most relevant action for that customer right now, and quick access to the tasks they return to most often.</p>
+        <div class="pullquote">
+          <p><strong>Design decision:</strong> The AI card gets prime real estate — above the fold, above everything. Because if we're repositioning this product as an advisor, the advice needs to be the first thing you see.</p>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;">
+        <div class="phone-frame">
+          <div class="pf-notch"></div>
+          <div class="pf-screen">
+            <img src="assets/verizon-home-app/home.png" alt="Verizon Home App — Home Dashboard screen">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 2: AI Assistant -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:4.5rem;padding-bottom:4.5rem;border-bottom:1px solid var(--rule);direction:rtl;" class="r">
+      <div style="direction:ltr;">
+        <div style="font-family:var(--font-serif);font-size:52pt;color:rgba(60,73,255,0.06);line-height:1;margin-bottom:-0.5rem;">02</div>
+        <div style="font-size:var(--text-nano);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-widest);text-transform:uppercase;color:var(--accent-mid);margin-bottom:0.5rem;">AI Home Advisor</div>
+        <h3 style="font-family:var(--font-serif);font-size:18pt;color:var(--ink);line-height:1.2;margin-bottom:0.9rem;">Intelligence that<br>earns its place</h3>
+        <p class="bp">The AI strategy existed as a slide deck. It had no design expression — no answer to "what does this actually look like, feel like, or say?" My job was to give it one.</p>
+        <p class="bp">The Advisor is not a chatbot. It's a <strong>contextual intelligence layer</strong> that monitors network health, usage patterns, and device behavior to surface the right insight at the right moment — in plain language, with a clear next action.</p>
+        <div class="pullquote">
+          <p><strong>Design principle:</strong> AI earns trust through restraint. One well-timed insight beats ten generic ones. We established a strict relevance threshold — if an insight doesn't change what a customer would do, it doesn't surface.</p>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;direction:ltr;">
+        <div class="phone-frame">
+          <div class="pf-notch"></div>
+          <div class="pf-screen">
+            <img src="assets/verizon-home-app/home-assistant-default.png" alt="Verizon Home App — AI Home Advisor screen">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 3: Devices -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:4.5rem;padding-bottom:4.5rem;border-bottom:1px solid var(--rule);" class="r">
+      <div>
+        <div style="font-family:var(--font-serif);font-size:52pt;color:rgba(60,73,255,0.06);line-height:1;margin-bottom:-0.5rem;">03</div>
+        <div style="font-size:var(--text-nano);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-widest);text-transform:uppercase;color:var(--accent-mid);margin-bottom:0.5rem;">Devices</div>
+        <h3 style="font-family:var(--font-serif);font-size:18pt;color:var(--ink);line-height:1.2;margin-bottom:0.9rem;">The household,<br>as a system</h3>
+        <p class="bp">Not a list of MAC addresses. A named, organized map of every device in the home — each one understood in context of the household's needs.</p>
+        <p class="bp">Parents set schedules. Guests get isolated access. Security alerts are contextual and actionable. The system knows which devices matter most and treats them accordingly.</p>
+        <div class="pullquote">
+          <p><strong>Strategic scope:</strong> We deliberately excluded smart home device control (thermostats, locks, etc.). Verizon owns the network layer — adding smart home control would create a competitive conflict without adding strategic value.</p>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;">
+        <div class="phone-frame">
+          <div class="pf-notch"></div>
+          <div class="pf-screen">
+            <img src="assets/verizon-home-app/devices.png" alt="Verizon Home App — Devices screen">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 4: Services + Video -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;" class="r">
+      <div style="direction:rtl;">
+        <div style="direction:ltr;">
+          <div style="font-family:var(--font-serif);font-size:52pt;color:rgba(60,73,255,0.06);line-height:1;margin-bottom:-0.5rem;">04</div>
+          <div style="font-size:var(--text-nano);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-widest);text-transform:uppercase;color:var(--accent-mid);margin-bottom:0.5rem;">Services &amp; AI Prototype</div>
+          <h3 style="font-family:var(--font-serif);font-size:18pt;color:var(--ink);line-height:1.2;margin-bottom:0.9rem;">Value made visible.<br>AI made <em>usable</em>.</h3>
+          <p class="bp">The Services view makes plan benefits visible without upsell pressure. Customers see what they have, what's available, and how to use it — without feeling hunted.</p>
+          <p class="bp">The AI assistant prototype below shows the interaction model in motion — how the advisor surfaces, frames, and resolves a household insight without demanding attention.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:1.5rem;align-items:flex-start;direction:ltr;">
+        <div class="phone-frame" style="width:180px;">
+          <div class="pf-notch"></div>
+          <div class="pf-screen">
+            <img src="assets/verizon-home-app/services.png" alt="Verizon Home App — Services screen">
+          </div>
+        </div>
+        <div style="flex:1;border-radius:var(--radius-card-lg);overflow:hidden;background:#000;border:1px solid var(--rule);align-self:stretch;min-height:320px;display:flex;align-items:center;">
+          <video controls muted playsinline preload="metadata" style="width:100%;display:block;"
+                 aria-label="Home AI assistant interaction prototype">
+            <source src="assets/verizon-home-app/home-assistant-prototype.mov" type="video/quicktime">
+            <source src="assets/verizon-home-app/home-assistant-prototype.mov" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     15 · AI ASSISTANT NARRATIVE (dark)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-dark">
+  <div class="sec-inner">
+    <div class="ch r d1" style="color:var(--accent-mid);">15 · AI Assistant</div>
+    <h2 class="st-d r d2">The household advisor.<br>Not a <em>utility dashboard</em>.</h2>
+
+    <div class="g2" style="margin-top:2.5rem;gap:3rem;">
+      <div>
+        <p class="bp-d r d2">The AI assistant is the product's most strategically important surface — and the one most likely to be built wrong. Most AI features in utility products are novelty: a chatbot that answers questions nobody was asking, a widget that surfaces data without context.</p>
+        <p class="bp-d r d3">The Home Advisor is designed around a different model: <strong>contextual intelligence that earns the right to surface</strong>. It only appears when it has something genuinely useful to say. It frames issues in household language, not network jargon. And it always ends with a clear, optional action — never a demand.</p>
+        <p class="bp-d r d4">The constraint that shaped everything: <strong>every insight must pass the "would I say this to a homeowner?" test.</strong> If a Verizon technician wouldn't walk up to your door and say it, the AI doesn't surface it.</p>
+      </div>
+      <div class="r d3">
+        <div class="ai-card-d" style="margin-bottom:1.2rem;">
+          <div class="ai-card-title">✦ Advisor Principle 01</div>
+          <p class="ai-card-q">"Restraint is the feature. One well-timed, genuinely helpful insight builds more trust than ten correct but low-value ones."</p>
+        </div>
+        <div class="ai-card-d" style="margin-bottom:1.2rem;">
+          <div class="ai-card-title">✦ Advisor Principle 02</div>
+          <p class="ai-card-q">"The advisor speaks in household terms, not network terms. 'Your evening video calls may be slower' — not 'upstream packet loss detected on port 8080.'"</p>
+        </div>
+        <div class="ai-card-d">
+          <div class="ai-card-title">✦ Advisor Principle 03</div>
+          <p class="ai-card-q">"The app becomes a household advisor. Not a utility dashboard. Not a feature list. An advisor."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     OUTCOMES
+══════════════════════════════════════ -->
+<section class="cs-sec bg-accent" id="outcomes">
+  <div class="sec-inner">
+    <div class="ch r d1">Outcomes</div>
+    <h2 class="st r d2">What actually <em>moved</em>.</h2>
+    <p class="bp r d3" style="max-width:540px;margin-bottom:2.5rem;">The metrics that matter aren't just the ones on a dashboard. A 4.5 App Store rating means customers chose to say something positive, unprompted. That's trust. That's the product.</p>
+
+    <div class="g4" style="margin-bottom:1.2rem;">
+      <div class="oc r d1"><div class="oc-num">1M+</div><div class="oc-label">Customers at Launch · Aug 2024</div></div>
+      <div class="oc r d2"><div class="oc-num">4.5★</div><div class="oc-label">App Store · Google Play 4.4</div></div>
+      <div class="oc r d3"><div class="oc-num">71%</div><div class="oc-label">Fewer "App Unusable" Tickets</div></div>
+      <div class="oc r d4"><div class="oc-num">85%</div><div class="oc-label">Faster Design-to-Dev Velocity</div></div>
+    </div>
+    <div class="g4">
+      <div class="oc r d1"><div class="oc-num">10+</div><div class="oc-label">Releases Shipped · v1.0–v2.2.1</div></div>
+      <div class="oc r d2"><div class="oc-num">900+</div><div class="oc-label">Design System Components</div></div>
+      <div class="oc r d3"><div class="oc-num">11</div><div class="oc-label">Teams on Shared Design Language</div></div>
+      <div class="oc r d4"><div class="oc-num">12%</div><div class="oc-label">Feature Adoption Increase</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CLOSING CINEMATIC
+══════════════════════════════════════ -->
+<section class="cinematic-sec" style="min-height:auto; padding:6rem clamp(1.25rem,5vw,4rem);">
+  <div class="cin-dots"></div>
+  <div class="cin-glow"></div>
+  <div class="cin-inner">
+    <p class="cin-q r d1" style="font-size:clamp(16pt,2.5vw,28pt); color:rgba(255,255,255,0.7);">
+      "This designer can operate at every layer simultaneously:<br>
+      execution, systems, operations, product strategy,<br>
+      organizational alignment, and <em>future-state experience vision</em>."
+    </p>
+    <p class="cin-attr r d2">Design Goal · Verizon Home App</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CTA — NEXT CASE STUDY
+══════════════════════════════════════ -->
 <section class="cta-sec">
   <div class="cta-d"></div>
   <div class="cta-g"></div>
@@ -80,9 +1489,13 @@
 
 
 <script>
-const prog = document.getElementById('prog');
-const nav  = document.getElementById('nav');
+const prog  = document.getElementById('prog');
+const nav   = document.getElementById('nav');
+const dot   = document.getElementById('cur-dot');
+const ring  = document.getElementById('cur-ring');
+const snav  = document.getElementById('cs-sidenav');
 
+// ── Scroll progress + nav state ──
 window.addEventListener('scroll', () => {
   const t = window.scrollY;
   const h = document.documentElement.scrollHeight - window.innerHeight;
@@ -90,15 +1503,39 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', t > 60);
   nav.classList.toggle('nav--light', t < 80);
   document.getElementById('back-top').classList.toggle('visible', t > 400);
+  updateSidenav();
 });
 
+// ── Back to top ──
 document.getElementById('back-top').addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
+// ── Sidenav: smooth scroll ──
+snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.target;
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+function updateSidenav() {
+  const targets = ['overview','part1','systems','part2','pillars','design','outcomes'];
+  let active = targets[0];
+  const offset = window.innerHeight * 0.45;
+  targets.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top < offset) active = id;
+  });
+  snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.target === active);
+  });
+}
+
+// ── Mobile nav ──
 const burger = document.getElementById('nav-burger');
 const mobNav = document.getElementById('mob-nav');
-
 burger.addEventListener('click', () => {
   const open = mobNav.classList.toggle('open');
   burger.classList.toggle('open', open);
@@ -106,7 +1543,6 @@ burger.addEventListener('click', () => {
   mobNav.setAttribute('aria-hidden', !open);
   document.body.style.overflow = open ? 'hidden' : '';
 });
-
 mobNav.querySelectorAll('a').forEach(a => {
   a.addEventListener('click', () => {
     mobNav.classList.remove('open');
@@ -117,12 +1553,9 @@ mobNav.querySelectorAll('a').forEach(a => {
   });
 });
 
-const dot  = document.getElementById('cur-dot');
-const ring = document.getElementById('cur-ring');
+// ── Cursor ──
 let mx = 0, my = 0, rx = 0, ry = 0;
-
 document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-
 (function lerp() {
   rx += (mx - rx) * 0.14;
   ry += (my - ry) * 0.14;
@@ -130,15 +1563,22 @@ document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; })
   ring.style.transform = `translate(${rx}px,${ry}px)`;
   requestAnimationFrame(lerp);
 })();
-
 document.addEventListener('mouseover', e => {
   const t = e.target;
   if (t.closest('a, button, [role="button"]')) { document.body.dataset.cursor = 'hover'; return; }
   document.body.dataset.cursor = 'default';
 });
+document.documentElement.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; });
+document.documentElement.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; });
 
-document.documentElement.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
-document.documentElement.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
+// ── Scroll reveal ──
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
+
+// ── Init sidenav state ──
+updateSidenav();
 </script>
 
 </body>

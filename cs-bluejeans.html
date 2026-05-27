@@ -6,6 +6,357 @@
   <title>BlueJeans by Verizon · Refaeli Ma</title>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="styles.css">
+  <style>
+
+    /* ── Section chapter label (inline with rule) ── */
+    .sec-ch {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .sec-ch::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 36px;
+      background: var(--accent-mid-a25);
+      flex-shrink: 0;
+    }
+
+    /* ── Part banner (chapter opener, blue tinted) ── */
+    .part-banner {
+      background: var(--dark);
+      border-top: 1px solid var(--accent-mid-a08);
+      padding: 5rem clamp(1.25rem, 5vw, 4rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .part-banner-inner {
+      max-width: var(--content-default);
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .part-ghost {
+      position: absolute;
+      right: clamp(1.25rem, 5vw, 4rem);
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-serif);
+      font-size: clamp(72pt, 11vw, 130pt);
+      color: rgba(141,148,255,0.04);
+      line-height: 1;
+      user-select: none;
+      pointer-events: none;
+    }
+    .part-eyebrow {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .part-eyebrow::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 36px;
+      background: var(--accent-mid-a25);
+    }
+    .part-h {
+      font-family: var(--font-serif);
+      font-size: clamp(26pt, 3.8vw, 44pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      max-width: 640px;
+    }
+    .part-h em { font-style: italic; color: var(--accent-mid); }
+    .part-desc {
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: var(--white-a38);
+      max-width: 520px;
+      line-height: var(--leading-body);
+    }
+
+    /* ── Video embed ── */
+    .cs-video-wrap {
+      border-radius: var(--radius-card-lg);
+      overflow: hidden;
+      background: #000;
+      margin-top: 2.5rem;
+      border: 1px solid var(--rule-dark);
+    }
+    .cs-video-wrap video { width: 100%; display: block; max-height: 70vh; object-fit: cover; }
+    .cs-video-wrap.on-light { border-color: var(--rule); }
+
+    /* ── Feature cluster cards ── */
+    .fc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+    }
+    .fc-card {
+      background: var(--surface-white);
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-card-lg);
+      padding: 1.6rem;
+      cursor: default;
+      transition: var(--transition-card);
+    }
+    .fc-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card-lift); }
+    .fc-num {
+      font-family: var(--font-serif);
+      font-size: 28pt;
+      color: rgba(60,73,255,0.06);
+      line-height: 1;
+      margin-bottom: -0.3rem;
+    }
+    .fc-label {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-widest);
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 0.4rem;
+    }
+    .fc-title {
+      font-size: 10pt;
+      font-weight: var(--weight-semibold);
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+    .fc-body {
+      font-size: 8.5pt;
+      font-weight: var(--weight-light);
+      color: var(--ink-mid);
+      line-height: var(--leading-normal);
+    }
+    .fc-items {
+      list-style: none;
+      margin-top: 0.6rem;
+    }
+    .fc-items li {
+      font-size: 8pt;
+      font-weight: var(--weight-light);
+      color: var(--ink-mid);
+      padding: 0.18rem 0 0.18rem 0.75rem;
+      position: relative;
+      line-height: 1.5;
+    }
+    .fc-items li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.52rem;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--accent-mid);
+    }
+
+    /* ── User interview grid ── */
+    .interview-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.6rem;
+      margin-top: 1.8rem;
+    }
+    .interview-grid img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: var(--radius-card);
+      border: 1px solid var(--rule);
+      display: block;
+    }
+
+    /* ── Metric strip (light) ── */
+    .metric-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--rule);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: 1px solid var(--rule);
+      margin-top: 2.5rem;
+    }
+    .ms-cell {
+      background: var(--surface-white);
+      padding: 1.6rem 1.2rem;
+      text-align: center;
+      cursor: default;
+      transition: background var(--dur-quick) var(--ease-base);
+    }
+    .ms-cell:hover { background: var(--accent-soft); }
+    .ms-num {
+      font-family: var(--font-serif);
+      font-size: clamp(20pt, 2.5vw, 28pt);
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .ms-label {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      color: var(--ink-light);
+      line-height: var(--leading-tight);
+    }
+
+    /* ── Metric strip (dark) ── */
+    .metric-strip-d {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--accent-mid-a10);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: 1px solid var(--accent-mid-a10);
+      margin-top: 2.5rem;
+    }
+    .ms-cell-d {
+      background: var(--dark);
+      padding: 1.6rem 1.2rem;
+      text-align: center;
+      cursor: default;
+      transition: background var(--dur-quick) var(--ease-base);
+    }
+    .ms-cell-d:hover { background: var(--dark-mid); }
+    .ms-num-d {
+      font-family: var(--font-serif);
+      font-size: clamp(20pt, 2.5vw, 28pt);
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .ms-label-d {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      color: var(--accent-mid-a50);
+      line-height: var(--leading-tight);
+    }
+
+    /* ── Insight cards (dark variant) ── */
+    .insight-d {
+      background: var(--white-a04);
+      border: 1px solid var(--rule-dark);
+      border-radius: var(--radius-card);
+      padding: 1.4rem;
+      cursor: default;
+      transition: border-color var(--dur-base) var(--ease-base), background var(--dur-base) var(--ease-base);
+    }
+    .insight-d:hover { border-color: rgba(141,148,255,0.28); background: var(--accent-a05); }
+    .insight-d-label {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-widest);
+      text-transform: uppercase;
+      color: var(--accent-mid-a50);
+      margin-bottom: 0.4rem;
+    }
+    .insight-d-body {
+      font-size: 8.5pt;
+      font-weight: var(--weight-light);
+      color: var(--white-a55);
+      line-height: var(--leading-normal);
+    }
+    .insight-d-body strong { font-weight: var(--weight-medium); color: rgba(255,255,255,0.78); }
+
+    /* ── Partner logos row ── */
+    .partners-row {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+    .partner-cell {
+      flex: 1;
+      min-width: 160px;
+      padding: 1.6rem 1.2rem;
+      text-align: center;
+      border-right: 1px solid var(--rule);
+      background: var(--surface-white);
+      cursor: default;
+      transition: background var(--dur-quick) var(--ease-base);
+    }
+    .partner-cell:last-child { border-right: none; }
+    .partner-cell:hover { background: var(--accent-soft); }
+    .partner-name {
+      font-size: 8.5pt;
+      font-weight: var(--weight-medium);
+      color: var(--ink);
+      margin-bottom: 0.2rem;
+    }
+    .partner-type {
+      font-size: var(--text-pico);
+      font-weight: var(--weight-light);
+      color: var(--ink-xlight);
+      letter-spacing: var(--tracking-wide);
+      text-transform: uppercase;
+    }
+
+    /* ── Image grid (2-up, 3-up) ── */
+    .img-2up {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-top: 2rem;
+    }
+    .img-3up {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.2rem;
+      margin-top: 2rem;
+    }
+    .img-frame {
+      border-radius: var(--radius-card-lg);
+      overflow: hidden;
+      border: 1px solid var(--rule);
+      background: var(--surface-white);
+    }
+    .img-frame img { width: 100%; display: block; }
+    .img-frame video { width: 100%; display: block; }
+    .img-caption {
+      padding: 0.6rem 0.9rem;
+      font-size: var(--text-nano);
+      font-weight: var(--weight-light);
+      color: var(--ink-light);
+      letter-spacing: var(--tracking-normal);
+      border-top: 1px solid var(--rule);
+    }
+
+    @media (max-width: 860px) {
+      .fc-grid { grid-template-columns: 1fr; }
+      .interview-grid { grid-template-columns: repeat(3, 1fr); }
+      .metric-strip, .metric-strip-d { grid-template-columns: 1fr 1fr; }
+      .img-2up, .img-3up { grid-template-columns: 1fr; }
+      .partners-row { flex-direction: column; }
+      .partner-cell { border-right: none; border-bottom: 1px solid var(--rule); }
+      .partner-cell:last-child { border-bottom: none; }
+    }
+  </style>
 </head>
 <body>
 
@@ -56,16 +407,797 @@
 </div>
 
 
+<!-- ── IN-PAGE SIDENAV ── -->
+<nav class="cs-sidenav" id="cs-sidenav" aria-label="Page sections">
+  <button class="cs-sidenav-dot active" data-label="Overview"       data-target="overview"></button>
+  <button class="cs-sidenav-dot"        data-label="Remote Learning" data-target="remote-learning"></button>
+  <button class="cs-sidenav-dot"        data-label="Video Layouts"   data-target="video-layouts"></button>
+  <button class="cs-sidenav-dot"        data-label="Meetings"        data-target="meetings"></button>
+  <button class="cs-sidenav-dot"        data-label="Design System"   data-target="design-system"></button>
+</nav>
+
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
 <section class="hero-cs" id="overview">
   <div class="hero-cs-inner">
-    <div class="hero-cs-kicker">Verizon · Enterprise · Cloud Video · 2019–2023</div>
-    <h1 class="hero-cs-h1">BlueJeans<br><em>by Verizon</em></h1>
-    <p class="hero-cs-subtitle">From chaos to cadence — redesigning enterprise video collaboration at scale.</p>
-    <p class="hero-cs-desc">Content coming soon.</p>
+    <div class="hero-cs-split">
+
+      <!-- Left: text -->
+      <div>
+        <div class="hero-cs-kicker">Verizon · Enterprise · Cloud Video · 2019–2023</div>
+        <h1 class="hero-cs-h1">BlueJeans<br><em>by Verizon</em></h1>
+        <p class="hero-cs-subtitle">Designing video communication as essential infrastructure.</p>
+        <p class="hero-cs-desc">At BlueJeans, we were building video conferencing solutions at the exact moment digital communication became essential infrastructure. What started as a collaboration platform evolved into something far more human — a place where work, learning, and connection converged.</p>
+
+        <div class="hero-chips">
+          <span class="chip">Design Leadership</span>
+          <span class="chip">Remote Learning</span>
+          <span class="chip">Atomic Design System</span>
+          <span class="chip">Enterprise UX</span>
+          <span class="chip">Video Conferencing</span>
+        </div>
+      </div>
+
+      <!-- Right: hero visual -->
+      <div class="hero-cs-cover">
+        <img src="assets/bluejeans-by-verizon/blue-hero.png"
+             alt="BlueJeans by Verizon — video collaboration platform">
+      </div>
+
+    </div>
+
+    <!-- Stat strip -->
+    <div class="hero-stat-strip" style="grid-template-columns:repeat(4,1fr); margin-top:3rem;">
+      <div class="hs-cell">
+        <div class="hs-cell-num">900+</div>
+        <div class="hs-cell-label">Design System Components</div>
+      </div>
+      <div class="hs-cell">
+        <div class="hs-cell-num">12%</div>
+        <div class="hs-cell-label">Increase in Feature Usage</div>
+      </div>
+      <div class="hs-cell">
+        <div class="hs-cell-num">85%</div>
+        <div class="hs-cell-label">Reduction in Task Completion Time</div>
+      </div>
+      <div class="hs-cell">
+        <div class="hs-cell-num">5×</div>
+        <div class="hs-cell-label">Faster Prototyping</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
 
+<!-- ══════════════════════════════════════
+     SECTION 01 — CHAPTER BANNER
+══════════════════════════════════════ -->
+<div class="part-banner" id="remote-learning">
+  <div class="part-ghost">01</div>
+  <div class="part-banner-inner">
+    <div class="part-eyebrow r">Section One</div>
+    <h2 class="part-h r d1">Corporate Training<br>&amp; <em>Remote Learning</em></h2>
+    <p class="part-desc r d2">How design supported remote learning transformation, digital classroom systems, and human connection at scale — in the middle of a global pandemic.</p>
+  </div>
+</div>
+
+
+<!-- ── 01 · INTRO ── -->
+<section class="cs-sec bg-page">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">01 · Context</div>
+    <h2 class="st r d2">Building the digital classroom<br>as the world moved <em>online</em>.</h2>
+
+    <div class="g2" style="margin-top:2rem;">
+      <div>
+        <p class="bp r d2">As Design Lead for the Remote Learning product, I helped shape a virtual classroom experience designed to support both teaching and human connection at scale.</p>
+        <p class="bp r d3">The platform was adopted by organizations including <strong>Verizon Training, the University of Michigan, Wharton School of Pennsylvania,</strong> and many others — validating its impact across education and enterprise learning environments.</p>
+        <p class="bp r d4">The challenge wasn't building a video tool. It was designing a system capable of holding the complexity of a real classroom: teaching, visibility, communication, engagement, and management — simultaneously.</p>
+      </div>
+      <div>
+        <div class="pullquote r d3">
+          <p>Digital communication became essential infrastructure during the pandemic. The question wasn't whether to build — it was how to build something human enough to hold real learning.</p>
+        </div>
+
+        <!-- Partner organizations -->
+        <div class="partners-row r d4">
+          <div class="partner-cell">
+            <div class="partner-name">Verizon Training</div>
+            <div class="partner-type">Enterprise</div>
+          </div>
+          <div class="partner-cell">
+            <div class="partner-name">University of Michigan</div>
+            <div class="partner-type">Higher Education</div>
+          </div>
+          <div class="partner-cell">
+            <div class="partner-name">Wharton School</div>
+            <div class="partner-type">Higher Education</div>
+          </div>
+          <div class="partner-cell">
+            <div class="partner-name">+ Many Others</div>
+            <div class="partner-type">Global Adoption</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── DASHBOARD VIDEO ── -->
+<section class="cs-sec bg-dark">
+  <div class="sec-inner">
+    <div class="sec-ch r d1" style="color:var(--accent-mid);">02 · Remote Learning Dashboard</div>
+    <h2 class="st-d r d2">The virtual classroom<br><em>in motion</em>.</h2>
+    <p class="bp-d r d3" style="max-width:560px;">The dashboard was the operational center of the classroom — attendance, content, communication, and participant management converging in one environment.</p>
+
+    <div class="cs-video-wrap r d3">
+      <video controls muted playsinline preload="metadata"
+             aria-label="BlueJeans Remote Learning Dashboard">
+        <source src="assets/bluejeans-by-verizon/remote-learning-dashboard.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── PARTNER QUOTES + ASSETS ── -->
+<section class="cs-sec bg-warm">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">03 · Partner Adoption</div>
+    <h2 class="st r d2">Adopted across enterprise<br>and <em>higher education</em>.</h2>
+    <p class="bp r d3" style="max-width:580px;margin-bottom:2rem;">The platform's adoption by leading organizations validated that the design worked not just for corporate training, but for the full complexity of higher education classrooms.</p>
+
+    <div class="cs-img-frame r d3">
+      <img src="assets/bluejeans-by-verizon/remote-learning- partners.png"
+           alt="BlueJeans Remote Learning — partner organizations and adoption">
+      <div class="cs-img-caption">Platform adoption across enterprise training and higher education</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── FEATURE CLUSTERS ── -->
+<section class="cs-sec bg-page">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">04 · Feature Architecture</div>
+    <h2 class="st r d2">Four themes.<br>One <em>coherent system</em>.</h2>
+    <p class="bp r d2" style="max-width:580px;margin-bottom:0;">Rather than a feature list, the platform was organized around the real jobs an instructor and learner perform simultaneously.</p>
+
+    <div class="fc-grid r d2">
+
+      <div class="fc-card">
+        <div class="fc-num">01</div>
+        <div class="fc-label">Classroom Management</div>
+        <div class="fc-title">Control without distraction</div>
+        <p class="fc-body">Instructors needed authority over their classroom without constant micro-management. Attendance, muting, participant visibility, and focus controls had to feel natural — not surgical.</p>
+        <ul class="fc-items">
+          <li>Attendance &amp; roster management</li>
+          <li>Smart mute &amp; spotlight controls</li>
+          <li>Breakout room orchestration</li>
+          <li>Hand-raise &amp; queue management</li>
+        </ul>
+      </div>
+
+      <div class="fc-card">
+        <div class="fc-num">02</div>
+        <div class="fc-label">Collaboration &amp; Engagement</div>
+        <div class="fc-title">Presence in a virtual room</div>
+        <p class="fc-body">Passive video watching is not learning. The platform needed engagement mechanisms that felt organic — not gamified. Reactions, annotations, and live polling closed the loop between instructor and student.</p>
+        <ul class="fc-items">
+          <li>Live reactions &amp; emoji responses</li>
+          <li>Shared annotation tools</li>
+          <li>Polling &amp; Q&amp;A systems</li>
+          <li>Chat panel with threading</li>
+        </ul>
+      </div>
+
+      <div class="fc-card">
+        <div class="fc-num">03</div>
+        <div class="fc-label">Flexible Learning</div>
+        <div class="fc-title">Adapts to every classroom dynamic</div>
+        <p class="fc-body">No two classrooms behave the same. Content types, group sizes, and teaching styles all demand different configurations. The system needed to flex without requiring the instructor to redesign their workflow.</p>
+        <ul class="fc-items">
+          <li>Video layout switching</li>
+          <li>Responsive participant grid</li>
+          <li>Expand / collapse classroom panels</li>
+          <li>Multi-device compatibility</li>
+        </ul>
+      </div>
+
+      <div class="fc-card">
+        <div class="fc-num">04</div>
+        <div class="fc-label">Smart Communication</div>
+        <div class="fc-title">The right channel at the right moment</div>
+        <p class="fc-body">Communication in a classroom is layered — instructor to group, instructor to individual, student to student. The design made each channel accessible without interrupting the primary teaching flow.</p>
+        <ul class="fc-items">
+          <li>Contextual direct messaging</li>
+          <li>Broadcast announcements</li>
+          <li>Teaching apps integration</li>
+          <li>Screen share + overlay modes</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ── USER TESTING ── -->
+<section class="cs-sec bg-warm">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">05 · User Research &amp; Testing</div>
+    <h2 class="st r d2">Research that adapted<br>to <em>pandemic constraints</em>.</h2>
+
+    <div class="g2" style="margin-top:2rem;">
+      <div>
+        <p class="bp r d2">During the pandemic, traditional in-person research became impossible. User testing shifted entirely online through platforms including usabilityhub and usertesting.com.</p>
+        <p class="bp r d3">Through extensive A/B testing, heat map analysis, event tracking, and expert interviews, we continuously refined the product around real classroom behavior rather than assumptions.</p>
+        <p class="bp r d4">Educators across multiple grade levels participated in cognitive walkthroughs, helping validate whether the platform addressed the realities of teaching, engagement, and classroom management in a remote environment.</p>
+      </div>
+      <div>
+        <div class="cs-img-frame r d3" style="margin-top:0;">
+          <img src="assets/bluejeans-by-verizon/user-testing.png"
+               alt="BlueJeans — user testing process">
+          <div class="cs-img-caption">Remote user testing sessions — pandemic-adapted research methodology</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User interview photos -->
+    <div class="interview-grid r d3">
+      <img src="assets/bluejeans-by-verizon/user-interview-01.png" alt="User interview session 1">
+      <img src="assets/bluejeans-by-verizon/user-interview-02.png" alt="User interview session 2">
+      <img src="assets/bluejeans-by-verizon/user-interview-03.png" alt="User interview session 3">
+      <img src="assets/bluejeans-by-verizon/user-interview-04.png" alt="User interview session 4">
+      <img src="assets/bluejeans-by-verizon/user-interview-05.png" alt="User interview session 5">
+    </div>
+  </div>
+</section>
+
+
+<!-- ── RESEARCH INSIGHTS ── -->
+<section class="cs-sec bg-dark">
+  <div class="sec-inner">
+    <div class="sec-ch r d1" style="color:var(--accent-mid);">06 · Key Insights</div>
+    <h2 class="st-d r d2">What the research<br><em>actually revealed</em>.</h2>
+    <p class="bp-d r d3" style="max-width:560px;margin-bottom:2.5rem;">The insights were behavioral, not cosmetic. They changed what we built — not just how we built it.</p>
+
+    <div class="g3" style="gap:1rem;">
+      <div class="insight-d r d2">
+        <div class="insight-d-label">Cognitive Load</div>
+        <p class="insight-d-body">Instructors managing a live classroom were operating at cognitive capacity. <strong>Every extra click was an error waiting to happen.</strong> Controls needed to be anticipatory, not reactive.</p>
+      </div>
+      <div class="insight-d r d3">
+        <div class="insight-d-label">Visibility Gap</div>
+        <p class="insight-d-body">Students felt <strong>invisible in large classes.</strong> When they couldn't see themselves or gauge participation, engagement dropped. Presence signals mattered more than we expected.</p>
+      </div>
+      <div class="insight-d r d4">
+        <div class="insight-d-label">Context Switching</div>
+        <p class="insight-d-body">Educators lost significant time moving between tools — slides, roster, chat, participant controls. <strong>Reducing context switching was the highest-leverage design intervention.</strong></p>
+      </div>
+      <div class="insight-d r d2">
+        <div class="insight-d-label">Trust in the Platform</div>
+        <p class="insight-d-body">Technical failures during live sessions caused disproportionate loss of student trust. <strong>Stability and recovery behavior mattered more than any feature.</strong></p>
+      </div>
+      <div class="insight-d r d3">
+        <div class="insight-d-label">Onboarding Friction</div>
+        <p class="insight-d-body">First-session setup consistently blocked instructors from focusing on teaching. <strong>The FTU experience needed to establish confidence, not just configure settings.</strong></p>
+      </div>
+      <div class="insight-d r d4">
+        <div class="insight-d-label">Grade-Level Variance</div>
+        <p class="insight-d-body">Classroom needs varied sharply between K-12, higher ed, and enterprise. <strong>A one-size UI failed all of them.</strong> Configurability wasn't optional — it was the product.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── FTU / ENTRY FLOW ── -->
+<section class="cs-sec bg-page">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">07 · First-Time Use &amp; Entry Flow</div>
+    <h2 class="st r d2">The first three minutes<br>set <em>everything</em>.</h2>
+    <p class="bp r d3" style="max-width:580px;">Reducing cognitive load, establishing classroom continuity, and making the platform feel familiar before the first session started.</p>
+
+    <div class="img-2up r d3">
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/ftu-responsive.jpg"
+             alt="BlueJeans FTU — responsive first-time use experience">
+        <div class="img-caption">FTU experience — responsive onboarding across device types</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/remote-learning-expand-collapse.jpg"
+             alt="BlueJeans — expand/collapse classroom state management">
+        <div class="img-caption">Expand / collapse — managing classroom environment transitions</div>
+      </div>
+    </div>
+
+    <div class="img-2up r d4">
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/blue-remote-learning-entry-flow.png"
+             alt="BlueJeans — remote learning entry flow">
+        <div class="img-caption">Classroom entry flow — pre-session configuration &amp; setup</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/enter-exit-flow.jpg"
+             alt="BlueJeans — enter/exit classroom flow">
+        <div class="img-caption">Enter / exit flow — environment transitions without disruption</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── VIDEO LAYOUT SYSTEM ── -->
+<section class="cs-sec bg-warm" id="video-layouts">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">08 · Video Layout System</div>
+    <h2 class="st r d2">Designing for constant<br><em>adaptation</em>.</h2>
+
+    <div class="g2" style="margin-top:2rem;">
+      <div>
+        <p class="bp r d2">Designing the virtual classroom meant designing for constant adaptation. Every participant, teaching style, and classroom dynamic demanded flexibility, while technical infrastructure imposed strict limitations on layout behavior and rendering logic.</p>
+        <p class="bp r d3">The challenge wasn't simply arranging windows. It was designing a system capable of balancing teaching, visibility, communication, and engagement simultaneously.</p>
+        <p class="bp r d4">The rendering logic system had to be <strong>both intelligent and transparent</strong> — making decisions the instructor didn't have to think about, while remaining predictable enough to trust.</p>
+      </div>
+      <div class="r d3">
+        <div class="cs-img-frame" style="margin-top:0;">
+          <img src="assets/bluejeans-by-verizon/video-layout-rendering-logic.png"
+               alt="Video layout rendering logic — decision system for dynamic layouts">
+          <div class="cs-img-caption">Rendering logic — the decision system behind dynamic layout switching</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="img-3up r d3">
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/video-layout-grid-view.png"
+             alt="Video layout — grid view">
+        <div class="img-caption">Grid view</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/video-layout-speaker-view.png"
+             alt="Video layout — speaker view">
+        <div class="img-caption">Speaker view</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/video-layout-grid-people.png"
+             alt="Video layout — grid people view">
+        <div class="img-caption">Grid + people</div>
+      </div>
+    </div>
+
+    <div class="img-2up r d4" style="margin-top:1.2rem;">
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/video-layout-grid-view-display-logic.jpg"
+             alt="Grid view — display logic documentation">
+        <div class="img-caption">Grid view display logic</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/remote-learning-dashboard-configuration.png"
+             alt="Dashboard configuration — layout system settings">
+        <div class="img-caption">Dashboard configuration</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── SCREEN SHARE ── -->
+<section class="cs-sec bg-page">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">09 · Screen Share System</div>
+    <h2 class="st r d2">Complexity management<br>under <em>real constraints</em>.</h2>
+    <p class="bp r d3" style="max-width:560px;">Multi-state system behavior. Scalability under strict layout constraints. Screen sharing during a live classroom session is one of the highest-stakes interactions in the product.</p>
+
+    <div class="img-2up r d3">
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/screen-share-widget.png"
+             alt="Screen share — widget system">
+        <div class="img-caption">Screen share widget — contextual control surface</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/screen-share-rendering.jpg"
+             alt="Screen share — rendering logic">
+        <div class="img-caption">Rendering logic under screen share conditions</div>
+      </div>
+    </div>
+
+    <!-- Screen share video -->
+    <div class="cs-video-wrap on-light r d4">
+      <video controls muted playsinline preload="metadata"
+             aria-label="Screen share interaction prototype">
+        <source src="assets/bluejeans-by-verizon/screenshare.mov" type="video/quicktime">
+        <source src="assets/bluejeans-by-verizon/screenshare.mov" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── WEATHER PERSON MODE ── -->
+<section class="cs-sec bg-warm">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">10 · Weather Person Mode</div>
+    <h2 class="st r d2">Transforming screen share<br>into a <em>human experience</em>.</h2>
+
+    <div class="g2" style="margin-top:2rem;">
+      <div>
+        <p class="bp r d2">I led the development of "Weather Person Mode," allowing instructors to overlay themselves directly onto presentations without background interruption.</p>
+        <p class="bp r d3">The feature transformed passive screen sharing into a more engaging and human teaching experience — the instructor remained physically present in the content, not replaced by it.</p>
+        <p class="bp r d4">Designing this required close collaboration with engineering to understand the rendering constraints and build a system that felt seamless despite significant technical complexity beneath.</p>
+      </div>
+      <div class="r d3">
+        <div class="cs-img-frame" style="margin-top:0;">
+          <img src="assets/bluejeans-by-verizon/weather-person-mode.jpg"
+               alt="Weather Person Mode — instructor overlaid on presentation">
+          <div class="cs-img-caption">Weather Person Mode — instructor overlay on live presentation</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="img-2up r d4">
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/weather-person-mode-flow.png"
+             alt="Weather Person Mode — user flow">
+        <div class="img-caption">Mode entry flow and configuration</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/receive-weather-person-mode-share.png"
+             alt="Receiving a Weather Person Mode share — attendee view">
+        <div class="img-caption">Attendee view — receiving a Weather Person Mode share</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── PANELS ── -->
+<section class="cs-sec bg-page">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">11 · Panel Architecture</div>
+    <h2 class="st r d2">Modular classroom<br><em>infrastructure</em>.</h2>
+    <p class="bp r d3" style="max-width:580px;">Multitasking optimization. Balancing teaching, participant management, and classroom communication simultaneously without overloading the primary teaching surface.</p>
+
+    <div class="img-3up r d3">
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/people-panel.png"
+             alt="People panel — participant management">
+        <div class="img-caption">People panel</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/chats-panel.png"
+             alt="Chats panel — classroom communication">
+        <div class="img-caption">Chats panel</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/teaching-apps-information-architecture.jpg"
+             alt="Teaching apps — information architecture">
+        <div class="img-caption">Teaching apps IA</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 02 — BLUEJEANS MEETINGS
+══════════════════════════════════════ -->
+<div class="part-banner" id="meetings">
+  <div class="part-ghost">02</div>
+  <div class="part-banner-inner">
+    <div class="part-eyebrow r">Section Two</div>
+    <h2 class="part-h r d1">BlueJeans<br><em>Meetings</em></h2>
+    <p class="part-desc r d2">Core platform optimization. Usability refinement. Desktop experience modernization. From the education ecosystem to the meeting room — the product that most people used, every day.</p>
+  </div>
+</div>
+
+
+<!-- ── PREFERENCES REDESIGN ── -->
+<section class="cs-sec bg-page">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">12 · Preferences Redesign</div>
+    <h2 class="st r d2">Restructuring the most<br><em>heavily used area</em>.</h2>
+
+    <div class="g2" style="margin-top:2rem;">
+      <div>
+        <p class="bp r d2">The Preferences redesign restructured one of the most heavily used areas of the product, improving discoverability, reducing friction, and modernizing the experience across the desktop ecosystem.</p>
+        <p class="bp r d3">The existing preferences panel had grown organically — a reflection of years of feature additions without architectural reconsideration. Users couldn't find settings they used regularly. Power users had built workarounds. New users were blocked entirely.</p>
+        <p class="bp r d4">The redesign started with card sorting research, reclassified every setting by user mental model rather than engineering category, and introduced progressive disclosure to reduce the visible surface area without reducing capability.</p>
+
+        <!-- Metrics highlight -->
+        <div class="metric-strip r d4" style="margin-top:2rem;grid-template-columns:1fr 1fr;">
+          <div class="ms-cell">
+            <div class="ms-num">12%</div>
+            <div class="ms-label">Increase in Feature Usage</div>
+          </div>
+          <div class="ms-cell">
+            <div class="ms-num">85%</div>
+            <div class="ms-label">Reduction in Task Completion Time</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="r d3">
+        <div class="img-frame" style="margin-bottom:1rem;">
+          <img src="assets/bluejeans-by-verizon/preference-card-sorting.png"
+               alt="Preference redesign — card sorting research">
+          <div class="img-caption">Card sorting — reclassifying settings by user mental model</div>
+        </div>
+        <div class="img-frame">
+          <img src="assets/bluejeans-by-verizon/preference-information-architecture.jpg"
+               alt="Preference redesign — new information architecture">
+          <div class="img-caption">New information architecture</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preference videos -->
+    <div class="img-3up r d4" style="margin-top:2rem;">
+      <div class="img-frame">
+        <video controls muted playsinline preload="metadata"
+               aria-label="Preference settings redesign">
+          <source src="assets/bluejeans-by-verizon/preference-setting.mov" type="video/quicktime">
+          <source src="assets/bluejeans-by-verizon/preference-setting.mov" type="video/mp4">
+        </video>
+        <div class="img-caption">Preference settings — redesigned flow</div>
+      </div>
+      <div class="img-frame">
+        <video controls muted playsinline preload="metadata"
+               aria-label="Preference profile">
+          <source src="assets/bluejeans-by-verizon/preference-profile.mov" type="video/quicktime">
+          <source src="assets/bluejeans-by-verizon/preference-profile.mov" type="video/mp4">
+        </video>
+        <div class="img-caption">Profile preferences</div>
+      </div>
+      <div class="img-frame">
+        <video controls muted playsinline preload="metadata"
+               aria-label="Virtual background preference">
+          <source src="assets/bluejeans-by-verizon/preference-virtual-background.mp4" type="video/mp4">
+        </video>
+        <div class="img-caption">Virtual background</div>
+      </div>
+    </div>
+
+    <div class="img-2up r d4" style="margin-top:1.2rem;">
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/preference-redesign-pain-point.png"
+             alt="Preferences — identified pain points">
+        <div class="img-caption">Original pain points — discoverability failures</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/blue-meeting-usage-metrcis.png"
+             alt="Meeting usage metrics — before and after">
+        <div class="img-caption">Usage metrics — before &amp; after redesign</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── NAME TAG ── -->
+<section class="cs-sec bg-warm">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">13 · Name Tag</div>
+    <h2 class="st r d2">Presence in a<br><em>virtual room</em>.</h2>
+    <p class="bp r d3" style="max-width:560px;margin-bottom:2rem;">Identity and presence in virtual meetings. Name tags made participants visible and contextual — a small design decision with a significant impact on meeting dynamics.</p>
+
+    <div class="cs-video-wrap on-light r d3">
+      <video controls muted playsinline preload="metadata"
+             aria-label="Name tag feature">
+        <source src="assets/bluejeans-by-verizon/preference-name-tag.mov" type="video/quicktime">
+        <source src="assets/bluejeans-by-verizon/preference-name-tag.mov" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── SMART THEME ── -->
+<section class="cs-sec bg-dark">
+  <div class="sec-inner">
+    <div class="sec-ch r d1" style="color:var(--accent-mid);">14 · Smart Theme (POC)</div>
+    <h2 class="st-d r d2">Early AI.<br><em>Contextual personalization</em>.</h2>
+
+    <div class="g2" style="margin-top:2rem;">
+      <div>
+        <p class="bp-d r d2">Smart Theme was a proof-of-concept exploring intelligent environment adaptation — the meeting interface automatically adjusting its visual configuration based on context, time of day, and participant signals.</p>
+        <p class="bp-d r d3">This was early AI experimentation: not a chatbot, not a feature-flagged option, but a system-level behavior that made the product feel contextually aware without demanding user input.</p>
+        <p class="bp-d r d4">The POC demonstrated that <strong>AI in productivity tools works best when it removes decisions rather than adding them.</strong></p>
+      </div>
+      <div class="r d3">
+        <div class="cs-video-wrap r d3" style="margin-top:0;">
+          <video controls muted playsinline preload="metadata"
+                 aria-label="Smart Theme POC">
+            <source src="assets/bluejeans-by-verizon/smart-theme.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── SCHEDULE MEETINGS ── -->
+<section class="cs-sec bg-page">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">15 · Schedule Meetings In-App</div>
+    <h2 class="st r d2">Ecosystem simplification.<br>Reducing <em>context switching</em>.</h2>
+
+    <div class="g2" style="margin-top:2rem;align-items:center;">
+      <div>
+        <p class="bp r d2">Scheduling a meeting shouldn't require leaving the meeting tool. The in-app scheduling feature unified the calendar workflow with the video collaboration experience — reducing the tool-switching that fragmented the meeting preparation flow.</p>
+        <p class="bp r d3">The design challenge was integrating calendar data, participant management, and meeting settings into a single flow without overwhelming the interface with a separate application.</p>
+      </div>
+      <div class="r d3">
+        <div class="cs-img-frame" style="margin:0;">
+          <img src="assets/bluejeans-by-verizon/schedule-meeting.jpg"
+               alt="Schedule meeting — in-app scheduling feature">
+          <div class="cs-img-caption">In-app meeting scheduling — unified workflow</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── APPS + REACTIONS ── -->
+<section class="cs-sec bg-warm">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">16 · Apps &amp; Reactions</div>
+    <h2 class="st r d2">The meeting as<br><em>collaboration surface</em>.</h2>
+    <p class="bp r d3" style="max-width:580px;margin-bottom:2rem;">Extending the platform beyond video into a programmable collaboration surface — while keeping the core experience clean and focused.</p>
+
+    <div class="img-2up r d3">
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/app-panel-design.jpg"
+             alt="App panel — design">
+        <div class="img-caption">App panel design</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/app-panel-installation.png"
+             alt="App panel — installation flow">
+        <div class="img-caption">App installation flow</div>
+      </div>
+    </div>
+
+    <div class="img-3up r d4" style="margin-top:1.2rem;">
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/blue-reaction.jpg"
+             alt="BlueJeans — reactions feature">
+        <div class="img-caption">Reactions</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/reaction-competitive-analysis.png"
+             alt="Reactions — competitive analysis">
+        <div class="img-caption">Competitive analysis</div>
+      </div>
+      <div class="img-frame">
+        <img src="assets/bluejeans-by-verizon/reaction-user-testing.png"
+             alt="Reactions — user testing">
+        <div class="img-caption">User testing</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 03 — DESIGN SYSTEM
+══════════════════════════════════════ -->
+<div class="part-banner" id="design-system">
+  <div class="part-ghost">03</div>
+  <div class="part-banner-inner">
+    <div class="part-eyebrow r">Section Three</div>
+    <h2 class="part-h r d1">Blue<br><em>Design System</em></h2>
+    <p class="part-desc r d2">Scalability. Operational maturity. System architecture. Engineering collaboration. The infrastructure that made every other section of this case study possible.</p>
+  </div>
+</div>
+
+
+<!-- ── DESIGN SYSTEM OVERVIEW ── -->
+<section class="cs-sec bg-page">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">17 · Atomic Design System</div>
+    <h2 class="st r d2">900+ components.<br>One <em>shared foundation</em>.</h2>
+
+    <div class="g2" style="margin-top:2rem;">
+      <div>
+        <p class="bp r d2">I led the creation of a comprehensive Atomic Design System in Figma, consisting of more than 900 responsive components designed to scale across multiple products and platforms.</p>
+        <p class="bp r d3">The system unified branding, accelerated collaboration between design and engineering, and dramatically improved the speed of product iteration and delivery.</p>
+        <p class="bp r d4">The system architecture followed strict atomic principles — tokens, atoms, molecules, organisms — ensuring that every component could compose predictably regardless of context, platform, or team.</p>
+
+        <!-- Design system metrics -->
+        <div class="metric-strip r d4" style="margin-top:2rem;grid-template-columns:repeat(4,1fr);">
+          <div class="ms-cell">
+            <div class="ms-num">30%</div>
+            <div class="ms-label">Reduction in Design Time</div>
+          </div>
+          <div class="ms-cell">
+            <div class="ms-num">5×</div>
+            <div class="ms-label">Faster Prototyping</div>
+          </div>
+          <div class="ms-cell">
+            <div class="ms-num">70%</div>
+            <div class="ms-label">Fewer UI Bugs</div>
+          </div>
+          <div class="ms-cell">
+            <div class="ms-num">3–7×</div>
+            <div class="ms-label">Faster UI Implementation</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="r d3">
+        <div class="cs-img-frame" style="margin:0 0 1rem 0;">
+          <img src="assets/bluejeans-by-verizon/design-system-business-impact.jpg"
+               alt="Blue Design System — business impact">
+          <div class="cs-img-caption">Business impact — before and after the design system</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── DESIGN SYSTEM ASSETS ── -->
+<section class="cs-sec bg-dark">
+  <div class="sec-inner">
+    <div class="sec-ch r d1" style="color:var(--accent-mid);">18 · System Architecture</div>
+    <h2 class="st-d r d2">From Blue to Verizon.<br><em>Architecture that scaled</em>.</h2>
+    <p class="bp-d r d3" style="max-width:560px;margin-bottom:2rem;">The system didn't just serve BlueJeans — it became the foundation for the Verizon design system migration, proving that well-architected design infrastructure compounds in value over time.</p>
+
+    <div class="cs-img-frame r d3">
+      <img src="assets/bluejeans-by-verizon/blue-vs-vz-design-system.png"
+           alt="Blue design system vs Verizon design system — architecture comparison">
+      <div class="cs-img-caption">Blue to Verizon — design system architecture comparison and migration path</div>
+    </div>
+
+    <!-- Smart component video -->
+    <div style="margin-top:2rem;" class="r d4">
+      <div class="sec-ch" style="color:var(--accent-mid);margin-bottom:0.8rem;">Smart Component System</div>
+      <div class="cs-video-wrap r d4">
+        <video controls muted playsinline preload="metadata"
+               aria-label="Smart component design system demo">
+          <source src="assets/bluejeans-by-verizon/smart-component-design-system.mov" type="video/quicktime">
+          <source src="assets/bluejeans-by-verizon/smart-component-design-system.mov" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── OUTCOMES ── -->
+<section class="cs-sec bg-accent">
+  <div class="sec-inner">
+    <div class="sec-ch r d1">Outcomes</div>
+    <h2 class="st r d2">Systems leadership<br>at <em>an inflection point</em>.</h2>
+    <p class="bp r d3" style="max-width:560px;margin-bottom:2.5rem;">This wasn't just interface design. It was systems leadership during a moment when digital communication became essential to how people worked, learned, and connected.</p>
+
+    <div class="g4">
+      <div class="oc r d1"><div class="oc-num">900+</div><div class="oc-label">Design System Components</div></div>
+      <div class="oc r d2"><div class="oc-num">85%</div><div class="oc-label">Faster Task Completion</div></div>
+      <div class="oc r d3"><div class="oc-num">70%</div><div class="oc-label">Fewer UI Bugs</div></div>
+      <div class="oc r d4"><div class="oc-num">5×</div><div class="oc-label">Prototyping Speed</div></div>
+    </div>
+    <div class="g4" style="margin-top:1.2rem;">
+      <div class="oc r d1"><div class="oc-num">12%</div><div class="oc-label">Feature Usage Increase</div></div>
+      <div class="oc r d2"><div class="oc-num">30%</div><div class="oc-label">Reduction in Design Time</div></div>
+      <div class="oc r d3"><div class="oc-num">3–7×</div><div class="oc-label">Faster UI Implementation</div></div>
+      <div class="oc r d4"><div class="oc-num">3+</div><div class="oc-label">Major Institutions Adopted</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CTA — NEXT CASE STUDY
+══════════════════════════════════════ -->
 <section class="cta-sec">
   <div class="cta-d"></div>
   <div class="cta-g"></div>
@@ -80,9 +1212,11 @@
 
 
 <script>
-const prog = document.getElementById('prog');
-const nav  = document.getElementById('nav');
+const prog  = document.getElementById('prog');
+const nav   = document.getElementById('nav');
+const snav  = document.getElementById('cs-sidenav');
 
+// ── Scroll progress + nav state ──
 window.addEventListener('scroll', () => {
   const t = window.scrollY;
   const h = document.documentElement.scrollHeight - window.innerHeight;
@@ -90,15 +1224,38 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', t > 60);
   nav.classList.toggle('nav--light', t < 80);
   document.getElementById('back-top').classList.toggle('visible', t > 400);
+  updateSidenav();
 });
 
+// ── Back to top ──
 document.getElementById('back-top').addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
+// ── Sidenav: smooth scroll ──
+snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const el = document.getElementById(btn.dataset.target);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+function updateSidenav() {
+  const targets = ['overview','remote-learning','video-layouts','meetings','design-system'];
+  let active = targets[0];
+  const offset = window.innerHeight * 0.45;
+  targets.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top < offset) active = id;
+  });
+  snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.target === active);
+  });
+}
+
+// ── Mobile nav ──
 const burger = document.getElementById('nav-burger');
 const mobNav = document.getElementById('mob-nav');
-
 burger.addEventListener('click', () => {
   const open = mobNav.classList.toggle('open');
   burger.classList.toggle('open', open);
@@ -106,7 +1263,6 @@ burger.addEventListener('click', () => {
   mobNav.setAttribute('aria-hidden', !open);
   document.body.style.overflow = open ? 'hidden' : '';
 });
-
 mobNav.querySelectorAll('a').forEach(a => {
   a.addEventListener('click', () => {
     mobNav.classList.remove('open');
@@ -117,12 +1273,11 @@ mobNav.querySelectorAll('a').forEach(a => {
   });
 });
 
+// ── Cursor ──
 const dot  = document.getElementById('cur-dot');
 const ring = document.getElementById('cur-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
-
 document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-
 (function lerp() {
   rx += (mx - rx) * 0.14;
   ry += (my - ry) * 0.14;
@@ -130,15 +1285,22 @@ document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; })
   ring.style.transform = `translate(${rx}px,${ry}px)`;
   requestAnimationFrame(lerp);
 })();
-
 document.addEventListener('mouseover', e => {
   const t = e.target;
   if (t.closest('a, button, [role="button"]')) { document.body.dataset.cursor = 'hover'; return; }
   document.body.dataset.cursor = 'default';
 });
+document.documentElement.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; });
+document.documentElement.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; });
 
-document.documentElement.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
-document.documentElement.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
+// ── Scroll reveal ──
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
+
+// ── Init ──
+updateSidenav();
 </script>
 
 </body>
