@@ -929,7 +929,7 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   to   { opacity: 1; transform: none; }
 }
 
-.hiw-tile.r.on, .phi-stat-card.r.on {
+.hiw-tile.r.on, .phi-stat-card.r.on, .phi-recog-card.r.on {
   animation: tile-reveal 1.4s var(--ease-reveal) backwards;
 }
 
@@ -937,6 +937,10 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 .hiw-tile.r.on.d4, .phi-stat-card.r.on.d4 { animation-delay: 0.15s; }
 .hiw-tile.r.on.d5, .phi-stat-card.r.on.d5 { animation-delay: 0.30s; }
 .hiw-tile.r.on.d6, .phi-stat-card.r.on.d6 { animation-delay: 0.45s; }
+.phi-recog-card.r.on.d2 { animation-delay: 0.00s; }
+.phi-recog-card.r.on.d3 { animation-delay: 0.15s; }
+.phi-recog-card.r.on.d4 { animation-delay: 0.30s; }
+.phi-recog-card.r.on.d5 { animation-delay: 0.45s; }
 
 /* SVG draw-path reveal */
 .draw-path {
@@ -1447,7 +1451,7 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 .phi-inner {
   display: flex;
   flex-direction: column;
-  gap: clamp(3rem, 5vw, 5rem);
+  gap: clamp(4.5rem, 7vw, 7rem);
   position: relative;
   z-index: 2;
   width: 100%;
@@ -1461,7 +1465,6 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   display: flex;
   flex-direction: row;
   gap: 1.4rem;
-  padding-bottom: 2.5rem;
 }
 
 /* Metric stat cards */
@@ -1565,6 +1568,138 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   font-style: italic;
   color: var(--white-a60);
 }
+
+/* ── IMPACT & RECOGNITION — standalone light section ── */
+.impact-sec {
+  background: #fff;
+  background-image: var(--dot-grid-mid);
+  background-size: var(--dot-size-md);
+  padding-top: clamp(9rem, 14vh, 13rem);
+  padding-bottom: clamp(9rem, 14vh, 13rem);
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.impact-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.impact-hd {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 700px;
+}
+
+/* Stat cards — background alpha:0.80 lets dots show through; text stays fully opaque */
+.impact-sec .phi-stat-card {
+  background: rgba(255,255,255,0.80);
+  border-color: rgba(0,0,0,0.08);
+  transition:
+    border-color var(--dur-base) var(--ease-base),
+    box-shadow var(--dur-base) var(--ease-base),
+    background var(--dur-base) var(--ease-base),
+    transform var(--dur-base) var(--ease-spring);
+}
+.impact-sec .phi-stat-card:hover {
+  border-color: var(--accent-a25);
+  box-shadow: 0 0 0 1px var(--accent-a10), 0 12px 32px var(--accent-a08);
+  background: rgba(255,255,255,0.96);
+  transform: translateY(-2px);
+}
+.impact-sec .phi-stat-num  { color: var(--accent); }
+.impact-sec .phi-stat-label { color: var(--ink-light); }
+
+/* Recognition logo blocks */
+.phi-recog-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Card is a zero-padding shell — meta and logos own their zones */
+.phi-recog-card {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: var(--radius-card-lg);
+  padding: 0;
+  gap: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: border-color var(--dur-base) var(--ease-base),
+              box-shadow var(--dur-base) var(--ease-base);
+  cursor: default;
+}
+
+.phi-recog-card:hover {
+  border-color: var(--accent-a20);
+  box-shadow: 0 4px 24px var(--accent-a08);
+}
+
+/* Top zone — secondary tinted bg, 80% alpha so dots bleed through */
+.phi-recog-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: rgba(238,240,255,0.80);
+  padding: clamp(0.8rem, 1.2vw, 1rem) clamp(1.8rem, 3vw, 2.8rem);
+}
+
+.phi-recog-title {
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-kicker);
+  text-transform: uppercase;
+  color: var(--ink-mid);
+}
+
+.phi-recog-body {
+  font-size: var(--text-label);
+  font-weight: var(--weight-light);
+  color: var(--ink-light);
+  line-height: var(--leading-normal);
+}
+
+/* Divider — naturally full-width since card has no padding */
+.phi-recog-divider {
+  border: none;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  width: 100%;
+  margin: 0;
+}
+
+/* Logo zone — 80% alpha so dots bleed through */
+.phi-recog-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  background: rgba(255,255,255,0.80);
+  padding: clamp(1.4rem, 2.5vw, 2rem) clamp(1.8rem, 3vw, 2.8rem);
+}
+
+.phi-recog-logos img {
+  height: 55px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: grayscale(1);
+  opacity: 0.6;
+  transition: filter 0.45s var(--ease-base),
+              opacity 0.3s var(--ease-base);
+}
+
+.phi-recog-card:hover .phi-recog-logos img {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
 
 /* ── HOW I WORK ── */
 #how-i-work {
@@ -3535,19 +3670,21 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 }
 
 .cs-sidenav-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent-mid-a25);
+  width: 5px;
+  height: 5px;
+  border-radius: 0;
+  border: none;
+  padding: 0;
+  background: rgba(255,255,255,0.35);
   cursor: pointer;
-  transition: background var(--dur-base) var(--ease-base), transform var(--dur-base) var(--ease-spring);
+  flex-shrink: 0;
+  transition: background var(--dur-base) var(--ease-base);
   position: relative;
 }
 
 .cs-sidenav-dot:hover,
 .cs-sidenav-dot.active {
-  background: var(--accent);
-  transform: scale(1.5);
+  background: rgba(255,255,255,1);
 }
 
 .cs-sidenav-dot[data-label]::after {
@@ -3561,7 +3698,7 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   font-weight: var(--weight-medium);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: var(--ink-light);
+  color: rgba(255,255,255,0.7);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--dur-quick) var(--ease-base);
@@ -3570,6 +3707,12 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 .cs-sidenav-dot:hover[data-label]::after {
   opacity: 1;
 }
+
+/* Light background mode — dots invert to dark */
+.cs-sidenav.on-light .cs-sidenav-dot { background: rgba(0,0,0,0.2); }
+.cs-sidenav.on-light .cs-sidenav-dot:hover,
+.cs-sidenav.on-light .cs-sidenav-dot.active { background: rgba(0,0,0,0.75); }
+.cs-sidenav.on-light .cs-sidenav-dot[data-label]::after { color: var(--ink-mid); }
 
 /* CTA section at end of case study */
 .cta-sec {
@@ -4456,6 +4599,8 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
     font-size: clamp(18pt, 5vw, 26pt);
   }
 
+  .phi-recog-logos img { height: 38px; }
+
   /* Hero — full viewport, corner text compresses */
   .hero {
     height: 100svh;
@@ -4647,6 +4792,8 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   .phi-stat-card {
     padding: 1.25rem 1.5rem;
   }
+
+  .phi-recog-logos { gap: 0.75rem; }
 
   .hero-stat-strip {
     grid-template-columns: repeat(2, 1fr);

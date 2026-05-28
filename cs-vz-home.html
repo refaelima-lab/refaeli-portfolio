@@ -556,7 +556,7 @@
     <a href="cs-iconmobile.html" class="cs-nav-pill" data-label="Iconmobile">04</a>
   </div>
 
-  <a href="index.html" class="nav-back">
+  <a href="index.html#work" class="nav-back">
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2L4 6l4 4"/></svg>
     Portfolio
   </a>
@@ -574,7 +574,7 @@
     <li><a href="cs-bluejeans.html">03 · BlueJeans by Verizon</a></li>
     <li><a href="cs-iconmobile.html">04 · Iconmobile</a></li>
   </ul>
-  <a href="index.html" class="mob-nav-cta">← Back to Portfolio</a>
+  <a href="index.html#work" class="mob-nav-cta">← Back to Portfolio</a>
   <div class="mob-nav-foot">02 of 04 · Verizon Home App</div>
 </div>
 
@@ -1483,7 +1483,7 @@
   <p class="cta-sub">From chaos to cadence — redesigning enterprise video collaboration at scale.</p>
   <div style="display:flex; gap:0.75rem; justify-content:center; align-items:center; flex-wrap:wrap; position:relative; z-index:2;">
     <a href="cs-bluejeans.html" class="cz-book-btn">See the case study</a>
-    <a href="index.html" class="cz-ghost-btn">Back to portfolio</a>
+    <a href="index.html#work" class="cz-ghost-btn">Back to portfolio</a>
   </div>
 </section>
 
@@ -1531,6 +1531,9 @@ function updateSidenav() {
   snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.target === active);
   });
+  const activeEl = document.getElementById(active);
+  const isLight = activeEl && (activeEl.classList.contains('bg-page') || activeEl.classList.contains('bg-warm'));
+  snav.classList.toggle('on-light', !!isLight);
 }
 
 // ── Mobile nav ──

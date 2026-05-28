@@ -41,7 +41,7 @@
     <a href="cs-iconmobile.html" class="cs-nav-pill" data-label="Iconmobile">04</a>
   </div>
 
-  <a href="index.html" class="nav-back">
+  <a href="index.html#work" class="nav-back">
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2L4 6l4 4"/></svg>
     Portfolio
   </a>
@@ -62,7 +62,7 @@
     <li><a href="cs-bluejeans.html">03 · BlueJeans</a></li>
     <li><a href="cs-iconmobile.html">04 · Iconmobile</a></li>
   </ul>
-  <a href="index.html" class="mob-nav-cta">← Back to Portfolio</a>
+  <a href="index.html#work" class="mob-nav-cta">← Back to Portfolio</a>
   <div class="mob-nav-foot">01 of 04 · Verizon Identity Architecture</div>
 </div>
 
@@ -216,7 +216,7 @@
   <p class="cta-sub">From a reactive utility into a proactive, intelligent home experience.</p>
   <div style="display:flex; gap:0.75rem; justify-content:center; align-items:center; flex-wrap:wrap; position:relative; z-index:2;">
     <a href="cs-vz-home.html" class="cz-book-btn">See the case study</a>
-    <a href="index.html" class="cz-ghost-btn">Back to portfolio</a>
+    <a href="index.html#work" class="cz-ghost-btn">Back to portfolio</a>
   </div>
 </section>
 
@@ -284,12 +284,16 @@ snavDots.forEach(dot => {
   });
 });
 
+const sidenav = document.getElementById('cs-sidenav');
+
 const secObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) {
       snavDots.forEach(d => d.classList.remove('active'));
       const match = document.querySelector(`.cs-sidenav-dot[data-target="${e.target.id}"]`);
       if (match) match.classList.add('active');
+      const isLight = e.target.classList.contains('bg-page') || e.target.classList.contains('bg-warm');
+      sidenav.classList.toggle('on-light', isLight);
     }
   });
 }, { threshold: 0.4 });

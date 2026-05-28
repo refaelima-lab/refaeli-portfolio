@@ -1,13 +1,13 @@
-<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="39" y="24" width="22" height="4" fill="black"/>
-<rect x="39" y="38" width="22" height="4" fill="black"/>
-<rect x="39" y="46" width="22" height="4" fill="black"/>
-<rect x="39" y="54" width="22" height="4" fill="black"/>
-<rect x="39" y="78" width="21" height="4" fill="black"/>
-<rect x="58.4648" y="75" width="12" height="4" transform="rotate(60 58.4648 75)" fill="black"/>
-<rect x="44.4648" y="61" width="12" height="4" transform="rotate(60 44.4648 61)" fill="black"/>
-<rect x="53.1797" y="57.3027" width="12" height="4" transform="rotate(125.153 53.1797 57.3027)" fill="black"/>
-<rect x="59.1797" y="62.3027" width="23.0945" height="4" transform="rotate(125.153 59.1797 62.3027)" fill="black"/>
-<rect x="48" y="39" width="26" height="4" transform="rotate(-90 48 39)" fill="black"/>
-<circle cx="50" cy="50" r="38" stroke="black" stroke-width="4"/>
+<svg width="92" height="82" viewBox="0 0 92 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="46" cy="41" r="28.5" stroke="black" stroke-width="3"/>
+<rect x="37.75" y="22.25" width="16.5" height="3" fill="black"/>
+<rect x="37.75" y="32.75" width="16.5" height="3" fill="black"/>
+<rect x="37.75" y="38.75" width="16.5" height="3" fill="black"/>
+<rect x="37.75" y="44.75" width="16.5" height="3" fill="black"/>
+<rect x="37.75" y="62.75" width="15.75" height="3" fill="black"/>
+<rect x="52.3477" y="60.5" width="9" height="3" transform="rotate(60 52.3477 60.5)" fill="black"/>
+<rect x="41.8477" y="50" width="9" height="3" transform="rotate(60 41.8477 50)" fill="black"/>
+<rect x="48.3828" y="47.2266" width="9" height="3" transform="rotate(125.153 48.3828 47.2266)" fill="black"/>
+<rect x="52.8828" y="50.9766" width="17.3209" height="3" transform="rotate(125.153 52.8828 50.9766)" fill="black"/>
+<rect x="44.5" y="33.5" width="19.5" height="3" transform="rotate(-90 44.5 33.5)" fill="black"/>
 </svg>
