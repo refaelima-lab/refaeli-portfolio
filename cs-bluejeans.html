@@ -8,6 +8,272 @@
   <link rel="stylesheet" href="styles.css">
   <style>
 
+    /* ── BJ Hero — sticky scroll stage ── */
+    @keyframes bj-img-in {
+      from {
+        opacity: 0;
+        transform: translateX(120px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes bj-grad {
+      0%   { background-position: 0% 0%; }
+      33%  { background-position: 100% 50%; }
+      66%  { background-position: 30% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+
+    .bj-stage {
+      position: relative;
+      height: 220vh;
+    }
+    .bj-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    /* Animated gradient background — light blue-white */
+    .bj-bg {
+      position: absolute;
+      inset: -12% 0;
+      background: linear-gradient(
+        135deg,
+        #f0f7ff 0%, #cce3ff 20%, #a8caff 38%,
+        #d4e9ff 56%, #e8f4ff 74%, #f7fbff 100%
+      );
+      background-size: 400% 400%;
+      animation: bj-grad 7s ease infinite;
+      will-change: transform;
+      z-index: 0;
+    }
+    .bj-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 65% 50% at 70% 40%, rgba(80,130,255,0.20) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 20% 70%, rgba(100,160,255,0.14) 0%, transparent 55%),
+        radial-gradient(ellipse 35% 35% at 88% 80%, rgba(60,110,240,0.12) 0%, transparent 50%);
+    }
+    /* Hero image — wrapper handles position + JS parallax */
+    .bj-img-wrap {
+      position: absolute;
+      top: 50%;
+      right: 5%;
+      transform: translateY(-50%);
+      height: 90vh;
+      max-width: 70%;
+      z-index: 2;
+      pointer-events: none;
+      will-change: transform;
+    }
+    .bj-img-abs {
+      height: 100%;
+      width: auto;
+      max-width: 100%;
+      display: block;
+      object-fit: contain;
+      filter: drop-shadow(0 20px 60px rgba(60,100,220,0.28));
+      opacity: 0;
+      animation: bj-img-in 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
+    }
+    /* ── Dot grid — LED panel ── */
+    .bj-dot-grid {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .bj-dot {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(40, 80, 200, 0.38);
+      transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
+      will-change: background, box-shadow, transform;
+    }
+    .bj-dot.lit-1 {
+      background: rgba(70, 130, 255, 1);
+      box-shadow: 0 0 10px 3px rgba(70, 130, 255, 0.55);
+      transform: translate(-50%, -50%) scale(1.6);
+    }
+    .bj-dot.lit-2 {
+      background: rgba(110, 180, 255, 0.95);
+      box-shadow: 0 0 8px 2px rgba(110, 180, 255, 0.45);
+      transform: translate(-50%, -50%) scale(1.4);
+    }
+
+    /* Top fade — keeps nav readable on light bg */
+    .bj-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 140px;
+      background: linear-gradient(to bottom, rgba(4,10,40,0.38) 0%, transparent 100%);
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    /* Glass reveal — 2 big serif lines, scroll-driven */
+    .bj-glass {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.1rem;
+      padding: 2rem clamp(2rem, 6vw, 6rem);
+      text-align: center;
+      pointer-events: none;
+      clip-path: inset(100% 0 0 0);
+      will-change: clip-path;
+    }
+    .bj-glass-line {
+      font-family: var(--font-serif);
+      font-size: clamp(17pt, 2.9vw, 34pt);
+      font-weight: var(--weight-regular);
+      color: rgba(8,20,60,0.88);
+      line-height: 1.3;
+      max-width: 1020px;
+      width: 90vw;
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: transform, opacity;
+    }
+    .bj-glass-line em {
+      font-style: italic;
+      color: rgba(40,80,200,0.90);
+    }
+    /* Title block — always visible at bottom */
+    .bj-content {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+    }
+    .bj-eyebrow {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(40,70,180,0.65);
+      margin-bottom: 0.55rem;
+      opacity: 0;
+      animation: fu 0.5s var(--ease-reveal) 0.2s both;
+    }
+    .bj-h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(30pt, 5.5vw, 60pt);
+      font-weight: var(--weight-regular);
+      color: #0a1040;
+      line-height: 1.02;
+      margin: 0 0 1.2rem;
+      opacity: 0;
+      animation: fu 0.6s var(--ease-reveal) 0.35s both;
+    }
+    .bj-h1 em { font-style: italic; color: rgba(40,80,210,0.88); }
+    .bj-meta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fu 0.5s var(--ease-reveal) 0.5s both;
+    }
+    .bj-meta span {
+      font-size: var(--text-caption);
+      font-weight: var(--weight-light);
+      color: rgba(255,255,255,0.28);
+      letter-spacing: var(--tracking-normal);
+    }
+    .bj-meta-sep { color: rgba(255,255,255,0.14) !important; }
+
+    /* Stat strip — dark, flush below stage */
+    .bj-stat-strip {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: rgba(4,4,20,0.98);
+      border-top: 1px solid rgba(141,148,255,0.10);
+    }
+    .bj-stat-cell {
+      padding: 2rem 1.5rem;
+      text-align: center;
+      border-right: 1px solid rgba(141,148,255,0.08);
+    }
+    .bj-stat-cell:last-child { border-right: none; }
+    .bj-stat-num {
+      font-family: var(--font-serif);
+      font-size: clamp(18pt, 2.6vw, 26pt);
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .bj-stat-label {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      color: rgba(141,148,255,0.48);
+      line-height: var(--leading-tight);
+    }
+
+    /* ── Video section — full bleed ── */
+    .bj-video-bridge {
+      height: 140px;
+      background: linear-gradient(to bottom, #ddeeff 0%, #04041a 100%);
+      display: block;
+      margin: 0;
+    }
+    .bj-video-sec {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 1.4s ease;
+    }
+    .bj-video-sec.bj-vid-visible {
+      opacity: 1;
+    }
+    .bj-video-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: #000;
+    }
+    /* Scale iframe slightly oversize to crop YouTube UI chrome */
+    .bj-video-frame iframe {
+      position: absolute;
+      top: -9%;
+      left: -1%;
+      width: 102%;
+      height: 118%;
+      border: 0;
+    }
+    /* Transparent shield — blocks hover so YouTube UI never appears */
+    .bj-yt-shield {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: transparent;
+    }
+
     /* ── Section chapter label (inline with rule) ── */
     .sec-ch {
       font-size: var(--text-micro);
@@ -420,56 +686,97 @@
 <!-- ══════════════════════════════════════
      HERO
 ══════════════════════════════════════ -->
-<section class="hero-cs" id="overview">
-  <div class="hero-cs-inner">
-    <div class="hero-cs-split">
+<!-- ── BJ HERO STAGE ── -->
+<div class="bj-stage" id="overview">
+  <div class="bj-hero">
 
-      <!-- Left: text -->
-      <div>
-        <div class="hero-cs-kicker">Verizon · Enterprise · Cloud Video · 2019–2023</div>
-        <h1 class="hero-cs-h1">BlueJeans<br><em>by Verizon</em></h1>
-        <p class="hero-cs-subtitle">Designing video communication as essential infrastructure.</p>
-        <p class="hero-cs-desc">At BlueJeans, we were building video conferencing solutions at the exact moment digital communication became essential infrastructure. What started as a collaboration platform evolved into something far more human — a place where work, learning, and connection converged.</p>
+    <!-- Animated gradient background -->
+    <div class="bj-bg"></div>
 
-        <div class="hero-chips">
-          <span class="chip">Design Leadership</span>
-          <span class="chip">Remote Learning</span>
-          <span class="chip">Atomic Design System</span>
-          <span class="chip">Enterprise UX</span>
-          <span class="chip">Video Conferencing</span>
-        </div>
-      </div>
+    <!-- Dot grid texture -->
+    <div class="bj-dot-grid" id="bj-dot-grid" aria-hidden="true"></div>
 
-      <!-- Right: hero visual -->
-      <div class="hero-cs-cover">
-        <img src="assets/bluejeans-by-verizon/blue-hero.png"
-             alt="BlueJeans by Verizon — video collaboration platform">
-      </div>
-
+    <!-- Hero image — wrapper for parallax, img for entry animation -->
+    <div class="bj-img-wrap" id="bj-img-wrap">
+      <img class="bj-img-abs"
+           src="assets/bluejeans-by-verizon/blue-hero.png"
+           alt="BlueJeans by Verizon — video collaboration platform">
     </div>
 
-    <!-- Stat strip -->
-    <div class="hero-stat-strip" style="grid-template-columns:repeat(4,1fr); margin-top:3rem;">
-      <div class="hs-cell">
-        <div class="hs-cell-num">900+</div>
-        <div class="hs-cell-label">Design System Components</div>
-      </div>
-      <div class="hs-cell">
-        <div class="hs-cell-num">12%</div>
-        <div class="hs-cell-label">Increase in Feature Usage</div>
-      </div>
-      <div class="hs-cell">
-        <div class="hs-cell-num">85%</div>
-        <div class="hs-cell-label">Reduction in Task Completion Time</div>
-      </div>
-      <div class="hs-cell">
-        <div class="hs-cell-num">5×</div>
-        <div class="hs-cell-label">Faster Prototyping</div>
-      </div>
+    <!-- Frosted glass overlay — scroll-driven reveal -->
+    <div class="bj-glass" id="bj-glass" aria-hidden="true">
+      <p class="bj-glass-line">When the world went remote, we were already building <em>what video needed to become.</em></p>
+      <p class="bj-glass-line">What started as a collaboration platform evolved into something far more human, a place where <em>work, learning, and connection</em> converged.</p>
+    </div>
+
+    <!-- Title block — always visible at bottom -->
+    <div class="bj-content">
+      <div class="bj-eyebrow">Verizon · Enterprise · Cloud Video · 2020–2023</div>
+      <h1 class="bj-h1">BlueJeans<br><em>by Verizon</em></h1>
     </div>
 
   </div>
-</section>
+</div>
+
+<!-- ── COLOUR BRIDGE hero → video ── -->
+<div class="bj-video-bridge"></div>
+
+<!-- ── FULL BLEED VIDEO ── -->
+<div class="bj-video-sec" id="bj-video-sec">
+  <div class="bj-video-frame">
+    <iframe id="bj-yt"
+      src="https://www.youtube.com/embed/AgjdPxQYazI?enablejsapi=1&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&showinfo=0"
+      allow="autoplay; encrypted-media; fullscreen"
+      allowfullscreen
+      title="BlueJeans by Verizon">
+    </iframe>
+    <!-- Blocks hover so YouTube UI chrome never surfaces -->
+    <div class="bj-yt-shield"></div>
+  </div>
+</div>
+
+
+<!-- Tag marquee -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Digital Product Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Design System <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Unified Communication <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Cross-Platform Collaboration Platform <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Cloud-Based Video Conferencing <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Desktop App (Windows / macOS) <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Mobile Application <span class="marquee-sep"></span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item">Digital Product Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Design System <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Unified Communication <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Cross-Platform Collaboration Platform <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Cloud-Based Video Conferencing <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Desktop App (Windows / macOS) <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Mobile Application <span class="marquee-sep"></span></span>
+  </div>
+</div>
+
+
+<!-- Stat strip — flush below marquee -->
+<div class="bj-stat-strip">
+  <div class="bj-stat-cell">
+    <div class="bj-stat-num">900+</div>
+    <div class="bj-stat-label">Design System Components</div>
+  </div>
+  <div class="bj-stat-cell">
+    <div class="bj-stat-num">12%</div>
+    <div class="bj-stat-label">Increase in Feature Usage</div>
+  </div>
+  <div class="bj-stat-cell">
+    <div class="bj-stat-num">85%</div>
+    <div class="bj-stat-label">Reduction in Task Completion Time</div>
+  </div>
+  <div class="bj-stat-cell">
+    <div class="bj-stat-num">5×</div>
+    <div class="bj-stat-label">Faster Prototyping</div>
+  </div>
+</div>
 
 
 <!-- ══════════════════════════════════════
@@ -1216,6 +1523,153 @@ const prog  = document.getElementById('prog');
 const nav   = document.getElementById('nav');
 const snav  = document.getElementById('cs-sidenav');
 
+// ── YouTube — play on scroll ──
+(function () {
+  var bjPlayer = null;
+  var pendingPlay = false;
+
+  var ytScript = document.createElement('script');
+  ytScript.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(ytScript);
+
+  window.onYouTubeIframeAPIReady = function () {
+    bjPlayer = new YT.Player('bj-yt', {
+      events: {
+        onReady: function () {
+          if (pendingPlay) { bjPlayer.playVideo(); pendingPlay = false; }
+        }
+      }
+    });
+  };
+
+  const sec = document.getElementById('bj-video-sec');
+
+  // Fade in + play when entering; pause when leaving
+  const vidObs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        sec.classList.add('bj-vid-visible');
+        if (bjPlayer && bjPlayer.playVideo) {
+          bjPlayer.playVideo();
+        } else {
+          pendingPlay = true;
+        }
+      } else {
+        if (bjPlayer && bjPlayer.pauseVideo) bjPlayer.pauseVideo();
+        pendingPlay = false;
+      }
+    });
+  }, { threshold: 0.15 });
+
+  if (sec) vidObs.observe(sec);
+})();
+
+// ── Dot grid — LED panel ──
+(function () {
+  const container = document.getElementById('bj-dot-grid');
+  if (!container) return;
+
+  const SPACING  = 28;
+  const LIT      = ['lit-1', 'lit-2'];
+  const FADE_X   = 0.66;  // dots fade to 0 by this fraction of viewport width
+  const PAD_TOP  = 110;   // skip nav zone
+  const PAD_BOT  = 170;   // skip title zone
+
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const cols = Math.ceil(vw * FADE_X / SPACING);
+  const rows = Math.ceil(vh / SPACING);
+  const dots = [];
+
+  for (let r = 0; r < rows; r++) {
+    const y = r * SPACING + SPACING / 2;
+    if (y < PAD_TOP || y > vh - PAD_BOT) continue;
+
+    for (let c = 0; c < cols; c++) {
+      const x     = c * SPACING + SPACING / 2;
+      const xFrac = x / (vw * FADE_X);
+      const base  = (1 - xFrac) * 0.55;   // opacity gradient left→right
+
+      const dot = document.createElement('span');
+      dot.className  = 'bj-dot';
+      dot.style.left = x + 'px';
+      dot.style.top  = y + 'px';
+      dot.style.opacity = base;
+      container.appendChild(dot);
+      dots.push({ el: dot, base });
+    }
+  }
+
+  // LED flicker loop
+  function flicker() {
+    const count = 1 + Math.floor(Math.random() * 2);
+    for (let i = 0; i < count; i++) {
+      const d   = dots[Math.floor(Math.random() * dots.length)];
+      const cls = LIT[Math.floor(Math.random() * LIT.length)];
+      d.el.style.opacity = 1;
+      d.el.classList.add(cls);
+      const hold = 1800 + Math.random() * 2200;
+      setTimeout(() => {
+        d.el.classList.remove(cls);
+        d.el.style.opacity = d.base;
+      }, hold);
+    }
+    setTimeout(flicker, 1500 + Math.random() * 2000);
+  }
+
+  // Start after page settles
+  setTimeout(flicker, 1400);
+})();
+
+// ── BJ Hero scroll elements ──
+const bjStageEl   = document.getElementById('overview');
+const bjBgEl      = document.querySelector('.bj-bg');
+const bjImgWrapEl = document.getElementById('bj-img-wrap');
+const bjGlassEl   = document.getElementById('bj-glass');
+const bjLines     = bjGlassEl ? bjGlassEl.querySelectorAll('.bj-glass-line') : [];
+const bjContentEl = document.querySelector('.bj-content');
+
+function tickBjHero(t) {
+  if (!bjStageEl || !bjBgEl || !bjGlassEl) return;
+
+  const stageTop   = bjStageEl.getBoundingClientRect().top + t;
+  const stageRange = bjStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  // Background parallax — drifts down slowly
+  bjBgEl.style.transform = `translateY(${within * 0.12}px)`;
+
+  // Image parallax — drifts up at a different rate, creating depth
+  if (bjImgWrapEl) {
+    bjImgWrapEl.style.transform = `translateY(calc(-50% - ${within * 0.08}px))`;
+  }
+
+  // Glass rises from bottom
+  const riseP = Math.min(p / 0.55, 1);
+  bjGlassEl.style.clipPath             = `inset(${(1 - riseP) * 100}% 0 0 0)`;
+  bjGlassEl.style.background           = `rgba(220,235,255,${riseP * 0.55})`;
+  bjGlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
+  bjGlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
+
+  // Content (title) dissolves out as glass climbs over it
+  if (bjContentEl) {
+    const fade = 1 - Math.max(0, Math.min(1, (p - 0.28) / 0.32));
+    bjContentEl.style.opacity   = fade;
+    bjContentEl.style.transform = `translateY(${(1 - fade) * 14}px)`;
+  }
+
+  // Glass lines: entrance + gentle scale drift
+  bjLines.forEach((line, i) => {
+    const entryP = Math.max(0, Math.min(1, (p - 0.48 - i * 0.14) / 0.28));
+    const postP  = Math.max(0, Math.min(1, (p - 0.62) / 0.38));
+    const scaleV = 1 + postP * 0.07;
+    const floatY = (1 - entryP) * 18 - postP * 24;
+    line.style.opacity   = entryP;
+    line.style.transform = `translateY(${floatY}px) scale(${scaleV})`;
+  });
+}
+
 // ── Scroll progress + nav state ──
 window.addEventListener('scroll', () => {
   const t = window.scrollY;
@@ -1224,6 +1678,7 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', t > 60);
   nav.classList.toggle('nav--light', t < 80);
   document.getElementById('back-top').classList.toggle('visible', t > 400);
+  tickBjHero(t);
   updateSidenav();
 });
 
@@ -1284,8 +1739,10 @@ document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; })
 (function lerp() {
   rx += (mx - rx) * 0.14;
   ry += (my - ry) * 0.14;
-  dot.style.transform  = `translate(${mx}px,${my}px)`;
-  ring.style.transform = `translate(${rx}px,${ry}px)`;
+  dot.style.left  = mx + 'px';
+  dot.style.top   = my + 'px';
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
   requestAnimationFrame(lerp);
 })();
 document.addEventListener('mouseover', e => {
@@ -1303,6 +1760,7 @@ const obs = new IntersectionObserver(entries => {
 document.querySelectorAll('.r').forEach(el => obs.observe(el));
 
 // ── Init ──
+tickBjHero(window.scrollY);
 updateSidenav();
 </script>
 

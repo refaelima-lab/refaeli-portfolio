@@ -911,6 +911,33 @@ h2.st.r, h2.st-d.r, .phi-statement-wrap.r {
   transition-timing-function: var(--ease-reveal);
 }
 
+/* ── Line slide-up reveal ── */
+/* Element-level fade/travel is suppressed once lines are split */
+h2.st.r.line-split,
+h2.st-d.r.line-split {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* Clip row — one per <br>-separated line, hides the line below */
+.line-wrap {
+  display: block;
+  overflow: hidden;
+}
+
+/* The line itself — starts below the clip, slides up on .on */
+.line-inner {
+  display: block;
+  transform: translateY(115%);
+  transition: transform 0.80s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+h2.st.on .line-inner,
+h2.st-d.on .line-inner {
+  transform: translateY(0);
+}
+
 /* Body paragraphs: blur-to-clear + smaller travel */
 p.bp.r, p.bp-d.r, .phi-body.r, .phi-pullquote.r {
   filter: blur(5px);
@@ -1717,6 +1744,7 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   inset: 0;
   pointer-events: none;
   z-index: -1;
+  will-change: transform;
 }
 
 .hiw-orb {

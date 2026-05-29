@@ -6,6 +6,388 @@
   <title>Iconmobile · Refaeli Ma</title>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="styles.css">
+  <style>
+
+    /* ── KIA Full-Bleed Hero (sticky stage + rising glass) ── */
+    .kia-stage {
+      position: relative;
+      height: 220vh;
+    }
+    .kia-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    .kia-bg {
+      position: absolute;
+      inset: -12% 0;
+      background: url('assets/iconmobile/kia/kia-poc-hero.avif') center 40% / cover no-repeat;
+      will-change: transform;
+      z-index: 0;
+    }
+    .kia-vignette {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, transparent 18%),
+        linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.18) 38%, transparent 58%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    /* frosted glass layer — scroll-driven, rises from bottom */
+    .kia-glass {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.1rem;
+      padding: 2rem clamp(2rem, 6vw, 6rem);
+      text-align: center;
+      pointer-events: none;
+      clip-path: inset(100% 0 0 0);
+    }
+    .kia-glass-line {
+      font-family: var(--font-serif);
+      font-size: clamp(17pt, 2.9vw, 34pt);
+      font-weight: var(--weight-regular);
+      color: rgba(255,255,255,0.90);
+      line-height: 1.35;
+      max-width: 1020px;
+      width: 90vw;
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: transform, opacity;
+    }
+    .kia-glass-line em {
+      font-style: italic;
+      color: var(--accent-mid);
+    }
+    /* content pinned to bottom */
+    .kia-content {
+      position: relative;
+      z-index: 4;
+      width: 100%;
+      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+    }
+    .kia-kicker {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.48);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fu 0.6s var(--ease-reveal) 0.3s both;
+    }
+    .kia-title {
+      font-family: var(--font-serif);
+      font-size: clamp(32pt, 6.5vw, 68pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.0;
+      margin: 0;
+      opacity: 0;
+      animation: fu 0.7s var(--ease-reveal) 0.5s both;
+    }
+    .kia-title em { font-style: italic; color: var(--accent-mid); }
+
+    /* ── KIA Showcase (bg + glass + 2-image scroll reveal) ── */
+    .kia-show-stage {
+      position: relative;
+      height: 250vh;
+    }
+    .kia-show-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .kia-show-bg {
+      position: absolute;
+      inset: -10% 0;
+      background: url('assets/iconmobile/kia/poc-ui.png') center / cover no-repeat;
+      will-change: transform;
+    }
+    .kia-show-glass {
+      position: absolute;
+      inset: 0;
+      background: rgba(6, 6, 18, 0.52);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+    .kia-show-img-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .kia-show-img {
+      max-width: 82%;
+      max-height: 88%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
+    }
+    .kia-show-layer2 {
+      clip-path: inset(100% 0 0 0);
+      will-change: clip-path;
+    }
+
+    /* ── FORD Full-Bleed Hero (same mechanic as KIA) ── */
+    .ford-stage {
+      position: relative;
+      height: 220vh;
+    }
+    .ford-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    .ford-bg {
+      position: absolute;
+      inset: -12% 0;
+      background: url('assets/iconmobile/ford/ford-cover.png') center 40% / cover no-repeat;
+      will-change: transform;
+      z-index: 0;
+    }
+    .ford-vignette {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, transparent 18%),
+        linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.18) 38%, transparent 58%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .ford-glass {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.1rem;
+      padding: 2rem clamp(2rem, 6vw, 6rem);
+      text-align: center;
+      pointer-events: none;
+      clip-path: inset(100% 0 0 0);
+    }
+    .ford-glass-line {
+      font-family: var(--font-serif);
+      font-size: clamp(17pt, 2.9vw, 34pt);
+      font-weight: var(--weight-regular);
+      color: rgba(255,255,255,0.90);
+      line-height: 1.35;
+      max-width: 1020px;
+      width: 90vw;
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: transform, opacity;
+    }
+    .ford-glass-line em {
+      font-style: italic;
+      color: var(--accent-mid);
+    }
+    .ford-content {
+      position: relative;
+      z-index: 4;
+      width: 100%;
+      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+    }
+    .ford-kicker {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.48);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fu 0.6s var(--ease-reveal) 0.3s both;
+    }
+    .ford-title {
+      font-family: var(--font-serif);
+      font-size: clamp(32pt, 6.5vw, 68pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.0;
+      margin: 0;
+      opacity: 0;
+      animation: fu 0.7s var(--ease-reveal) 0.5s both;
+    }
+    .ford-title em { font-style: italic; color: var(--accent-mid); }
+
+    /* ── FORD Asset Showcase ── */
+    .ford-video-strip {
+      width: 100%;
+      overflow: hidden;
+      background: #000;
+      line-height: 0;
+    }
+    .ford-video-strip video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .ford-gif-panel {
+      width: 100%;
+      overflow: hidden;
+      background: #000;
+      line-height: 0;
+    }
+    .ford-gif-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ── BMW Full-Bleed Hero ── */
+    .bmw-stage {
+      position: relative;
+      height: 220vh;
+    }
+    .bmw-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    .bmw-bg {
+      position: absolute;
+      inset: -12% 0;
+      background: url('assets/iconmobile/bmw/bmw-cover.png') center 40% / cover no-repeat;
+      will-change: transform;
+      z-index: 0;
+    }
+    .bmw-vignette {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, transparent 18%),
+        linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.18) 38%, transparent 58%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .bmw-glass {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.1rem;
+      padding: 2rem clamp(2rem, 6vw, 6rem);
+      text-align: center;
+      pointer-events: none;
+      clip-path: inset(100% 0 0 0);
+    }
+    .bmw-glass-line {
+      font-family: var(--font-serif);
+      font-size: clamp(17pt, 2.9vw, 34pt);
+      font-weight: var(--weight-regular);
+      color: rgba(255,255,255,0.90);
+      line-height: 1.35;
+      max-width: 1020px;
+      width: 90vw;
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: transform, opacity;
+    }
+    .bmw-glass-line em { font-style: italic; color: var(--accent-mid); }
+    .bmw-content {
+      position: relative;
+      z-index: 4;
+      width: 100%;
+      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+    }
+    .bmw-kicker {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.48);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fu 0.6s var(--ease-reveal) 0.3s both;
+    }
+    .bmw-title {
+      font-family: var(--font-serif);
+      font-size: clamp(32pt, 6.5vw, 68pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.0;
+      margin: 0;
+      opacity: 0;
+      animation: fu 0.7s var(--ease-reveal) 0.5s both;
+    }
+    .bmw-title em { font-style: italic; color: var(--accent-mid); }
+
+    /* ── BMW Showcase (in-car bg + glass + 2-screen reveal) ── */
+    .bmw-show-stage {
+      position: relative;
+      height: 250vh;
+    }
+    .bmw-show-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .bmw-show-bg {
+      position: absolute;
+      inset: -10% 0;
+      background: url('assets/iconmobile/bmw/bmw-in-car-ex.jpeg') center / cover no-repeat;
+      will-change: transform;
+    }
+    .bmw-show-glass {
+      position: absolute;
+      inset: 0;
+      background: rgba(6, 6, 18, 0.52);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+    .bmw-show-img-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bmw-show-img {
+      max-width: 82%;
+      max-height: 88%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
+    }
+    .bmw-show-layer2 {
+      clip-path: inset(100% 0 0 0);
+      will-change: clip-path;
+    }
+
+  </style>
 </head>
 <body>
 
@@ -56,16 +438,233 @@
 </div>
 
 
-<section class="hero-cs" id="overview">
-  <div class="hero-cs-inner">
-    <div class="hero-cs-kicker">Iconmobile · Automotive UX · HMI Design</div>
-    <h1 class="hero-cs-h1">Icon<em>mobile</em></h1>
-    <p class="hero-cs-subtitle">Designing for context, constraints, and human behavior at automotive scale.</p>
-    <p class="hero-cs-desc">Content coming soon.</p>
+<!-- ══════════════════════════════════════
+     HERO — KIA New Era (sticky stage)
+══════════════════════════════════════ -->
+<div class="kia-stage">
+<section class="kia-hero" id="overview">
+
+  <!-- Parallax background -->
+  <div class="kia-bg" aria-hidden="true"></div>
+
+  <!-- Permanent bottom vignette -->
+  <div class="kia-vignette" aria-hidden="true"></div>
+
+  <!-- Frosted glass overlay (scroll-driven) -->
+  <div class="kia-glass" id="kia-glass" aria-hidden="true">
+    <p class="kia-glass-line">KIA New Era explored how a brand identity extends beyond form into a <em>unified digital ecosystem,</em> where mobile, web, and in-car experiences shape one coherent expression.</p>
   </div>
+
+  <!-- Content: kicker + title -->
+  <div class="kia-content" id="kia-content">
+    <div class="kia-kicker">Iconmobile · Automotive · HMI Design · 2019–2022</div>
+    <h1 class="kia-title">KIA <em>New Era</em></h1>
+  </div>
+
 </section>
+</div><!-- /.kia-stage -->
 
 
+<!-- ══════════════════════════════════════
+     SHOWCASE — bg glass + 2-screen reveal
+══════════════════════════════════════ -->
+<div class="kia-show-stage" id="kia-show-stage">
+  <div class="kia-show-sticky">
+
+    <!-- Background: kia-poc-dark -->
+    <div class="kia-show-bg" aria-hidden="true"></div>
+
+    <!-- Frosted glass overlay -->
+    <div class="kia-show-glass" aria-hidden="true"></div>
+
+    <!-- Screen 1: poc-ui (always visible) -->
+    <div class="kia-show-img-layer">
+      <img class="kia-show-img"
+           src="assets/iconmobile/kia/poc-ui.png"
+           alt="KIA New Era — POC UI screen 1">
+    </div>
+
+    <!-- Screen 2: poc-ui-2 (scroll reveal) -->
+    <div class="kia-show-img-layer kia-show-layer2" id="kia-show-layer2">
+      <img class="kia-show-img"
+           src="assets/iconmobile/kia/poc-ui-2.png"
+           alt="KIA New Era — POC UI screen 2">
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     KIA TAG MARQUEE
+══════════════════════════════════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">HMI Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Design System <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Automotive <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Cross-Platform Experience <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Digital Interface Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">In-Car Interface <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Mobile &amp; Web <span class="marquee-sep"></span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item">HMI Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Design System <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Automotive <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Cross-Platform Experience <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Digital Interface Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">In-Car Interface <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Mobile &amp; Web <span class="marquee-sep"></span></span>
+  </div>
+</div>
+
+
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
+<!-- ══════════════════════════════════════
+     HERO — FORD Mustang Mach-E (sticky stage)
+══════════════════════════════════════ -->
+<div class="ford-stage">
+<section class="ford-hero">
+
+  <div class="ford-bg" aria-hidden="true"></div>
+  <div class="ford-vignette" aria-hidden="true"></div>
+
+  <div class="ford-glass" id="ford-glass" aria-hidden="true">
+    <p class="ford-glass-line">The Mustang Mach-E demonstrates how digital interfaces and physical controls can work together, using a <em>hybrid touchscreen and rotary dial</em> to create intuitive, tactile interaction within a minimalist system.</p>
+  </div>
+
+  <div class="ford-content" id="ford-content">
+    <div class="ford-kicker">Iconmobile · Automotive · HMI Design · 2019–2022</div>
+    <h2 class="ford-title">FORD <em>Mustang Mach-E</em></h2>
+  </div>
+
+</section>
+</div><!-- /.ford-stage -->
+
+
+<!-- ══════════════════════════════════════
+     FORD ASSETS — video + GIF
+══════════════════════════════════════ -->
+
+<!-- Cinematic video strip -->
+<div class="ford-video-strip">
+  <video autoplay muted loop playsinline>
+    <source src="assets/iconmobile/ford/Mustang-vision.mov" type="video/quicktime">
+    <source src="assets/iconmobile/ford/Mustang-vision.mov" type="video/mp4">
+  </video>
+</div>
+
+<!-- HMI animation on dark panel -->
+<div class="ford-gif-panel">
+  <img class="ford-gif-img"
+       src="assets/iconmobile/ford/ford-mach-e-animation.gif"
+       alt="Ford Mustang Mach-E — HMI interface animation">
+</div>
+
+
+<!-- ══════════════════════════════════════
+     FORD TAG MARQUEE
+══════════════════════════════════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">HMI Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Automotive <span class="marquee-sep"></span></span>
+    <span class="marquee-item">In-Car Interface <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Integrated Touchscreen <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Digital Interface Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Physical Rotary Dial Interface <span class="marquee-sep"></span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item">HMI Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Automotive <span class="marquee-sep"></span></span>
+    <span class="marquee-item">In-Car Interface <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Integrated Touchscreen <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Digital Interface Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Physical Rotary Dial Interface <span class="marquee-sep"></span></span>
+  </div>
+</div>
+
+
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
+<!-- ══════════════════════════════════════
+     HERO — BMW ID 7.0 (sticky stage)
+══════════════════════════════════════ -->
+<div class="bmw-stage">
+<section class="bmw-hero">
+
+  <div class="bmw-bg" aria-hidden="true"></div>
+  <div class="bmw-vignette" aria-hidden="true"></div>
+
+  <div class="bmw-glass" id="bmw-glass" aria-hidden="true">
+    <p class="bmw-glass-line">The BMW i7 elevates this further, positioning digital experience as a core part of luxury, where <em>technology, space, and interaction</em> redefine what a flagship vehicle feels like.</p>
+  </div>
+
+  <div class="bmw-content" id="bmw-content">
+    <div class="bmw-kicker">Iconmobile · Automotive · HMI Design · 2019–2022</div>
+    <h2 class="bmw-title">BMW <em>ID 7.0</em></h2>
+  </div>
+
+</section>
+</div><!-- /.bmw-stage -->
+
+
+<!-- ══════════════════════════════════════
+     BMW SHOWCASE — in-car bg + glass + UI reveal
+══════════════════════════════════════ -->
+<div class="bmw-show-stage" id="bmw-show-stage">
+  <div class="bmw-show-sticky">
+
+    <div class="bmw-show-bg" aria-hidden="true"></div>
+    <div class="bmw-show-glass" aria-hidden="true"></div>
+
+    <!-- Screen 1: interface-music (always visible) -->
+    <div class="bmw-show-img-layer">
+      <img class="bmw-show-img"
+           src="assets/iconmobile/bmw/bmw-i7-interface-music.webp"
+           alt="BMW ID 7.0 — interface music screen">
+    </div>
+
+    <!-- Screen 2: layout-select (scroll reveal) -->
+    <div class="bmw-show-img-layer bmw-show-layer2" id="bmw-show-layer2">
+      <img class="bmw-show-img"
+           src="assets/iconmobile/bmw/bmw-i7-layout-select.webp"
+           alt="BMW ID 7.0 — layout select screen">
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     BMW TAG MARQUEE
+══════════════════════════════════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Advanced Digital HMI <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Automotive <span class="marquee-sep"></span></span>
+    <span class="marquee-item">In-Car Interface <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Integrated Curved Display Cockpit <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Interaction Bar <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Rear Theater Screen <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Luxury Electric Sedan <span class="marquee-sep"></span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item">Advanced Digital HMI <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Automotive <span class="marquee-sep"></span></span>
+    <span class="marquee-item">In-Car Interface <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Integrated Curved Display Cockpit <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Interaction Bar <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Rear Theater Screen <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Luxury Electric Sedan <span class="marquee-sep"></span></span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     CTA — BACK TO TOP / NEXT
+══════════════════════════════════════ -->
 <section class="cta-sec">
   <div class="cta-d"></div>
   <div class="cta-g"></div>
@@ -82,7 +681,168 @@
 <script>
 const prog = document.getElementById('prog');
 const nav  = document.getElementById('nav');
+const dot  = document.getElementById('cur-dot');
+const ring = document.getElementById('cur-ring');
 
+// ── KIA Hero: sticky scroll + rising glass ──
+const kiaStageEl   = document.querySelector('.kia-stage');
+const kiaBgEl      = document.querySelector('.kia-bg');
+const kiaGlassEl   = document.getElementById('kia-glass');
+const kiaLines     = kiaGlassEl ? kiaGlassEl.querySelectorAll('.kia-glass-line') : [];
+const kiaContentEl = document.getElementById('kia-content');
+
+function tickKiaHero(t) {
+  if (!kiaStageEl || !kiaBgEl || !kiaGlassEl) return;
+
+  const stageTop   = kiaStageEl.getBoundingClientRect().top + t;
+  const stageRange = kiaStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1); // 0→1 across stage
+
+  // Subtle bg parallax while pinned
+  kiaBgEl.style.transform = `translateY(${within * 0.18}px)`;
+
+  // Glass rises from bottom
+  const riseP  = Math.min(p / 0.55, 1);
+  const topPct = (1 - riseP) * 100;
+  kiaGlassEl.style.clipPath             = `inset(${topPct}% 0 0 0)`;
+  kiaGlassEl.style.background           = `rgba(8,8,20,${riseP * 0.62})`;
+  kiaGlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
+  kiaGlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
+
+  // Bottom content dissolves out as glass climbs over it
+  if (kiaContentEl) {
+    const fade = 1 - Math.max(0, Math.min(1, (p - 0.28) / 0.32));
+    kiaContentEl.style.opacity   = fade;
+    kiaContentEl.style.transform = `translateY(${(1 - fade) * 14}px)`;
+  }
+
+  // Glass text: entrance + float
+  kiaLines.forEach((line, i) => {
+    const entryP = Math.max(0, Math.min(1, (p - 0.48 - i * 0.14) / 0.28));
+    const postP  = Math.max(0, Math.min(1, (p - 0.62) / 0.38));
+    const scaleV = 1 + postP * 0.07;
+    const floatY = (1 - entryP) * 18 - postP * 24;
+    line.style.opacity   = entryP;
+    line.style.transform = `translateY(${floatY}px) scale(${scaleV})`;
+  });
+}
+
+// ── FORD Hero: sticky scroll + rising glass ──
+const fordStageEl   = document.querySelector('.ford-stage');
+const fordBgEl      = document.querySelector('.ford-bg');
+const fordGlassEl   = document.getElementById('ford-glass');
+const fordLines     = fordGlassEl ? fordGlassEl.querySelectorAll('.ford-glass-line') : [];
+const fordContentEl = document.getElementById('ford-content');
+
+function tickFordHero(t) {
+  if (!fordStageEl || !fordBgEl || !fordGlassEl) return;
+
+  const stageTop   = fordStageEl.getBoundingClientRect().top + t;
+  const stageRange = fordStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  fordBgEl.style.transform = `translateY(${within * 0.18}px)`;
+
+  const riseP  = Math.min(p / 0.55, 1);
+  const topPct = (1 - riseP) * 100;
+  fordGlassEl.style.clipPath             = `inset(${topPct}% 0 0 0)`;
+  fordGlassEl.style.background           = `rgba(8,8,20,${riseP * 0.62})`;
+  fordGlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
+  fordGlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
+
+  if (fordContentEl) {
+    const fade = 1 - Math.max(0, Math.min(1, (p - 0.28) / 0.32));
+    fordContentEl.style.opacity   = fade;
+    fordContentEl.style.transform = `translateY(${(1 - fade) * 14}px)`;
+  }
+
+  fordLines.forEach((line, i) => {
+    const entryP = Math.max(0, Math.min(1, (p - 0.48 - i * 0.14) / 0.28));
+    const postP  = Math.max(0, Math.min(1, (p - 0.62) / 0.38));
+    const scaleV = 1 + postP * 0.07;
+    const floatY = (1 - entryP) * 18 - postP * 24;
+    line.style.opacity   = entryP;
+    line.style.transform = `translateY(${floatY}px) scale(${scaleV})`;
+  });
+}
+
+// ── BMW Hero: sticky scroll + rising glass ──
+const bmwStageEl   = document.querySelector('.bmw-stage');
+const bmwBgEl      = document.querySelector('.bmw-bg');
+const bmwGlassEl   = document.getElementById('bmw-glass');
+const bmwLines     = bmwGlassEl ? bmwGlassEl.querySelectorAll('.bmw-glass-line') : [];
+const bmwContentEl = document.getElementById('bmw-content');
+
+function tickBmwHero(t) {
+  if (!bmwStageEl || !bmwBgEl || !bmwGlassEl) return;
+
+  const stageTop   = bmwStageEl.getBoundingClientRect().top + t;
+  const stageRange = bmwStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  bmwBgEl.style.transform = `translateY(${within * 0.18}px)`;
+
+  const riseP  = Math.min(p / 0.55, 1);
+  const topPct = (1 - riseP) * 100;
+  bmwGlassEl.style.clipPath             = `inset(${topPct}% 0 0 0)`;
+  bmwGlassEl.style.background           = `rgba(8,8,20,${riseP * 0.62})`;
+  bmwGlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
+  bmwGlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
+
+  if (bmwContentEl) {
+    const fade = 1 - Math.max(0, Math.min(1, (p - 0.28) / 0.32));
+    bmwContentEl.style.opacity   = fade;
+    bmwContentEl.style.transform = `translateY(${(1 - fade) * 14}px)`;
+  }
+
+  bmwLines.forEach((line, i) => {
+    const entryP = Math.max(0, Math.min(1, (p - 0.48 - i * 0.14) / 0.28));
+    const postP  = Math.max(0, Math.min(1, (p - 0.62) / 0.38));
+    const scaleV = 1 + postP * 0.07;
+    const floatY = (1 - entryP) * 18 - postP * 24;
+    line.style.opacity   = entryP;
+    line.style.transform = `translateY(${floatY}px) scale(${scaleV})`;
+  });
+}
+
+// ── BMW Showcase: scroll-reveal second UI screen ──
+const bmwShowStageEl = document.getElementById('bmw-show-stage');
+const bmwShowLayer2  = document.getElementById('bmw-show-layer2');
+
+function tickBmwShow() {
+  if (!bmwShowStageEl || !bmwShowLayer2) return;
+  const rect       = bmwShowStageEl.getBoundingClientRect();
+  const stageRange = Math.max(1, bmwShowStageEl.offsetHeight - window.innerHeight);
+  const within     = Math.max(0, -rect.top);
+  const p          = Math.min(within / stageRange, 1);
+  const riseP      = Math.max(0, Math.min(1, (p - 0.20) / 0.60));
+  const eased      = 1 - Math.pow(1 - riseP, 3);
+  bmwShowLayer2.style.clipPath = `inset(${(1 - eased) * 100}% 0 0 0)`;
+}
+
+tickBmwShow();
+
+// ── KIA Showcase: scroll-reveal second UI screen ──
+const kiaShowStageEl = document.getElementById('kia-show-stage');
+const kiaShowLayer2  = document.getElementById('kia-show-layer2');
+
+function tickKiaShow() {
+  if (!kiaShowStageEl || !kiaShowLayer2) return;
+  const rect       = kiaShowStageEl.getBoundingClientRect();
+  const stageRange = Math.max(1, kiaShowStageEl.offsetHeight - window.innerHeight);
+  const within     = Math.max(0, -rect.top);
+  const p          = Math.min(within / stageRange, 1);
+  const riseP      = Math.max(0, Math.min(1, (p - 0.20) / 0.60));
+  const eased      = 1 - Math.pow(1 - riseP, 3);
+  kiaShowLayer2.style.clipPath = `inset(${(1 - eased) * 100}% 0 0 0)`;
+}
+
+tickKiaShow();
+
+// ── Scroll handler ──
 window.addEventListener('scroll', () => {
   const t = window.scrollY;
   const h = document.documentElement.scrollHeight - window.innerHeight;
@@ -90,15 +850,21 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', t > 60);
   nav.classList.toggle('nav--light', t < 80);
   document.getElementById('back-top').classList.toggle('visible', t > 400);
-});
+  tickKiaHero(t);
+  tickKiaShow();
+  tickFordHero(t);
+  tickBmwHero(t);
+  tickBmwShow();
+}, { passive: true });
 
+// ── Back to top ──
 document.getElementById('back-top').addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
+// ── Mobile nav ──
 const burger = document.getElementById('nav-burger');
 const mobNav = document.getElementById('mob-nav');
-
 burger.addEventListener('click', () => {
   const open = mobNav.classList.toggle('open');
   burger.classList.toggle('open', open);
@@ -106,7 +872,6 @@ burger.addEventListener('click', () => {
   mobNav.setAttribute('aria-hidden', !open);
   document.body.style.overflow = open ? 'hidden' : '';
 });
-
 mobNav.querySelectorAll('a').forEach(a => {
   a.addEventListener('click', () => {
     mobNav.classList.remove('open');
@@ -117,28 +882,30 @@ mobNav.querySelectorAll('a').forEach(a => {
   });
 });
 
-const dot  = document.getElementById('cur-dot');
-const ring = document.getElementById('cur-ring');
+// ── Cursor ──
 let mx = 0, my = 0, rx = 0, ry = 0;
-
 document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-
 (function lerp() {
   rx += (mx - rx) * 0.14;
   ry += (my - ry) * 0.14;
-  dot.style.transform  = `translate(${mx}px,${my}px)`;
-  ring.style.transform = `translate(${rx}px,${ry}px)`;
+  dot.style.left  = mx + 'px';
+  dot.style.top   = my + 'px';
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
   requestAnimationFrame(lerp);
 })();
-
 document.addEventListener('mouseover', e => {
-  const t = e.target;
-  if (t.closest('a, button, [role="button"]')) { document.body.dataset.cursor = 'hover'; return; }
+  if (e.target.closest('a, button, [role="button"]')) { document.body.dataset.cursor = 'hover'; return; }
   document.body.dataset.cursor = 'default';
 });
+document.documentElement.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; });
+document.documentElement.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; });
 
-document.documentElement.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
-document.documentElement.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
+// ── Scroll reveal ──
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
 </script>
 
 </body>

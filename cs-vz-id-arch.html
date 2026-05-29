@@ -6,6 +6,136 @@
   <title>Verizon Identity Architecture · Refaeli Ma</title>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="styles.css">
+  <style>
+
+    /* ── IA Hero — sticky scroll stage ── */
+    @keyframes ia-img-in {
+      from { opacity: 0; transform: scale(1.06); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .ia-stage { position: relative; height: 260vh; }
+
+    .ia-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    /* Dark background */
+    .ia-bg {
+      position: absolute;
+      inset: -12% 0;
+      background: linear-gradient(135deg, #060812 0%, #0c1422 40%, #080f1e 70%, #040810 100%);
+      will-change: transform;
+      z-index: 0;
+    }
+    .ia-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 55% at 68% 48%, rgba(180,30,30,0.07) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 50% at 15% 60%, rgba(50,70,180,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 30% 30% at 85% 20%, rgba(80,40,160,0.05) 0%, transparent 50%);
+    }
+
+    /* Cover image — full bleed, parallax wrapper */
+    .ia-img-wrap {
+      position: absolute;
+      inset: -12% 0;
+      z-index: 2;
+      pointer-events: none;
+      will-change: transform;
+    }
+    .ia-img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center center;
+      opacity: 0;
+      animation: ia-img-in 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
+    }
+
+    /* Vignette — top for nav, bottom for title */
+    .ia-vignette {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, transparent 18%),
+        linear-gradient(to top,   rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.18) 38%, transparent 58%);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* Glass reveal — 3 lines, scroll-driven */
+    .ia-glass {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 2rem clamp(2rem, 6vw, 6rem);
+      text-align: center;
+      pointer-events: none;
+      clip-path: inset(100% 0 0 0);
+      will-change: clip-path;
+    }
+    .ia-glass-line {
+      font-family: var(--font-serif);
+      font-size: clamp(13pt, 2.2vw, 26pt);
+      font-weight: var(--weight-regular);
+      color: rgba(255,255,255,0.88);
+      line-height: 1.45;
+      max-width: 900px;
+      width: 90vw;
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: transform, opacity;
+    }
+    .ia-glass-line em {
+      font-style: italic;
+      color: rgba(190,205,255,0.92);
+    }
+
+    /* Title block — always visible at bottom */
+    .ia-content {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+    }
+    .ia-eyebrow {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.44);
+      margin-bottom: 0.55rem;
+      opacity: 0;
+      animation: fu 0.5s var(--ease-reveal) 0.2s both;
+    }
+    .ia-h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(30pt, 5.5vw, 60pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.02;
+      margin: 0;
+      opacity: 0;
+      animation: fu 0.6s var(--ease-reveal) 0.35s both;
+    }
+    .ia-h1 em { font-style: italic; color: var(--accent-mid); }
+
+  </style>
 </head>
 <body>
 
@@ -81,36 +211,62 @@
 
 
 <!-- ══════════════════════════════════════
-     HERO
+     HERO STAGE
 ══════════════════════════════════════ -->
-<section class="hero-cs" id="overview">
-  <div class="hero-cs-inner">
-    <div class="hero-cs-split">
+<div class="ia-stage">
+<section class="ia-hero" id="overview">
 
-      <!-- Left: text -->
-      <div>
-        <div class="hero-cs-kicker">Verizon · Experience Architecture · 2026–Present</div>
-        <h1 class="hero-cs-h1">Verizon Identity<br><em>Architecture</em></h1>
-        <p class="hero-cs-subtitle">The invisible structure behind connected lives at scale.</p>
-        <p class="hero-cs-desc">Most people never see this work. That's the point. Leading Verizon's identity and profile ecosystem, creating the infrastructure that connects households, devices, behaviors, and services into one coherent, intelligent system.</p>
-        <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-top:2rem; opacity:0; animation:fu 0.6s var(--ease-reveal) 0.9s both;">
-          <span style="font-size:var(--text-caption); font-weight:var(--weight-light); color:var(--white-a38); letter-spacing:var(--tracking-normal);">Role: Principal Product Designer</span>
-          <span style="color:var(--white-a18);">·</span>
-          <span style="font-size:var(--text-caption); font-weight:var(--weight-light); color:var(--white-a38); letter-spacing:var(--tracking-normal);">Timeline: 2026–Present</span>
-          <span style="color:var(--white-a18);">·</span>
-          <span style="font-size:var(--text-caption); font-weight:var(--weight-light); color:var(--white-a38); letter-spacing:var(--tracking-normal);">Status: Active</span>
-        </div>
-      </div>
+  <div class="ia-bg"></div>
 
-      <!-- Right: cover image -->
-      <div class="hero-cs-cover">
-        <img src="assets/verizon-identity-architecture/idarch-cover.png"
-             alt="Verizon Identity Architecture — ecosystem diagram showing households, devices, behaviors, services, and relationships orbiting a central identity core">
-      </div>
-
-    </div>
+  <!-- Cover image -->
+  <div class="ia-img-wrap" id="ia-img-wrap">
+    <img class="ia-img"
+         src="assets/verizon-identity-architecture/idarch-cover.png"
+         alt="Verizon Identity Architecture — ecosystem diagram">
   </div>
+
+  <div class="ia-vignette"></div>
+
+  <!-- Glass reveal — 3 lines -->
+  <div class="ia-glass" id="ia-glass" aria-hidden="true">
+    <p class="ia-glass-line">Verizon already owns the physical and digital household infrastructure. The challenge is no longer connectivity. It is <em>understanding relationships.</em></p>
+    <p class="ia-glass-line">Identity Architecture rethinks how Verizon recognizes households, devices, behaviors, and intent, transforming fragmented systems into a <em>connected intelligence layer</em> capable of powering future AI-driven experiences.</p>
+  </div>
+
+  <!-- Title block -->
+  <div class="ia-content">
+    <div class="ia-eyebrow">Verizon · Experience Architecture · 2026–Present</div>
+    <h1 class="ia-h1">Verizon Identity<br><em>Architecture</em></h1>
+  </div>
+
 </section>
+</div><!-- /.ia-stage -->
+
+
+<!-- ══════════════════════════════════════
+     TAG MARQUEE
+══════════════════════════════════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Experience Architecture <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Identity System <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Platform Strategy <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Behavioral Architecture <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Connected Ecosystems <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Human-Centered AI <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Context-Aware Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Intelligent Interface <span class="marquee-sep"></span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item">Experience Architecture <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Identity System <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Platform Strategy <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Behavioral Architecture <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Connected Ecosystems <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Human-Centered AI <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Context-Aware Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Intelligent Interface <span class="marquee-sep"></span></span>
+  </div>
+</div>
 
 
 <!-- ══════════════════════════════════════
@@ -229,12 +385,56 @@
 const prog = document.getElementById('prog');
 const nav  = document.getElementById('nav');
 
+/* ── IA HERO SCROLL ── */
+const iaStageEl   = document.querySelector('.ia-stage');
+const iaBgEl      = document.querySelector('.ia-bg');
+const iaImgWrapEl = document.getElementById('ia-img-wrap');
+const iaGlassEl   = document.getElementById('ia-glass');
+const iaLines     = iaGlassEl ? iaGlassEl.querySelectorAll('.ia-glass-line') : [];
+const iaContentEl = document.querySelector('.ia-content');
+
+function tickIaHero(t) {
+  if (!iaStageEl) return;
+  const stageTop   = iaStageEl.getBoundingClientRect().top + t;
+  const stageRange = iaStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  iaBgEl.style.transform = `translateY(${within * 0.12}px)`;
+
+  if (iaImgWrapEl) {
+    iaImgWrapEl.style.transform = `translateY(${within * 0.08}px)`;
+  }
+
+  const riseP = Math.min(p / 0.55, 1);
+  iaGlassEl.style.clipPath             = `inset(${(1 - riseP) * 100}% 0 0 0)`;
+  iaGlassEl.style.background           = `rgba(6,8,18,${riseP * 0.65})`;
+  iaGlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
+  iaGlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
+
+  if (iaContentEl) {
+    const fade = 1 - Math.max(0, Math.min(1, (p - 0.28) / 0.32));
+    iaContentEl.style.opacity   = fade;
+    iaContentEl.style.transform = `translateY(${(1 - fade) * 14}px)`;
+  }
+
+  iaLines.forEach((line, i) => {
+    const entryP = Math.max(0, Math.min(1, (p - 0.48 - i * 0.12) / 0.26));
+    const postP  = Math.max(0, Math.min(1, (p - 0.76) / 0.24));
+    const scaleV = 1 + postP * 0.06;
+    const floatY = (1 - entryP) * 18 - postP * 20;
+    line.style.opacity   = entryP;
+    line.style.transform = `translateY(${floatY}px) scale(${scaleV})`;
+  });
+}
+
 window.addEventListener('scroll', () => {
   const t = window.scrollY;
   const h = document.documentElement.scrollHeight - window.innerHeight;
   prog.style.width = (t / h * 100) + '%';
   nav.classList.toggle('scrolled', t > 60);
   nav.classList.toggle('nav--light', t < 80);
+  tickIaHero(t);
 
   const bt = document.getElementById('back-top');
   bt.classList.toggle('visible', t > 400);
@@ -312,8 +512,10 @@ function lerp(a, b, t) { return a + (b - a) * t; }
 function animCursor() {
   rx = lerp(rx, mx, 0.14);
   ry = lerp(ry, my, 0.14);
-  dot.style.transform  = `translate(${mx}px,${my}px)`;
-  ring.style.transform = `translate(${rx}px,${ry}px)`;
+  dot.style.left  = mx + 'px';
+  dot.style.top   = my + 'px';
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
   raf = requestAnimationFrame(animCursor);
 }
 animCursor();

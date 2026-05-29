@@ -1099,7 +1099,84 @@ window.addEventListener('scroll', () => {
       pxLoc.style.transform  = `translateY(${t * 0.09}px)`;
     }
   }
+
+  /* hiw background parallax */
+  tickHiwParallax();
+
+  /* impact dot-grid parallax */
+  tickImpactParallax();
+
+  /* philosophy dot-grid parallax */
+  tickPhilosophyParallax();
 });
+
+
+/* ── HOW I WORK PARALLAX ── */
+const hiwSection = document.getElementById('how-i-work');
+const hiwOrbs    = hiwSection ? hiwSection.querySelector('.hiw-orbs') : null;
+
+function tickHiwParallax() {
+  if (!hiwOrbs) return;
+  const rect = hiwSection.getBoundingClientRect();
+  const vh   = window.innerHeight;
+  if (rect.bottom < 0 || rect.top > vh) return;
+  /* orbs drift at ~85% of scroll speed — they hang back, feel like a deeper layer */
+  hiwOrbs.style.transform = `translateY(${(vh - rect.top) * 0.15}px)`;
+}
+
+
+/* ── PHILOSOPHY DOT-GRID PARALLAX ── */
+const philosophySection = document.getElementById('philosophy');
+
+function tickPhilosophyParallax() {
+  if (!philosophySection) return;
+  const rect = philosophySection.getBoundingClientRect();
+  const vh   = window.innerHeight;
+  if (rect.bottom < 0 || rect.top > vh) return;
+  const scrolled = vh - rect.top;
+  philosophySection.style.backgroundPositionY = `${scrolled * 0.25}px`;
+}
+
+
+/* ── IMPACT DOT-GRID PARALLAX ── */
+const impactSection = document.getElementById('impact');
+
+function tickImpactParallax() {
+  if (!impactSection) return;
+  const rect = impactSection.getBoundingClientRect();
+  const vh   = window.innerHeight;
+  if (rect.bottom < 0 || rect.top > vh) return;
+  /* shift background-position-y so dots drift at ~75% of scroll speed */
+  const scrolled = vh - rect.top;
+  impactSection.style.backgroundPositionY = `${scrolled * 0.25}px`;
+}
+
+
+/* ── STAT COUNTER ROLL ── */
+function animateCounter(el, target, suffix, duration) {
+  const start = performance.now();
+  (function tick(now) {
+    const p    = Math.min((now - start) / duration, 1);
+    const ease = p === 1 ? 1 : 1 - Math.pow(2, -10 * p); /* easeOutExpo */
+    el.textContent = Math.round(ease * target) + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+  })(start);
+}
+
+const statNums = document.querySelectorAll('.impact-sec .phi-stat-num');
+
+const statObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el    = e.target;
+    const match = el.textContent.trim().match(/^(\d+)(.*)/);
+    if (!match) return;
+    animateCounter(el, parseInt(match[1], 10), match[2], 1800);
+    statObs.unobserve(el);
+  });
+}, { threshold: 0.6 });
+
+statNums.forEach(el => statObs.observe(el));
 
 
 /* ── HERO PARALLAX SETUP ── */
@@ -1818,6 +1895,49 @@ document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
   window.addEventListener('scroll', render, { passive: true });
   window.addEventListener('resize', function () { calcMetrics(); lastP = -1; render(); });
 }());
+
+
+/* ── MAGNETIC BUTTONS ── */
+const magnetEls = [
+  ...document.querySelectorAll('.nav-links a'),
+  ...document.querySelectorAll('.cz-book-btn, .cz-li-btn, .cz-resume-btn')
+];
+
+magnetEls.forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const r  = el.getBoundingClientRect();
+    const dx = (e.clientX - (r.left + r.width  / 2)) * 0.30;
+    const dy = (e.clientY - (r.top  + r.height / 2)) * 0.30;
+    el.style.transition = 'transform 0.08s ease';
+    el.style.transform  = `translate(${dx}px, ${dy}px)`;
+  });
+  el.addEventListener('mouseleave', () => {
+    el.style.transition = 'transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    el.style.transform  = '';
+  });
+});
+
+
+/* ── LINE SLIDE-UP REVEAL ── */
+function splitLines(el) {
+  // Base delay from d1/d2/d3 stagger class
+  const base = el.classList.contains('d3') ? 0.25
+             : el.classList.contains('d2') ? 0.15
+             : el.classList.contains('d1') ? 0.08
+             : 0;
+
+  // Split at <br> — preserve all inline HTML (em, strong…) within each line
+  const parts = el.innerHTML.split(/<br\s*\/?>/i);
+
+  el.innerHTML = parts.map((part, i) =>
+    `<span class="line-wrap"><span class="line-inner" style="transition-delay:${(base + i * 0.13).toFixed(3)}s">${part.trim()}</span></span>`
+  ).join('');
+
+  el.classList.add('line-split');
+}
+
+document.querySelectorAll('h2.st, h2.st-d').forEach(splitLines);
+
 
 </script>
 
