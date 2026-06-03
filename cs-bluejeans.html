@@ -9,6 +9,27 @@
   <style>
 
     /* ── BJ Hero — sticky scroll stage ── */
+    /* ── Magnifier lens ── */
+    body[data-cursor="zoom"] #cur-dot  { opacity: 0; }
+    body[data-cursor="zoom"] #cur-ring { opacity: 0; }
+    .zoom-img { cursor: none; }
+    #mag-lens {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.75);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.22), inset 0 0 0 1px rgba(60,73,255,0.25);
+      pointer-events: none;
+      z-index: 99999;
+      display: none;
+      will-change: transform;
+    }
+    #mag-lens canvas { display: block; }
+
     @keyframes bj-img-in {
       from {
         opacity: 0;
@@ -40,14 +61,14 @@
       display: flex;
       align-items: flex-end;
     }
-    /* Animated gradient background — light blue-white */
+    /* Animated gradient background — light indigo-white */
     .bj-bg {
       position: absolute;
       inset: -12% 0;
       background: linear-gradient(
         135deg,
-        #f0f7ff 0%, #cce3ff 20%, #a8caff 38%,
-        #d4e9ff 56%, #e8f4ff 74%, #f7fbff 100%
+        #f0f1ff 0%, #dde0ff 20%, #c5c9ff 38%,
+        #dde0ff 56%, #edeeff 74%, #f7f8ff 100%
       );
       background-size: 400% 400%;
       animation: bj-grad 7s ease infinite;
@@ -59,9 +80,9 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 65% 50% at 70% 40%, rgba(80,130,255,0.20) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 60% at 20% 70%, rgba(100,160,255,0.14) 0%, transparent 55%),
-        radial-gradient(ellipse 35% 35% at 88% 80%, rgba(60,110,240,0.12) 0%, transparent 50%);
+        radial-gradient(ellipse 65% 50% at 70% 40%, rgba(60,73,255,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 20% 70%, rgba(141,148,255,0.13) 0%, transparent 55%),
+        radial-gradient(ellipse 35% 35% at 88% 80%, rgba(60,73,255,0.10) 0%, transparent 50%);
     }
     /* Hero image — wrapper handles position + JS parallax */
     .bj-img-wrap {
@@ -81,7 +102,7 @@
       max-width: 100%;
       display: block;
       object-fit: contain;
-      filter: drop-shadow(0 20px 60px rgba(60,100,220,0.28));
+      filter: none;
       opacity: 0;
       animation: bj-img-in 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
     }
@@ -99,18 +120,18 @@
       height: 5px;
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(40, 80, 200, 0.38);
+      background: rgba(60, 73, 255, 0.28);
       transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease;
       will-change: background, box-shadow, transform;
     }
     .bj-dot.lit-1 {
-      background: rgba(70, 130, 255, 1);
-      box-shadow: 0 0 10px 3px rgba(70, 130, 255, 0.55);
+      background: rgba(60, 73, 255, 1);
+      box-shadow: 0 0 10px 3px rgba(60, 73, 255, 0.55);
       transform: translate(-50%, -50%) scale(1.6);
     }
     .bj-dot.lit-2 {
-      background: rgba(110, 180, 255, 0.95);
-      box-shadow: 0 0 8px 2px rgba(110, 180, 255, 0.45);
+      background: rgba(141, 148, 255, 0.95);
+      box-shadow: 0 0 8px 2px rgba(141, 148, 255, 0.45);
       transform: translate(-50%, -50%) scale(1.4);
     }
 
@@ -120,7 +141,7 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 140px;
-      background: linear-gradient(to bottom, rgba(4,10,40,0.38) 0%, transparent 100%);
+      background: linear-gradient(to bottom, rgba(24,24,33,0.30) 0%, transparent 100%);
       z-index: 6;
       pointer-events: none;
     }
@@ -145,7 +166,7 @@
       font-family: var(--font-serif);
       font-size: clamp(17pt, 2.9vw, 34pt);
       font-weight: var(--weight-regular);
-      color: rgba(8,20,60,0.88);
+      color: rgba(24,24,32,0.88);
       line-height: 1.3;
       max-width: 1020px;
       width: 90vw;
@@ -155,7 +176,7 @@
     }
     .bj-glass-line em {
       font-style: italic;
-      color: rgba(40,80,200,0.90);
+      color: var(--accent);
     }
     /* Title block — always visible at bottom */
     .bj-content {
@@ -169,7 +190,7 @@
       font-weight: var(--weight-semibold);
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
-      color: rgba(40,70,180,0.65);
+      color: var(--accent-mid);
       margin-bottom: 0.55rem;
       opacity: 0;
       animation: fu 0.5s var(--ease-reveal) 0.2s both;
@@ -178,13 +199,13 @@
       font-family: var(--font-serif);
       font-size: clamp(30pt, 5.5vw, 60pt);
       font-weight: var(--weight-regular);
-      color: #0a1040;
+      color: var(--ink);
       line-height: 1.02;
       margin: 0 0 1.2rem;
       opacity: 0;
       animation: fu 0.6s var(--ease-reveal) 0.35s both;
     }
-    .bj-h1 em { font-style: italic; color: rgba(40,80,210,0.88); }
+    .bj-h1 em { font-style: italic; color: var(--accent); }
     .bj-meta {
       display: flex;
       gap: 1rem;
@@ -200,41 +221,10 @@
     }
     .bj-meta-sep { color: rgba(255,255,255,0.14) !important; }
 
-    /* Stat strip — dark, flush below stage */
-    .bj-stat-strip {
-      position: relative;
-      z-index: 2;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      background: rgba(4,4,20,0.98);
-      border-top: 1px solid rgba(141,148,255,0.10);
-    }
-    .bj-stat-cell {
-      padding: 2rem 1.5rem;
-      text-align: center;
-      border-right: 1px solid rgba(141,148,255,0.08);
-    }
-    .bj-stat-cell:last-child { border-right: none; }
-    .bj-stat-num {
-      font-family: var(--font-serif);
-      font-size: clamp(18pt, 2.6vw, 26pt);
-      color: #fff;
-      line-height: 1;
-      margin-bottom: 0.35rem;
-    }
-    .bj-stat-label {
-      font-size: var(--text-nano);
-      font-weight: var(--weight-medium);
-      letter-spacing: var(--tracking-wider);
-      text-transform: uppercase;
-      color: rgba(141,148,255,0.48);
-      line-height: var(--leading-tight);
-    }
-
     /* ── Video section — full bleed ── */
     .bj-video-bridge {
       height: 140px;
-      background: linear-gradient(to bottom, #ddeeff 0%, #04041a 100%);
+      background: linear-gradient(to bottom, #edeeff 0%, var(--dark) 100%);
       display: block;
       margin: 0;
     }
@@ -274,25 +264,296 @@
       background: transparent;
     }
 
-    /* ── Section chapter label (inline with rule) ── */
-    .sec-ch {
+    /* ── 3-part Case Study Overview section — light mode ── */
+    .bj-overview {
+      background-color: var(--warm);
+      background-image: var(--dot-grid-mid);
+      background-size: var(--dot-size-md);
+      min-height: 100vh;
+      padding: 6rem clamp(1.25rem, 5vw, 4rem) 6rem;
+      border-top: 1px solid rgba(60,73,255,0.10);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .bj-overview-head {
+      max-width: 860px;
+      margin: 0 auto 3.5rem;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .bj-overview-eyebrow {
       font-size: var(--text-micro);
       font-weight: var(--weight-semibold);
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
-      color: var(--accent-mid);
-      margin-bottom: 0.7rem;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .bj-overview-title {
+      font-family: var(--font-serif);
+      font-size: clamp(20pt, 3.2vw, 32pt);
+      color: #06080f;
+      font-weight: var(--weight-regular);
+      line-height: 1.2;
+    }
+    .bj-overview-title em { font-style: italic; color: var(--accent); }
+    .bj-overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      position: relative;
+      z-index: 2;
+    }
+    .bj-ov-block {
+      position: relative;
+      min-height: 400px;
+      padding: 2.5rem 2.2rem;
+      background: transparent;
+      border: 1px solid rgba(60,73,255,0.10);
+      border-radius: var(--radius-card-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.5s ease, transform 0.3s var(--ease-base), box-shadow 0.3s var(--ease-base);
+    }
+    .bj-ov-block:hover {
+      background: rgba(238,241,255,0.30);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(60,73,255,0.09);
+    }
+    .bj-ov-block.r.on { animation: tile-reveal 1.4s var(--ease-reveal) backwards; }
+    .bj-ov-block.r.on.d3 { animation-delay: 0s; }
+    .bj-ov-block.r.on.d4 { animation-delay: 0.12s; }
+    .bj-ov-block.r.on.d5 { animation-delay: 0.24s; }
+    .bj-ov-num {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(60,73,255,0.40);
+      margin-bottom: 1.2rem;
+      position: relative;
+      z-index: 2;
+    }
+    .bj-ov-default {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .bj-ov-block:hover .bj-ov-default {
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+    }
+    .bj-ov-block-title {
+      font-family: var(--font-serif);
+      font-size: clamp(14pt, 1.7vw, 20pt);
+      color: rgba(6,8,20,0.88);
+      font-weight: var(--weight-regular);
+      line-height: 1.3;
+      margin-bottom: 1.5rem;
+    }
+    .bj-ov-anim {
+      flex: 1;
+      position: relative;
+      min-height: 110px;
+      overflow: hidden;
+    }
+    /* Hover layer */
+    .bj-ov-hover {
+      position: absolute;
+      inset: 0;
+      padding: 2.5rem 2.2rem;
+      background: rgba(238,241,255,0.88);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .bj-ov-block:hover .bj-ov-hover {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .bj-ov-hover-num {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(60,73,255,0.40);
+      margin-bottom: auto;
+    }
+    .bj-ov-hover-title {
+      font-family: var(--font-serif);
+      font-size: clamp(17pt, 2.0vw, 24pt);
+      color: rgba(6,8,20,0.85);
+      font-weight: var(--weight-regular);
+      line-height: 1.25;
+      margin-bottom: 1rem;
+    }
+    .bj-ov-desc {
+      font-size: var(--text-body-sm);
+      color: rgba(30,40,90,0.62);
+      line-height: 1.65;
+      margin-bottom: 1.4rem;
+    }
+    .bj-ov-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      transition: gap 0.2s ease;
+    }
+    .bj-ov-cta:hover { gap: 0.75rem; }
+    .bj-ov-cta::after { content: ' ↓'; }
+    /* Block 1 — broadcast rings */
+    @keyframes bj-ring-out {
+      0%   { transform: translate(-50%, -50%) scale(0.5); opacity: 0.85; }
+      100% { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
+    }
+    .bj-anim-rings { position: absolute; inset: 0; }
+    .bj-anim-ring {
+      position: absolute;
+      width: 48px; height: 48px;
+      top: 50%; left: 50%;
+      border-radius: 50%;
+      border: 1.5px solid rgba(60,73,255,0.45);
+      animation: bj-ring-out 5.5s ease-out infinite;
+    }
+    .bj-anim-ring:nth-child(1) { animation-delay: 0s; }
+    .bj-anim-ring:nth-child(2) { animation-delay: 1.83s; }
+    .bj-anim-ring:nth-child(3) { animation-delay: 3.66s; }
+    .bj-anim-dot {
+      position: absolute;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--accent-mid);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 14px 5px rgba(141,148,255,0.4);
+    }
+    /* Block 2 — UI preference sliders */
+    @keyframes bj-slider-anim {
+      0%   { transform: scaleX(0.2); }
+      45%  { transform: scaleX(1); }
+      55%  { transform: scaleX(1); }
+      100% { transform: scaleX(0.35); }
+    }
+    .bj-anim-sliders {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+      padding: 0 1.5rem;
+    }
+    .bj-anim-slider-row { display: flex; align-items: center; gap: 10px; }
+    .bj-anim-slider-track {
+      flex: 1; height: 3px;
+      background: rgba(60,73,255,0.14);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .bj-anim-slider-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-mid) 100%);
+      transform-origin: left;
+      animation: bj-slider-anim 6s ease-in-out infinite;
+    }
+    .bj-anim-slider-row:nth-child(1) .bj-anim-slider-fill { animation-delay: 0s;    width: 70%; }
+    .bj-anim-slider-row:nth-child(2) .bj-anim-slider-fill { animation-delay: 1.2s;  width: 85%; }
+    .bj-anim-slider-row:nth-child(3) .bj-anim-slider-fill { animation-delay: 2.4s;  width: 50%; }
+    .bj-anim-slider-row:nth-child(4) .bj-anim-slider-fill { animation-delay: 3.6s;  width: 90%; }
+    .bj-anim-slider-knob {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent-mid);
+      flex-shrink: 0;
+      opacity: 0.45;
+    }
+    /* Block 3 — component grid flicker */
+    @keyframes bj-cell-glow {
+      0%, 100% { opacity: 0.10; }
+      50%       { opacity: 0.55; }
+    }
+    .bj-anim-comp-grid {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 5px;
+      padding: 1rem 1.5rem;
+    }
+    .bj-anim-comp-cell {
+      border-radius: 4px;
+      background: var(--accent);
+      opacity: 0.12;
+      animation: bj-cell-glow 2.5s ease-in-out infinite;
+    }
+    .bj-anim-comp-cell { animation-duration: 5s; }
+    .bj-anim-comp-cell:nth-child(7n+1) { animation-delay: 0.0s; }
+    .bj-anim-comp-cell:nth-child(7n+2) { animation-delay: 0.7s; }
+    .bj-anim-comp-cell:nth-child(7n+3) { animation-delay: 1.4s; }
+    .bj-anim-comp-cell:nth-child(7n+4) { animation-delay: 2.1s; }
+    .bj-anim-comp-cell:nth-child(7n+5) { animation-delay: 2.8s; }
+    .bj-anim-comp-cell:nth-child(7n+6) { animation-delay: 3.5s; }
+    .bj-anim-comp-cell:nth-child(7n+7) { animation-delay: 4.2s; }
+    /* Placeholder video container */
+    .bj-vid-placeholder { opacity: 1 !important; }
+    .bj-vid-placeholder .bj-video-frame {
+      background: #04040f;
+    }
+    .bj-vid-placeholder-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      border: 1px dashed rgba(141,148,255,0.12);
+    }
+    .bj-vid-ph-icon {
+      width: 52px; height: 52px;
+      border: 1.5px solid rgba(141,148,255,0.22);
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      gap: 0.55rem;
+      justify-content: center;
+      margin-bottom: 0.4rem;
     }
-    .sec-ch::after {
-      content: '';
-      display: block;
-      height: 1px;
-      width: 36px;
-      background: var(--accent-mid-a25);
-      flex-shrink: 0;
+    .bj-vid-ph-icon::after {
+      content: '▶';
+      font-size: 14px;
+      color: rgba(141,148,255,0.3);
+      margin-left: 4px;
+    }
+    .bj-vid-ph-label {
+      font-size: var(--text-nano);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(141,148,255,0.22);
     }
 
     /* ── Part banner (chapter opener, blue tinted) ── */
@@ -357,6 +618,318 @@
       line-height: var(--leading-body);
     }
 
+    /* ── Section 01 — Remote Learning sticky stage ── */
+    .rl-stage { position: relative; height: 240vh; }
+    .rl-panel {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    .rl-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        var(--dot-grid-white-sm),
+        linear-gradient(135deg, #04060e 0%, #080e1c 55%, #040810 100%);
+      background-size: var(--dot-size-md), cover;
+      z-index: 0;
+    }
+    /* Editorial "01" — centered ghost watermark */
+    .rl-num {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-serif);
+      font-size: clamp(100pt, 24vw, 300pt);
+      color: rgba(141,148,255,0.055);
+      line-height: 1;
+      z-index: 2;
+      user-select: none;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    /* Centered content layer */
+    .rl-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 clamp(1.25rem, 8vw, 10rem);
+      z-index: 3;
+      will-change: opacity, transform;
+    }
+    .rl-content-left {
+      width: min(920px, 90vw);
+    }
+    .rl-eyebrow {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(141,148,255,0.55);
+      margin-bottom: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+    }
+    .rl-eyebrow::before,
+    .rl-eyebrow::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 28px;
+      background: rgba(141,148,255,0.25);
+      flex-shrink: 0;
+    }
+    .rl-h {
+      font-family: var(--font-serif);
+      font-size: clamp(22pt, 3.6vw, 44pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.1;
+      margin: 0 0 1.6rem;
+    }
+    .rl-h em { font-style: italic; color: var(--accent-mid); }
+    .rl-desc {
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: rgba(255,255,255,0.50);
+      line-height: var(--leading-body);
+      max-width: 52ch;
+      margin: 0 auto;
+    }
+    /* YouTube full-bleed layer — revealed on scroll */
+    .rl-yt-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      opacity: 0;
+      will-change: opacity;
+      pointer-events: none;
+      background: #000;
+    }
+    .rl-yt-frame {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .rl-yt-frame iframe {
+      position: absolute;
+      top: -9%; left: -1%;
+      width: 102%; height: 118%;
+      border: 0;
+    }
+    .rl-yt-shield {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: transparent;
+    }
+
+    /* ── Section 02 — Meetings sticky stage ── */
+    .mt-stage { position: relative; height: 240vh; }
+    .mt-panel {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    .mt-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        var(--dot-grid-white-sm),
+        linear-gradient(135deg, #04060e 0%, #080e1c 55%, #040810 100%);
+      background-size: var(--dot-size-md), cover;
+      z-index: 0;
+    }
+    .mt-num {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-serif);
+      font-size: clamp(100pt, 24vw, 300pt);
+      color: rgba(141,148,255,0.055);
+      line-height: 1;
+      z-index: 2;
+      user-select: none;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .mt-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 clamp(1.25rem, 8vw, 10rem);
+      z-index: 3;
+      will-change: opacity, transform;
+    }
+    .mt-content-left { width: min(920px, 90vw); }
+    .mt-eyebrow {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(141,148,255,0.55);
+      margin-bottom: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+    }
+    .mt-eyebrow::before,
+    .mt-eyebrow::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 28px;
+      background: rgba(141,148,255,0.25);
+      flex-shrink: 0;
+    }
+    .mt-h {
+      font-family: var(--font-serif);
+      font-size: clamp(28pt, 5vw, 62pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.1;
+      margin: 0 0 1.6rem;
+    }
+    .mt-h em { font-style: italic; color: var(--accent-mid); }
+    .mt-desc {
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: rgba(255,255,255,0.50);
+      line-height: var(--leading-body);
+      max-width: 52ch;
+      margin: 0 auto;
+    }
+    .mt-yt-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      opacity: 0;
+      will-change: opacity;
+      pointer-events: none;
+      background: #000;
+    }
+    .mt-yt-frame {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .mt-yt-frame iframe {
+      position: absolute;
+      top: -9%; left: -1%;
+      width: 102%; height: 118%;
+      border: 0;
+    }
+    .mt-yt-shield {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: transparent;
+    }
+
+    /* ── Section 03 — Design System breaker ── */
+    .ds-stage {
+      position: relative;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+    .ds-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        var(--dot-grid-white-sm),
+        linear-gradient(135deg, #04060e 0%, #080e1c 55%, #040810 100%);
+      background-size: var(--dot-size-md), cover;
+      z-index: 0;
+    }
+    .ds-num {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-serif);
+      font-size: clamp(100pt, 24vw, 300pt);
+      color: rgba(141,148,255,0.055);
+      line-height: 1;
+      z-index: 2;
+      user-select: none;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .ds-content {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 clamp(1.25rem, 8vw, 10rem);
+      z-index: 3;
+    }
+    .ds-content-left { width: min(920px, 90vw); }
+    .ds-eyebrow {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(141,148,255,0.55);
+      margin-bottom: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+    }
+    .ds-eyebrow::before,
+    .ds-eyebrow::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 28px;
+      background: rgba(141,148,255,0.25);
+      flex-shrink: 0;
+    }
+    .ds-h {
+      font-family: var(--font-serif);
+      font-size: clamp(28pt, 5vw, 62pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.1;
+      margin: 0 0 1.6rem;
+    }
+    .ds-h em { font-style: italic; color: var(--accent-mid); }
+    .ds-desc {
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: rgba(255,255,255,0.50);
+      line-height: var(--leading-body);
+      max-width: 52ch;
+      margin: 0 auto;
+    }
+
     /* ── Video embed ── */
     .cs-video-wrap {
       border-radius: var(--radius-card-lg);
@@ -379,47 +952,55 @@
       background: var(--surface-white);
       border: 1px solid var(--rule);
       border-radius: var(--radius-card-lg);
-      padding: 1.6rem;
+      padding: 2rem;
       cursor: default;
+      position: relative;
+      overflow: hidden;
       transition: var(--transition-card);
     }
     .fc-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-card-lift); }
     .fc-num {
       font-family: var(--font-serif);
-      font-size: 28pt;
-      color: rgba(60,73,255,0.06);
+      font-size: clamp(80pt, 11vw, 130pt);
+      color: rgba(60,73,255,0.055);
       line-height: 1;
-      margin-bottom: -0.3rem;
+      position: absolute;
+      right: -0.5rem;
+      top: -0.5rem;
+      pointer-events: none;
+      user-select: none;
     }
     .fc-label {
-      font-size: var(--text-nano);
+      font-size: var(--text-caption);
       font-weight: var(--weight-semibold);
       letter-spacing: var(--tracking-widest);
       text-transform: uppercase;
       color: var(--accent-mid);
-      margin-bottom: 0.4rem;
-    }
-    .fc-title {
-      font-size: 10pt;
-      font-weight: var(--weight-semibold);
-      color: var(--ink);
       margin-bottom: 0.5rem;
     }
+    .fc-title {
+      font-size: var(--text-body);
+      font-weight: var(--weight-semibold);
+      color: var(--ink);
+      margin-bottom: 0.65rem;
+      max-width: 68%;
+    }
     .fc-body {
-      font-size: 8.5pt;
+      font-size: var(--text-body-sm);
       font-weight: var(--weight-light);
       color: var(--ink-mid);
       line-height: var(--leading-normal);
+      max-width: 72%;
     }
     .fc-items {
       list-style: none;
-      margin-top: 0.6rem;
+      margin-top: 0.75rem;
     }
     .fc-items li {
-      font-size: 8pt;
+      font-size: var(--text-caption);
       font-weight: var(--weight-light);
       color: var(--ink-mid);
-      padding: 0.18rem 0 0.18rem 0.75rem;
+      padding: 0.22rem 0 0.22rem 0.75rem;
       position: relative;
       line-height: 1.5;
     }
@@ -427,12 +1008,18 @@
       content: '';
       position: absolute;
       left: 0;
-      top: 0.52rem;
+      top: 0.55rem;
       width: 3px;
       height: 3px;
       border-radius: 50%;
       background: var(--accent-mid);
     }
+    .fc-card.r.on {
+      animation: tile-reveal 1.4s var(--ease-reveal) backwards;
+    }
+    .fc-card.r.on.d3 { animation-delay: 0.12s; }
+    .fc-card.r.on.d4 { animation-delay: 0.24s; }
+    .fc-card.r.on.d5 { animation-delay: 0.36s; }
 
     /* ── User interview grid ── */
     .interview-grid {
@@ -525,26 +1112,48 @@
       background: var(--white-a04);
       border: 1px solid var(--rule-dark);
       border-radius: var(--radius-card);
-      padding: 1.4rem;
+      padding: 2rem 1.8rem;
       cursor: default;
+      display: flex;
+      flex-direction: column;
       transition: border-color var(--dur-base) var(--ease-base), background var(--dur-base) var(--ease-base);
     }
     .insight-d:hover { border-color: rgba(141,148,255,0.28); background: var(--accent-a05); }
+    .insight-emoji {
+      font-size: 1.7rem;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
     .insight-d-label {
-      font-size: var(--text-nano);
+      font-size: var(--text-caption);
       font-weight: var(--weight-semibold);
       letter-spacing: var(--tracking-widest);
       text-transform: uppercase;
       color: var(--accent-mid-a50);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.55rem;
     }
     .insight-d-body {
-      font-size: 8.5pt;
+      font-size: var(--text-body-sm);
       font-weight: var(--weight-light);
       color: var(--white-a55);
       line-height: var(--leading-normal);
     }
     .insight-d-body strong { font-weight: var(--weight-medium); color: rgba(255,255,255,0.78); }
+    .ki-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 4vw, 4rem);
+      align-items: center;
+      margin-bottom: 2.5rem;
+    }
+    .ki-header .pullquote-d {
+      margin: 0;
+    }
+    .insight-d.r.on {
+      animation: tile-reveal 1.4s var(--ease-reveal) backwards;
+    }
+    .insight-d.r.on.d3 { animation-delay: 0.12s; }
+    .insight-d.r.on.d4 { animation-delay: 0.24s; }
 
     /* ── Partner logos row ── */
     .partners-row {
@@ -613,6 +1222,123 @@
       border-top: 1px solid var(--rule);
     }
 
+    /* ── Context section dot grid (matches IMPACT & RECOGNITION) ── */
+    .bj-context-sec {
+      background-image: var(--dot-grid-mid);
+      background-size: var(--dot-size-md);
+    }
+
+    /* ── Global dot-grid across all sections ──────────────── */
+    .cs-sec.bg-page,
+    .cs-sec.bg-warm,
+    .cs-sec.bg-accent {
+      background-image: var(--dot-grid-mid);
+      background-size: var(--dot-size-md);
+    }
+    .cs-sec.bg-dark,
+    .part-banner,
+    /* ── Context → Partner scroll-cover ──────────────────── */
+    .context-stack {
+      position: relative;
+    }
+    .bj-context-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      will-change: transform;
+    }
+    .bj-partner-cover {
+      position: relative;
+      z-index: 2;
+      border-radius: 1.5rem 1.5rem 0 0;
+      box-shadow: 0 -20px 60px rgba(0,0,0,0.09);
+    }
+    /* Cover that is also pinned — for multi-level cover chains */
+    .bj-cover-sticky {
+      position: sticky;
+      top: 0;
+      border-radius: 1.5rem 1.5rem 0 0;
+      box-shadow: 0 -20px 60px rgba(0,0,0,0.09);
+      will-change: transform;
+    }
+
+    /* Sub-heading — adoption title, less prominent than main h2.st */
+    .st-adopt {
+      font-family: var(--font-serif);
+      font-size: clamp(14pt, 1.6vw, 20pt);
+      font-weight: var(--weight-regular);
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+    .st-adopt em { font-style: italic; color: var(--accent); }
+
+    /* Centered wrapper for adoption sub-section head */
+    .bj-adopt-head {
+      text-align: center;
+      margin-top: 3.5rem;
+      margin-bottom: 2rem;
+    }
+    .bj-adopt-head .bp { color: var(--ink-mid); }
+
+    /* ── Quote cards ── */
+    .bj-quote-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+    }
+    .bj-quote-card {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(60,73,255,0.10);
+      border-radius: 16px;
+      padding: 2rem 2rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      transition: border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+    .bj-quote-card:hover {
+      border-color: rgba(60,73,255,0.22);
+      box-shadow: 0 8px 32px rgba(60,73,255,0.08);
+    }
+    .bj-quote-mark {
+      font-family: var(--font-serif);
+      font-size: 52pt;
+      color: rgba(60,73,255,0.18);
+      line-height: 0.85;
+      margin-bottom: 1rem;
+      user-select: none;
+    }
+    .bj-quote-text {
+      font-family: var(--font-serif);
+      font-size: clamp(11pt, 1.25vw, 13.5pt);
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .bj-quote-rule {
+      width: 28px;
+      height: 1.5px;
+      background: rgba(60,73,255,0.28);
+      margin: 1.4rem 0 1rem;
+      flex-shrink: 0;
+    }
+    .bj-quote-name {
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--ink);
+      margin-bottom: 0.3rem;
+    }
+    .bj-quote-role {
+      font-size: var(--text-caption);
+      font-weight: var(--weight-light);
+      color: var(--ink-mid);
+      line-height: 1.5;
+    }
+
     @media (max-width: 860px) {
       .fc-grid { grid-template-columns: 1fr; }
       .interview-grid { grid-template-columns: repeat(3, 1fr); }
@@ -621,6 +1347,1315 @@
       .partners-row { flex-direction: column; }
       .partner-cell { border-right: none; border-bottom: 1px solid var(--rule); }
       .partner-cell:last-child { border-bottom: none; }
+      .bj-quote-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── User Testing Stage ─────────────────────────────── */
+    @keyframes ut-img-in {
+      from { opacity: 0; transform: rotate(-5deg) scale(0.88); }
+      to   { opacity: 1; transform: rotate(0deg)  scale(1);    }
+    }
+    .ut-stage {
+      position: relative;
+      height: 180vh;
+      background-color: var(--warm);
+      background-image: var(--dot-grid-mid);
+      background-size: var(--dot-size-md);
+      isolation: isolate;
+      clip-path: inset(0);
+    }
+    .ut-panel {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 600px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: clamp(3rem, 5vw, 6rem);
+      align-items: center;
+      padding: 0 clamp(2rem, 6vw, 6rem);
+      overflow: hidden;
+    }
+    .ut-right {
+      position: relative;
+    }
+    .ut-img-wrap {
+      border-radius: 10px;
+      overflow: hidden;
+      will-change: opacity, transform;
+    }
+    .ut-img-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0;
+      transform: rotate(-5deg) scale(0.88);
+      transform-origin: center center;
+    }
+    .ut-img-wrap.on img {
+      animation: ut-img-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s both;
+    }
+    .ut-body-reveal {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.3rem;
+      pointer-events: none;
+    }
+    .ut-body-reveal .bp {
+      margin-bottom: 0;
+      opacity: 0;
+      transform: translateY(16px);
+      will-change: opacity, transform;
+    }
+    @media (max-width: 860px) {
+      .ut-panel { grid-template-columns: 1fr; align-items: start; padding-top: 5rem; }
+    }
+
+    /* ── Remote Learning Dashboard ── */
+    .rl-dash-sec {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 !important;
+    }
+    .rl-dash-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: clamp(3rem, 5vw, 6rem);
+      align-items: center;
+      width: 100%;
+      padding: 0 clamp(2rem, 6vw, 6rem);
+    }
+    .rl-imac-wrap {
+      position: relative;
+      will-change: opacity, transform;
+    }
+    .rl-imac-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      pointer-events: none;
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      transform: rotate(-5deg) scale(0.88);
+      transform-origin: center center;
+    }
+    .rl-imac-wrap.on img {
+      animation: ut-img-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s both;
+    }
+    .rl-imac-screen {
+      position: absolute;
+      top: 4%;
+      left: 3.5%;
+      width: 93%;
+      height: 58%;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.4s ease 1.2s;
+    }
+    .rl-imac-wrap.on .rl-imac-screen {
+      opacity: 1;
+    }
+    .rl-imac-screen video {
+      width: 85%;
+      height: auto;
+      display: block;
+      border-radius: 2px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+      clip-path: inset(0 2% 0 2%);
+    }
+    @media (max-width: 860px) {
+      .rl-dash-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── FTU Hero Stage ── */
+    .ftu-stage {
+      position: relative;
+      height: 450vh;
+      overflow: clip; /* clips sticky overflow without breaking sticky or cover border-radius */
+    }
+    .ftu-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      background-color: var(--page);
+      background-image: var(--dot-grid-mid);
+      background-size: var(--dot-size-md);
+      isolation: isolate;
+    }
+    .ftu-grid {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 4rem clamp(1rem, 3vw, 3rem) 6rem clamp(2rem, 6vw, 6rem);
+    }
+    .ftu-hero-asset {
+      max-height: 92vh;
+      max-width: 72%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+      opacity: 0;
+      transform: rotate(-5deg) scale(0.88);
+      transform-origin: center center;
+    }
+    .ftu-grid.on .ftu-hero-asset {
+      animation: ut-img-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s both;
+    }
+    .ftu-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+      z-index: 4;
+      max-width: 54%;
+    }
+    .ftu-kicker {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fu 0.6s var(--ease-reveal) 0.3s both;
+    }
+    .ftu-title {
+      font-family: var(--font-serif);
+      font-size: clamp(26pt, 5vw, 54pt);
+      font-weight: var(--weight-regular);
+      color: var(--ink);
+      line-height: 1.05;
+      margin: 0;
+      opacity: 0;
+      animation: fu 0.7s var(--ease-reveal) 0.5s both;
+    }
+    .ftu-title em { font-style: italic; color: var(--accent); }
+    .ftu-glass {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.1rem;
+      padding: 2rem clamp(2rem, 6vw, 6rem);
+      text-align: center;
+      pointer-events: none;
+      clip-path: inset(100% 0 0 0);
+    }
+    .ftu-glass-body {
+      font-family: var(--font-serif);
+      font-size: clamp(17pt, 2.9vw, 34pt);
+      font-weight: var(--weight-regular);
+      color: var(--ink);
+      line-height: 1.35;
+      max-width: 1020px;
+      width: 90vw;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: transform, opacity;
+    }
+    .ftu-glass-body em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    /* ── FTU Entry layer — clips in over glass, no opaque bg ── */
+    .ftu-entry-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(2rem, 5vh, 4rem) clamp(2rem, 6vw, 6rem);
+      clip-path: inset(100% 0 0 0);
+      will-change: clip-path, opacity;
+    }
+
+    /* ── FTU Image layers (inside unified hero) — transparent, glass stays behind ── */
+    .ftu-img-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(2rem, 5vh, 4rem) clamp(2rem, 6vw, 6rem);
+      clip-path: inset(100% 0 0 0);
+      will-change: clip-path, opacity;
+    }
+    .ftu-show-img {
+      max-width: 88%;
+      max-height: 84vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+    }
+    @media (max-width: 860px) {
+      .ftu-grid { grid-template-columns: 1fr; }
+      .ftu-content { max-width: 100%; }
+      .ftu-show-img { max-width: 95%; }
+    }
+
+    /* ── Video Layout System Stage — unified sticky ── */
+    .vls-stage {
+      position: relative;
+      height: 700vh;
+      background-color: var(--warm);
+      background-image: var(--dot-grid-mid);
+      background-size: var(--dot-size-md);
+      isolation: isolate;
+      clip-path: inset(0);
+    }
+    .vls-panel {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 600px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: clamp(3rem, 5vw, 6rem);
+      align-items: center;
+      padding: 0 clamp(2rem, 6vw, 6rem);
+      overflow: hidden;
+    }
+    .vls-right { position: relative; }
+    .vls-img-wrap {
+      border-radius: 10px;
+      overflow: hidden;
+      will-change: opacity, transform;
+    }
+    .vls-img-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0;
+      transform: rotate(-5deg) scale(0.88);
+      transform-origin: center center;
+    }
+    .vls-img-wrap.on img {
+      animation: ut-img-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s both;
+    }
+    .vls-body-reveal {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.3rem;
+      pointer-events: none;
+    }
+    .vls-body-reveal .bp {
+      margin-bottom: 0;
+      opacity: 0;
+      transform: translateY(16px);
+      will-change: opacity, transform;
+    }
+    /* ── VLS image layers — inside .vls-right, replaces body text area ── */
+    .vls-img-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--warm);
+      background-image: var(--dot-grid-mid);
+      background-size: var(--dot-size-md);
+      clip-path: inset(100% 0 0 0);
+      will-change: clip-path, opacity;
+    }
+    .vls-show-img {
+      max-width: 88%;
+      max-height: 84vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+    }
+    @media (max-width: 860px) {
+      .vls-panel { grid-template-columns: 1fr; align-items: start; padding-top: 5rem; }
+      .vls-show-img { max-width: 95%; }
+    }
+
+    /* ── Screen Share Hero Stage ── */
+    .ss-stage {
+      position: relative;
+      height: 450vh;
+      clip-path: inset(0);
+    }
+    .ss-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    .ss-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .ss-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .ss-vignette {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.40) 0%, transparent 22%),
+        linear-gradient(to top, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.25) 42%, transparent 62%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .ss-glass {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.1rem;
+      padding: 2rem clamp(2rem, 6vw, 6rem);
+      text-align: center;
+      pointer-events: none;
+      clip-path: inset(100% 0 0 0);
+    }
+    .ss-glass-body {
+      font-family: var(--font-serif);
+      font-size: clamp(17pt, 2.9vw, 34pt);
+      font-weight: var(--weight-regular);
+      color: rgba(255,255,255,0.90);
+      line-height: 1.35;
+      max-width: 1020px;
+      width: 90vw;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: transform, opacity;
+    }
+    .ss-glass-body em { font-style: italic; color: var(--accent-mid); }
+    .ss-content {
+      position: relative;
+      z-index: 4;
+      width: 100%;
+      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+    }
+    .ss-kicker {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.48);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fu 0.6s var(--ease-reveal) 0.3s both;
+    }
+    .ss-title {
+      font-family: var(--font-serif);
+      font-size: clamp(26pt, 5vw, 54pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.05;
+      margin: 0;
+      opacity: 0;
+      animation: fu 0.7s var(--ease-reveal) 0.5s both;
+    }
+    .ss-title em { font-style: italic; color: var(--accent-mid); }
+
+    /* ── Screen Share Image layers (inside unified hero) ── */
+    .ss-img-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(2rem, 5vh, 4rem) clamp(2rem, 6vw, 6rem);
+      clip-path: inset(100% 0 0 0);
+      will-change: clip-path, opacity;
+    }
+    .ss-show-img {
+      max-width: 88%;
+      max-height: 84vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+    }
+
+    /* ── Name Tag Stage ── */
+    .nt-stage {
+      position: relative;
+      height: 350vh;
+      clip-path: inset(0);
+    }
+    .nt-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    .nt-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .nt-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .nt-vignette {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, transparent 22%),
+        linear-gradient(to top, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.25) 42%, transparent 62%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .nt-glass {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem clamp(2rem, 6vw, 6rem);
+      text-align: center;
+      pointer-events: none;
+      clip-path: inset(100% 0 0 0);
+    }
+    .nt-glass-body {
+      font-family: var(--font-serif);
+      font-size: clamp(17pt, 2.9vw, 34pt);
+      font-weight: var(--weight-regular);
+      color: rgba(255,255,255,0.90);
+      line-height: 1.35;
+      max-width: 1020px;
+      width: 90vw;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: transform, opacity;
+    }
+    .nt-glass-body em { font-style: italic; color: var(--accent-mid); }
+    .nt-content {
+      position: relative;
+      z-index: 4;
+      width: 100%;
+      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+    }
+    .nt-kicker {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.48);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fu 0.6s var(--ease-reveal) 0.3s both;
+    }
+    .nt-title {
+      font-family: var(--font-serif);
+      font-size: clamp(26pt, 5vw, 54pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.05;
+      margin: 0;
+      opacity: 0;
+      animation: fu 0.7s var(--ease-reveal) 0.5s both;
+    }
+    .nt-title em { font-style: italic; color: var(--accent-mid); }
+
+    /* ── Smart Theme Stage ── */
+    .st-stage {
+      position: relative;
+      height: 500vh;
+      margin-top: -100vh;
+      overflow: clip;
+      isolation: isolate;
+    }
+    .st-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      background-color: var(--dark);
+      background-image: var(--dot-grid-white-sm);
+      background-size: var(--dot-size-md);
+      isolation: isolate;
+    }
+    .st-grid {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 4rem clamp(6rem, 14vw, 16rem) 6rem clamp(2rem, 6vw, 6rem);
+    }
+    .st-hero-vid {
+      max-height: 72vh;
+      max-width: 55%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+      flex-shrink: 0;
+      opacity: 0;
+      transform: rotate(-5deg) scale(0.88);
+      transform-origin: center center;
+      will-change: opacity, transform;
+    }
+    .st-grid.on .st-hero-vid { animation: ut-img-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s both; }
+    .st-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+      z-index: 4;
+      max-width: 50%;
+    }
+    .st-kicker {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.48);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fu 0.6s var(--ease-reveal) 0.3s both;
+    }
+    .st-title {
+      font-family: var(--font-serif);
+      font-size: clamp(22pt, 3.8vw, 44pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.05;
+      margin: 0;
+      opacity: 0;
+      animation: fu 0.7s var(--ease-reveal) 0.5s both;
+    }
+    .st-title em { font-style: italic; color: var(--accent-mid); }
+    .st-glass {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem clamp(2rem, 6vw, 6rem);
+      text-align: center;
+      pointer-events: none;
+      clip-path: inset(100% 0 0 0);
+    }
+    .st-glass-body {
+      font-family: var(--font-serif);
+      font-size: clamp(16pt, 2.2vw, 26pt);
+      font-weight: var(--weight-regular);
+      color: rgba(255,255,255,0.92);
+      line-height: 1.45;
+      max-width: 1080px;
+      width: 92vw;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: transform, opacity;
+    }
+    .st-glass-body em { font-style: italic; color: var(--accent-mid); }
+
+    /* ── Atomic Design System Panel Stage ── */
+    .ds2-stage {
+      position: relative;
+      height: 500vh;
+      overflow: clip;
+      isolation: isolate;
+    }
+    .ds2-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      background-color: var(--dark);
+      background-image: var(--dot-grid-white-sm);
+      background-size: var(--dot-size-md);
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: clamp(3rem, 5vw, 6rem);
+      align-items: center;
+      padding: clamp(4rem, 8vh, 6rem) clamp(2rem, 6vw, 6rem);
+    }
+    .ads-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .ads-kicker {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.48);
+      margin-bottom: 0.75rem;
+    }
+    .ads-title {
+      font-family: var(--font-serif);
+      font-size: clamp(22pt, 3.8vw, 44pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.05;
+      margin: 0 0 1.5rem;
+    }
+    .ads-title em { font-style: italic; color: var(--accent-mid); }
+    /* Text swap container */
+    .ads-text-swap {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .ads-body {
+      position: relative;
+      font-size: var(--text-body);
+      font-weight: var(--weight-regular);
+      color: rgba(255,255,255,0.60);
+      line-height: 1.70;
+      max-width: 640px;
+      margin: 0;
+      opacity: 1;
+      will-change: opacity;
+    }
+    .ads-body-alt {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      font-size: var(--text-body);
+      font-weight: var(--weight-regular);
+      color: rgba(255,255,255,0.60);
+      line-height: 1.70;
+      max-width: 640px;
+    }
+    .ads-body em, .ads-body-alt em { color: rgba(255,255,255,0.92); font-style: normal; }
+    .ads-body-alt {
+      opacity: 0;
+      transform: translateY(14px);
+      will-change: opacity, transform;
+    }
+    .ads-outcomes {
+      list-style: none;
+      padding: 0;
+      margin: 0.85rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .ads-outcomes li {
+      font-size: var(--text-body-sm);
+      color: rgba(255,255,255,0.55);
+      padding-left: 1rem;
+      position: relative;
+    }
+    .ads-outcomes li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: var(--accent-mid);
+      font-weight: var(--weight-semibold);
+    }
+    .ads-outcomes li em { color: rgba(255,255,255,0.85); font-style: normal; }
+    .ads-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.65rem 1.5rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255,255,255,0.22);
+      background: transparent;
+      font-family: var(--font-sans);
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-medium);
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: border-color 0.2s ease, color 0.2s ease;
+      opacity: 1;
+      will-change: opacity;
+    }
+    .ads-cta:hover { border-color: var(--accent-mid); color: #fff; }
+    /* Right column */
+    .ads-right {
+      position: relative;
+      height: 80vh;
+      display: flex;
+      align-items: center;
+    }
+    .ads-vid-wrap {
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      opacity: 0;
+      transform: rotate(-5deg) scale(0.88);
+      transform-origin: center center;
+      will-change: opacity, transform;
+    }
+    .ads-right.on .ads-vid-wrap { animation: ut-img-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s both; }
+    .ads-vid {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .ads-metrics {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-content: center;
+      opacity: 0;
+      transform: translateY(20px);
+      will-change: opacity, transform;
+    }
+
+    /* ── Weather Person Mode Stage ── */
+    .wpm-stage {
+      position: relative;
+      height: 500vh;
+      margin-top: -100vh;
+      background-color: var(--warm);
+      background-image: var(--dot-grid-mid);
+      background-size: var(--dot-size-md);
+      isolation: isolate;
+      overflow: clip; /* clips sticky overflow without breaking sticky or the shadow */
+    }
+    .wpm-panel {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 600px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: clamp(3rem, 5vw, 6rem);
+      align-items: center;
+      padding: 0 clamp(2rem, 6vw, 6rem);
+      overflow: hidden;
+    }
+    .wpm-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .wpm-right {
+      position: relative;
+      align-self: stretch; /* fills full 100vh panel height */
+    }
+    .wpm-img-wrap {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: calc(-1 * clamp(2rem, 6vw, 6rem)); /* extend to viewport right edge */
+      overflow: visible;
+      display: flex;
+      justify-content: flex-end; /* image right-edge = viewport right */
+      will-change: opacity, transform;
+    }
+    .wpm-img-wrap img {
+      height: 100%;
+      width: auto;
+      max-width: none;
+      flex-shrink: 0;
+      display: block;
+      opacity: 0;
+      transform: rotate(-5deg) scale(0.88);
+      transform-origin: center center;
+    }
+    .wpm-img-wrap.on img {
+      animation: ut-img-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s both;
+    }
+    .wpm-body-reveal {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.3rem;
+      pointer-events: none;
+    }
+    .wpm-body-reveal .bp {
+      margin-bottom: 0;
+      opacity: 0;
+      transform: translateY(16px);
+      will-change: opacity, transform;
+    }
+    /* ── WPM image layers — inside .wpm-right ── */
+    .wpm-img-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--warm);
+      background-image: var(--dot-grid-mid);
+      background-size: var(--dot-size-md);
+      clip-path: inset(100% 0 0 0);
+      will-change: clip-path, opacity;
+    }
+    .wpm-show-img {
+      max-width: 88%;
+      max-height: 84vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+    }
+    @media (max-width: 860px) {
+      .wpm-panel { grid-template-columns: 1fr; align-items: start; padding-top: 5rem; }
+      .wpm-show-img { max-width: 95%; }
+    }
+
+    /* ── Panel Architecture — sticky 2-col stage ── */
+    .pan-stage {
+      position: relative;
+      height: 450vh;
+      background-color: var(--page);
+      background-image: var(--dot-grid-light);
+      background-size: var(--dot-size-md);
+      isolation: isolate;
+      overflow: clip;
+    }
+    .pan-panel {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 600px;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: clamp(3rem, 5vw, 6rem);
+      align-items: center;
+      padding: 0 clamp(2rem, 6vw, 6rem);
+      overflow: hidden;
+    }
+    .pan-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .pan-right {
+      position: relative;
+      align-self: stretch;
+      display: flex;
+      align-items: center;
+    }
+    .pan-img-wrap {
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      will-change: opacity, transform;
+    }
+    .pan-img-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      opacity: 0;
+      transform: rotate(-5deg) scale(0.88);
+      transform-origin: center center;
+    }
+    .pan-img-wrap.on img {
+      animation: ut-img-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s both;
+    }
+    .pan-img-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--page);
+      background-image: var(--dot-grid-light);
+      background-size: var(--dot-size-md);
+      clip-path: inset(100% 0 0 0);
+      will-change: clip-path;
+    }
+    .pan-show-img {
+      max-width: 88%;
+      max-height: 84vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+    }
+    /* View IA button */
+    .pan-ia-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1.75rem;
+      padding: 0.65rem 1.5rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(0,0,0,0.18);
+      background: transparent;
+      font-family: var(--font-sans);
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-medium);
+      color: var(--ink);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+      align-self: flex-start;
+    }
+    .pan-ia-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+    /* ── IA Lightbox ── */
+    .ia-lb {
+      position: fixed;
+      inset: 0;
+      z-index: 99998;
+      background: rgba(8, 8, 20, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      overflow-y: auto;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      cursor: default;
+    }
+    /* Hide custom cursor inside lightbox; restore native cursor */
+    body.ia-lb-open #cur-dot,
+    body.ia-lb-open #cur-ring { opacity: 0 !important; }
+    body.ia-lb-open .ia-lb,
+    body.ia-lb-open .ia-lb * { cursor: default !important; }
+    body.ia-lb-open .ia-lb-close { cursor: pointer !important; }
+    .ia-lb.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .ia-lb-img {
+      max-width: min(88vw, 900px);
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      object-fit: contain;
+    }
+    .ia-lb-close {
+      position: fixed;
+      top: 1.25rem;
+      right: 1.25rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.15s;
+      z-index: 99999;
+    }
+    .ia-lb-close:hover {
+      background: rgba(255,255,255,0.22);
+      transform: scale(1.1);
+    }
+    @media (max-width: 860px) {
+      .pan-panel { grid-template-columns: 1fr; align-items: start; padding-top: 5rem; }
+      .pan-show-img { max-width: 95%; }
+    }
+
+    /* ── Preferences Redesign Stage — FTU-pattern ── */
+    .pref-stage {
+      position: relative;
+      height: 600vh;
+      overflow: clip;
+      isolation: isolate;
+    }
+    .pref-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      background-color: var(--page);
+      background-image: var(--dot-grid-mid);
+      background-size: var(--dot-size-md);
+      isolation: isolate;
+    }
+    /* Right — laptop mock, right-aligned, mirroring ftu-grid */
+    .pref-grid {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 4rem clamp(1rem, 3vw, 3rem) 6rem clamp(2rem, 6vw, 6rem);
+    }
+    .pref-hero-vid {
+      max-height: 72vh;
+      max-width: 55%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+      flex-shrink: 0;
+      opacity: 0;
+      transform: rotate(-5deg) scale(0.88);
+      transform-origin: center center;
+      will-change: opacity, transform;
+    }
+    .pref-grid.on .pref-hero-vid {
+      animation: ut-img-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s both;
+    }
+    /* Left — eyebrow + title + metrics, bottom-anchored */
+    .pref-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+      z-index: 4;
+      max-width: 50%;
+    }
+    .pref-kicker {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fu 0.6s var(--ease-reveal) 0.3s both;
+    }
+    .pref-title {
+      font-family: var(--font-serif);
+      font-size: clamp(22pt, 3.8vw, 44pt);
+      font-weight: var(--weight-regular);
+      color: var(--ink);
+      line-height: 1.05;
+      margin: 0;
+      opacity: 0;
+      animation: fu 0.7s var(--ease-reveal) 0.5s both;
+    }
+    .pref-title em { font-style: italic; color: var(--accent); }
+    /* Icon inside metric cells */
+    .ms-num-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      margin-bottom: 0.25rem;
+    }
+    .ms-icon {
+      font-size: 1.1rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    /* Glass overlay */
+    .pref-glass {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem clamp(2rem, 6vw, 6rem);
+      text-align: center;
+      pointer-events: none;
+      clip-path: inset(100% 0 0 0);
+    }
+    .pref-glass-body {
+      font-family: var(--font-serif);
+      font-size: clamp(16pt, 2.2vw, 26pt);
+      font-weight: var(--weight-regular);
+      color: var(--ink);
+      line-height: 1.45;
+      max-width: 1080px;
+      width: 92vw;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: transform, opacity;
+    }
+    .pref-glass-body em { font-style: italic; color: var(--accent); }
+    /* Image / video layers — no background so glass stays visible behind */
+    .pref-img-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(2rem, 5vh, 4rem) clamp(2rem, 6vw, 6rem);
+      clip-path: inset(100% 0 0 0);
+      will-change: clip-path, opacity;
+    }
+    .pref-show-img {
+      max-width: 88%;
+      max-height: 84vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+    }
+    /* Video layers — fixed width so both match each other */
+    .pref-img-layer video.pref-show-img {
+      width: 72%;
+      height: auto;
+      max-height: 84vh;
+    }
+    @media (max-width: 860px) {
+      .pref-content { max-width: 100%; position: relative; padding-top: 3rem; }
+      .pref-hero-vid { max-width: 90%; }
+      .pref-show-img { max-width: 95%; }
+    }
+
+    /* ── Outcomes section ── */
+    .oc-sec {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .oc-orbit-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .oc-orb {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border: 1px solid var(--accent-mid-a18);
+      border-radius: 50%;
+    }
+    .oc-orb-1 {
+      width: 112vmin; height: 112vmin;
+      animation: oc-spin 40s linear infinite;
+    }
+    .oc-orb-2 {
+      width: 74vmin; height: 74vmin;
+      animation: oc-spin 58s linear infinite reverse;
+    }
+    .oc-orb-3 {
+      width: 44vmin; height: 44vmin;
+      opacity: 0.5;
+    }
+    @keyframes oc-spin {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to   { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    .oc-orb-dot {
+      position: absolute;
+      width: 7px; height: 7px;
+      background: var(--accent-mid);
+      border-radius: 50%;
+      top: -3.5px; left: 50%; margin-left: -3.5px;
+      box-shadow: 0 0 10px var(--accent-mid), 0 0 20px var(--accent-a35);
+    }
+    .oc-header-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 5vw, 6rem);
+      align-items: center;
+      margin-bottom: clamp(2rem, 4vh, 3rem);
+    }
+    .oc-header-row h2.st { margin-bottom: 0; }
+    .oc-header-row .bp   { margin-bottom: 0; }
+    .oc-sec .pq {
+      background: rgba(255,255,255,0.72);
+      margin: 0;
+      border-radius: 0 var(--radius-card-sm) var(--radius-card-sm) 0;
+    }
+    .oc-grid-wrap {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--gap-grid-tight);
+    }
+    .oc-sec .oc {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.80);
+      border-color: rgba(0,0,0,0.08);
+      border-radius: var(--radius-card-md);
+      padding: 1.75rem 2rem;
+      transition:
+        border-color var(--dur-base) var(--ease-base),
+        box-shadow var(--dur-base) var(--ease-base),
+        background var(--dur-base) var(--ease-base),
+        transform var(--dur-base) var(--ease-spring);
+    }
+    .oc-sec .oc:hover {
+      border-color: var(--accent-a25);
+      box-shadow: 0 0 0 1px var(--accent-a10), 0 12px 32px var(--accent-a08);
+      background: rgba(255,255,255,0.96);
+      transform: translateY(-2px);
+    }
+    .oc-sec .oc-num {
+      font-family: var(--font-sans);
+      font-size: clamp(26pt, 3.2vw, 44pt);
+      font-weight: var(--weight-regular);
+      color: var(--accent);
+      letter-spacing: -0.01em;
+    }
+    .oc-sec .oc-label {
+      font-size: var(--text-ui);
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
+      color: var(--ink-light);
     }
   </style>
 </head>
@@ -629,6 +2664,7 @@
 <div id="prog"></div>
 <div id="cur-dot"></div>
 <div id="cur-ring"><span id="cur-label">View</span></div>
+<div id="mag-lens" aria-hidden="true"><canvas id="mag-canvas" width="180" height="180"></canvas></div>
 <button id="back-top" aria-label="Back to top">
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
     <path d="M7 11V3M3 6.5L7 3l4 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -680,6 +2716,7 @@
   <button class="cs-sidenav-dot"        data-label="Video Layouts"   data-target="video-layouts"></button>
   <button class="cs-sidenav-dot"        data-label="Meetings"        data-target="meetings"></button>
   <button class="cs-sidenav-dot"        data-label="Design System"   data-target="design-system"></button>
+  <button class="cs-sidenav-dot"        data-label="Outcomes"        data-target="outcomes"></button>
 </nav>
 
 
@@ -718,24 +2755,6 @@
   </div>
 </div>
 
-<!-- ── COLOUR BRIDGE hero → video ── -->
-<div class="bj-video-bridge"></div>
-
-<!-- ── FULL BLEED VIDEO ── -->
-<div class="bj-video-sec" id="bj-video-sec">
-  <div class="bj-video-frame">
-    <iframe id="bj-yt"
-      src="https://www.youtube.com/embed/AgjdPxQYazI?enablejsapi=1&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&showinfo=0"
-      allow="autoplay; encrypted-media; fullscreen"
-      allowfullscreen
-      title="BlueJeans by Verizon">
-    </iframe>
-    <!-- Blocks hover so YouTube UI chrome never surfaces -->
-    <div class="bj-yt-shield"></div>
-  </div>
-</div>
-
-
 <!-- Tag marquee -->
 <div class="marquee-wrap">
   <div class="marquee-track">
@@ -758,129 +2777,346 @@
 </div>
 
 
-<!-- Stat strip — flush below marquee -->
-<div class="bj-stat-strip">
-  <div class="bj-stat-cell">
-    <div class="bj-stat-num">900+</div>
-    <div class="bj-stat-label">Design System Components</div>
+<!-- ── 3-part Case Study Overview ── -->
+<section class="bj-overview" id="bj-overview">
+  <!-- Orbital rings — same as How I Work section -->
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
   </div>
-  <div class="bj-stat-cell">
-    <div class="bj-stat-num">12%</div>
-    <div class="bj-stat-label">Increase in Feature Usage</div>
+  <div class="bj-overview-head">
+    <div class="bj-overview-eyebrow r d1">Case Study Overview</div>
+    <h2 class="bj-overview-title r d2">Three parallel tracks.<br><em>One unified platform.</em></h2>
   </div>
-  <div class="bj-stat-cell">
-    <div class="bj-stat-num">85%</div>
-    <div class="bj-stat-label">Reduction in Task Completion Time</div>
-  </div>
-  <div class="bj-stat-cell">
-    <div class="bj-stat-num">5×</div>
-    <div class="bj-stat-label">Faster Prototyping</div>
-  </div>
-</div>
+  <div class="bj-overview-grid">
 
+    <!-- Block 01 — Remote Learning -->
+    <div class="bj-ov-block r d3">
+      <div class="bj-ov-num">01 / Remote Learning</div>
+      <div class="bj-ov-default">
+        <div class="bj-ov-block-title">Corporate Training<br>&amp; Remote Learning</div>
+        <div class="bj-ov-anim">
+          <div class="bj-anim-rings">
+            <div class="bj-anim-ring"></div>
+            <div class="bj-anim-ring"></div>
+            <div class="bj-anim-ring"></div>
+            <div class="bj-anim-dot"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bj-ov-hover">
+        <div class="bj-ov-hover-num">01</div>
+        <div class="bj-ov-hover-title">Corporate Training &amp; Remote Learning</div>
+        <p class="bj-ov-desc">Design Lead for remote learning transformation. Designed the digital classroom experience adopted by Verizon Training, University of Michigan, and Wharton School of Pennsylvania.</p>
+        <a href="#remote-learning" class="bj-ov-cta">Explore section</a>
+      </div>
+    </div>
+
+    <!-- Block 02 — BlueJeans Meetings -->
+    <div class="bj-ov-block r d4">
+      <div class="bj-ov-num">02 / BlueJeans Meetings</div>
+      <div class="bj-ov-default">
+        <div class="bj-ov-block-title">BlueJeans<br>Meetings</div>
+        <div class="bj-ov-anim">
+          <div class="bj-anim-sliders">
+            <div class="bj-anim-slider-row">
+              <div class="bj-anim-slider-track"><div class="bj-anim-slider-fill"></div></div>
+              <div class="bj-anim-slider-knob"></div>
+            </div>
+            <div class="bj-anim-slider-row">
+              <div class="bj-anim-slider-track"><div class="bj-anim-slider-fill"></div></div>
+              <div class="bj-anim-slider-knob"></div>
+            </div>
+            <div class="bj-anim-slider-row">
+              <div class="bj-anim-slider-track"><div class="bj-anim-slider-fill"></div></div>
+              <div class="bj-anim-slider-knob"></div>
+            </div>
+            <div class="bj-anim-slider-row">
+              <div class="bj-anim-slider-track"><div class="bj-anim-slider-fill"></div></div>
+              <div class="bj-anim-slider-knob"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bj-ov-hover">
+        <div class="bj-ov-hover-num">02</div>
+        <div class="bj-ov-hover-title">BlueJeans Meetings</div>
+        <p class="bj-ov-desc">Preferences redesign drove 12% increase in feature usage and 85% reduction in task completion time. Computer vision POCs and Meta partnership expanded the platform's capabilities.</p>
+        <a href="#meetings" class="bj-ov-cta">Explore section</a>
+      </div>
+    </div>
+
+    <!-- Block 03 — Design System -->
+    <div class="bj-ov-block r d5">
+      <div class="bj-ov-num">03 / Design System</div>
+      <div class="bj-ov-default">
+        <div class="bj-ov-block-title">Blue<br>Design System</div>
+        <div class="bj-ov-anim">
+          <div class="bj-anim-comp-grid">
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+            <div class="bj-anim-comp-cell"></div><div class="bj-anim-comp-cell"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bj-ov-hover">
+        <div class="bj-ov-hover-num">03</div>
+        <div class="bj-ov-hover-title">Blue Design System</div>
+        <p class="bj-ov-desc">900+ components built with atomic design principles. Set a 29-second page design record. Became the foundation for Verizon's design system migration and cut feature development time by 85%.</p>
+        <a href="#design-system" class="bj-ov-cta">Explore section</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
 
 <!-- ══════════════════════════════════════
-     SECTION 01 — CHAPTER BANNER
+     SECTION 01 — REMOTE LEARNING STICKY STAGE
 ══════════════════════════════════════ -->
-<div class="part-banner" id="remote-learning">
-  <div class="part-ghost">01</div>
-  <div class="part-banner-inner">
-    <div class="part-eyebrow r">Section One</div>
-    <h2 class="part-h r d1">Corporate Training<br>&amp; <em>Remote Learning</em></h2>
-    <p class="part-desc r d2">How design supported remote learning transformation, digital classroom systems, and human connection at scale — in the middle of a global pandemic.</p>
+<div class="rl-stage" id="remote-learning">
+  <div class="rl-panel" id="rl-panel">
+
+    <div class="rl-bg"></div>
+
+    <!-- "01" editorial — top left, floating -->
+    <div class="rl-num" aria-hidden="true">01</div>
+
+    <!-- Content layer: centered text -->
+    <div class="rl-content" id="rl-content">
+      <div class="rl-content-left">
+        <div class="rl-eyebrow r d1">Section One</div>
+        <h2 class="rl-h r d2">Corporate Training<br>&amp; <em>Remote Learning</em></h2>
+        <p class="rl-desc r d3">How design supported remote learning transformation, digital classroom systems, and human connection at scale, in the middle of a global pandemic.</p>
+      </div>
+    </div>
+
+    <!-- YouTube full-bleed layer — scroll-driven reveal -->
+    <div class="rl-yt-layer" id="rl-yt-layer">
+      <div class="rl-yt-frame">
+        <iframe id="rl-yt"
+          src="https://www.youtube.com/embed/axm-bN7bJ8k?enablejsapi=1&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&showinfo=0&autoplay=1&mute=1"
+          allow="autoplay; encrypted-media; fullscreen"
+          allowfullscreen
+          title="Remote Learning — BlueJeans by Verizon">
+        </iframe>
+        <div class="rl-yt-shield"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 
-<!-- ── 01 · INTRO ── -->
-<section class="cs-sec bg-page">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">01 · Context</div>
-    <h2 class="st r d2">Building the digital classroom<br>as the world moved <em>online</em>.</h2>
+<!-- ── CONTEXT + PARTNER ADOPTION — scroll-cover stack ── -->
+<div class="context-stack">
 
-    <div class="g2" style="margin-top:2rem;">
-      <div>
-        <p class="bp r d2">As Design Lead for the Remote Learning product, I helped shape a virtual classroom experience designed to support both teaching and human connection at scale.</p>
-        <p class="bp r d3">The platform was adopted by organizations including <strong>Verizon Training, the University of Michigan, Wharton School of Pennsylvania,</strong> and many others — validating its impact across education and enterprise learning environments.</p>
-        <p class="bp r d4">The challenge wasn't building a video tool. It was designing a system capable of holding the complexity of a real classroom: teaching, visibility, communication, engagement, and management — simultaneously.</p>
+<!-- ── 01 · CONTEXT ── -->
+<section class="cs-sec bg-page bj-context-sec bj-context-sticky" style="padding-top:9rem;">
+  <div class="sec-inner">
+    <div class="sec-ch r">01 · Context</div>
+    <h2 class="st r d1">Building the digital classroom<br>as the world moved <em>online</em>.</h2>
+    <p class="bp r d2" style="max-width:780px;">As Design Lead for the Remote Learning product, I helped redefine what a virtual classroom could be when physical classrooms were no longer an option. The challenge was not building another video conferencing product. It was designing an environment capable of supporting the complexity of real learning. Teaching, communication, participation, classroom management, and human connection all needed to coexist within a single experience.</p>
+    <div class="pullquote r d3" style="max-width:780px;">
+      <p>Technology kept people connected during the pandemic. Design determined whether those interactions felt transactional or genuinely human.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── PARTNER ADOPTION ── -->
+<section class="cs-sec bg-page bj-context-sec bj-partner-cover" style="padding-bottom:9rem;">
+  <div class="sec-inner">
+    <div class="sec-ch r">02 · Partner Adoption</div>
+    <h2 class="st r d1">Adopted across enterprise<br>and <em>higher education</em>.</h2>
+    <p class="bp r d2" style="max-width:860px;">Adopted by organizations including Verizon Training, the University of Michigan, and the Wharton School, the platform served educators, students, and enterprise learners during a period when digital communication became a critical part of everyday life. Its success across diverse learning environments demonstrated that the experience could support far more than video conferencing, accommodating the complexity of real classrooms, training programs, and collaborative learning at scale.</p>
+
+    <!-- Partner logos -->
+    <div class="phi-recog-card r d3" style="margin-top:2.5rem;">
+      <div class="phi-recog-meta">
+        <div class="phi-recog-title">Partner Institutions</div>
+        <p class="phi-recog-body">Universities, schools, and enterprise organizations that adopted the platform.</p>
       </div>
-      <div>
-        <div class="pullquote r d3">
-          <p>Digital communication became essential infrastructure during the pandemic. The question wasn't whether to build — it was how to build something human enough to hold real learning.</p>
-        </div>
+      <hr class="phi-recog-divider">
+      <div class="phi-recog-logos" style="gap:3.5rem;">
+        <img src="assets/bluejeans-by-verizon/logo-school/wharton.svg"      alt="Wharton School">
+        <img src="assets/bluejeans-by-verizon/logo-school/northwestern.svg"  alt="Northwestern University">
+        <img src="assets/bluejeans-by-verizon/logo-school/michigan.svg"      alt="University of Michigan">
+        <img src="assets/bluejeans-by-verizon/logo-school/viterbi.svg"       alt="USC Viterbi">
+        <img src="assets/bluejeans-by-verizon/logo-school/khan.svg"          alt="Khan Academy">
+        <img src="assets/bluejeans-by-verizon/logo-school/northwood.svg"     alt="Northwood University">
+        <img src="assets/bluejeans-by-verizon/logo-school/stevenson.svg"     alt="Stevenson University">
+        <img src="assets/bluejeans-by-verizon/logo-school/fuller.svg"        alt="Fuller Seminary">
+        <img src="assets/bluejeans-by-verizon/logo-school/bcnet.svg"         alt="BCNet">
+        <img src="assets/bluejeans-by-verizon/logo-school/louisville.svg"    alt="University of Louisville">
+      </div>
+    </div>
 
-        <!-- Partner organizations -->
-        <div class="partners-row r d4">
-          <div class="partner-cell">
-            <div class="partner-name">Verizon Training</div>
-            <div class="partner-type">Enterprise</div>
-          </div>
-          <div class="partner-cell">
-            <div class="partner-name">University of Michigan</div>
-            <div class="partner-type">Higher Education</div>
-          </div>
-          <div class="partner-cell">
-            <div class="partner-name">Wharton School</div>
-            <div class="partner-type">Higher Education</div>
-          </div>
-          <div class="partner-cell">
-            <div class="partner-name">+ Many Others</div>
-            <div class="partner-type">Global Adoption</div>
-          </div>
-        </div>
+    <!-- Partner quotes -->
+    <div class="bj-quote-grid">
+
+      <div class="bj-quote-card r d3">
+        <div class="bj-quote-mark">&ldquo;</div>
+        <p class="bj-quote-text">After experimenting with different solutions, BlueJeans was by far superior to other tools.</p>
+        <div class="bj-quote-rule"></div>
+        <div class="bj-quote-name">Todd Austin</div>
+        <div class="bj-quote-role">Videoconferencing Lead, College of Literature,<br>Science &amp; the Arts,<br>University of Michigan</div>
+      </div>
+
+      <div class="bj-quote-card r d4">
+        <div class="bj-quote-mark">&ldquo;</div>
+        <p class="bj-quote-text">On a daily basis, BlueJeans affects our culture. It lets us incorporate the world into our classroom. That's the direction we're moving as a global business school.</p>
+        <div class="bj-quote-rule"></div>
+        <div class="bj-quote-name">Dan Alig</div>
+        <div class="bj-quote-role">CIO<br>Wharton School &amp; UPenn</div>
+      </div>
+
+      <div class="bj-quote-card r d5">
+        <div class="bj-quote-mark">&ldquo;</div>
+        <p class="bj-quote-text">If we were to look at another product... I have a hard time believing their customer support could do the things BlueJeans does. To me, that puts BlueJeans above the rest.</p>
+        <div class="bj-quote-rule"></div>
+        <div class="bj-quote-name">Steve Engorn</div>
+        <div class="bj-quote-role">Former CIO<br>Stevenson University</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</div><!-- /context-stack -->
+
+<!-- ── USER TESTING ── -->
+<div class="ut-stage bg-warm" id="ut-stage">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="ut-panel">
+    <div class="ut-left">
+      <div class="sec-ch r d1">03 · User Research &amp; Testing</div>
+      <h2 class="st r d2">Research that adapted<br>to <em>pandemic constraints</em>.</h2>
+    </div>
+    <div class="ut-right">
+      <div class="ut-img-wrap" id="ut-img">
+        <img src="assets/bluejeans-by-verizon/user-testing-mock.png" alt="BlueJeans — user testing process">
+      </div>
+      <div class="ut-body-reveal" id="ut-body">
+        <p class="bp">During the pandemic, traditional in-person research became impossible. User testing shifted entirely online through platforms including usabilityhub and usertesting.com.</p>
+        <p class="bp">Through extensive A/B testing, heat map analysis, event tracking, and expert interviews, we continuously refined the product around real classroom behavior rather than assumptions.</p>
+        <p class="bp">Educators across multiple grade levels participated in cognitive walkthroughs, helping validate whether the platform addressed the realities of teaching, engagement, and classroom management in a remote environment.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── KEY INSIGHTS + FEATURE ARCHITECTURE — scroll-cover stack ── -->
+<div class="context-stack">
+
+<!-- ── RESEARCH INSIGHTS ── -->
+<section class="cs-sec bg-dark bj-context-sticky" style="padding-top:8rem;padding-bottom:12rem;">
+  <div class="sec-inner">
+    <div class="ki-header">
+      <div>
+        <div class="sec-ch r d1" style="color:var(--accent-mid);">06 · Key Insights</div>
+        <h2 class="st-d r d2">What the research<br><em>actually revealed</em>.</h2>
+      </div>
+      <div class="pullquote-d r d3">
+        <p>The insights were behavioral, not cosmetic. They changed what we built, not just how we built it.</p>
+      </div>
+    </div>
+
+    <div class="g3" style="gap:1.25rem;">
+      <div class="insight-d r d2">
+        <div class="insight-emoji">🧠</div>
+        <div class="insight-d-label">Cognitive Load</div>
+        <p class="insight-d-body">Instructors managing a live classroom were operating at cognitive capacity. <strong>Every extra click was an error waiting to happen.</strong> Controls needed to be anticipatory, not reactive.</p>
+      </div>
+      <div class="insight-d r d3">
+        <div class="insight-emoji">👁️</div>
+        <div class="insight-d-label">Visibility Gap</div>
+        <p class="insight-d-body">Students felt <strong>invisible in large classes.</strong> When they couldn't see themselves or gauge participation, engagement dropped. Presence signals mattered more than we expected.</p>
+      </div>
+      <div class="insight-d r d4">
+        <div class="insight-emoji">🔄</div>
+        <div class="insight-d-label">Context Switching</div>
+        <p class="insight-d-body">Educators lost significant time moving between tools: slides, roster, chat, participant controls. <strong>Reducing context switching was the highest-leverage design intervention.</strong></p>
+      </div>
+      <div class="insight-d r d2">
+        <div class="insight-emoji">🛡️</div>
+        <div class="insight-d-label">Trust in the Platform</div>
+        <p class="insight-d-body">Technical failures during live sessions caused disproportionate loss of student trust. <strong>Stability and recovery behavior mattered more than any feature.</strong></p>
+      </div>
+      <div class="insight-d r d3">
+        <div class="insight-emoji">⚡</div>
+        <div class="insight-d-label">Onboarding Friction</div>
+        <p class="insight-d-body">First-session setup consistently blocked instructors from focusing on teaching. <strong>The FTU experience needed to establish confidence, not just configure settings.</strong></p>
+      </div>
+      <div class="insight-d r d4">
+        <div class="insight-emoji">🎓</div>
+        <div class="insight-d-label">Grade-Level Variance</div>
+        <p class="insight-d-body">Classroom needs varied sharply between K-12, higher ed, and enterprise. <strong>A one-size UI failed all of them.</strong> Configurability wasn't optional, it was the product.</p>
       </div>
     </div>
   </div>
 </section>
 
-
-<!-- ── DASHBOARD VIDEO ── -->
-<section class="cs-sec bg-dark">
-  <div class="sec-inner">
-    <div class="sec-ch r d1" style="color:var(--accent-mid);">02 · Remote Learning Dashboard</div>
-    <h2 class="st-d r d2">The virtual classroom<br><em>in motion</em>.</h2>
-    <p class="bp-d r d3" style="max-width:560px;">The dashboard was the operational center of the classroom — attendance, content, communication, and participant management converging in one environment.</p>
-
-    <div class="cs-video-wrap r d3">
-      <video controls muted playsinline preload="metadata"
-             aria-label="BlueJeans Remote Learning Dashboard">
-        <source src="assets/bluejeans-by-verizon/remote-learning-dashboard.mp4" type="video/mp4">
-      </video>
-    </div>
-  </div>
-</section>
-
-
-<!-- ── PARTNER QUOTES + ASSETS ── -->
-<section class="cs-sec bg-warm">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">03 · Partner Adoption</div>
-    <h2 class="st r d2">Adopted across enterprise<br>and <em>higher education</em>.</h2>
-    <p class="bp r d3" style="max-width:580px;margin-bottom:2rem;">The platform's adoption by leading organizations validated that the design worked not just for corporate training, but for the full complexity of higher education classrooms.</p>
-
-    <div class="cs-img-frame r d3">
-      <img src="assets/bluejeans-by-verizon/remote-learning- partners.png"
-           alt="BlueJeans Remote Learning — partner organizations and adoption">
-      <div class="cs-img-caption">Platform adoption across enterprise training and higher education</div>
-    </div>
-  </div>
-</section>
 
 
 <!-- ── FEATURE CLUSTERS ── -->
-<section class="cs-sec bg-page">
+<section class="cs-sec bg-page bj-cover-sticky" style="z-index: 2;">
   <div class="sec-inner">
     <div class="sec-ch r d1">04 · Feature Architecture</div>
     <h2 class="st r d2">Four themes.<br>One <em>coherent system</em>.</h2>
     <p class="bp r d2" style="max-width:580px;margin-bottom:0;">Rather than a feature list, the platform was organized around the real jobs an instructor and learner perform simultaneously.</p>
 
-    <div class="fc-grid r d2">
+    <div class="fc-grid">
 
-      <div class="fc-card">
+      <div class="fc-card r d2">
         <div class="fc-num">01</div>
         <div class="fc-label">Classroom Management</div>
         <div class="fc-title">Control without distraction</div>
-        <p class="fc-body">Instructors needed authority over their classroom without constant micro-management. Attendance, muting, participant visibility, and focus controls had to feel natural — not surgical.</p>
+        <p class="fc-body">Instructors needed authority over their classroom without constant micro-management. Attendance, muting, participant visibility, and focus controls had to feel natural, not surgical.</p>
         <ul class="fc-items">
           <li>Attendance &amp; roster management</li>
           <li>Smart mute &amp; spotlight controls</li>
@@ -889,11 +3125,11 @@
         </ul>
       </div>
 
-      <div class="fc-card">
+      <div class="fc-card r d3">
         <div class="fc-num">02</div>
         <div class="fc-label">Collaboration &amp; Engagement</div>
         <div class="fc-title">Presence in a virtual room</div>
-        <p class="fc-body">Passive video watching is not learning. The platform needed engagement mechanisms that felt organic — not gamified. Reactions, annotations, and live polling closed the loop between instructor and student.</p>
+        <p class="fc-body">Passive video watching is not learning. The platform needed engagement mechanisms that felt organic, not gamified. Reactions, annotations, and live polling closed the loop between instructor and student.</p>
         <ul class="fc-items">
           <li>Live reactions &amp; emoji responses</li>
           <li>Shared annotation tools</li>
@@ -902,7 +3138,7 @@
         </ul>
       </div>
 
-      <div class="fc-card">
+      <div class="fc-card r d4">
         <div class="fc-num">03</div>
         <div class="fc-label">Flexible Learning</div>
         <div class="fc-title">Adapts to every classroom dynamic</div>
@@ -915,11 +3151,11 @@
         </ul>
       </div>
 
-      <div class="fc-card">
+      <div class="fc-card r d5">
         <div class="fc-num">04</div>
         <div class="fc-label">Smart Communication</div>
         <div class="fc-title">The right channel at the right moment</div>
-        <p class="fc-body">Communication in a classroom is layered — instructor to group, instructor to individual, student to student. The design made each channel accessible without interrupting the primary teaching flow.</p>
+        <p class="fc-body">Communication in a classroom is layered: instructor to group, instructor to individual, student to student. The design made each channel accessible without interrupting the primary teaching flow.</p>
         <ul class="fc-items">
           <li>Contextual direct messaging</li>
           <li>Broadcast announcements</li>
@@ -932,571 +3168,632 @@
   </div>
 </section>
 
+<!-- ── DASHBOARD VIDEO ── -->
+<section class="cs-sec bg-dark rl-dash-sec bj-cover-sticky" style="z-index: 3;">
+  <div>
+    <div class="rl-dash-layout">
 
-<!-- ── USER TESTING ── -->
-<section class="cs-sec bg-warm">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">05 · User Research &amp; Testing</div>
-    <h2 class="st r d2">Research that adapted<br>to <em>pandemic constraints</em>.</h2>
-
-    <div class="g2" style="margin-top:2rem;">
-      <div>
-        <p class="bp r d2">During the pandemic, traditional in-person research became impossible. User testing shifted entirely online through platforms including usabilityhub and usertesting.com.</p>
-        <p class="bp r d3">Through extensive A/B testing, heat map analysis, event tracking, and expert interviews, we continuously refined the product around real classroom behavior rather than assumptions.</p>
-        <p class="bp r d4">Educators across multiple grade levels participated in cognitive walkthroughs, helping validate whether the platform addressed the realities of teaching, engagement, and classroom management in a remote environment.</p>
+      <!-- left: text -->
+      <div class="rl-dash-left">
+        <div class="sec-ch r d1" style="color:var(--accent-mid);">02 · Remote Learning Dashboard</div>
+        <h2 class="st-d r d2">The virtual classroom<br><em>in motion</em>.</h2>
+        <p class="bp-d r d3">The dashboard was the operational center of the classroom: attendance, content, communication, and participant management converging in one environment.</p>
       </div>
-      <div>
-        <div class="cs-img-frame r d3" style="margin-top:0;">
-          <img src="assets/bluejeans-by-verizon/user-testing.png"
-               alt="BlueJeans — user testing process">
-          <div class="cs-img-caption">Remote user testing sessions — pandemic-adapted research methodology</div>
+
+      <!-- right: iMac mockup -->
+      <div class="rl-imac-wrap r d2">
+        <img src="assets/bluejeans-by-verizon/blue_iMac.png" alt="BlueJeans Remote Learning Dashboard on iMac">
+        <div class="rl-imac-screen">
+          <video id="rl-video" autoplay muted loop playsinline
+                 aria-label="BlueJeans Remote Learning Dashboard">
+            <source src="assets/bluejeans-by-verizon/remote-learning-dashboard.mp4" type="video/mp4">
+          </video>
         </div>
       </div>
-    </div>
 
-    <!-- User interview photos -->
-    <div class="interview-grid r d3">
-      <img src="assets/bluejeans-by-verizon/user-interview-01.png" alt="User interview session 1">
-      <img src="assets/bluejeans-by-verizon/user-interview-02.png" alt="User interview session 2">
-      <img src="assets/bluejeans-by-verizon/user-interview-03.png" alt="User interview session 3">
-      <img src="assets/bluejeans-by-verizon/user-interview-04.png" alt="User interview session 4">
-      <img src="assets/bluejeans-by-verizon/user-interview-05.png" alt="User interview session 5">
     </div>
   </div>
 </section>
 
 
-<!-- ── RESEARCH INSIGHTS ── -->
-<section class="cs-sec bg-dark">
-  <div class="sec-inner">
-    <div class="sec-ch r d1" style="color:var(--accent-mid);">06 · Key Insights</div>
-    <h2 class="st-d r d2">What the research<br><em>actually revealed</em>.</h2>
-    <p class="bp-d r d3" style="max-width:560px;margin-bottom:2.5rem;">The insights were behavioral, not cosmetic. They changed what we built — not just how we built it.</p>
 
-    <div class="g3" style="gap:1rem;">
-      <div class="insight-d r d2">
-        <div class="insight-d-label">Cognitive Load</div>
-        <p class="insight-d-body">Instructors managing a live classroom were operating at cognitive capacity. <strong>Every extra click was an error waiting to happen.</strong> Controls needed to be anticipatory, not reactive.</p>
+<!-- ── FTU HERO STAGE ── -->
+<div class="ftu-stage bj-partner-cover" id="ftu-stage" style="z-index: 4;">
+  <section class="ftu-hero">
+
+    <!-- Orbit rings -->
+    <div class="hiw-orbs" aria-hidden="true">
+      <div class="hiw-orb hiw-orb-tr">
+        <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
       </div>
-      <div class="insight-d r d3">
-        <div class="insight-d-label">Visibility Gap</div>
-        <p class="insight-d-body">Students felt <strong>invisible in large classes.</strong> When they couldn't see themselves or gauge participation, engagement dropped. Presence signals mattered more than we expected.</p>
+      <div class="hiw-orb hiw-orb-bl">
+        <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
       </div>
-      <div class="insight-d r d4">
-        <div class="insight-d-label">Context Switching</div>
-        <p class="insight-d-body">Educators lost significant time moving between tools — slides, roster, chat, participant controls. <strong>Reducing context switching was the highest-leverage design intervention.</strong></p>
-      </div>
-      <div class="insight-d r d2">
-        <div class="insight-d-label">Trust in the Platform</div>
-        <p class="insight-d-body">Technical failures during live sessions caused disproportionate loss of student trust. <strong>Stability and recovery behavior mattered more than any feature.</strong></p>
-      </div>
-      <div class="insight-d r d3">
-        <div class="insight-d-label">Onboarding Friction</div>
-        <p class="insight-d-body">First-session setup consistently blocked instructors from focusing on teaching. <strong>The FTU experience needed to establish confidence, not just configure settings.</strong></p>
-      </div>
-      <div class="insight-d r d4">
-        <div class="insight-d-label">Grade-Level Variance</div>
-        <p class="insight-d-body">Classroom needs varied sharply between K-12, higher ed, and enterprise. <strong>A one-size UI failed all of them.</strong> Configurability wasn't optional — it was the product.</p>
-      </div>
+    </div>
+
+    <!-- Centered hero asset -->
+    <div class="ftu-grid r">
+      <img class="ftu-hero-asset"
+           src="assets/bluejeans-by-verizon/blue-group-mock.png"
+           alt="BlueJeans — group meeting mock">
+    </div>
+
+    <!-- Eyebrow + title pinned to bottom-left -->
+    <div class="ftu-content" id="ftu-content">
+      <div class="ftu-kicker">05 · First Time User Experience &amp; Entry Flow</div>
+      <h2 class="ftu-title">The first three minutes<br>set <em>everything</em>.</h2>
+    </div>
+
+    <!-- Light frosted glass — scroll driven, reveals body text -->
+    <div class="ftu-glass" id="ftu-glass" aria-hidden="true">
+      <p class="ftu-glass-body">Reducing <em>cognitive load,</em> establishing <em>classroom continuity,</em> and making the platform feel familiar before the first session started.</p>
+    </div>
+
+    <!-- Entry image: over glass (no background) -->
+    <div class="ftu-entry-layer" id="ftu-entry">
+      <img class="ftu-show-img zoom-img"
+           src="assets/bluejeans-by-verizon/blue-remote-learning-entry-flow.png"
+           alt="BlueJeans — remote learning entry flow">
+    </div>
+
+    <!-- Image 1: enter-exit-flow (opaque bg, replaces glass) -->
+    <div class="ftu-img-layer" id="ftu-layer-1">
+      <img class="ftu-show-img zoom-img"
+           src="assets/bluejeans-by-verizon/enter-exit-flow.jpg"
+           alt="BlueJeans — enter/exit classroom flow">
+    </div>
+
+    <!-- Image 2: ftu-responsive -->
+    <div class="ftu-img-layer" id="ftu-layer-2">
+      <img class="ftu-show-img zoom-img"
+           src="assets/bluejeans-by-verizon/ftu-responsive.jpg"
+           alt="BlueJeans FTU — responsive first-time use experience">
+    </div>
+
+    <!-- Image 3: remote-learning-expand-collapse -->
+    <div class="ftu-img-layer" id="ftu-layer-3">
+      <img class="ftu-show-img zoom-img"
+           src="assets/bluejeans-by-verizon/remote-learning-expand-collapse.jpg"
+           alt="BlueJeans — expand/collapse classroom state management">
+    </div>
+
+  </section>
+</div><!-- /.ftu-stage -->
+
+</div><!-- /context-stack (key-insights → feature-arch → dashboard → ftu chain) -->
+
+
+<!-- ── VIDEO LAYOUT SYSTEM STAGE ── -->
+<div class="vls-stage" id="video-layouts">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
     </div>
   </div>
-</section>
-
-
-<!-- ── FTU / ENTRY FLOW ── -->
-<section class="cs-sec bg-page">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">07 · First-Time Use &amp; Entry Flow</div>
-    <h2 class="st r d2">The first three minutes<br>set <em>everything</em>.</h2>
-    <p class="bp r d3" style="max-width:580px;">Reducing cognitive load, establishing classroom continuity, and making the platform feel familiar before the first session started.</p>
-
-    <div class="img-2up r d3">
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/ftu-responsive.jpg"
-             alt="BlueJeans FTU — responsive first-time use experience">
-        <div class="img-caption">FTU experience — responsive onboarding across device types</div>
-      </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/remote-learning-expand-collapse.jpg"
-             alt="BlueJeans — expand/collapse classroom state management">
-        <div class="img-caption">Expand / collapse — managing classroom environment transitions</div>
-      </div>
+  <div class="vls-panel">
+    <div class="vls-left">
+      <div class="sec-ch r d1">06 · Video Layout System</div>
+      <h2 class="st r d2">Designing for constant<br><em>adaptation</em>.</h2>
     </div>
-
-    <div class="img-2up r d4">
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/blue-remote-learning-entry-flow.png"
-             alt="BlueJeans — remote learning entry flow">
-        <div class="img-caption">Classroom entry flow — pre-session configuration &amp; setup</div>
+    <div class="vls-right">
+      <div class="vls-img-wrap" id="vls-img">
+        <img src="assets/bluejeans-by-verizon/blue-mock-gallery.png"
+             alt="BlueJeans — video layout gallery mock">
       </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/enter-exit-flow.jpg"
-             alt="BlueJeans — enter/exit classroom flow">
-        <div class="img-caption">Enter / exit flow — environment transitions without disruption</div>
+      <div class="vls-body-reveal" id="vls-body">
+        <p class="bp">Designing the virtual classroom meant designing for constant adaptation. Every participant, teaching style, and classroom dynamic demanded flexibility, while technical infrastructure imposed strict limitations on layout behavior and rendering logic.</p>
+        <p class="bp">The challenge wasn't simply arranging windows. It was designing a system capable of balancing teaching, visibility, communication, and engagement simultaneously.</p>
+        <p class="bp">The rendering logic system had to be both intelligent and transparent: making decisions the instructor didn't have to think about, while remaining predictable enough to trust.</p>
       </div>
-    </div>
-  </div>
-</section>
 
-
-<!-- ── VIDEO LAYOUT SYSTEM ── -->
-<section class="cs-sec bg-warm" id="video-layouts">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">08 · Video Layout System</div>
-    <h2 class="st r d2">Designing for constant<br><em>adaptation</em>.</h2>
-
-    <div class="g2" style="margin-top:2rem;">
-      <div>
-        <p class="bp r d2">Designing the virtual classroom meant designing for constant adaptation. Every participant, teaching style, and classroom dynamic demanded flexibility, while technical infrastructure imposed strict limitations on layout behavior and rendering logic.</p>
-        <p class="bp r d3">The challenge wasn't simply arranging windows. It was designing a system capable of balancing teaching, visibility, communication, and engagement simultaneously.</p>
-        <p class="bp r d4">The rendering logic system had to be <strong>both intelligent and transparent</strong> — making decisions the instructor didn't have to think about, while remaining predictable enough to trust.</p>
+      <!-- Image layers inside right column — wipe in, left column stays -->
+      <div class="vls-img-layer" id="vls-layer-0">
+        <img class="vls-show-img zoom-img"
+             src="assets/bluejeans-by-verizon/video-layout-rendering-logic.png"
+             alt="Video layout rendering logic — decision system for dynamic layouts">
       </div>
-      <div class="r d3">
-        <div class="cs-img-frame" style="margin-top:0;">
-          <img src="assets/bluejeans-by-verizon/video-layout-rendering-logic.png"
-               alt="Video layout rendering logic — decision system for dynamic layouts">
-          <div class="cs-img-caption">Rendering logic — the decision system behind dynamic layout switching</div>
-        </div>
+      <div class="vls-img-layer" id="vls-layer-1">
+        <img class="vls-show-img zoom-img"
+             src="assets/bluejeans-by-verizon/video-layout-grid-people.png"
+             alt="Video layout — people view">
       </div>
-    </div>
-
-    <div class="img-3up r d3">
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/video-layout-grid-view.png"
-             alt="Video layout — grid view">
-        <div class="img-caption">Grid view</div>
-      </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/video-layout-speaker-view.png"
+      <div class="vls-img-layer" id="vls-layer-2">
+        <img class="vls-show-img zoom-img"
+             src="assets/bluejeans-by-verizon/video-layout-speaker-view.png"
              alt="Video layout — speaker view">
-        <div class="img-caption">Speaker view</div>
       </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/video-layout-grid-people.png"
-             alt="Video layout — grid people view">
-        <div class="img-caption">Grid + people</div>
+      <div class="vls-img-layer" id="vls-layer-3">
+        <img class="vls-show-img zoom-img"
+             src="assets/bluejeans-by-verizon/video-layout-grid-view.png"
+             alt="Video layout — gallery view">
       </div>
-    </div>
-
-    <div class="img-2up r d4" style="margin-top:1.2rem;">
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/video-layout-grid-view-display-logic.jpg"
-             alt="Grid view — display logic documentation">
-        <div class="img-caption">Grid view display logic</div>
-      </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/remote-learning-dashboard-configuration.png"
+      <div class="vls-img-layer" id="vls-layer-4">
+        <img class="vls-show-img zoom-img"
+             src="assets/bluejeans-by-verizon/remote-learning-dashboard-configuration.png"
              alt="Dashboard configuration — layout system settings">
-        <div class="img-caption">Dashboard configuration</div>
       </div>
     </div>
+
   </div>
-</section>
+</div><!-- /.vls-stage -->
 
 
-<!-- ── SCREEN SHARE ── -->
-<section class="cs-sec bg-page">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">09 · Screen Share System</div>
-    <h2 class="st r d2">Complexity management<br>under <em>real constraints</em>.</h2>
-    <p class="bp r d3" style="max-width:560px;">Multi-state system behavior. Scalability under strict layout constraints. Screen sharing during a live classroom session is one of the highest-stakes interactions in the product.</p>
+<!-- ── SCREEN SHARE + WEATHER PERSON MODE — scroll-cover stack ── -->
+<div class="context-stack">
 
-    <div class="img-2up r d3">
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/screen-share-widget.png"
-             alt="Screen share — widget system">
-        <div class="img-caption">Screen share widget — contextual control surface</div>
-      </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/screen-share-rendering.jpg"
-             alt="Screen share — rendering logic">
-        <div class="img-caption">Rendering logic under screen share conditions</div>
-      </div>
-    </div>
+<!-- ── SCREEN SHARE HERO STAGE ── -->
+<div class="ss-stage" id="ss-stage">
+  <section class="ss-hero">
 
-    <!-- Screen share video -->
-    <div class="cs-video-wrap on-light r d4">
-      <video controls muted playsinline preload="metadata"
-             aria-label="Screen share interaction prototype">
-        <source src="assets/bluejeans-by-verizon/screenshare.mov" type="video/quicktime">
+    <!-- Video background -->
+    <div class="ss-bg" aria-hidden="true">
+      <video id="ss-video" muted loop playsinline>
         <source src="assets/bluejeans-by-verizon/screenshare.mov" type="video/mp4">
       </video>
     </div>
-  </div>
-</section>
 
+    <!-- Vignette -->
+    <div class="ss-vignette" aria-hidden="true"></div>
 
-<!-- ── WEATHER PERSON MODE ── -->
-<section class="cs-sec bg-warm">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">10 · Weather Person Mode</div>
-    <h2 class="st r d2">Transforming screen share<br>into a <em>human experience</em>.</h2>
-
-    <div class="g2" style="margin-top:2rem;">
-      <div>
-        <p class="bp r d2">I led the development of "Weather Person Mode," allowing instructors to overlay themselves directly onto presentations without background interruption.</p>
-        <p class="bp r d3">The feature transformed passive screen sharing into a more engaging and human teaching experience — the instructor remained physically present in the content, not replaced by it.</p>
-        <p class="bp r d4">Designing this required close collaboration with engineering to understand the rendering constraints and build a system that felt seamless despite significant technical complexity beneath.</p>
-      </div>
-      <div class="r d3">
-        <div class="cs-img-frame" style="margin-top:0;">
-          <img src="assets/bluejeans-by-verizon/weather-person-mode.jpg"
-               alt="Weather Person Mode — instructor overlaid on presentation">
-          <div class="cs-img-caption">Weather Person Mode — instructor overlay on live presentation</div>
-        </div>
-      </div>
+    <!-- Dark glass overlay — scroll driven -->
+    <div class="ss-glass" id="ss-glass" aria-hidden="true">
+      <p class="ss-glass-body">Multi-state system behavior. Scalability under <em>strict layout constraints.</em> Screen sharing during a live classroom session is one of the <em>highest-stakes interactions</em> in the product.</p>
     </div>
 
-    <div class="img-2up r d4">
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/weather-person-mode-flow.png"
-             alt="Weather Person Mode — user flow">
-        <div class="img-caption">Mode entry flow and configuration</div>
-      </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/receive-weather-person-mode-share.png"
-             alt="Receiving a Weather Person Mode share — attendee view">
-        <div class="img-caption">Attendee view — receiving a Weather Person Mode share</div>
-      </div>
+    <!-- Eyebrow + title pinned to bottom-left -->
+    <div class="ss-content" id="ss-content">
+      <div class="ss-kicker">07 · Screen Share System</div>
+      <h2 class="ss-title">Complexity management<br>under <em>real constraints</em>.</h2>
+    </div>
+
+    <!-- Image: screen-share-rendering -->
+    <div class="ss-img-layer" id="ss-layer-2">
+      <img class="ss-show-img zoom-img"
+           src="assets/bluejeans-by-verizon/screen-share-rendering.jpg"
+           alt="Screen share — rendering logic">
+    </div>
+
+  </section>
+</div><!-- /.ss-stage -->
+
+
+<!-- ── WEATHER PERSON MODE STAGE — grows from bottom over SS ── -->
+<div class="wpm-stage bj-partner-cover" id="weather-person-mode">
+
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
     </div>
   </div>
-</section>
+
+  <div class="wpm-panel">
+
+    <div class="wpm-left">
+      <div class="sec-ch r d1">08 · Weather Person Mode</div>
+      <h2 class="st r d2">Transforming<br>screen share into<br>a <em>human experience</em>.</h2>
+    </div>
+
+    <div class="wpm-right">
+
+      <!-- Intro mock — bottom-aligned, rotation entrance -->
+      <div class="wpm-img-wrap" id="wpm-img">
+        <img src="assets/bluejeans-by-verizon/weather-person-mock.png"
+             alt="Weather Person Mode — instructor overlay mock">
+      </div>
+
+      <!-- Body text — reveals over mock, fades before images -->
+      <div class="wpm-body-reveal" id="wpm-body">
+        <p class="bp">I led the development of "Weather Person Mode," allowing instructors to overlay themselves directly onto presentations without background interruption.</p>
+        <p class="bp">The feature transformed passive screen sharing into a more engaging and human teaching experience. The instructor remained physically present in the content, not replaced by it.</p>
+        <p class="bp">Designing this required close collaboration with engineering to understand the rendering constraints and build a system that felt seamless despite significant technical complexity beneath.</p>
+      </div>
+
+      <!-- Image layers — wipe in from bottom, left column stays pinned -->
+      <div class="wpm-img-layer" id="wpm-layer-0">
+        <img class="wpm-show-img zoom-img"
+             src="assets/bluejeans-by-verizon/weather-person-mode-flow.png"
+             alt="Weather Person Mode — user flow and configuration">
+      </div>
+      <div class="wpm-img-layer" id="wpm-layer-1">
+        <img class="wpm-show-img zoom-img"
+             src="assets/bluejeans-by-verizon/receive-weather-person-mode-share.png"
+             alt="Attendee view — receiving a Weather Person Mode share">
+      </div>
+
+    </div><!-- /.wpm-right -->
+  </div><!-- /.wpm-panel -->
+
+</div><!-- /.wpm-stage -->
+
+</div><!-- /context-stack -->
 
 
-<!-- ── PANELS ── -->
-<section class="cs-sec bg-page">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">11 · Panel Architecture</div>
-    <h2 class="st r d2">Modular classroom<br><em>infrastructure</em>.</h2>
-    <p class="bp r d3" style="max-width:580px;">Multitasking optimization. Balancing teaching, participant management, and classroom communication simultaneously without overloading the primary teaching surface.</p>
+<!-- ── IA Lightbox overlay ── -->
+<div class="ia-lb" id="ia-lb" aria-modal="true" role="dialog" aria-label="Teaching Apps Information Architecture">
+  <button class="ia-lb-close" id="ia-lb-close" aria-label="Close">✕</button>
+  <img class="ia-lb-img"
+       src="assets/bluejeans-by-verizon/teaching-apps-information-architecture.jpg"
+       alt="Teaching apps — information architecture">
+</div>
 
-    <div class="img-3up r d3">
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/people-panel.png"
+<!-- ── PANEL ARCHITECTURE STAGE ── -->
+<div class="pan-stage" id="panel-architecture">
+  <div class="pan-panel">
+
+    <div class="pan-left">
+      <div class="sec-ch r d1">09 · Panel Architecture</div>
+      <h2 class="st r d2">Modular classroom<br><em>infrastructure</em>.</h2>
+      <p class="bp r d3">Multitasking optimization. Balancing teaching, participant management, and classroom communication simultaneously without overloading the primary teaching surface.</p>
+      <button class="pan-ia-btn" id="pan-ia-btn">View IA ↗</button>
+    </div>
+
+    <div class="pan-right">
+
+      <!-- Initial image: people-panel, rotation entrance -->
+      <div class="pan-img-wrap" id="pan-img">
+        <img class="zoom-img"
+             src="assets/bluejeans-by-verizon/people-panel.png"
              alt="People panel — participant management">
-        <div class="img-caption">People panel</div>
       </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/chats-panel.png"
+
+      <!-- Layer 0: chats-panel wipes in -->
+      <div class="pan-img-layer" id="pan-layer-0">
+        <img class="pan-show-img zoom-img"
+             src="assets/bluejeans-by-verizon/chats-panel.png"
              alt="Chats panel — classroom communication">
-        <div class="img-caption">Chats panel</div>
       </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/teaching-apps-information-architecture.jpg"
-             alt="Teaching apps — information architecture">
-        <div class="img-caption">Teaching apps IA</div>
+
+      <!-- Layer 1: app-panel-design wipes in -->
+      <div class="pan-img-layer" id="pan-layer-1">
+        <img class="pan-show-img zoom-img"
+             src="assets/bluejeans-by-verizon/app-panel-design.jpg"
+             alt="App panel design — teaching applications">
       </div>
-    </div>
-  </div>
-</section>
+
+    </div><!-- /.pan-right -->
+  </div><!-- /.pan-panel -->
+</div><!-- /.pan-stage -->
 
 
 <!-- ══════════════════════════════════════
      SECTION 02 — BLUEJEANS MEETINGS
 ══════════════════════════════════════ -->
-<div class="part-banner" id="meetings">
-  <div class="part-ghost">02</div>
-  <div class="part-banner-inner">
-    <div class="part-eyebrow r">Section Two</div>
-    <h2 class="part-h r d1">BlueJeans<br><em>Meetings</em></h2>
-    <p class="part-desc r d2">Core platform optimization. Usability refinement. Desktop experience modernization. From the education ecosystem to the meeting room — the product that most people used, every day.</p>
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+<!-- ══════════════════════════════════════
+     SECTION 02 — MEETINGS STICKY STAGE
+══════════════════════════════════════ -->
+<div class="mt-stage" id="meetings">
+  <div class="mt-panel" id="mt-panel">
+
+    <div class="mt-bg"></div>
+
+    <!-- "02" editorial — centered ghost watermark -->
+    <div class="mt-num" aria-hidden="true">02</div>
+
+    <!-- Content layer: centered text -->
+    <div class="mt-content" id="mt-content">
+      <div class="mt-content-left">
+        <div class="mt-eyebrow r d1">Section Two</div>
+        <h2 class="mt-h r d2">BlueJeans<br><em>Meetings</em></h2>
+        <p class="mt-desc r d3">Core platform optimization, usability refinement, desktop experience modernization. From the education ecosystem to the meeting room, the product that most people used, every day.</p>
+      </div>
+    </div>
+
+    <!-- YouTube full-bleed layer — scroll-driven reveal -->
+    <div class="mt-yt-layer" id="mt-yt-layer">
+      <div class="mt-yt-frame">
+        <iframe id="mt-yt"
+          src="https://www.youtube.com/embed/AgjdPxQYazI?enablejsapi=1&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&showinfo=0&autoplay=1&mute=1"
+          allow="autoplay; encrypted-media; fullscreen"
+          allowfullscreen
+          title="BlueJeans Meetings">
+        </iframe>
+        <div class="mt-yt-shield"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 
 <!-- ── PREFERENCES REDESIGN ── -->
-<section class="cs-sec bg-page">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">12 · Preferences Redesign</div>
-    <h2 class="st r d2">Restructuring the most<br><em>heavily used area</em>.</h2>
+<div class="pref-stage" id="preferences-redesign">
+  <section class="pref-hero">
 
-    <div class="g2" style="margin-top:2rem;">
-      <div>
-        <p class="bp r d2">The Preferences redesign restructured one of the most heavily used areas of the product, improving discoverability, reducing friction, and modernizing the experience across the desktop ecosystem.</p>
-        <p class="bp r d3">The existing preferences panel had grown organically — a reflection of years of feature additions without architectural reconsideration. Users couldn't find settings they used regularly. Power users had built workarounds. New users were blocked entirely.</p>
-        <p class="bp r d4">The redesign started with card sorting research, reclassified every setting by user mental model rather than engineering category, and introduced progressive disclosure to reduce the visible surface area without reducing capability.</p>
-
-        <!-- Metrics highlight -->
-        <div class="metric-strip r d4" style="margin-top:2rem;grid-template-columns:1fr 1fr;">
-          <div class="ms-cell">
-            <div class="ms-num">12%</div>
-            <div class="ms-label">Increase in Feature Usage</div>
-          </div>
-          <div class="ms-cell">
-            <div class="ms-num">85%</div>
-            <div class="ms-label">Reduction in Task Completion Time</div>
-          </div>
-        </div>
+    <!-- Orbit rings -->
+    <div class="hiw-orbs" aria-hidden="true">
+      <div class="hiw-orb hiw-orb-tr">
+        <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
       </div>
+      <div class="hiw-orb hiw-orb-bl">
+        <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+      </div>
+    </div>
 
-      <div class="r d3">
-        <div class="img-frame" style="margin-bottom:1rem;">
-          <img src="assets/bluejeans-by-verizon/preference-card-sorting.png"
-               alt="Preference redesign — card sorting research">
-          <div class="img-caption">Card sorting — reclassifying settings by user mental model</div>
+    <!-- Right: preference-setting video, fades out as glass rises -->
+    <div class="pref-grid r" id="pref-grid">
+      <video class="pref-hero-vid" autoplay muted loop playsinline>
+        <source src="assets/bluejeans-by-verizon/preference-setting.mov" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- Left: eyebrow + title + metric strip -->
+    <div class="pref-content" id="pref-content">
+      <div class="pref-kicker">10 · Preferences Redesign</div>
+      <h2 class="pref-title">Restructuring the most<br><em>heavily used area</em>.</h2>
+      <div class="metric-strip r" style="grid-template-columns:1fr 1fr;margin-top:1.5rem;">
+        <div class="ms-cell">
+          <div class="ms-num-row"><span class="ms-icon">📈</span><span class="ms-num">12%</span></div>
+          <div class="ms-label">Increase in Feature Usage</div>
         </div>
-        <div class="img-frame">
-          <img src="assets/bluejeans-by-verizon/preference-information-architecture.jpg"
-               alt="Preference redesign — new information architecture">
-          <div class="img-caption">New information architecture</div>
+        <div class="ms-cell">
+          <div class="ms-num-row"><span class="ms-icon">⚡</span><span class="ms-num">85%</span></div>
+          <div class="ms-label">Reduction in Task Time</div>
         </div>
       </div>
     </div>
 
-    <!-- Preference videos -->
-    <div class="img-3up r d4" style="margin-top:2rem;">
-      <div class="img-frame">
-        <video controls muted playsinline preload="metadata"
-               aria-label="Preference settings redesign">
-          <source src="assets/bluejeans-by-verizon/preference-setting.mov" type="video/quicktime">
-          <source src="assets/bluejeans-by-verizon/preference-setting.mov" type="video/mp4">
-        </video>
-        <div class="img-caption">Preference settings — redesigned flow</div>
-      </div>
-      <div class="img-frame">
-        <video controls muted playsinline preload="metadata"
-               aria-label="Preference profile">
-          <source src="assets/bluejeans-by-verizon/preference-profile.mov" type="video/quicktime">
-          <source src="assets/bluejeans-by-verizon/preference-profile.mov" type="video/mp4">
-        </video>
-        <div class="img-caption">Profile preferences</div>
-      </div>
-      <div class="img-frame">
-        <video controls muted playsinline preload="metadata"
-               aria-label="Virtual background preference">
-          <source src="assets/bluejeans-by-verizon/preference-virtual-background.mp4" type="video/mp4">
-        </video>
-        <div class="img-caption">Virtual background</div>
-      </div>
+    <!-- Glass: frosted body text overlay -->
+    <div class="pref-glass" id="pref-glass" aria-hidden="true">
+      <p class="pref-glass-body">
+        The preference redesign restructured one of the most heavily used areas of the product, improving <em>discoverability</em>, reducing <em>friction</em>, and modernizing the experience across the desktop ecosystem. The existing panel had grown organically, a reflection of years of feature additions without architectural reconsideration. The redesign reclassified every setting by <em>user mental model</em> rather than engineering category, and introduced <em>progressive disclosure</em> to reduce visible surface without reducing capability.
+      </p>
     </div>
 
-    <div class="img-2up r d4" style="margin-top:1.2rem;">
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/preference-redesign-pain-point.png"
-             alt="Preferences — identified pain points">
-        <div class="img-caption">Original pain points — discoverability failures</div>
-      </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/blue-meeting-usage-metrcis.png"
-             alt="Meeting usage metrics — before and after">
-        <div class="img-caption">Usage metrics — before &amp; after redesign</div>
-      </div>
+    <!-- Layer 0: preference information architecture -->
+    <div class="pref-img-layer" id="pref-layer-0">
+      <img class="pref-show-img zoom-img"
+           src="assets/bluejeans-by-verizon/preference-information-architecture.jpg"
+           alt="Preference redesign — information architecture">
     </div>
-  </div>
-</section>
 
+    <!-- Layer 1: preference profile (video) -->
+    <div class="pref-img-layer" id="pref-layer-1">
+      <video class="pref-show-img" autoplay muted loop playsinline>
+        <source src="assets/bluejeans-by-verizon/preference-profile.mov" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- Layer 2: preference virtual background (video) -->
+    <div class="pref-img-layer" id="pref-layer-2">
+      <video class="pref-show-img" autoplay muted loop playsinline>
+        <source src="assets/bluejeans-by-verizon/preference-virtual-background.mp4" type="video/mp4">
+      </video>
+    </div>
+
+  </section>
+</div><!-- /.pref-stage -->
+
+
+<!-- ── NAME TAG → SMART THEME cover chain ── -->
+<div class="context-stack">
 
 <!-- ── NAME TAG ── -->
-<section class="cs-sec bg-warm">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">13 · Name Tag</div>
-    <h2 class="st r d2">Presence in a<br><em>virtual room</em>.</h2>
-    <p class="bp r d3" style="max-width:560px;margin-bottom:2rem;">Identity and presence in virtual meetings. Name tags made participants visible and contextual — a small design decision with a significant impact on meeting dynamics.</p>
+<div class="nt-stage" id="nt-stage" style="position:relative;z-index:1;">
+  <section class="nt-hero">
 
-    <div class="cs-video-wrap on-light r d3">
-      <video controls muted playsinline preload="metadata"
-             aria-label="Name tag feature">
-        <source src="assets/bluejeans-by-verizon/preference-name-tag.mov" type="video/quicktime">
+    <div class="nt-bg" aria-hidden="true">
+      <video id="nt-video" muted loop playsinline>
         <source src="assets/bluejeans-by-verizon/preference-name-tag.mov" type="video/mp4">
       </video>
     </div>
-  </div>
-</section>
+
+    <div class="nt-vignette" aria-hidden="true"></div>
+
+    <div class="nt-glass" id="nt-glass" aria-hidden="true">
+      <p class="nt-glass-body">Identity and presence in virtual meetings. Name tags made participants visible and contextual, a small design decision with a <em>significant impact</em> on meeting dynamics.</p>
+    </div>
+
+    <div class="nt-content" id="nt-content">
+      <div class="nt-kicker">11 · Name Tag</div>
+      <h2 class="nt-title">Presence in a<br><em>virtual room</em>.</h2>
+    </div>
+
+  </section>
+</div>
 
 
 <!-- ── SMART THEME ── -->
-<section class="cs-sec bg-dark">
-  <div class="sec-inner">
-    <div class="sec-ch r d1" style="color:var(--accent-mid);">14 · Smart Theme (POC)</div>
-    <h2 class="st-d r d2">Early AI.<br><em>Contextual personalization</em>.</h2>
+<div class="st-stage bj-partner-cover" id="smart-theme">
+  <section class="st-hero">
 
-    <div class="g2" style="margin-top:2rem;">
-      <div>
-        <p class="bp-d r d2">Smart Theme was a proof-of-concept exploring intelligent environment adaptation — the meeting interface automatically adjusting its visual configuration based on context, time of day, and participant signals.</p>
-        <p class="bp-d r d3">This was early AI experimentation: not a chatbot, not a feature-flagged option, but a system-level behavior that made the product feel contextually aware without demanding user input.</p>
-        <p class="bp-d r d4">The POC demonstrated that <strong>AI in productivity tools works best when it removes decisions rather than adding them.</strong></p>
+    <div class="hiw-orbs" aria-hidden="true">
+      <div class="hiw-orb hiw-orb-tr">
+        <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
       </div>
-      <div class="r d3">
-        <div class="cs-video-wrap r d3" style="margin-top:0;">
-          <video controls muted playsinline preload="metadata"
-                 aria-label="Smart Theme POC">
-            <source src="assets/bluejeans-by-verizon/smart-theme.mp4" type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ── SCHEDULE MEETINGS ── -->
-<section class="cs-sec bg-page">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">15 · Schedule Meetings In-App</div>
-    <h2 class="st r d2">Ecosystem simplification.<br>Reducing <em>context switching</em>.</h2>
-
-    <div class="g2" style="margin-top:2rem;align-items:center;">
-      <div>
-        <p class="bp r d2">Scheduling a meeting shouldn't require leaving the meeting tool. The in-app scheduling feature unified the calendar workflow with the video collaboration experience — reducing the tool-switching that fragmented the meeting preparation flow.</p>
-        <p class="bp r d3">The design challenge was integrating calendar data, participant management, and meeting settings into a single flow without overwhelming the interface with a separate application.</p>
-      </div>
-      <div class="r d3">
-        <div class="cs-img-frame" style="margin:0;">
-          <img src="assets/bluejeans-by-verizon/schedule-meeting.jpg"
-               alt="Schedule meeting — in-app scheduling feature">
-          <div class="cs-img-caption">In-app meeting scheduling — unified workflow</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ── APPS + REACTIONS ── -->
-<section class="cs-sec bg-warm">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">16 · Apps &amp; Reactions</div>
-    <h2 class="st r d2">The meeting as<br><em>collaboration surface</em>.</h2>
-    <p class="bp r d3" style="max-width:580px;margin-bottom:2rem;">Extending the platform beyond video into a programmable collaboration surface — while keeping the core experience clean and focused.</p>
-
-    <div class="img-2up r d3">
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/app-panel-design.jpg"
-             alt="App panel — design">
-        <div class="img-caption">App panel design</div>
-      </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/app-panel-installation.png"
-             alt="App panel — installation flow">
-        <div class="img-caption">App installation flow</div>
+      <div class="hiw-orb hiw-orb-bl">
+        <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
       </div>
     </div>
 
-    <div class="img-3up r d4" style="margin-top:1.2rem;">
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/blue-reaction.jpg"
-             alt="BlueJeans — reactions feature">
-        <div class="img-caption">Reactions</div>
-      </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/reaction-competitive-analysis.png"
-             alt="Reactions — competitive analysis">
-        <div class="img-caption">Competitive analysis</div>
-      </div>
-      <div class="img-frame">
-        <img src="assets/bluejeans-by-verizon/reaction-user-testing.png"
-             alt="Reactions — user testing">
-        <div class="img-caption">User testing</div>
-      </div>
+    <div class="st-grid" id="st-grid">
+      <video class="st-hero-vid" autoplay muted loop playsinline>
+        <source src="assets/bluejeans-by-verizon/smart-theme.mp4" type="video/mp4">
+      </video>
     </div>
-  </div>
-</section>
+
+    <div class="st-content" id="st-content">
+      <div class="st-kicker">12 · Smart Theme (POC)</div>
+      <h2 class="st-title">Early AI.<br><em>Contextual personalization</em>.</h2>
+    </div>
+
+    <div class="st-glass" id="st-glass" aria-hidden="true">
+      <p class="st-glass-body">Smart Theme was a proof-of-concept exploring <em>intelligent environment adaptation</em>, the meeting interface automatically adjusting its visual configuration based on context, time of day, and participant signals. This was early AI experimentation: not a chatbot, not a feature-flagged option, but a system-level behavior that made the product feel <em>contextually aware</em> without demanding user input. The POC demonstrated that AI in productivity tools works best when it <em>removes decisions</em> rather than adding them.</p>
+    </div>
+
+  </section>
+</div>
+
+</div><!-- /context-stack (name-tag → smart-theme) -->
 
 
 <!-- ══════════════════════════════════════
      SECTION 03 — DESIGN SYSTEM
 ══════════════════════════════════════ -->
-<div class="part-banner" id="design-system">
-  <div class="part-ghost">03</div>
-  <div class="part-banner-inner">
-    <div class="part-eyebrow r">Section Three</div>
-    <h2 class="part-h r d1">Blue<br><em>Design System</em></h2>
-    <p class="part-desc r d2">Scalability. Operational maturity. System architecture. Engineering collaboration. The infrastructure that made every other section of this case study possible.</p>
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+<!-- ── DS BREAKER → ATOMIC DS cover chain ── -->
+<div class="context-stack">
+
+<div class="ds-stage bj-context-sticky" id="design-system">
+  <div class="ds-bg"></div>
+  <div class="ds-num" aria-hidden="true">03</div>
+  <div class="ds-content">
+    <div class="ds-content-left">
+      <div class="ds-eyebrow r d1">Section Three</div>
+      <h2 class="ds-h r d2">Blue<br><em>Design System</em></h2>
+      <p class="ds-desc r d3">Scalability, operational maturity, system architecture, engineering collaboration. The infrastructure that made every other section of this case study possible.</p>
+    </div>
   </div>
 </div>
 
 
-<!-- ── DESIGN SYSTEM OVERVIEW ── -->
-<section class="cs-sec bg-page">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">17 · Atomic Design System</div>
-    <h2 class="st r d2">900+ components.<br>One <em>shared foundation</em>.</h2>
+<!-- ── ATOMIC DESIGN SYSTEM PANEL ── -->
+<div class="ds2-stage bj-partner-cover" id="ds2-stage">
+  <section class="ds2-hero" id="ds2-hero">
 
-    <div class="g2" style="margin-top:2rem;">
-      <div>
-        <p class="bp r d2">I led the creation of a comprehensive Atomic Design System in Figma, consisting of more than 900 responsive components designed to scale across multiple products and platforms.</p>
-        <p class="bp r d3">The system unified branding, accelerated collaboration between design and engineering, and dramatically improved the speed of product iteration and delivery.</p>
-        <p class="bp r d4">The system architecture followed strict atomic principles — tokens, atoms, molecules, organisms — ensuring that every component could compose predictably regardless of context, platform, or team.</p>
+    <!-- Left: content -->
+    <div class="ads-left">
+      <div class="ads-kicker">13 · Atomic Design System</div>
+      <h2 class="ads-title">900+ components.<br>One <em>shared language</em>.</h2>
 
-        <!-- Design system metrics -->
-        <div class="metric-strip r d4" style="margin-top:2rem;grid-template-columns:repeat(4,1fr);">
-          <div class="ms-cell">
-            <div class="ms-num">30%</div>
-            <div class="ms-label">Reduction in Design Time</div>
-          </div>
-          <div class="ms-cell">
-            <div class="ms-num">5×</div>
-            <div class="ms-label">Faster Prototyping</div>
-          </div>
-          <div class="ms-cell">
-            <div class="ms-num">70%</div>
-            <div class="ms-label">Fewer UI Bugs</div>
-          </div>
-          <div class="ms-cell">
-            <div class="ms-num">3–7×</div>
-            <div class="ms-label">Faster UI Implementation</div>
-          </div>
+      <div class="ads-text-swap">
+        <!-- Initial body text -->
+        <p class="ads-body" id="ads-body">To support a rapidly evolving product ecosystem, I led the creation of an Atomic Design System in Figma, consisting of over <em>900 responsive components</em>, reusable patterns, and production-ready templates. More than a UI library, the system became a <em>shared language</em> between design and engineering. It brought consistency across products, accelerated decision-making, reduced implementation friction, and created a scalable foundation for future growth. By transforming design from a collection of individual screens into a cohesive system, teams were able to move faster while maintaining a higher standard of quality.</p>
+
+        <!-- Metrics body text (fades in on scroll) -->
+        <div class="ads-body-alt" id="ads-body-alt">
+          <p style="margin:0 0 0.75rem;">The design system became a <em>force multiplier</em> across the organization.</p>
+          <ul class="ads-outcomes">
+            <li><em>30%</em> reduction in design time</li>
+            <li><em>5×</em> faster prototype creation</li>
+            <li>Significant reduction in engineering iterations</li>
+            <li><em>3×</em> faster UI implementation on average, some workflows reaching <em>7×</em></li>
+            <li><em>70%</em> reduction in UI-related bugs</li>
+            <li>Improved product consistency and delivery efficiency</li>
+          </ul>
+          <p style="margin:0.75rem 0 0;color:rgba(255,255,255,0.40);">The result was not simply faster execution, but a more scalable product development process capable of supporting long-term growth.</p>
         </div>
       </div>
 
-      <div class="r d3">
-        <div class="cs-img-frame" style="margin:0 0 1rem 0;">
-          <img src="assets/bluejeans-by-verizon/design-system-business-impact.jpg"
-               alt="Blue Design System — business impact">
-          <div class="cs-img-caption">Business impact — before and after the design system</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ── DESIGN SYSTEM ASSETS ── -->
-<section class="cs-sec bg-dark">
-  <div class="sec-inner">
-    <div class="sec-ch r d1" style="color:var(--accent-mid);">18 · System Architecture</div>
-    <h2 class="st-d r d2">From Blue to Verizon.<br><em>Architecture that scaled</em>.</h2>
-    <p class="bp-d r d3" style="max-width:560px;margin-bottom:2rem;">The system didn't just serve BlueJeans — it became the foundation for the Verizon design system migration, proving that well-architected design infrastructure compounds in value over time.</p>
-
-    <div class="cs-img-frame r d3">
-      <img src="assets/bluejeans-by-verizon/blue-vs-vz-design-system.png"
-           alt="Blue design system vs Verizon design system — architecture comparison">
-      <div class="cs-img-caption">Blue to Verizon — design system architecture comparison and migration path</div>
+      <a class="ads-cta" id="ads-cta" href="https://www.figma.com/design/5qVHw7NAVb4JuH42Q3deDQ/Blue-Design-System?node-id=1436-35319&t=fIootCbKP6n60RML-1" target="_blank" rel="noopener">Explore the system on Figma ↗</a>
     </div>
 
-    <!-- Smart component video -->
-    <div style="margin-top:2rem;" class="r d4">
-      <div class="sec-ch" style="color:var(--accent-mid);margin-bottom:0.8rem;">Smart Component System</div>
-      <div class="cs-video-wrap r d4">
-        <video controls muted playsinline preload="metadata"
-               aria-label="Smart component design system demo">
-          <source src="assets/bluejeans-by-verizon/smart-component-design-system.mov" type="video/quicktime">
+    <!-- Right: video → metrics -->
+    <div class="ads-right" id="ads-right">
+      <div class="ads-vid-wrap" id="ads-vid-wrap">
+        <video class="ads-vid" autoplay muted loop playsinline>
           <source src="assets/bluejeans-by-verizon/smart-component-design-system.mov" type="video/mp4">
         </video>
       </div>
+
+      <div class="ads-metrics" id="ads-metrics">
+        <div class="phi-stat-card">
+          <div class="phi-stat-num">30%</div>
+          <div class="phi-stat-label">Design Time Saved</div>
+        </div>
+        <div class="phi-stat-card">
+          <div class="phi-stat-num">5×</div>
+          <div class="phi-stat-label">Faster Prototyping</div>
+        </div>
+        <div class="phi-stat-card">
+          <div class="phi-stat-num">70%</div>
+          <div class="phi-stat-label">Fewer UI Bugs</div>
+        </div>
+        <div class="phi-stat-card">
+          <div class="phi-stat-num">3–7×</div>
+          <div class="phi-stat-label">Faster Implementation</div>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+
+  </section>
+</div>
+
+</div><!-- /context-stack (ds-breaker → atomic-ds) -->
 
 
 <!-- ── OUTCOMES ── -->
-<section class="cs-sec bg-accent">
-  <div class="sec-inner">
-    <div class="sec-ch r d1">Outcomes</div>
-    <h2 class="st r d2">Systems leadership<br>at <em>an inflection point</em>.</h2>
-    <p class="bp r d3" style="max-width:560px;margin-bottom:2.5rem;">This wasn't just interface design. It was systems leadership during a moment when digital communication became essential to how people worked, learned, and connected.</p>
-
-    <div class="g4">
-      <div class="oc r d1"><div class="oc-num">900+</div><div class="oc-label">Design System Components</div></div>
-      <div class="oc r d2"><div class="oc-num">85%</div><div class="oc-label">Faster Task Completion</div></div>
-      <div class="oc r d3"><div class="oc-num">70%</div><div class="oc-label">Fewer UI Bugs</div></div>
-      <div class="oc r d4"><div class="oc-num">5×</div><div class="oc-label">Prototyping Speed</div></div>
+<section class="cs-sec bg-accent oc-sec" id="outcomes">
+  <div class="oc-orbit-bg">
+    <div class="oc-orb oc-orb-1"><div class="oc-orb-dot"></div></div>
+    <div class="oc-orb oc-orb-2"><div class="oc-orb-dot"></div></div>
+    <div class="oc-orb oc-orb-3"></div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r d1">14 · Outcomes</div>
+    <div class="oc-header-row">
+      <h2 class="st r d2">Systems leadership<br>at <em>an inflection point</em>.</h2>
+      <div class="pq r d3">
+        <p>This wasn't just interface design. It was systems leadership during a moment when digital communication became essential to how people worked, learned, and connected.</p>
+      </div>
     </div>
-    <div class="g4" style="margin-top:1.2rem;">
-      <div class="oc r d1"><div class="oc-num">12%</div><div class="oc-label">Feature Usage Increase</div></div>
-      <div class="oc r d2"><div class="oc-num">30%</div><div class="oc-label">Reduction in Design Time</div></div>
+    <div class="oc-grid-wrap" id="oc-grid">
+      <div class="oc r d1"><div class="oc-num" data-count="900" data-suffix="+">900+</div><div class="oc-label">Design System Components</div></div>
+      <div class="oc r d2"><div class="oc-num" data-count="85" data-suffix="%">85%</div><div class="oc-label">Faster Task Completion</div></div>
+      <div class="oc r d3"><div class="oc-num" data-count="70" data-suffix="%">70%</div><div class="oc-label">Fewer UI Bugs</div></div>
+      <div class="oc r d4"><div class="oc-num" data-count="5" data-suffix="×">5×</div><div class="oc-label">Prototyping Speed</div></div>
+      <div class="oc r d1"><div class="oc-num" data-count="12" data-suffix="%">12%</div><div class="oc-label">Feature Usage Increase</div></div>
+      <div class="oc r d2"><div class="oc-num" data-count="30" data-suffix="%">30%</div><div class="oc-label">Reduction in Design Time</div></div>
       <div class="oc r d3"><div class="oc-num">3–7×</div><div class="oc-label">Faster UI Implementation</div></div>
-      <div class="oc r d4"><div class="oc-num">3+</div><div class="oc-label">Major Institutions Adopted</div></div>
+      <div class="oc r d4"><div class="oc-num" data-count="3" data-suffix="+">3+</div><div class="oc-label">Major Institutions Adopted</div></div>
     </div>
   </div>
 </section>
@@ -1523,45 +3820,33 @@ const prog  = document.getElementById('prog');
 const nav   = document.getElementById('nav');
 const snav  = document.getElementById('cs-sidenav');
 
-// ── YouTube — play on scroll ──
-(function () {
-  var bjPlayer = null;
-  var pendingPlay = false;
+// ── YouTube — multi-player setup ──
+var _ytRl = null, _ytRlPending = false;
+var _ytMt = null, _ytMtPending = false;
 
-  var ytScript = document.createElement('script');
-  ytScript.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(ytScript);
+(function () {
+  var s = document.createElement('script');
+  s.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(s);
 
   window.onYouTubeIframeAPIReady = function () {
-    bjPlayer = new YT.Player('bj-yt', {
-      events: {
-        onReady: function () {
-          if (pendingPlay) { bjPlayer.playVideo(); pendingPlay = false; }
-        }
-      }
-    });
+    // Section 01 — Remote Learning stage player
+    if (document.getElementById('rl-yt')) {
+      _ytRl = new YT.Player('rl-yt', {
+        events: { onReady: function () {
+          if (_ytRlPending) { _ytRl.playVideo(); _ytRlPending = false; }
+        }}
+      });
+    }
+    // Section 02 — Meetings stage player
+    if (document.getElementById('mt-yt')) {
+      _ytMt = new YT.Player('mt-yt', {
+        events: { onReady: function () {
+          if (_ytMtPending) { _ytMt.playVideo(); _ytMtPending = false; }
+        }}
+      });
+    }
   };
-
-  const sec = document.getElementById('bj-video-sec');
-
-  // Fade in + play when entering; pause when leaving
-  const vidObs = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) {
-        sec.classList.add('bj-vid-visible');
-        if (bjPlayer && bjPlayer.playVideo) {
-          bjPlayer.playVideo();
-        } else {
-          pendingPlay = true;
-        }
-      } else {
-        if (bjPlayer && bjPlayer.pauseVideo) bjPlayer.pauseVideo();
-        pendingPlay = false;
-      }
-    });
-  }, { threshold: 0.15 });
-
-  if (sec) vidObs.observe(sec);
 })();
 
 // ── Dot grid — LED panel ──
@@ -1621,6 +3906,123 @@ const snav  = document.getElementById('cs-sidenav');
   setTimeout(flicker, 1400);
 })();
 
+// ── Section 01 — Remote Learning stage scroll elements ──
+const rlStageEl   = document.getElementById('remote-learning');
+const rlContentEl = document.getElementById('rl-content');
+const rlYtLayerEl = document.getElementById('rl-yt-layer');
+
+function tickRlStage(t) {
+  if (!rlStageEl || !rlContentEl || !rlYtLayerEl) return;
+
+  const stageTop   = rlStageEl.getBoundingClientRect().top + t;
+  const stageRange = rlStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  const active = t >= stageTop && t <= stageTop + stageRange;
+
+  // Content fades: p 0.28 → 0.56
+  const contentFade = 1 - Math.min(Math.max((p - 0.28) / 0.28, 0), 1);
+  rlContentEl.style.opacity   = contentFade;
+  rlContentEl.style.transform = `translateY(${(1 - contentFade) * -18}px)`;
+
+  // YouTube layer reveals: p 0.42 → 0.70
+  const ytReveal = Math.min(Math.max((p - 0.42) / 0.28, 0), 1);
+  rlYtLayerEl.style.opacity      = ytReveal;
+  rlYtLayerEl.style.pointerEvents = ytReveal > 0.4 ? 'auto' : 'none';
+
+  // YouTube — play when reveal starts, pause when out of range
+  if (active && ytReveal > 0.15) {
+    if (_ytRl && typeof _ytRl.playVideo === 'function') {
+      try { _ytRl.playVideo(); } catch(e) {}
+    } else {
+      _ytRlPending = true;
+    }
+  } else if (!active || ytReveal < 0.05) {
+    if (_ytRl && typeof _ytRl.pauseVideo === 'function') {
+      try { _ytRl.pauseVideo(); } catch(e) {}
+    }
+    if (!active) _ytRlPending = false;
+  }
+}
+
+// ── Section 02 — Meetings stage scroll elements ──
+const mtStageEl   = document.getElementById('meetings');
+const mtContentEl = document.getElementById('mt-content');
+const mtYtLayerEl = document.getElementById('mt-yt-layer');
+
+function tickMtStage(t) {
+  if (!mtStageEl || !mtContentEl || !mtYtLayerEl) return;
+
+  const stageTop   = mtStageEl.getBoundingClientRect().top + t;
+  const stageRange = mtStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  const active = t >= stageTop && t <= stageTop + stageRange;
+
+  // Content fades: p 0.28 → 0.56
+  const contentFade = 1 - Math.min(Math.max((p - 0.28) / 0.28, 0), 1);
+  mtContentEl.style.opacity   = contentFade;
+  mtContentEl.style.transform = `translateY(${(1 - contentFade) * -18}px)`;
+
+  // YouTube layer reveals: p 0.42 → 0.70
+  const ytReveal = Math.min(Math.max((p - 0.42) / 0.28, 0), 1);
+  mtYtLayerEl.style.opacity       = ytReveal;
+  mtYtLayerEl.style.pointerEvents = ytReveal > 0.4 ? 'auto' : 'none';
+
+  // YouTube — play when reveal starts, pause when out of range
+  if (active && ytReveal > 0.15) {
+    if (_ytMt && typeof _ytMt.playVideo === 'function') {
+      try { _ytMt.playVideo(); } catch(e) {}
+    } else {
+      _ytMtPending = true;
+    }
+  } else if (!active || ytReveal < 0.05) {
+    if (_ytMt && typeof _ytMt.pauseVideo === 'function') {
+      try { _ytMt.pauseVideo(); } catch(e) {}
+    }
+    if (!active) _ytMtPending = false;
+  }
+}
+
+// ── User Testing stage scroll elements ──
+const utStageEl = document.getElementById('ut-stage');
+const utImgEl   = document.getElementById('ut-img');
+const utBodyEl  = document.getElementById('ut-body');
+const utBps     = utBodyEl ? utBodyEl.querySelectorAll('.bp') : [];
+
+function tickUtStage(t) {
+  if (!utStageEl) return;
+
+  const stageTop   = utStageEl.getBoundingClientRect().top + t;
+  const stageRange = utStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  // Entrance: fire rotation reveal once viewer lands on section (stage top at viewport top)
+  if (utImgEl && !utImgEl.classList.contains('on') && t >= stageTop) {
+    utImgEl.classList.add('on');
+  }
+
+  // Image: fades out + drifts left slightly (p 0.18 → 0.50)
+  if (utImgEl) {
+    const imgP = 1 - Math.min(Math.max((p - 0.18) / 0.32, 0), 1);
+    utImgEl.style.opacity   = imgP;
+    utImgEl.style.transform = `translateX(${(1 - imgP) * -24}px) scale(${1 + (1 - imgP) * 0.04})`;
+  }
+
+  // Body paragraphs: stagger in as image exits (p 0.36 → 0.70, offset per para)
+  if (utBodyEl) {
+    utBodyEl.style.pointerEvents = p > 0.35 ? 'auto' : 'none';
+  }
+  utBps.forEach((el, i) => {
+    const ep = Math.min(Math.max((p - 0.36 - i * 0.10) / 0.22, 0), 1);
+    el.style.opacity   = ep;
+    el.style.transform = `translateY(${(1 - ep) * 18}px)`;
+  });
+}
+
 // ── BJ Hero scroll elements ──
 const bjStageEl   = document.getElementById('overview');
 const bjBgEl      = document.querySelector('.bj-bg');
@@ -1648,7 +4050,7 @@ function tickBjHero(t) {
   // Glass rises from bottom
   const riseP = Math.min(p / 0.55, 1);
   bjGlassEl.style.clipPath             = `inset(${(1 - riseP) * 100}% 0 0 0)`;
-  bjGlassEl.style.background           = `rgba(220,235,255,${riseP * 0.55})`;
+  bjGlassEl.style.background           = `rgba(225,226,255,${riseP * 0.55})`;
   bjGlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
   bjGlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
 
@@ -1671,6 +4073,114 @@ function tickBjHero(t) {
 }
 
 // ── Scroll progress + nav state ──
+// ── Panel Architecture — sticky 2-col scroll stage ──
+const panStageEl = document.getElementById('panel-architecture');
+const panImgEl   = document.getElementById('pan-img');
+const panL0      = document.getElementById('pan-layer-0');
+const panL1      = document.getElementById('pan-layer-1');
+
+function tickPanStage(t) {
+  if (!panStageEl || !panImgEl) return;
+  const stageTop   = panStageEl.getBoundingClientRect().top + t;
+  const stageRange = panStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  if (!panImgEl.classList.contains('on') && t >= stageTop) panImgEl.classList.add('on');
+
+  // chats-panel wipes in: p 0.30 → 0.48
+  const r0  = Math.max(0, Math.min(1, (p - 0.30) / 0.18));
+  const er0 = 1 - Math.pow(1 - r0, 3);
+  if (panL0) panL0.style.clipPath = `inset(${(1 - er0) * 100}% 0 0 0)`;
+
+  // app-panel wipes in: p 0.62 → 0.78; chats-panel fades
+  const r1  = Math.max(0, Math.min(1, (p - 0.62) / 0.16));
+  const er1 = 1 - Math.pow(1 - r1, 3);
+  if (panL1) panL1.style.clipPath = `inset(${(1 - er1) * 100}% 0 0 0)`;
+  if (panL0) panL0.style.opacity  = String(1 - r1);
+}
+
+// ── Preferences Redesign Stage ──
+const prefStageEl   = document.getElementById('preferences-redesign');
+const prefGlassEl   = document.getElementById('pref-glass');
+const prefGlassBody = prefGlassEl ? prefGlassEl.querySelector('.pref-glass-body') : null;
+const prefContentEl = document.getElementById('pref-content');
+const prefGridEl    = document.getElementById('pref-grid');
+const prefLayer0    = document.getElementById('pref-layer-0');
+const prefLayer1    = document.getElementById('pref-layer-1');
+const prefLayer2    = document.getElementById('pref-layer-2');
+
+function tickPrefStage(t) {
+  if (!prefStageEl || !prefGlassEl) return;
+  const stageTop   = prefStageEl.getBoundingClientRect().top + t;
+  const stageRange = prefStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  // Laptop entrance animation
+  if (prefGridEl && !prefGridEl.classList.contains('on') && t >= stageTop) prefGridEl.classList.add('on');
+
+  // Glass rises: p 0→0.20
+  const riseP  = Math.min(p / 0.20, 1);
+  const topPct = (1 - riseP) * 100;
+  prefGlassEl.style.clipPath             = `inset(${topPct}% 0 0 0)`;
+  prefGlassEl.style.background           = `rgba(245,246,255,${riseP * 0.14})`;
+  prefGlassEl.style.backdropFilter       = `blur(${riseP * 10}px)`;
+  prefGlassEl.style.webkitBackdropFilter = `blur(${riseP * 10}px)`;
+
+  // Left content + right video fade out together: p 0.10→0.22
+  const fade = 1 - Math.max(0, Math.min(1, (p - 0.10) / 0.12));
+  if (prefContentEl) {
+    prefContentEl.style.opacity   = fade;
+    prefContentEl.style.transform = `translateY(${(1 - fade) * 14}px)`;
+  }
+  if (prefGridEl) {
+    prefGridEl.style.opacity   = fade;
+    prefGridEl.style.transform = `translateY(${(1 - fade) * 14}px)`;
+  }
+
+  // Body text appears: p 0.18→0.34
+  if (prefGlassBody) {
+    const ep = Math.max(0, Math.min(1, (p - 0.18) / 0.16));
+    prefGlassBody.style.opacity   = ep;
+    prefGlassBody.style.transform = `translateY(${(1 - ep) * 18}px)`;
+  }
+
+  // Glass fades out as first image starts: p 0.36→0.44
+  const glassOut = 1 - Math.max(0, Math.min(1, (p - 0.36) / 0.08));
+  prefGlassEl.style.opacity = String(glassOut);
+
+  // Pref IA wipes in: p 0.40→0.52
+  const r0  = Math.max(0, Math.min(1, (p - 0.40) / 0.12));
+  const er0 = 1 - Math.pow(1 - r0, 3);
+  if (prefLayer0) prefLayer0.style.clipPath = `inset(${(1 - er0) * 100}% 0 0 0)`;
+
+  // Profile video wipes in: p 0.57→0.67; IA fades
+  const r1  = Math.max(0, Math.min(1, (p - 0.57) / 0.10));
+  const er1 = 1 - Math.pow(1 - r1, 3);
+  if (prefLayer1) prefLayer1.style.clipPath = `inset(${(1 - er1) * 100}% 0 0 0)`;
+  if (prefLayer0) prefLayer0.style.opacity  = String(1 - r1);
+
+  // Virtual bg video wipes in: p 0.74→0.84; profile fades
+  const r2  = Math.max(0, Math.min(1, (p - 0.74) / 0.10));
+  const er2 = 1 - Math.pow(1 - r2, 3);
+  if (prefLayer2) prefLayer2.style.clipPath = `inset(${(1 - er2) * 100}% 0 0 0)`;
+  if (prefLayer1) prefLayer1.style.opacity  = String(1 - r2);
+}
+
+// ── IA Lightbox ──
+const iaLb      = document.getElementById('ia-lb');
+const iaLbClose = document.getElementById('ia-lb-close');
+const iaLbBtn   = document.getElementById('pan-ia-btn');
+
+function openIaLb()  { iaLb.classList.add('open');    document.body.classList.add('ia-lb-open');    document.body.style.overflow = 'hidden'; }
+function closeIaLb() { iaLb.classList.remove('open'); document.body.classList.remove('ia-lb-open'); document.body.style.overflow = ''; }
+
+if (iaLbBtn)   iaLbBtn.addEventListener('click', openIaLb);
+if (iaLbClose) iaLbClose.addEventListener('click', closeIaLb);
+if (iaLb)      iaLb.addEventListener('click', e => { if (e.target === iaLb) closeIaLb(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && iaLb.classList.contains('open')) closeIaLb(); });
+
 window.addEventListener('scroll', () => {
   const t = window.scrollY;
   const h = document.documentElement.scrollHeight - window.innerHeight;
@@ -1679,6 +4189,18 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('nav--light', t < 80);
   document.getElementById('back-top').classList.toggle('visible', t > 400);
   tickBjHero(t);
+  tickRlStage(t);
+  tickMtStage(t);
+  tickUtStage(t);
+  tickVlsStage(t);
+  tickSsHero(t);
+  tickWpmStage(t);
+  tickFtuHero(t);
+  tickNtHero(t);
+  tickStHero(t);
+  tickDs2Stage(t);
+  tickPanStage(t);
+  tickPrefStage(t);
   updateSidenav();
 });
 
@@ -1695,8 +4217,42 @@ snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
   });
 });
 
+// Classes that indicate a light-bg element behind the sidenav
+const _SNAV_LIGHT = new Set([
+  'bg-page','bg-warm','bg-accent','bg-white',
+  'bj-stage','bj-hero','bj-bg','bj-overview'
+]);
+// Classes that indicate a dark-bg element behind the sidenav
+const _SNAV_DARK = new Set([
+  'bg-dark','rl-panel','rl-bg','mt-panel','mt-bg',
+  'nt-hero','st-hero','ds2-hero','cta-sec','cs-sec-dark'
+]);
+
+function sampleNavBg() {
+  if (!document.elementsFromPoint) return false;
+  const x   = window.innerWidth - 28;
+  const y   = window.innerHeight / 2;
+  const els = document.elementsFromPoint(x, y);
+  for (const el of els) {
+    if (el === snav || snav.contains(el)) continue;
+    const cl = el.classList;
+    if ([..._SNAV_LIGHT].some(c => cl.contains(c))) return true;
+    if ([..._SNAV_DARK].some(c => cl.contains(c)))  return false;
+    // Fallback: read computed solid background-color and check luminance
+    const bg = getComputedStyle(el).backgroundColor;
+    if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+      const m = bg.match(/[\d.]+/g);
+      if (m && m.length >= 3) {
+        const lum = (0.299 * +m[0] + 0.587 * +m[1] + 0.114 * +m[2]) / 255;
+        if ((m[3] !== undefined ? +m[3] : 1) > 0.15) return lum > 0.5;
+      }
+    }
+  }
+  return false;
+}
+
 function updateSidenav() {
-  const targets = ['overview','remote-learning','video-layouts','meetings','design-system'];
+  const targets = ['overview','remote-learning','video-layouts','meetings','design-system','outcomes'];
   let active = targets[0];
   const offset = window.innerHeight * 0.45;
   targets.forEach(id => {
@@ -1706,9 +4262,7 @@ function updateSidenav() {
   snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.target === active);
   });
-  const activeEl = document.getElementById(active);
-  const isLight = activeEl && (activeEl.classList.contains('bg-page') || activeEl.classList.contains('bg-warm'));
-  snav.classList.toggle('on-light', !!isLight);
+  snav.classList.toggle('on-light', sampleNavBg());
 }
 
 // ── Mobile nav ──
@@ -1748,10 +4302,79 @@ document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; })
 document.addEventListener('mouseover', e => {
   const t = e.target;
   if (t.closest('a, button, [role="button"]')) { document.body.dataset.cursor = 'hover'; return; }
+  if (t.closest('.zoom-img'))                  { document.body.dataset.cursor = 'zoom';  return; }
   document.body.dataset.cursor = 'default';
 });
 document.documentElement.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; });
 document.documentElement.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; });
+
+// ── Magnifier lens ──
+const magLens   = document.getElementById('mag-lens');
+const magCanvas = document.getElementById('mag-canvas');
+const magCtx    = magCanvas.getContext('2d');
+const MAG_ZOOM  = 1.6;
+const MAG_SIZE  = 180;
+const MAG_HALF  = MAG_SIZE / 2;
+
+let magRaf   = null;
+let magCX    = 0, magCY = 0;
+let magRect  = null;
+let magImgEl = null;
+
+function flushMag() {
+  magRaf = null;
+  if (!magRect || !magImgEl || !magImgEl.naturalWidth) return;
+
+  // Move lens on compositor (no layout)
+  magLens.style.transform = `translate3d(${magCX - MAG_HALF}px,${magCY - MAG_HALF}px,0)`;
+
+  // Compute source crop in natural image pixels
+  const scaleX = magImgEl.naturalWidth  / magRect.width;
+  const scaleY = magImgEl.naturalHeight / magRect.height;
+  const sw = (MAG_SIZE / MAG_ZOOM) * scaleX;
+  const sh = (MAG_SIZE / MAG_ZOOM) * scaleY;
+  const cx = magCX - magRect.left;
+  const cy = magCY - magRect.top;
+  const sx = Math.max(0, Math.min(magImgEl.naturalWidth  - sw, cx * scaleX - sw / 2));
+  const sy = Math.max(0, Math.min(magImgEl.naturalHeight - sh, cy * scaleY - sh / 2));
+
+  // Draw only the 180×180 crop — GPU composited, no CSS repaint
+  magCtx.clearRect(0, 0, MAG_SIZE, MAG_SIZE);
+  magCtx.drawImage(magImgEl, sx, sy, sw, sh, 0, 0, MAG_SIZE, MAG_SIZE);
+}
+
+document.querySelectorAll('.zoom-img').forEach(img => {
+  img.addEventListener('mouseenter', () => {
+    magImgEl = img;
+    magLens.style.display = 'block';
+    magRect = img.getBoundingClientRect();
+  });
+  img.addEventListener('mouseleave', () => {
+    magLens.style.display = 'none';
+    magRect  = null;
+    magImgEl = null;
+  });
+  img.addEventListener('mousemove', e => {
+    magCX = e.clientX;
+    magCY = e.clientY;
+    magRect = img.getBoundingClientRect();
+    if (!magRaf) magRaf = requestAnimationFrame(flushMag);
+  });
+});
+
+// ── Heading line-split (matches home page heading reveal) ──
+function splitLines(el) {
+  const base = el.classList.contains('d3') ? 0.25
+             : el.classList.contains('d2') ? 0.15
+             : el.classList.contains('d1') ? 0.08
+             : 0;
+  const parts = el.innerHTML.split(/<br\s*\/?>/i);
+  el.innerHTML = parts.map((part, i) =>
+    `<span class="line-wrap"><span class="line-inner" style="transition-delay:${(base + i * 0.13).toFixed(3)}s">${part.trim()}</span></span>`
+  ).join('');
+  el.classList.add('line-split');
+}
+document.querySelectorAll('h2.st, h2.st-d').forEach(splitLines);
 
 // ── Scroll reveal ──
 const obs = new IntersectionObserver(entries => {
@@ -1759,9 +4382,413 @@ const obs = new IntersectionObserver(entries => {
 }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.r').forEach(el => obs.observe(el));
 
+// ── Video Layout System Stage — unified (mock → text → 5 images) ──
+const vlsStageEl = document.getElementById('video-layouts');
+const vlsImgEl   = document.getElementById('vls-img');
+const vlsBodyEl  = document.getElementById('vls-body');
+const vlsBps     = vlsBodyEl ? vlsBodyEl.querySelectorAll('.bp') : [];
+const vlsLayer0  = document.getElementById('vls-layer-0');
+const vlsLayer1  = document.getElementById('vls-layer-1');
+const vlsLayer2  = document.getElementById('vls-layer-2');
+const vlsLayer3  = document.getElementById('vls-layer-3');
+const vlsLayer4  = document.getElementById('vls-layer-4');
+
+function tickVlsStage(t) {
+  if (!vlsStageEl || !vlsImgEl) return;
+  const stageTop   = vlsStageEl.getBoundingClientRect().top + t;
+  const stageRange = vlsStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  // Trigger mock entrance
+  if (!vlsImgEl.classList.contains('on') && t >= stageTop) vlsImgEl.classList.add('on');
+
+  // blue-mock-gallery fades: p 0.12→0.32
+  const imgP = 1 - Math.min(Math.max((p - 0.12) / 0.20, 0), 1);
+  vlsImgEl.style.opacity   = imgP;
+  vlsImgEl.style.transform = `translateX(${(1 - imgP) * -24}px) scale(${1 + (1 - imgP) * 0.04})`;
+
+  // Body text stagger in — each para takes 0.14 to fully appear, staggered 0.08 apart
+  // Para 1: 0.28→0.42  Para 2: 0.36→0.50  Para 3: 0.44→0.58
+  if (vlsBodyEl) vlsBodyEl.style.pointerEvents = p > 0.28 ? 'auto' : 'none';
+  vlsBps.forEach((el, i) => {
+    const ep = Math.min(Math.max((p - 0.28 - i * 0.08) / 0.14, 0), 1);
+    el.style.opacity   = ep;
+    el.style.transform = `translateY(${(1 - ep) * 18}px)`;
+  });
+
+  // All 3 paragraphs fully visible p 0.58→0.68 (60vh dwell at 700vh stage)
+  // Body text fades out: p 0.66→0.74
+  const textFade = 1 - Math.min(Math.max((p - 0.66) / 0.08, 0), 1);
+  if (vlsBodyEl) vlsBodyEl.style.opacity = String(textFade);
+
+  // rendering-logic clips in: p 0.72→0.80
+  const r0 = Math.max(0, Math.min(1, (p - 0.72) / 0.08));
+  const er0 = 1 - Math.pow(1 - r0, 3);
+  if (vlsLayer0) vlsLayer0.style.clipPath = `inset(${(1 - er0) * 100}% 0 0 0)`;
+
+  // people view: p 0.81→0.87, rendering fades
+  const r1 = Math.max(0, Math.min(1, (p - 0.81) / 0.06));
+  const er1 = 1 - Math.pow(1 - r1, 3);
+  if (vlsLayer1) vlsLayer1.style.clipPath = `inset(${(1 - er1) * 100}% 0 0 0)`;
+  if (vlsLayer0) vlsLayer0.style.opacity  = String(1 - r1);
+
+  // speaker view: p 0.88→0.92, people fades
+  const r2 = Math.max(0, Math.min(1, (p - 0.88) / 0.04));
+  const er2 = 1 - Math.pow(1 - r2, 3);
+  if (vlsLayer2) vlsLayer2.style.clipPath = `inset(${(1 - er2) * 100}% 0 0 0)`;
+  if (vlsLayer1) vlsLayer1.style.opacity  = String(1 - r2);
+
+  // gallery view: p 0.93→0.96, speaker fades
+  const r3 = Math.max(0, Math.min(1, (p - 0.93) / 0.03));
+  const er3 = 1 - Math.pow(1 - r3, 3);
+  if (vlsLayer3) vlsLayer3.style.clipPath = `inset(${(1 - er3) * 100}% 0 0 0)`;
+  if (vlsLayer2) vlsLayer2.style.opacity  = String(1 - r3);
+
+  // dashboard config: p 0.96→0.99, gallery fades
+  const r4 = Math.max(0, Math.min(1, (p - 0.96) / 0.03));
+  const er4 = 1 - Math.pow(1 - r4, 3);
+  if (vlsLayer4) vlsLayer4.style.clipPath = `inset(${(1 - er4) * 100}% 0 0 0)`;
+  if (vlsLayer3) vlsLayer3.style.opacity  = String(1 - r4);
+}
+
+// ── Weather Person Mode Stage — mock → text → 2 images ──
+const wpmStageEl = document.getElementById('weather-person-mode');
+const wpmImgEl   = document.getElementById('wpm-img');
+const wpmBodyEl  = document.getElementById('wpm-body');
+const wpmBps     = wpmBodyEl ? wpmBodyEl.querySelectorAll('.bp') : [];
+const wpmLayer0  = document.getElementById('wpm-layer-0');
+const wpmLayer1  = document.getElementById('wpm-layer-1');
+
+function tickWpmStage(t) {
+  if (!wpmStageEl || !wpmImgEl) return;
+  const stageTop   = wpmStageEl.getBoundingClientRect().top + t;
+  const stageRange = wpmStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  // Trigger mock entrance animation
+  if (!wpmImgEl.classList.contains('on') && t >= stageTop) wpmImgEl.classList.add('on');
+
+  // weather-person-mock fades: p 0.12→0.32
+  const imgP = 1 - Math.min(Math.max((p - 0.12) / 0.20, 0), 1);
+  wpmImgEl.style.opacity   = imgP;
+  wpmImgEl.style.transform = `translateY(${(1 - imgP) * 24}px) scale(${1 + (1 - imgP) * 0.04})`;
+
+  // Body text stagger — para1: 0.28→0.42, para2: 0.36→0.50, para3: 0.44→0.58
+  if (wpmBodyEl) wpmBodyEl.style.pointerEvents = p > 0.28 ? 'auto' : 'none';
+  wpmBps.forEach((el, i) => {
+    const ep = Math.min(Math.max((p - 0.28 - i * 0.08) / 0.14, 0), 1);
+    el.style.opacity   = ep;
+    el.style.transform = `translateY(${(1 - ep) * 18}px)`;
+  });
+
+  // All paras visible p 0.58→0.68; text fades: p 0.66→0.74
+  const textFade = 1 - Math.min(Math.max((p - 0.66) / 0.08, 0), 1);
+  if (wpmBodyEl) wpmBodyEl.style.opacity = String(textFade);
+
+  // mode-flow wipes in: p 0.74→0.84
+  const r0  = Math.max(0, Math.min(1, (p - 0.74) / 0.10));
+  const er0 = 1 - Math.pow(1 - r0, 3);
+  if (wpmLayer0) wpmLayer0.style.clipPath = `inset(${(1 - er0) * 100}% 0 0 0)`;
+
+  // receive-wpm wipes in: p 0.88→0.96, mode-flow fades
+  const r1  = Math.max(0, Math.min(1, (p - 0.88) / 0.08));
+  const er1 = 1 - Math.pow(1 - r1, 3);
+  if (wpmLayer1) wpmLayer1.style.clipPath = `inset(${(1 - er1) * 100}% 0 0 0)`;
+  if (wpmLayer0) wpmLayer0.style.opacity  = String(1 - r1);
+}
+
+// ── Screen Share Hero: unified stage (dark glass + 2 image transitions) ──
+const ssStageEl   = document.getElementById('ss-stage');
+const ssGlassEl   = document.getElementById('ss-glass');
+const ssGlassBody = ssGlassEl ? ssGlassEl.querySelector('.ss-glass-body') : null;
+const ssContentEl = document.getElementById('ss-content');
+const ssVideoEl   = document.getElementById('ss-video');
+const ssLayer2    = document.getElementById('ss-layer-2');
+
+function tickSsHero(t) {
+  if (!ssStageEl || !ssGlassEl) return;
+  const stageTop   = ssStageEl.getBoundingClientRect().top + t;
+  const stageRange = ssStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  // Video: fade in as stage scrolls up from bottom of viewport
+  if (ssVideoEl) {
+    const rectTop = ssStageEl.getBoundingClientRect().top;
+    const revealP = Math.max(0, Math.min(1, 1 - rectTop / window.innerHeight));
+    ssVideoEl.style.opacity = revealP;
+    if (revealP > 0 && ssVideoEl.paused) ssVideoEl.play().catch(() => {});
+  }
+
+  // Glass rises: p 0→0.30
+  const riseP  = Math.min(p / 0.30, 1);
+  const topPct = (1 - riseP) * 100;
+  ssGlassEl.style.clipPath             = `inset(${topPct}% 0 0 0)`;
+  ssGlassEl.style.background           = `rgba(8,8,20,${riseP * 0.65})`;
+  ssGlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
+  ssGlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
+
+  // Title fades out: p 0.14→0.28
+  if (ssContentEl) {
+    const fade = 1 - Math.max(0, Math.min(1, (p - 0.14) / 0.14));
+    ssContentEl.style.opacity   = fade;
+    ssContentEl.style.transform = `translateY(${(1 - fade) * 14}px)`;
+  }
+
+  // Glass body text appears: p 0.24→0.40
+  if (ssGlassBody) {
+    const entryP = Math.max(0, Math.min(1, (p - 0.24) / 0.16));
+    ssGlassBody.style.opacity   = entryP;
+    ssGlassBody.style.transform = `translateY(${(1 - entryP) * 18}px)`;
+  }
+
+  // Glass stays — never fades. screen-share-rendering clips in OVER glass: p 0.50→0.64
+  const imgP = Math.max(0, Math.min(1, (p - 0.50) / 0.14));
+  const eImg = 1 - Math.pow(1 - imgP, 3);
+  if (ssLayer2) ssLayer2.style.clipPath = `inset(${(1 - eImg) * 100}% 0 0 0)`;
+}
+
+// ── Atomic Design System Panel ──
+const ds2StageEl   = document.getElementById('ds2-stage');
+const adsRightEl   = document.getElementById('ads-right');
+const adsVidWrapEl = document.getElementById('ads-vid-wrap');
+const adsBodyEl    = document.getElementById('ads-body');
+const adsBodyAltEl = document.getElementById('ads-body-alt');
+const adsCtaEl     = document.getElementById('ads-cta');
+const adsMetricsEl = document.getElementById('ads-metrics');
+
+function tickDs2Stage(t) {
+  if (!ds2StageEl) return;
+  const stageTop   = ds2StageEl.getBoundingClientRect().top + t;
+  const stageRange = ds2StageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  // Video entrance animation
+  if (adsRightEl && !adsRightEl.classList.contains('on') && t >= stageTop) adsRightEl.classList.add('on');
+
+  // Transition: p 0.38→0.54
+  const tp  = Math.max(0, Math.min(1, (p - 0.38) / 0.16));
+  const etp = 1 - Math.pow(1 - tp, 3);
+
+  // Right: video fades out, metrics fade in
+  if (adsVidWrapEl) {
+    if (etp > 0) adsVidWrapEl.style.animation = 'none';
+    adsVidWrapEl.style.opacity = String(1 - etp);
+  }
+  if (adsMetricsEl) {
+    adsMetricsEl.style.opacity   = etp;
+    adsMetricsEl.style.transform = `translateY(${(1 - etp) * 20}px)`;
+  }
+
+  // Left: initial body + CTA fade out
+  if (adsBodyEl)  adsBodyEl.style.opacity  = String(1 - etp);
+  if (adsCtaEl)   adsCtaEl.style.opacity   = String(1 - etp);
+
+  // Left: alt body fades in
+  if (adsBodyAltEl) {
+    adsBodyAltEl.style.opacity   = String(etp);
+    adsBodyAltEl.style.transform = `translateY(${(1 - etp) * 14}px)`;
+  }
+}
+
+// ── Smart Theme Hero ──
+const stStageEl   = document.getElementById('smart-theme');
+const stGlassEl   = document.getElementById('st-glass');
+const stGlassBody = stGlassEl ? stGlassEl.querySelector('.st-glass-body') : null;
+const stContentEl = document.getElementById('st-content');
+const stGridEl    = document.getElementById('st-grid');
+
+function tickStHero(t) {
+  if (!stStageEl || !stGlassEl) return;
+  const stageTop   = stStageEl.getBoundingClientRect().top + t;
+  const stageRange = stStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  if (stGridEl && !stGridEl.classList.contains('on') && t >= stageTop) stGridEl.classList.add('on');
+
+  // Glass rises: p 0→0.30
+  const riseP  = Math.min(p / 0.30, 1);
+  const topPct = (1 - riseP) * 100;
+  stGlassEl.style.clipPath             = `inset(${topPct}% 0 0 0)`;
+  stGlassEl.style.background           = `rgba(8,8,20,${riseP * 0.28})`;
+  stGlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
+  stGlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
+
+  // Content + video fade out: p 0.10→0.24
+  const fade = 1 - Math.max(0, Math.min(1, (p - 0.10) / 0.14));
+  if (stContentEl) { stContentEl.style.opacity = fade; stContentEl.style.transform = `translateY(${(1 - fade) * 14}px)`; }
+  if (stGridEl)    { stGridEl.style.opacity    = fade; stGridEl.style.transform    = `translateY(${(1 - fade) * 14}px)`; }
+
+  // Glass body text: p 0.24→0.40
+  if (stGlassBody) {
+    const ep = Math.max(0, Math.min(1, (p - 0.24) / 0.16));
+    stGlassBody.style.opacity   = ep;
+    stGlassBody.style.transform = `translateY(${(1 - ep) * 18}px)`;
+  }
+}
+
+// ── Name Tag Hero ──
+const ntStageEl   = document.getElementById('nt-stage');
+const ntGlassEl   = document.getElementById('nt-glass');
+const ntGlassBody = ntGlassEl ? ntGlassEl.querySelector('.nt-glass-body') : null;
+const ntContentEl = document.getElementById('nt-content');
+const ntVideoEl   = document.getElementById('nt-video');
+
+function tickNtHero(t) {
+  if (!ntStageEl || !ntGlassEl) return;
+  const stageTop   = ntStageEl.getBoundingClientRect().top + t;
+  const stageRange = ntStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  if (ntVideoEl) {
+    const rectTop = ntStageEl.getBoundingClientRect().top;
+    const revealP = Math.max(0, Math.min(1, 1 - rectTop / window.innerHeight));
+    ntVideoEl.style.opacity = revealP;
+    if (revealP > 0 && ntVideoEl.paused) ntVideoEl.play().catch(() => {});
+  }
+
+  // Glass rises: p 0→0.30
+  const riseP  = Math.min(p / 0.30, 1);
+  const topPct = (1 - riseP) * 100;
+  ntGlassEl.style.clipPath             = `inset(${topPct}% 0 0 0)`;
+  ntGlassEl.style.background           = `rgba(8,8,20,${riseP * 0.65})`;
+  ntGlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
+  ntGlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
+
+  // Title fades out: p 0.14→0.28
+  if (ntContentEl) {
+    const fade = 1 - Math.max(0, Math.min(1, (p - 0.14) / 0.14));
+    ntContentEl.style.opacity   = fade;
+    ntContentEl.style.transform = `translateY(${(1 - fade) * 14}px)`;
+  }
+
+  // Glass body text appears: p 0.24→0.40
+  if (ntGlassBody) {
+    const entryP = Math.max(0, Math.min(1, (p - 0.24) / 0.16));
+    ntGlassBody.style.opacity   = entryP;
+    ntGlassBody.style.transform = `translateY(${(1 - entryP) * 18}px)`;
+  }
+}
+
+// ── FTU Hero: unified stage (glass + entry image + 3 image transitions) ──
+const ftuStageEl   = document.getElementById('ftu-stage');
+const ftuGlassEl   = document.getElementById('ftu-glass');
+const ftuGlassBody = ftuGlassEl ? ftuGlassEl.querySelector('.ftu-glass-body') : null;
+const ftuContentEl = document.getElementById('ftu-content');
+const ftuEntryEl   = document.getElementById('ftu-entry');
+const ftuLayer1    = document.getElementById('ftu-layer-1');
+const ftuLayer2    = document.getElementById('ftu-layer-2');
+const ftuLayer3    = document.getElementById('ftu-layer-3');
+
+function tickFtuHero(t) {
+  if (!ftuStageEl || !ftuGlassEl) return;
+  const stageTop   = ftuStageEl.getBoundingClientRect().top + t;
+  const stageRange = ftuStageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  // Glass rises: p 0→0.30
+  const riseP  = Math.min(p / 0.30, 1);
+  const topPct = (1 - riseP) * 100;
+  ftuGlassEl.style.clipPath             = `inset(${topPct}% 0 0 0)`;
+  ftuGlassEl.style.background           = `rgba(245,246,255,${riseP * 0.60})`;
+  ftuGlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
+  ftuGlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
+
+  // Title fades out: p 0.14→0.28
+  if (ftuContentEl) {
+    const fade = 1 - Math.max(0, Math.min(1, (p - 0.14) / 0.14));
+    ftuContentEl.style.opacity   = fade;
+    ftuContentEl.style.transform = `translateY(${(1 - fade) * 14}px)`;
+  }
+
+  // Glass body text appears: p 0.24→0.40
+  if (ftuGlassBody) {
+    const entryP = Math.max(0, Math.min(1, (p - 0.24) / 0.16));
+    ftuGlassBody.style.opacity   = entryP;
+    ftuGlassBody.style.transform = `translateY(${(1 - entryP) * 18}px)`;
+  }
+
+  // Entry image clips in OVER glass (glass stays): p 0.42→0.54
+  const entryP = Math.max(0, Math.min(1, (p - 0.42) / 0.12));
+  const entryE = 1 - Math.pow(1 - entryP, 3);
+  if (ftuEntryEl) ftuEntryEl.style.clipPath = `inset(${(1 - entryE) * 100}% 0 0 0)`;
+
+  // enter-exit-flow clips in, entry image fades: p 0.56→0.67
+  const img1P = Math.max(0, Math.min(1, (p - 0.56) / 0.11));
+  const e1    = 1 - Math.pow(1 - img1P, 3);
+  if (ftuLayer1)  ftuLayer1.style.clipPath  = `inset(${(1 - e1) * 100}% 0 0 0)`;
+  if (ftuEntryEl) ftuEntryEl.style.opacity  = String(Math.max(0, 1 - img1P));
+
+  // ftu-responsive clips in, enter-exit fades: p 0.70→0.81
+  const img2P = Math.max(0, Math.min(1, (p - 0.70) / 0.11));
+  const e2    = 1 - Math.pow(1 - img2P, 3);
+  if (ftuLayer2) ftuLayer2.style.clipPath = `inset(${(1 - e2) * 100}% 0 0 0)`;
+  if (ftuLayer1) ftuLayer1.style.opacity  = String(1 - img2P);
+
+  // expand-collapse clips in, ftu-responsive fades: p 0.84→0.95
+  const img3P = Math.max(0, Math.min(1, (p - 0.84) / 0.11));
+  const e3    = 1 - Math.pow(1 - img3P, 3);
+  if (ftuLayer3) ftuLayer3.style.clipPath = `inset(${(1 - e3) * 100}% 0 0 0)`;
+  if (ftuLayer2) ftuLayer2.style.opacity  = String(1 - img3P);
+}
+
+// ── Dashboard video: slow playback ──
+const rlVideo = document.getElementById('rl-video');
+if (rlVideo) {
+  rlVideo.addEventListener('loadedmetadata', () => { rlVideo.playbackRate = 0.6; });
+  rlVideo.playbackRate = 0.6;
+}
+
 // ── Init ──
 tickBjHero(window.scrollY);
+tickUtStage(window.scrollY);
+tickVlsStage(window.scrollY);
+tickSsHero(window.scrollY);
+tickWpmStage(window.scrollY);
+tickFtuHero(window.scrollY);
+tickPanStage(window.scrollY);
+tickPrefStage(window.scrollY);
+tickNtHero(window.scrollY);
+tickStHero(window.scrollY);
+tickDs2Stage(window.scrollY);
 updateSidenav();
+
+// ── Outcome metrics count-up ──
+(function () {
+  const nums = document.querySelectorAll('.oc-num[data-count]');
+  if (!nums.length) return;
+
+  function countUp(el, target, suffix) {
+    const duration = 1800;
+    const start    = performance.now();
+    function frame(now) {
+      const p   = Math.min((now - start) / duration, 1);
+      const ep  = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(ep * target) + suffix;
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  const ocObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el     = e.target;
+      const target = parseInt(el.dataset.count, 10);
+      const suffix = el.dataset.suffix || '';
+      countUp(el, target, suffix);
+      ocObs.unobserve(el);
+    });
+  }, { threshold: 0.4 });
+
+  nums.forEach(el => ocObs.observe(el));
+})();
 </script>
 
 </body>

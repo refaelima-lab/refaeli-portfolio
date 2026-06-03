@@ -6,7 +6,23 @@
       "Bash(python3 *)",
       "Bash(open *)",
       "Bash(echo \"Server PID: $!\")",
-      "Bash(grep -E \"\\\\.\\(jpg|png|mp4|mov\\)$\")"
+      "Bash(grep -E \"\\\\.\\(jpg|png|mp4|mov\\)$\")",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/rari/Downloads/refaeli-portfolio/assets/bluejeans-by-verizon/weather-person-mock.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/rari/Downloads/refaeli-portfolio/assets/bluejeans-by-verizon/blue-mock-gallery.png)",
+      "Bash(sed -n '110,115p' /Users/rari/Downloads/refaeli-portfolio/styles.css)",
+      "Bash(sed -n '3720,3728p' /Users/rari/Downloads/refaeli-portfolio/styles.css)",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/rari/Downloads/refaeli-portfolio/assets/bluejeans-by-verizon/__TRACKED_VAR__)",
+      "Bash(sed -n '103,107p' /Users/rari/Downloads/refaeli-portfolio/cs-bluejeans.html)",
+      "Bash(sed -n '320,330p' /Users/rari/Downloads/refaeli-portfolio/cs-bluejeans.html)",
+      "Bash(sed -n '1614,1620p' /Users/rari/Downloads/refaeli-portfolio/cs-bluejeans.html)",
+      "Bash(sed -n '1818,1823p' /Users/rari/Downloads/refaeli-portfolio/cs-bluejeans.html)",
+      "Bash(sed -n '5033,5048p' /Users/rari/Downloads/refaeli-portfolio/styles.css)",
+      "Bash(sed -n '1208,1218p' /Users/rari/Downloads/refaeli-portfolio/cs-bluejeans.html)",
+      "Bash(sed -n '1508,1520p' /Users/rari/Downloads/refaeli-portfolio/cs-bluejeans.html)",
+      "Bash(awk NR>=3497 && NR<=3530 *)",
+      "Bash(awk NR>=3570 && NR<=3600 *)",
+      "Bash(awk NR>=3517 && NR<=3535 *)",
+      "Bash(grep -n \"class=.*block\\\\|\\\\..*block\\\\s*{\" /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)"
     ]
   }
 }

@@ -200,22 +200,23 @@
       pointer-events: none;
     }
     .chap-eyebrow {
-      font-size: var(--text-micro);
+      font-size: var(--text-caption);
       font-weight: var(--weight-semibold);
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: var(--accent-mid);
-      margin-bottom: 1rem;
+      margin-bottom: 0.7rem;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.55rem;
     }
     .chap-eyebrow::after {
       content: '';
       display: block;
-      height: 1px;
-      width: 36px;
+      height: 1.5px;
+      width: var(--kicker-rule-width);
       background: var(--accent-mid-a25);
+      flex-shrink: 0;
     }
     .chap-h {
       font-family: var(--font-serif);
@@ -1033,53 +1034,6 @@
 
 
 <!-- ══════════════════════════════════════
-     05 · DESIGN SYSTEM (dark)
-══════════════════════════════════════ -->
-<section class="cs-sec bg-dark">
-  <div class="sec-inner">
-    <div class="ch r d1" style="color:var(--accent-mid);">05 · Design Infrastructure</div>
-    <h2 class="st-d r d2">900+ components.<br>One <em>shared language</em>.</h2>
-    <p class="bp-d r d3" style="max-width:560px;margin-bottom:2.5rem;">The design system wasn't a nice-to-have. It was the infrastructure that made everything else possible. Before it existed, 11 teams were solving the same problems 11 different ways.</p>
-
-    <div class="g3 r d2" style="gap:1.2rem;">
-      <div class="ff-card">
-        <div class="ff-title">Foundations</div>
-        <p class="ff-body">A single token system spanning light/dark, accessibility states, and brand. Every decision traced to a principle, not a preference.</p>
-        <div style="display:flex;gap:6px;margin-top:1rem;flex-wrap:wrap;">
-          <div style="width:22px;height:22px;border-radius:5px;background:#3C49FF;"></div>
-          <div style="width:22px;height:22px;border-radius:5px;background:#8D94FF;"></div>
-          <div style="width:22px;height:22px;border-radius:5px;background:#f4f4ff;"></div>
-          <div style="width:22px;height:22px;border-radius:5px;background:#1a7a3c;"></div>
-          <div style="width:22px;height:22px;border-radius:5px;background:#c75b00;"></div>
-          <div style="width:22px;height:22px;border-radius:5px;background:#181820;"></div>
-        </div>
-      </div>
-      <div class="ff-card">
-        <div class="ff-title">900+ Components</div>
-        <p class="ff-body">Atomic components from status chips to full-screen modals — all responsive, all accessible. Reduced design-to-dev time by 85%. Unified iOS, Android, and web.</p>
-        <div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:5px;">
-          <span style="background:rgba(60,73,255,0.12);color:#8D94FF;border-radius:5px;padding:2px 7px;font-size:7pt;font-weight:500;">Cards</span>
-          <span style="background:rgba(60,73,255,0.12);color:#8D94FF;border-radius:5px;padding:2px 7px;font-size:7pt;font-weight:500;">Navigation</span>
-          <span style="background:rgba(60,73,255,0.12);color:#8D94FF;border-radius:5px;padding:2px 7px;font-size:7pt;font-weight:500;">Modals</span>
-          <span style="background:rgba(60,73,255,0.12);color:#8D94FF;border-radius:5px;padding:2px 7px;font-size:7pt;font-weight:500;">AI Surfaces</span>
-          <span style="background:rgba(60,73,255,0.12);color:#8D94FF;border-radius:5px;padding:2px 7px;font-size:7pt;font-weight:500;">Alerts</span>
-        </div>
-      </div>
-      <div class="ff-card">
-        <div class="ff-title">Governing Principles</div>
-        <p class="ff-body">Systems work when everyone internalizes the principles, not just the components. These anchored every decision across all 11 teams.</p>
-        <ul style="margin-top:0.9rem;list-style:none;display:flex;flex-direction:column;gap:0.5rem;">
-          <li style="font-size:8pt;font-weight:300;color:rgba(255,255,255,0.48);padding-left:0.8rem;position:relative;"><span style="position:absolute;left:0;top:0.3rem;width:3.5px;height:3.5px;background:#8D94FF;border-radius:50%;display:block;"></span>Trust before delight</li>
-          <li style="font-size:8pt;font-weight:300;color:rgba(255,255,255,0.48);padding-left:0.8rem;position:relative;"><span style="position:absolute;left:0;top:0.3rem;width:3.5px;height:3.5px;background:#8D94FF;border-radius:50%;display:block;"></span>Invisible when working, clear when not</li>
-          <li style="font-size:8pt;font-weight:300;color:rgba(255,255,255,0.48);padding-left:0.8rem;position:relative;"><span style="position:absolute;left:0;top:0.3rem;width:3.5px;height:3.5px;background:#8D94FF;border-radius:50%;display:block;"></span>Right thing inevitable, wrong thing effortful</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════
      CHAPTER BREAK
 ══════════════════════════════════════ -->
 <div class="chap-break r">
@@ -1835,6 +1789,20 @@ document.addEventListener('mouseover', e => {
 });
 document.documentElement.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; });
 document.documentElement.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; });
+
+// ── Heading line-split (matches home page heading reveal) ──
+function splitLines(el) {
+  const base = el.classList.contains('d3') ? 0.25
+             : el.classList.contains('d2') ? 0.15
+             : el.classList.contains('d1') ? 0.08
+             : 0;
+  const parts = el.innerHTML.split(/<br\s*\/?>/i);
+  el.innerHTML = parts.map((part, i) =>
+    `<span class="line-wrap"><span class="line-inner" style="transition-delay:${(base + i * 0.13).toFixed(3)}s">${part.trim()}</span></span>`
+  ).join('');
+  el.classList.add('line-split');
+}
+document.querySelectorAll('h2.st, h2.st-d').forEach(splitLines);
 
 // ── Scroll reveal ──
 const obs = new IntersectionObserver(entries => {

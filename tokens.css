@@ -195,6 +195,12 @@
   --gap-content:       4rem;
   --gap-hero:          6rem;
 
+  /* ── SECTION HEADER STACK ───────────────────────── */
+  /* eyebrow → heading → body spacing — shared across all pages */
+  --gap-eyebrow:       0.7rem;   /* below .ch / .sec-ch */
+  --gap-heading:       1.3rem;   /* below h2.st / h2.st-d */
+  --gap-body:          1.1rem;   /* below .bp / .bp-d */
+
   --breakpoint-mob:    860px;
   --breakpoint-tab:    900px;
 
