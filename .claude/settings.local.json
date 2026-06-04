@@ -22,7 +22,17 @@
       "Bash(awk NR>=3497 && NR<=3530 *)",
       "Bash(awk NR>=3570 && NR<=3600 *)",
       "Bash(awk NR>=3517 && NR<=3535 *)",
-      "Bash(grep -n \"class=.*block\\\\|\\\\..*block\\\\s*{\" /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)"
+      "Bash(grep -n \"class=.*block\\\\|\\\\..*block\\\\s*{\" /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)",
+      "Bash(awk '/^    \\\\./{cls=$1} /margin-bottom:|margin: 0 0|margin-top:/{print NR\": \"cls\" -> \"$0}' /Users/rari/Downloads/refaeli-portfolio/cs-bluejeans.html)",
+      "Bash(awk '/^    \\\\./{cls=$1} /margin-bottom:|margin: 0 0|margin-top:/ && !/var\\\\\\(/ && !/auto/ && !/-100vh/ && !/clamp/{print NR\": \"cls\" -> \"$0}' /Users/rari/Downloads/refaeli-portfolio/cs-bluejeans.html)",
+      "Bash(awk '/^    \\\\./{cls=$1} /margin-bottom:|margin: 0 0/ && !/var\\\\\\(/ && !/auto/ && !/clamp/{print NR\": \"cls\" -> \"$0}' /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)",
+      "Bash(awk '/^    \\\\./{cls=$1} /margin-bottom:|margin: 0 0/ && !/var\\\\\\(/ && !/auto/ && !/clamp/{print NR\": \"cls\" -> \"$0}' /Users/rari/Downloads/refaeli-portfolio/cs-vz-id-arch.html)",
+      "Bash(awk '/^    \\\\./{cls=$1} /margin-bottom:|margin: 0 0/ && !/var\\\\\\(/ && !/auto/ && !/clamp/{print NR\": \"cls\" -> \"$0}' /Users/rari/Downloads/refaeli-portfolio/cs-iconmobile.html)",
+      "Bash(awk '/^    \\\\./{cls=$1} /dot-grid-\\(white|mid|light|strong\\)/ && !/--dot-grid-/ {print cls}' /Users/rari/Downloads/refaeli-portfolio/cs-bluejeans.html)",
+      "Bash(awk '/^    \\\\./{cls=$0; line=NR} /background-image:.*dot-grid/ {print line\": \"cls}' /Users/rari/Downloads/refaeli-portfolio/cs-bluejeans.html)",
+      "Bash(grep -n \"</div>$\\\\|</section>$\\\\|<script>\\\\|apr-stepper\" /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)",
+      "Bash(awk 'NR==1 || \\(/apr-stepper|<script>/ && NR > 1\\) { print }')",
+      "Bash(awk 'NR>=1690 && NR<=1720' /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)"
     ]
   }
 }

@@ -1,7 +1,9 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 REFAELI MA PORTFOLIO — COMPONENT REFERENCE
 Files: index.html · styles.css · tokens.css
-Last updated: Session 11
+       cs-bluejeans.html · cs-vz-home.html
+       cs-vz-id-arch.html · cs-iconmobile.html
+Last updated: 2026-06-03
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
@@ -52,26 +54,47 @@ Centering a section's inner content (used in breakers):
 3. SECTION BREAKERS (full-viewport chapter openers)
 ═══════════════════════════════════════════════════════════════════
 
-.philosophy-sec   (also used for #work / MADE REAL)
+There are THREE breakers on index.html. Each occupies one viewport
+height, holds the section ID, and uses the same eyebrow/title/body
+rhythm via tokens (no inline margins).
+
+.philosophy-sec   (#philosophy)
   Dark surface. background: var(--dark) + --dot-grid-white-sm.
   min-height:100vh. display:flex; align-items:center.
-  Canvas ripple effect active on desktop (see §9).
-  Used by: #philosophy, #work (MADE REAL).
+  Inner: .sec-inner.phi-inner — left column with the type stack
+  (.phi-kicker → .phi-statement-wrap → .phi-pullquote → .phi-body).
+  Has decorative dot-grid parallax tied to scroll.
 
-.object-breaker   (#object)
-  Light surface counterpart. background: var(--warm) + --dot-grid-mid.
-  min-height:100vh. display:flex; align-items:center.
-  Uses dark dot grid (dots visible on light bg).
-  No canvas ripple (static dot grid only).
+.wsb-breaker      (#work — "MADE REAL")
+  Dark surface. background: var(--dark) + --dot-grid-white-sm.
+  position:absolute; inset:0 inside .work-sticky.
+  display:flex; align-items:center; justify-content:center.
+  padding: 0 var(--section-padding-x) — matches .philosophy-sec gutter.
+  Inner: .wsb-inner — flex column, left-aligned, max-width
+  var(--content-default), centered via auto margin.
+  Has .hero-glow centered overlay; canvas ripple active.
+  Scroll-driven opacity (fades out as first work card enters).
 
-Title/body spacing inside breakers:
-  h2 uses style="margin-bottom:2rem;" inline to space from body.
-  Both MADE REAL and OBJECT breakers use max-width:600px on heading,
-  max-width:640px on body paragraph.
+.ob-breaker       (#object — "OTHER THINGS I MAKE")
+  Warm surface. background: var(--warm) + --dot-grid-mid.
+  position:absolute; inset:0 inside .gal-sticky.
+  display:flex; align-items:center; justify-content:center.
+  padding: 0 var(--section-padding-x).
+  Inner: reuses .wsb-inner class (same layout rules).
+  Scroll-driven opacity (fades out as gallery enters).
 
-Note: breakers carry the section ID; the content section
-immediately after (work cards, object gallery) has no ID.
-No anim-divider between breaker and its gallery.
+Typography rhythm inside breakers (driven by tokens — never hardcode):
+  .ch / .ch-d           margin-bottom: var(--gap-eyebrow)  → 1.75rem
+  h2.st / h2.st-d       margin-bottom: var(--gap-heading)  → 0
+  .bp / .bp-d           margin-bottom: var(--gap-body)     → 1.1rem
+  h2 inline max-width:  900px   (heading line length)
+  p  inline max-width:  640px   (body line length)
+  h2 font scale         var(--text-heading) — matches Design Philosophy
+  body color (dark bg)  rgba(255,255,255,0.45) (.bp-d override)
+
+Note: breakers carry the section ID; the content section immediately
+after (work cards, object gallery) has no ID. No anim-divider between
+a breaker and its own gallery.
 
 
 ═══════════════════════════════════════════════════════════════════
@@ -645,6 +668,34 @@ LAYOUT
   --section-padding-x clamp(1.25rem, 5vw, 4rem)
   --section-padding-y 6rem
 
+SECTION HEADER RHYTHM (eyebrow → title → body)
+  --gap-eyebrow       1.75rem  (below .ch / .sec-ch)
+  --gap-heading       0        (below h2.st / h2.st-d)
+  --gap-body          1.1rem   (below .bp / .bp-d)
+
+  ONE RHYTHM ACROSS THE WHOLE SITE — home and all case studies share
+  these tokens. Standard classes (.ch, h2.st, .bp) consume them
+  automatically; bespoke classes reference them directly.
+
+  Home-page custom consumers:
+    .phi-kicker          margin-bottom: var(--gap-eyebrow)
+    .phi-statement-wrap  margin-bottom: var(--gap-heading)
+    .cz-kicker           margin-bottom: var(--gap-eyebrow)
+    .cz-title            margin-bottom: var(--gap-heading)
+
+  Case-study bespoke consumers (inline <style> in each CS page):
+    BJ        .bj-eyebrow, .bj-overview-eyebrow      → --gap-eyebrow
+              .bj-h1                                  → --gap-heading
+    VZ Home   .vzh-kicker, .chap-eyebrow              → --gap-eyebrow
+              .vzh-title, .chap-h                     → --gap-heading
+    IA        .ia-eyebrow                             → --gap-eyebrow
+              (.ia-h1 already at margin:0 = token val)
+    Iconmob.  .kia-kicker, .ford-kicker, .bmw-kicker  → --gap-eyebrow
+              (.kia-title, .ford-title, .bmw-title — margin:0)
+
+  To change the rhythm: edit the two token values in tokens.css
+  and every section across every page updates.
+
 BREAKPOINTS
   --breakpoint-mob  860px
   --breakpoint-tab  900px
@@ -674,43 +725,499 @@ Asset folders:
 
 
 ═══════════════════════════════════════════════════════════════════
-18. CASE STUDY PAGES (not yet built)
+18. CASE STUDY PAGES (all four built)
 ═══════════════════════════════════════════════════════════════════
 
-Four case study pages are planned. Each is a standalone HTML file
-that links from the corresponding work card on index.html.
+Each case study is a standalone HTML file linked from its work card
+on index.html. They share tokens.css + styles.css and the nav/footer.
 
-FILES TO BUILD
-  cs-vz-home.html          Verizon Home App
-  cs-bluejeans.html        BlueJeans by Verizon
-  cs-vz-id-arch.html       Verizon Identity Architecture
-  cs-iconmobile.html       Iconmobile In-Car Experience
+CURRENT FILES
+  cs-vz-home.html      Verizon Home App
+  cs-bluejeans.html    BlueJeans by Verizon       (most pattern-rich)
+  cs-vz-id-arch.html   Verizon Identity Architecture
+  cs-iconmobile.html   Iconmobile In-Car Experience
 
-REFERENCE FILES (existing, do not modify)
-  casestudy_verizon_home.html              VZ Home reference
-  casestudy_vz_fromchaosfinal.html         BlueJeans reference
+SHARED CS-LEVEL COMPONENTS (defined in styles.css, see §19 for usage)
+  .cs-sec              CS section wrapper. Inherits the global
+                       section-header rhythm (gap-eyebrow / gap-heading).
+  .cs-sec .sec-inner > .sec-ch / h2.st / p.bp
+                       Auto-applies kicker → heading → body margins
+                       via the cs-scoped tokens.
+  .cs-sidenav          Sticky right-edge dot nav with scroll-spy.
+  .cs-sidenav-dot      Individual dot — data-label + data-target.
+                       .on-light variant for dots on light backgrounds.
+  .cs-img-frame        Bordered media frame (border-radius, overflow).
+  .cs-img-caption      Below-image caption strip.
+  .cs-2col             Two-column grid wrapper for paired media.
+  .pullquote /
+  .pullquote-d         Standalone serif testimonial block.
 
-BUILD APPROACH
-  1. Link tokens.css + styles.css — reuse all existing design tokens.
-  2. Reuse components: .sec/.sec-inner, .ch/.ch-d, .st/.st-d, .bp/.bp-d,
-     .anim-divider, nav (.nav-bar), footer, scroll reveal (.r/.d1–d6).
-  3. Extend with case-study-specific layout as needed (new classes OK,
-     must still use tokens — no hardcoded values).
-  4. Nav and footer copy exactly from index.html. Scroll-spy still works.
-  5. Work card SVG visuals: inline SMIL SVG, dark background (#181821).
+BUILD APPROACH (when starting a new CS page or section)
+  1. Reuse tokens + shared components first. New classes are fine
+     when bespoke art-direction is needed — they must still reference
+     tokens (no hardcoded colors/spacing).
+  2. Page-scoped classes use a 2–3-letter prefix (bj-*, vzh-*, ia-*,
+     kia-*, ford-*, bmw-*). Keep that scope; do NOT promote to
+     generic names without an extraction pass.
+  3. Nav + footer copy exactly from index.html. Scroll-spy still works.
+  4. For recurring layouts (hero stage, sticky-cover stack, dashboard
+     showcase, overview grid), copy the recipes in §19 below.
 
-TYPICAL CS PAGE SECTIONS (adapt per project)
-  Hero        Project title, role, year, brief tagline.
-  Overview    Problem statement, my role, team context.
-  Process     Research, ideation, iterations — image-heavy.
-  Solution    Final design, key screens/flows.
-  Outcomes    Metrics, impact, what shipped.
-  Next        What I'd do differently / what's next.
+TYPICAL CS PAGE FLOW (varies per project)
+  Hero        Full-bleed sticky stage + frosted-glass reveal.
+  Tag marquee Looping keyword strip.
+  Overview    3-block hover-flip grid (BJ pattern, §19.3).
+  Chapters    Sticky-cover stacked sections (§19.4).
+  Research /  Two-column kicker/title/body + visual.
+  Solution    Full-bleed dashboard/screen showcase (§19.8).
+  Impact      Stat strip or quote grid (§19.7).
   Footer      White background, dark text (same as index.html).
 
 LETTER SPACING NOTE
   Use --tracking-wider (0.16em) for kicker/eyebrow labels,
   consistent with index.html nav links and hero location.
+
+
+═══════════════════════════════════════════════════════════════════
+19. CASE STUDY PATTERN RECIPES
+═══════════════════════════════════════════════════════════════════
+
+Layout patterns that recur across cs-*.html pages. Each recipe shows
+the structural skeleton — copy, swap the prefix, fill the slots.
+Class names use a per-page prefix (bj-, vzh-, ia-, kia-, ford-, bmw-)
+so two CS pages can use the same recipe with different styling.
+
+When adding a new CS page, prefer reusing these recipes over inventing
+new structures. If you find yourself writing a fourth variant of one
+of these, that's the signal to extract it to a shared class — until
+then, page-scoped prefixes keep each story independently art-directable.
+
+
+───────────────────────────────────────────────────────────────────
+19.1 — FULL-BLEED STICKY HERO STAGE
+       Used by: every CS page
+       Live examples: cs-bluejeans (bj-stage / bj-hero)
+                      cs-vz-home (vzh-stage / vzh-hero)
+                      cs-vz-id-arch (ia-stage / ia-hero)
+                      cs-iconmobile (kia-stage / kia-hero)
+───────────────────────────────────────────────────────────────────
+
+Stage container holds ~220–260vh of scroll length; the hero inside
+is sticky-100vh. Background + image layers parallax; a frosted-glass
+overlay rises with scroll and cross-fades over the project title.
+
+SKELETON
+  <div class="[prefix]-stage" id="overview">
+    <section class="[prefix]-hero">
+      <div class="[prefix]-bg"       aria-hidden="true"></div>
+      <div class="[prefix]-vignette" aria-hidden="true"></div>
+
+      <div class="[prefix]-img-wrap" aria-hidden="true">
+        <img class="[prefix]-img" src="..." alt="...">
+      </div>
+
+      <div class="[prefix]-glass" id="[prefix]-glass" aria-hidden="true">
+        <p class="[prefix]-glass-line">Opening statement <em>with italic.</em></p>
+        <p class="[prefix]-glass-line">Second statement for emphasis.</p>
+      </div>
+
+      <div class="[prefix]-content" id="[prefix]-content">
+        <div class="[prefix]-kicker">Company · Category · Years</div>
+        <h1 class="[prefix]-h1">Project<br><em>Title</em></h1>
+      </div>
+    </section>
+  </div>
+
+SLOTS
+  -bg         solid color, gradient, or radial — set in page CSS
+  -img        hero artwork (parallax on scroll)
+  -glass-line serif text lines, staggered clip-path reveal
+  -kicker     company · medium · year range
+  -h1         project name, italic emphasis via <em>
+
+JS HOOKS
+  Scroll progress drives:
+    - parallax translateY on .[prefix]-img-wrap
+    - frosted glass opacity + clip-path inset reveal
+    - content cross-fade (28–60% of stage scroll)
+  Pattern: read getBoundingClientRect on the stage, compute 0→1,
+  apply transforms in rAF.
+
+
+───────────────────────────────────────────────────────────────────
+19.2 — TAG MARQUEE STRIP
+       Used by: every CS page (post-hero) AND index.html hero
+       Live examples: index.html (line 122), all four CS pages
+───────────────────────────────────────────────────────────────────
+
+Infinite horizontally-looping keyword strip. Pure CSS animation —
+the track is duplicated inline for a seamless loop.
+
+SKELETON
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Keyword<span class="marquee-sep"></span></span>
+      <!-- ...16–18 items... -->
+      <!-- duplicate the same sequence verbatim for seamless loop -->
+      <span class="marquee-item">Keyword<span class="marquee-sep"></span></span>
+    </div>
+  </div>
+
+SLOTS
+  marquee-item    project tags (Digital Product Design, HMI, etc.)
+  loop length     ~16–18 items per set, duplicated
+
+JS HOOKS — none. animation-play-state: paused on hover (CSS only).
+
+
+───────────────────────────────────────────────────────────────────
+19.3 — THREE-BLOCK OVERVIEW GRID (hover-flip cards)
+       Live example: cs-bluejeans (bj-overview, lines 2781–2910)
+───────────────────────────────────────────────────────────────────
+
+3-column grid of cards that flip on hover from a default face
+(animated illustration + title) to a hover face (description +
+metrics + section anchor). Reuses the .hiw-orbs orbit-rings
+background as a decorative layer.
+
+SKELETON
+  <section class="[prefix]-overview" id="[prefix]-overview">
+    <!-- decorative orbit rings (optional, reused from #how-i-work) -->
+    <div class="hiw-orbs" aria-hidden="true">
+      <div class="hiw-orb hiw-orb-tr"><!-- 6 dot-arms --></div>
+      <div class="hiw-orb hiw-orb-bl"><!-- 6 dot-arms --></div>
+    </div>
+
+    <div class="[prefix]-overview-head">
+      <div class="[prefix]-overview-eyebrow r d1">Case Study Overview</div>
+      <h2 class="[prefix]-overview-title r d2">Three tracks.<br><em>One platform.</em></h2>
+    </div>
+
+    <div class="[prefix]-overview-grid">
+      <div class="[prefix]-ov-block r d3">
+        <div class="[prefix]-ov-num">01 / Slug</div>
+        <div class="[prefix]-ov-default">
+          <div class="[prefix]-ov-block-title">Display Title</div>
+          <div class="[prefix]-ov-anim"><!-- CSS/SVG anim --></div>
+        </div>
+        <div class="[prefix]-ov-hover">
+          <div class="[prefix]-ov-hover-num">01</div>
+          <div class="[prefix]-ov-hover-title">Full Title</div>
+          <p class="[prefix]-ov-desc">Description + metric.</p>
+          <a href="#section" class="[prefix]-ov-cta">Explore →</a>
+        </div>
+      </div>
+      <!-- ...repeat for blocks 02 and 03... -->
+    </div>
+  </section>
+
+SLOTS
+  -ov-anim    CSS/SVG animation that conveys the track's character
+              (BJ uses: rings, sliders, comp-grid — different per block)
+  -ov-hover   description + anchor link to deeper-page section
+
+JS HOOKS — none. Pure CSS :hover swaps default ↔ hover face.
+
+
+───────────────────────────────────────────────────────────────────
+19.4 — SCROLL-COVER STACKED CHAPTERS (.context-stack)
+       Live example: cs-bluejeans (used 3+ times — context+partner,
+                                   insights+features, dashboard+ftu)
+───────────────────────────────────────────────────────────────────
+
+Sequential chapters where each new section "covers" the previous
+one by being sticky underneath and having a higher z-index. The
+result reads as panels sliding over panels as you scroll.
+
+SKELETON
+  <div class="context-stack">
+
+    <!-- Sticky underneath section -->
+    <section class="cs-sec bg-page [prefix]-context-sticky"
+             style="padding-top:9rem;">
+      <div class="sec-inner">
+        <div class="sec-ch r">01 · Context</div>
+        <h2 class="st r d1">Title<br><em>with italic.</em></h2>
+        <p class="bp r d2" style="max-width:780px;">Body.</p>
+      </div>
+    </section>
+
+    <!-- Covering section — slides over the sticky one -->
+    <section class="cs-sec bg-page [prefix]-partner-cover"
+             style="padding-bottom:9rem;">
+      <div class="sec-inner">
+        <div class="sec-ch r">02 · Partner Adoption</div>
+        <h2 class="st r d1">Next Title</h2>
+        <p class="bp r d2">Body.</p>
+        <!-- optional: partner-logo strip, quotes, etc. -->
+      </div>
+    </section>
+
+  </div>
+
+SLOTS
+  -context-sticky   position:sticky; top:0; z-index:1
+  -[name]-cover     z-index:2; usually with border-radius top +
+                    shadow so the cover edge reads clearly
+  Multi-level       you can chain N covers — z-index increments,
+                    each section has -cover-sticky if it covers
+                    the next AND gets covered by it.
+
+JS HOOKS — none required. Sticky positioning + z-index handles it.
+
+
+───────────────────────────────────────────────────────────────────
+19.5 — STICKY IN-PAGE SIDENAV (dot rail)
+       Used by: every CS page
+       Shared component: .cs-sidenav  (styles.css:3738+)
+───────────────────────────────────────────────────────────────────
+
+Fixed dot-rail on the right edge. Each dot scrolls to a section
+anchor; the active dot is highlighted by scroll-spy. Auto-inverts
+to dark dots on light backgrounds via .on-light modifier.
+
+SKELETON
+  <nav class="cs-sidenav" id="cs-sidenav" aria-label="Page sections">
+    <button class="cs-sidenav-dot active"
+            data-label="Overview"  data-target="overview"></button>
+    <button class="cs-sidenav-dot"
+            data-label="Context"   data-target="context"></button>
+    <button class="cs-sidenav-dot"
+            data-label="Research"  data-target="research"></button>
+    <!-- ...one dot per chapter... -->
+  </nav>
+
+SLOTS
+  data-label      shown on hover via ::after
+  data-target     section ID the dot scrolls to
+
+JS HOOKS
+  IntersectionObserver watches all section[id] referenced by dots.
+  Toggles .active on the matching dot.
+  Toggles .on-light on the nav based on the active section's bg.
+
+
+───────────────────────────────────────────────────────────────────
+19.6 — IMAGE FRAME + CAPTION (single, or paired in .cs-2col)
+       Used by: every CS page
+       Shared components: .cs-img-frame, .cs-img-caption, .cs-2col
+───────────────────────────────────────────────────────────────────
+
+Bordered media frame with a below-image caption strip. Use
+.cs-2col to pair two frames side-by-side (comparisons, befores
+and afters).
+
+SKELETON — single
+  <div class="cs-img-frame r d4">
+    <img src="..." alt="...">
+    <div class="cs-img-caption">Caption text.</div>
+  </div>
+
+SKELETON — paired
+  <div class="cs-2col r d4">
+    <div class="cs-img-frame" style="margin:0;">
+      <img src="..." alt="...">
+      <div class="cs-img-caption">Left caption.</div>
+    </div>
+    <div class="cs-img-frame" style="margin:0;">
+      <img src="..." alt="...">
+      <div class="cs-img-caption">Right caption.</div>
+    </div>
+  </div>
+
+SLOTS
+  img src/alt   visual asset
+  caption       1–2 line description
+  .cs-2col      wraps two frames; inline margin:0 on the children
+                so the grid gap controls spacing, not the frame
+                default margin.
+
+JS HOOKS — none. Scroll-reveal via .r .d[N].
+
+
+───────────────────────────────────────────────────────────────────
+19.7 — STAT STRIP / QUOTE GRID (impact blocks)
+       Stat live: cs-vz-home (vzh-stat-strip, lines 852–868)
+       Quote live: cs-bluejeans (bj-quote-grid, lines 1285–1340)
+───────────────────────────────────────────────────────────────────
+
+Two flavours of the same impact-summary slot:
+  - Stat strip: 4 cells of big-number + label, separated by rules
+  - Quote grid: 3 testimonial cards with attribution
+
+SKELETON — stat strip
+  <div class="[prefix]-stat-strip">
+    <div class="[prefix]-stat-cell">
+      <div class="[prefix]-stat-num">1M+</div>
+      <div class="[prefix]-stat-label">Customers · Launch Aug 2024</div>
+    </div>
+    <!-- ...3 more cells... -->
+  </div>
+
+SKELETON — quote grid
+  <div class="[prefix]-quote-grid">
+    <div class="[prefix]-quote-card r d3">
+      <div class="[prefix]-quote-mark">&ldquo;</div>
+      <p class="[prefix]-quote-text">Quote text.</p>
+      <div class="[prefix]-quote-rule"></div>
+      <div class="[prefix]-quote-name">Person Name</div>
+      <div class="[prefix]-quote-role">Title / Org</div>
+    </div>
+    <!-- ...2 more cards... -->
+  </div>
+
+SLOTS
+  stat-num + stat-label   metric value + context
+  quote-text + name + role testimonial body + attribution
+
+JS HOOKS
+  Optional: stat-num counter animation (cs-vz-home has this).
+  Otherwise scroll-reveal only via .r .d[N].
+
+
+───────────────────────────────────────────────────────────────────
+19.8 — FULL-BLEED DASHBOARD SHOWCASE (scroll-driven 2-layer)
+       Live examples: cs-iconmobile (kia-show, ford-show, bmw-show)
+       Also: cs-bluejeans rl-dash-sec uses a static variant
+───────────────────────────────────────────────────────────────────
+
+Sticky stage holding a centered hero asset; a second image layer
+fades/reveals on scroll, so the user sees "screen → next screen"
+transition without leaving the section.
+
+SKELETON
+  <div class="[prefix]-show-stage" id="[prefix]-show-stage">
+    <div class="[prefix]-show-sticky">
+      <div class="[prefix]-show-bg"    aria-hidden="true"></div>
+      <div class="[prefix]-show-glass" aria-hidden="true"></div>
+
+      <!-- Screen 1: always visible -->
+      <div class="[prefix]-show-img-layer">
+        <img class="[prefix]-show-img" src="..." alt="...">
+      </div>
+
+      <!-- Screen 2: scroll-driven reveal -->
+      <div class="[prefix]-show-img-layer [prefix]-show-layer2"
+           id="[prefix]-show-layer2">
+        <img class="[prefix]-show-img" src="..." alt="...">
+      </div>
+    </div>
+  </div>
+
+SLOTS
+  -bg         background color/image
+  -glass      optional frosted overlay
+  -img        max 82% width/height, object-fit:contain
+  reveal      cubic-ease clip-path on layer2 from 20%→80% scroll
+
+JS HOOKS
+  Scroll progress on -show-stage drives:
+    layer2.style.clipPath = 'inset(... 0 ... 0)'
+  Or scaled opacity blend.
+
+
+───────────────────────────────────────────────────────────────────
+19.9 — DECORATIVE ORBIT RINGS BACKGROUND
+       Defined in: styles.css (.hiw-orbs / .hiw-orb / .hiw-orb-dot)
+       Reused by: index.html #how-i-work, cs-bluejeans bj-overview
+───────────────────────────────────────────────────────────────────
+
+Two rotating dotted rings — top-right CW, bottom-left CCW —
+positioned as an absolute background layer. Drop anywhere you
+need ambient motion without competing with content.
+
+SKELETON
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg">  <span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"> <span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <!-- same 6 arms, but offset by 30°: 30/90/150/210/270/330deg -->
+    </div>
+  </div>
+
+SLOTS
+  --da on each .hiw-dot-arm sets the dot's angular position.
+  Adjust ring size / position by wrapping in a container with
+  custom positioning (the orb itself is 86vw circle by default).
+
+JS HOOKS — none. CSS @keyframes hiw-spin-cw / hiw-spin-ccw.
+
+
+───────────────────────────────────────────────────────────────────
+19.10 — STANDALONE PULL QUOTE
+        Shared component: .pullquote / .pullquote-d
+        Live examples: cs-vz-home (lines 902, 1196, 1479+),
+                       cs-bluejeans
+───────────────────────────────────────────────────────────────────
+
+Centered serif testimonial block — one beat of emphasis between
+denser body sections. Dark variant for dark surfaces.
+
+SKELETON
+  <div class="pullquote r d3">
+    <p>The single sentence that anchors the chapter.</p>
+    <cite>Optional — attribution.</cite>
+  </div>
+
+SLOTS
+  <p>           the quote (keep to 1–3 sentences)
+  <cite>        optional attribution
+  .pullquote-d  dark-surface variant
+
+JS HOOKS — none. Scroll-reveal via .r .d[N].
+
+
+───────────────────────────────────────────────────────────────────
+19.11 — STANDARD SECTION (.cs-sec / kicker → title → body)
+        The default building block for every CS chapter
+───────────────────────────────────────────────────────────────────
+
+Use this for any "talking-head" chapter — the rhythm tokens
+already produce the correct spacing inside .cs-sec without inline
+margins. Add .bg-page / .bg-warm / .bg-dark for surface variant.
+
+SKELETON
+  <section class="cs-sec bg-page" id="some-anchor">
+    <div class="sec-inner">
+      <div class="sec-ch r">05 · Chapter Label</div>
+      <h2 class="st r d1">Main Title<br><em>with italic.</em></h2>
+      <p class="bp r d2" style="max-width:600px;">Body copy.</p>
+    </div>
+  </section>
+
+DARK-SURFACE VARIANT
+  Swap to .bg-dark + h2.st-d + .bp-d. The sec-ch can take an inline
+  style="color:var(--accent-mid);" to keep contrast.
+
+SLOTS
+  sec-ch     "##· Topic" eyebrow
+  h2         title with optional <em> + <br>
+  p.bp       body, max-width inline (commonly 580–860px)
+
+JS HOOKS — scroll-reveal only.
+
+
+───────────────────────────────────────────────────────────────────
+EXTRACTION CRITERIA — when to promote a recipe to a shared class
+───────────────────────────────────────────────────────────────────
+
+Keep prefixed (bj-, vzh-, etc.) if:
+  - The visual identity differs meaningfully per page
+  - Only 1–2 CS pages use the pattern
+  - Page-specific JS hooks the structure tightly
+
+Promote to a shared class (like the existing .cs-sec, .cs-sidenav,
+.cs-img-frame, .pullquote) if:
+  - 3+ pages have near-identical markup
+  - Styling differences are token-level (color, padding) not
+    structural
+  - You'd rather edit one rule than four
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

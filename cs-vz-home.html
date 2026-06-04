@@ -76,6 +76,15 @@
       z-index: 4;
       width: 100%;
       padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: clamp(1.5rem, 4vw, 3rem);
+      flex-wrap: wrap;
+    }
+    .vzh-content-left {
+      flex: 0 1 auto;
+      min-width: 0;
     }
     .vzh-kicker {
       font-size: var(--text-micro);
@@ -83,7 +92,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: rgba(255,255,255,0.48);
-      margin-bottom: 0.75rem;
+      margin-bottom: 0;
       opacity: 0;
       animation: fu 0.6s var(--ease-reveal) 0.3s both;
     }
@@ -93,7 +102,7 @@
       font-weight: var(--weight-regular);
       color: #fff;
       line-height: 1.0;
-      margin: 0 0 1.8rem;
+      margin: 0 0 1rem;
       opacity: 0;
       animation: fu 0.7s var(--ease-reveal) 0.5s both;
     }
@@ -205,7 +214,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: var(--accent-mid);
-      margin-bottom: 0.7rem;
+      margin-bottom: var(--gap-eyebrow);
       display: flex;
       align-items: center;
       gap: 0.55rem;
@@ -224,7 +233,7 @@
       font-weight: var(--weight-regular);
       color: #fff;
       line-height: 1.1;
-      margin-bottom: 1.2rem;
+      margin-bottom: var(--gap-heading);
       max-width: 620px;
     }
     .chap-h em { font-style: italic; color: var(--accent-mid); }
@@ -267,28 +276,81 @@
       text-align: left;
     }
 
+    /* ── Global dot-grid across all sections ──────────────── */
+    .cs-sec.bg-page,
+    .cs-sec.bg-warm,
+    .cs-sec.bg-accent {
+      background-image: var(--dot-grid-mid);
+      background-size: var(--dot-size-md);
+    }
+    .cs-sec.bg-dark {
+      background-image: var(--dot-grid-white-sm);
+      background-size: var(--dot-size-md);
+    }
+
     /* ── Chapter break transition ── */
     .chap-break {
-      background: var(--dark);
+      background-color: var(--dark);
+      background-image: var(--dot-grid-white-sm);
+      background-size: var(--dot-size-md);
       border-top: 1px solid var(--accent-mid-a08);
       border-bottom: 1px solid var(--accent-mid-a08);
       padding: 4rem clamp(1.25rem, 5vw, 4rem);
-      overflow: hidden;
+      position: relative;
     }
     .chap-break-inner {
       max-width: var(--content-default);
       margin: 0 auto;
       display: flex;
-      align-items: center;
+      align-items: stretch;
       gap: 3rem;
     }
-    .cb-side { flex: 1; }
+    .cb-side {
+      flex: 1;
+      position: relative;
+      min-height: 300px;
+    }
+
+    /* Two stacked faces — default + hover, cross-fade on hover */
+    .cb-default,
+    .cb-hover {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: opacity 0.4s ease;
+    }
+    .cb-default { opacity: 1; pointer-events: auto; }
+    .cb-hover   { opacity: 0; pointer-events: none; }
+    .cb-side:hover .cb-default { opacity: 0; pointer-events: none; }
+    .cb-side:hover .cb-hover   { opacity: 1; pointer-events: auto; }
+
     .cb-num {
       font-family: var(--font-serif);
-      font-size: clamp(52pt, 7vw, 80pt);
+      font-size: clamp(80pt, 13vw, 180pt);
       color: var(--accent-mid-a08);
       line-height: 1;
       margin-bottom: -0.15em;
+    }
+    /* Shimmer on the active chapter's number (looping highlight sweep) */
+    .cb-side.cb-active .cb-num {
+      background-image: linear-gradient(
+        100deg,
+        rgba(141,148,255,0.08) 35%,
+        rgba(255,255,255,0.28) 50%,
+        rgba(141,148,255,0.08) 65%
+      );
+      background-size: 200% 100%;
+      background-position: 200% 0;
+      -webkit-background-clip: text;
+              background-clip: text;
+      color: transparent;
+      animation: cb-shimmer 5s ease-in-out infinite;
+    }
+    @keyframes cb-shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -100% 0; }
     }
     .cb-chapter {
       font-size: var(--text-micro);
@@ -302,10 +364,43 @@
       font-family: var(--font-serif);
       font-size: clamp(16pt, 2.2vw, 24pt);
       line-height: 1.2;
+      color: rgba(255,255,255,0.3);
     }
-    .cb-title.done { color: rgba(255,255,255,0.3); }
-    .cb-title.next { color: #fff; }
-    .cb-divider { width: 1px; height: 72px; background: var(--accent-mid-a12); flex-shrink: 0; }
+    .cb-side.cb-active .cb-title { color: #fff; }
+
+    /* Hover-face content */
+    .cb-desc {
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: rgba(255,255,255,0.65);
+      line-height: 1.55;
+      margin: 0 0 1rem;
+    }
+    .cb-jump {
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      align-self: flex-start;
+      transition: color 0.2s ease;
+    }
+    .cb-jump:hover { color: #fff; }
+    .cb-jump-arrow { transition: transform 0.2s ease; }
+    .cb-jump:hover .cb-jump-arrow { transform: translateX(3px); }
+    .cb-jump.cb-jump-back:hover .cb-jump-arrow { transform: translateX(-3px); }
+
+    .cb-divider {
+      width: 1px;
+      height: 120px;
+      background: var(--accent-mid-a12);
+      flex-shrink: 0;
+      align-self: center;
+    }
 
     /* ── Cinematic quote section ── */
     .cinematic-sec {
@@ -592,11 +687,9 @@
 
     /* ── Video embed ── */
     .cs-video-wrap {
-      border-radius: var(--radius-card-lg);
       overflow: hidden;
-      background: #000;
+      background: transparent;
       margin-top: 2.5rem;
-      border: 1px solid var(--rule-dark);
     }
     .cs-video-wrap video { width: 100%; display: block; max-height: 72vh; object-fit: cover; }
 
@@ -707,6 +800,586 @@
       .mission-cards { grid-template-columns: 1fr; }
       .mc-arrow { transform: rotate(90deg); }
       .metric-row { grid-template-columns: 1fr; }
+      .challenge-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── CHALLENGE 3-tile grid (reuses .hiw-tile component) ── */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+    }
+    /* Hover-face content left-aligned so bullets read naturally */
+    .challenge-grid .hiw-face-hover {
+      align-items: flex-start;
+      text-align: left;
+    }
+    .hiw-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0.8rem 0 0;
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: var(--ink-mid);
+      line-height: 1.55;
+    }
+    .hiw-bullets li {
+      padding-left: 1rem;
+      position: relative;
+      margin-bottom: 0.55rem;
+    }
+    .hiw-bullets li::before {
+      content: '';
+      position: absolute;
+      left: 0.15rem;
+      top: 0.55em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .hiw-bullets li:last-child { margin-bottom: 0; }
+
+    /* ── CHALLENGE → MY ROLE sticky-cover stack ── */
+    .vzh-stack {
+      position: relative;
+    }
+    .vzh-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      will-change: transform;
+    }
+    .vzh-cover {
+      position: relative;
+      z-index: 2;
+      border-radius: 1.5rem 1.5rem 0 0;
+      box-shadow: 0 -20px 60px rgba(0,0,0,0.30);
+    }
+    /* Multi-cover sections need orb containment */
+    .vzh-stack-cover {
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    /* ── MY ROLE Venn (two converging dotted orbits + labels) ── */
+    .role-venn {
+      position: relative;
+      height: 460px;
+      margin-top: 4.5rem;
+      overflow: hidden;
+    }
+    /* Keep the container itself visible; only the children animate */
+    .role-venn.r { opacity: 1; transform: none; transition: none; }
+
+    .role-orbit {
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      top: 50%;
+      left: 50%;
+      margin-top: -180px;
+      margin-left: -180px;
+      opacity: 0;
+      transition:
+        transform 4s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 1.6s ease;
+    }
+    .role-orbit-l { transform: translateX(-300px); }
+    .role-orbit-r { transform: translateX( 300px); }
+
+    .role-venn.on .role-orbit   { opacity: 1; }
+    .role-venn.on .role-orbit-l { transform: translateX(-110px); }
+    .role-venn.on .role-orbit-r { transform: translateX( 110px); }
+
+    .role-orbit-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px dashed rgba(141, 148, 255, 0.30);
+    }
+    .role-orbit-l .role-orbit-ring { animation: hiw-spin-cw  80s linear infinite; }
+    .role-orbit-r .role-orbit-ring { animation: hiw-spin-ccw 90s linear infinite; }
+
+    /* Labels — fade in only after the rings settle (dark surface variant) */
+    .role-label {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      transition-delay: 3s;
+      z-index: 2;
+    }
+    /* Left label sits OUTSIDE the left orb (right-anchored so it grows leftward) */
+    .role-label-l { right: calc(50% + 300px); text-align: right; }
+    /* Right label sits OUTSIDE the right orb */
+    .role-label-r { left:  calc(50% + 300px); text-align: left; }
+
+    .role-overlap-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-serif);
+      font-size: clamp(18pt, 2.2vw, 26pt);
+      font-style: italic;
+      font-weight: var(--weight-regular);
+      color: var(--accent-mid);
+      line-height: 1.05;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1.8s ease;
+      transition-delay: 4.5s;
+      z-index: 3;
+    }
+
+    .role-venn.on .role-label,
+    .role-venn.on .role-overlap-label { opacity: 1; }
+
+    @media (max-width: 860px) {
+      .role-venn { height: 340px; margin-top: 3rem; }
+      .role-orbit { width: 240px; height: 240px; margin-top: -120px; margin-left: -120px; }
+      .role-orbit-l { transform: translateX(-220px); }
+      .role-orbit-r { transform: translateX( 220px); }
+      .role-venn.on .role-orbit-l { transform: translateX(-72px); }
+      .role-venn.on .role-orbit-r { transform: translateX( 72px); }
+      .role-label-l { right: calc(50% + 200px); left: auto; }
+      .role-label-r { left:  calc(50% + 200px); right: auto; }
+      .role-label { font-size: 7.5pt; }
+      .role-overlap-label { font-size: 14pt; }
+    }
+
+    /* ── APPROACH — static 4-step overview (no tabs) ── */
+    .apr-stepper {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      margin-top: 3.5rem;
+    }
+    /* Connector line — endpoints anchored at the centers of step 01 and step 04
+       (10% / 90%), so the line doesn't extend beyond the outer circles.
+       Has a soft accent-colored gradient that sweeps left → right. */
+    .apr-stepper::before {
+      content: '';
+      position: absolute;
+      top: 30px;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        var(--accent-mid-a25) 0%,
+        var(--accent) 50%,
+        var(--accent-mid-a25) 100%
+      );
+      background-size: 200% 100%;
+      animation: apr-line-slide 5s ease-in-out infinite;
+      z-index: 0;
+    }
+    /* Traveling glow dot — runs from circle 01 to circle 04, passes behind 02/03 */
+    .apr-stepper::after {
+      content: '';
+      position: absolute;
+      top: 30px;
+      left: 10%;
+      width: 6px;
+      height: 6px;
+      margin-top: -3px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: apr-dot-travel 5s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes apr-line-slide {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    @keyframes apr-dot-travel {
+      0%   { left: 10%; opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { left: 90%; opacity: 0; }
+    }
+
+    .apr-step {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 0 0 20%;
+      max-width: 260px;
+      text-align: center;
+      font-family: var(--font-sans);
+    }
+
+    .apr-step-node {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--page);
+      border: 1px solid var(--accent-mid-a25);
+      font-family: var(--font-serif);
+      font-size: 18pt;
+      color: var(--accent);
+      margin: 0 0 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .apr-step-eyebrow {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .apr-step-title {
+      font-family: var(--font-serif);
+      font-size: 14pt;
+      color: var(--ink);
+      margin-bottom: 0.55rem;
+      line-height: 1.2;
+    }
+    /* Sub fills the step container — wider than before so the copy fits in 2 lines */
+    .apr-step-sub {
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: var(--ink-mid);
+      line-height: 1.5;
+      max-width: 100%;
+    }
+
+    @media (max-width: 760px) {
+      .apr-stepper {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding-top: 0;
+      }
+      .apr-stepper::before { display: none; }
+      .apr-step {
+        flex: 0 0 auto;
+        max-width: none;
+        width: 100%;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 1rem;
+        text-align: left;
+      }
+      .apr-step-node { margin: 0; width: 44px; height: 44px; font-size: 14pt; }
+      .apr-step-eyebrow,
+      .apr-step-title,
+      .apr-step-sub { text-align: left; max-width: none; margin: 0 0 0.3rem; }
+    }
+
+    /* ── APPROACH → 4 MOVES multi-level parallax cover stack ── */
+    .vzh-stack-multi { position: relative; }
+    .vzh-stack-cover {
+      position: sticky;
+      top: 0;
+      border-radius: 1.5rem 1.5rem 0 0;
+      box-shadow: 0 -20px 60px rgba(0,0,0,0.10);
+    }
+
+    /* ── MOVE section — 3 tiles (Problem / Action / Result) ── */
+    .move-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 3.5rem;
+    }
+    .move-tile {
+      position: relative;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid var(--accent-mid-a08);
+      border-radius: 1rem;
+      padding: 2.2rem 2rem 2.5rem;
+      overflow: hidden;
+    }
+    /* Large transparent line icon, top-right, content-specific */
+    .move-tile-icon {
+      position: absolute;
+      top: -22px;
+      right: -22px;
+      width: 200px;
+      height: 200px;
+      color: var(--accent);
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .move-tile-label,
+    .move-tile-sub,
+    .move-tile-list { position: relative; z-index: 2; }
+    .move-tile-label {
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .move-tile-sub {
+      font-family: var(--font-serif);
+      font-size: 18pt;
+      color: var(--ink);
+      line-height: 1.25;
+      margin-bottom: 1.2rem;
+      max-width: 80%;
+    }
+    .move-tile-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: var(--text-body-sm);
+      color: var(--ink-mid);
+      line-height: var(--leading-spacious);
+    }
+    .move-tile-list > li {
+      padding-left: 1.25rem;
+      position: relative;
+      margin-bottom: 0.55rem;
+    }
+    .move-tile-list > li::before {
+      content: '';
+      position: absolute;
+      left: 0.25rem;
+      top: 0.7em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    @media (max-width: 900px) {
+      .move-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .move-tile-icon { width: 150px; height: 150px; top: -18px; right: -18px; }
+      .move-tile-sub { max-width: 70%; }
+    }
+
+    /* ── OUTCOME — 6-card metric grid ── */
+    .outcome-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1.2rem;
+      margin-top: 3.5rem;
+    }
+    .outcome-card {
+      grid-column: span 2;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(141, 148, 255, 0.12);
+      border-radius: 1rem;
+      padding: 1.8rem 2rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 210px;
+    }
+    .outcome-card.oc-half { grid-column: span 3; }
+    .outcome-card-full { grid-column: 1 / -1; }
+
+    .oc-label {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 1.2rem;
+    }
+    .oc-metric {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: auto;
+    }
+    .oc-num, .oc-num-from {
+      font-family: var(--font-serif);
+      font-size: clamp(28pt, 4.6vw, 44pt);
+      color: #fff;
+      line-height: 1;
+      font-weight: var(--weight-regular);
+    }
+    .oc-num-from {
+      color: rgba(255,255,255,0.40);
+      font-size: clamp(20pt, 3.2vw, 30pt);
+    }
+    .oc-arrow-inline {
+      font-family: var(--font-sans);
+      font-size: clamp(18pt, 2.8vw, 24pt);
+      color: var(--accent-mid);
+      font-weight: var(--weight-light);
+      line-height: 1;
+    }
+    .oc-metric-aux {
+      font-family: var(--font-sans);
+      font-size: var(--text-body-sm);
+      color: rgba(255,255,255,0.55);
+      font-weight: var(--weight-light);
+      margin-left: 0.4rem;
+    }
+    .oc-sub {
+      font-size: var(--text-caption);
+      color: rgba(255,255,255,0.42);
+      font-family: var(--font-sans);
+      margin-top: 0.55rem;
+      letter-spacing: 0.01em;
+    }
+    /* Card 3 — metric (left) + context subs (right) side-by-side */
+    .oc-bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      margin-top: auto;
+    }
+    .oc-bottom-row .oc-metric { margin-top: 0; }
+    .oc-subs { text-align: right; flex-shrink: 0; }
+    .oc-subs .oc-sub { margin-top: 0; margin-bottom: 0.3rem; }
+    .oc-subs .oc-sub:last-child { margin-bottom: 0; }
+
+    /* Arrow icon — top-right of each card, draws in on .on */
+    .oc-arrow {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 26px;
+      height: 26px;
+      color: var(--accent-mid);
+      opacity: 0.75;
+    }
+    .oc-arrow line,
+    .oc-arrow polyline {
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 50;
+      stroke-dashoffset: 50;
+      transition: stroke-dashoffset 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+      transition-delay: 0.45s;
+    }
+    .outcome-card.on .oc-arrow line,
+    .outcome-card.on .oc-arrow polyline { stroke-dashoffset: 0; }
+
+    /* Platform icon (Android / Apple) — bottom-right, low opacity backdrop */
+    .oc-platform-icon {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      width: 64px;
+      height: 64px;
+      color: var(--accent-mid);
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    /* Line chart (Card 3) — top of card */
+    .oc-chart {
+      width: 100%;
+      height: 50px;
+      margin-bottom: 0.8rem;
+      overflow: visible;
+    }
+    .oc-chart polyline {
+      fill: none;
+      stroke: var(--accent-mid);
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 110;
+      stroke-dashoffset: 110;
+      transition: stroke-dashoffset 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+      transition-delay: 0.35s;
+    }
+    .outcome-card.on .oc-chart polyline { stroke-dashoffset: 0; }
+
+    /* Full-width Releases card */
+    .outcome-card-full { min-height: auto; display: block; padding: 2.2rem 2.5rem 2.5rem; }
+    .oc-full-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+    .oc-full-meta { flex: 1; }
+    .outcome-card-full .oc-label { margin-bottom: 0.9rem; }
+    .outcome-card-full .oc-metric { margin-top: 0; }
+    .outcome-card-full .oc-arrow {
+      position: static;
+      flex-shrink: 0;
+    }
+
+    /* Release timeline (Card 6) — markers staggered left → right */
+    .oc-timeline {
+      position: relative;
+      margin-top: 2.2rem;
+      height: 56px;
+    }
+    .oc-tl-line {
+      position: absolute;
+      top: 14px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(141, 148, 255, 0.22);
+      transform-origin: left center;
+      transform: scaleX(0);
+      transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+      transition-delay: 0.25s;
+    }
+    .outcome-card.on .oc-tl-line { transform: scaleX(1); }
+
+    .oc-tl-marker {
+      position: absolute;
+      top: 0;
+      left: var(--p);
+      transform: translateX(-50%) translateY(4px);
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.45s ease, transform 0.45s ease;
+      transition-delay: calc(0.05s * var(--idx, 0) + 0.4s);
+    }
+    .outcome-card.on .oc-tl-marker {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .oc-tl-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-mid);
+      margin: 11.5px auto 0.55rem;
+    }
+    .oc-tl-label {
+      font-size: 7pt;
+      color: rgba(255,255,255,0.42);
+      font-family: var(--font-sans);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+      .outcome-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .outcome-card,
+      .outcome-card.oc-half,
+      .outcome-card-full { grid-column: 1 / -1; }
+      .oc-tl-label { font-size: 6pt; }
     }
   </style>
 </head>
@@ -789,10 +1462,12 @@
     <p class="vzh-glass-line">Transforming a fragmented utility into a more <em>intelligent, proactive</em> household experience.</p>
   </div>
 
-  <!-- Content: kicker + title + download CTAs -->
+  <!-- Content: kicker + title (left) · download CTAs (right, bottom-aligned) -->
   <div class="vzh-content">
-    <div class="vzh-kicker">Verizon · Mobile · iOS &amp; Android · 2023–2025</div>
-    <h1 class="vzh-title">Verizon<br><em>Home App</em></h1>
+    <div class="vzh-content-left">
+      <h1 class="vzh-title">Verizon<br><em>Home App</em></h1>
+      <div class="vzh-kicker">Verizon · Mobile · iOS &amp; Android · 2023–2025</div>
+    </div>
 
     <div class="vzh-app-btns">
       <!-- iOS App Store -->
@@ -873,75 +1548,729 @@
 
 
 <!-- ══════════════════════════════════════
-     PART 1 — CHAPTER OPENER
+     CONTEXT (duplicate of BJ CONTEXT section template)
 ══════════════════════════════════════ -->
-<div class="cs-chap-breaker" id="part1">
-  <div class="hero-glow" style="top:50%;left:50%;"></div>
-  <div class="wsb-inner">
-    <div class="r"><div class="ch ch-d">Part One</div></div>
-    <h2 class="st-d r d1" style="max-width:600px;margin-bottom:2rem;">From Chaos<br><em>to Cadence</em></h2>
-    <p class="bp-d r d2" style="max-width:640px;">Operational transformation. Leadership. Systems organization. This chapter is about the execution, the unglamorous, high-leverage work of turning fragmentation into infrastructure.</p>
+<section class="cs-sec bg-page" style="padding-top:7rem;padding-bottom:7rem;position:relative;overflow:hidden;isolation:isolate;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
   </div>
-</div>
-
-
-<!-- ══════════════════════════════════════
-     01 · CONTEXT: WHAT I INHERITED
-══════════════════════════════════════ -->
-<section class="cs-sec bg-page">
-  <div class="sec-inner">
-    <div class="ch r d1">01 · Context</div>
-    <h2 class="st r d2">I didn't inherit a clean slate.<br>I inherited <em>a mess with a roadmap</em>.</h2>
-
-    <div class="g2" style="margin-top:2.5rem;">
-      <div>
-        <p class="bp r d2">Verizon Home App was a <strong>connectivity management tool</strong> for home internet customers — router controls, device management, network diagnostics. On paper, everything a customer would need. In practice, a product built to reduce call-center volume, not to serve people.</p>
-        <p class="bp r d3">That one distinction — cost deflection versus customer trust — was embedded in every decision: the information hierarchy, the error states, the onboarding flow. The app was built to make customers stop calling. Not to make them feel capable.</p>
-        <p class="bp r d4">When I joined, there were <strong>1,600+ "app unusable" tickets per release cycle.</strong> Teams had tried patching individual screens. Nobody had asked the harder question.</p>
-
-        <div class="pullquote r d5">
-          <p>Most products fail because they solve the wrong thing beautifully. I design systems that resolve what matters — not interfaces that mask it.</p>
-        </div>
-      </div>
-      <div>
-        <div class="g3" style="gap:1rem; margin-bottom:1rem;">
-          <div class="ic r d2">
-            <div class="ic-icon">⚡</div>
-            <div class="ic-label">Reactive, not proactive</div>
-            <p class="ic-body">The app only surfaced when something broke. No ambient presence, no guidance during the calm moments when trust is built.</p>
-          </div>
-          <div class="ic r d3">
-            <div class="ic-icon">🔇</div>
-            <div class="ic-label">Silence destroyed trust</div>
-            <p class="ic-body">When the app failed, it gave customers nothing — no context, no next action. <strong>Silence reads as incompetence.</strong> Support tickets spiked after every release.</p>
-          </div>
-          <div class="ic r d4">
-            <div class="ic-icon">◫</div>
-            <div class="ic-label">11 teams, no shared language</div>
-            <p class="ic-body">Every team solving the same problems in isolation. Without shared components or principles, every sprint added more debt. <strong>Incoherent because it was.</strong></p>
-          </div>
-        </div>
-
-        <p class="bp r d3" style="margin-top:0.8rem;">My first three weeks weren't in Figma. I sat with support teams, read customer transcripts, audited 18 months of release notes, and met with every PM and engineering lead I could find.</p>
-        <p class="bp r d4">What I found: <strong>eleven teams working in parallel, no shared design language, no defined success metric from the customer's perspective,</strong> and an AI strategy that existed in a slide deck but had no design tether.</p>
-      </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Context</div>
+    <h2 class="st r d1">Building the machine.<br>Then changing its <em>direction</em>.</h2>
+    <p class="bp r d2" style="max-width:780px;">When I joined the Verizon Home App team, the challenge wasn’t only the product. The organization needed clearer structure, stronger processes, better alignment, and a more sustainable way of working. Before improving the experience, we first had to improve how the experience was built.</p>
+    <p class="bp r d3" style="max-width:780px;">Once that foundation was in place, the focus shifted to a larger opportunity: redefining the role of the Home App within Verizon’s ecosystem and creating a vision for a more proactive, intelligent future.</p>
+    <div class="pullquote r d4" style="max-width:780px;">
+      <p>Strategy without execution is fiction.<br>Execution without strategy is maintenance.</p>
     </div>
   </div>
 </section>
 
 
 <!-- ══════════════════════════════════════
-     HOME APP 1.0 VISION VIDEO
+     CHAPTER NAVIGATOR — entering Chapter One
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-dark">
+<div class="chap-break r" id="part1">
+  <div class="chap-break-inner">
+    <div class="cb-divider"></div>
+    <div class="cb-side cb-active">
+      <div class="cb-default">
+        <div class="cb-num">01</div>
+        <div class="cb-chapter">Chapter One · Stabilize</div>
+        <div class="cb-title">From Chaos to Cadence</div>
+      </div>
+      <div class="cb-hover">
+        <p class="cb-desc">Operational transformation. Leadership. Systems organization. This chapter is about the execution, the unglamorous, high-leverage work of turning fragmentation into infrastructure.</p>
+      </div>
+    </div>
+    <div class="cb-divider"></div>
+    <div class="cb-side cb-other">
+      <div class="cb-default">
+        <div class="cb-num">02</div>
+        <div class="cb-chapter">Chapter Two · Transform</div>
+        <div class="cb-title">From Reactive to Proactive</div>
+      </div>
+      <div class="cb-hover">
+        <p class="cb-desc">Product vision. Ecosystem strategy. AI experience. Household intelligence. The pacing slows here intentionally, this chapter earns the breathing room.</p>
+        <a href="#part2" class="cb-jump">Jump to Chapter Two <span class="cb-jump-arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SUMMARY (Chapter One overview + timeline image)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-page" style="padding-top:9rem;padding-bottom:9rem;">
   <div class="sec-inner">
-    <div class="ch r d1" style="color:var(--accent-mid);">02 · Vision · Home App 1.0</div>
-    <h2 class="st-d r d2">The vision that<br><em>preceded the work</em>.</h2>
-    <p class="bp-d r d3" style="max-width:560px;">Before design began in earnest, a vision was articulated — directionally right, but without the operational systems to land it. This is that vision.</p>
+    <div class="sec-ch r">Summary</div>
+    <h2 class="st r d1">From fragmentation to <em>scale</em>.</h2>
+    <p class="bp r d2">Operational transformation. Leadership. Systems thinking. Before we could improve the experience, we had to improve the system creating it. This chapter follows four strategic moves that transformed fragmented teams, competing priorities, and inconsistent processes into a scalable operating model capable of supporting long-term product growth.</p>
+
+    <div class="r d3" style="margin-top:3.5rem;">
+      <img src="assets/verizon-home-app/vz-home-summery.png" alt="Chapter One timeline" style="width:100%; height:auto; display:block;">
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CHALLENGE → MY ROLE (sticky-cover transition)
+══════════════════════════════════════ -->
+<div class="vzh-stack">
+
+<!-- ── CHALLENGE (sticky underneath) ── -->
+<section class="cs-sec bg-warm vzh-sticky" style="padding-top:9rem;padding-bottom:11rem;">
+  <div class="sec-inner">
+    <div class="sec-ch r">Challenge</div>
+    <h2 class="st r d1">Problem blocking <em>value</em>.</h2>
+    <p class="bp r d2">The challenges facing the Home App were not isolated issues. They formed a pattern. Fragmented execution slowed delivery. Misaligned priorities created competing directions. Missing customer signals made it difficult to know whether we were solving the right problems. Before the product could scale, these foundations needed to be addressed.</p>
+
+    <div class="challenge-grid">
+
+      <!-- Tile 01 — Fragmented Execution -->
+      <div class="hiw-tile r r-late d3">
+        <span class="hiw-num" aria-hidden="true">01</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="6" width="7" height="12" rx="1"/>
+              <rect x="14" y="6" width="7" height="12" rx="1"/>
+              <line x1="10" y1="12" x2="11.5" y2="12"/>
+              <line x1="12.5" y1="12" x2="14" y2="12"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title"><strong>Fragmented</strong> Execution</div>
+          <p class="hiw-short">Handoff gaps and missing process slowed delivery.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title"><strong>Fragmented</strong> Execution</div>
+          <ul class="hiw-bullets">
+            <li>Agency handoff with limited product context</li>
+            <li>Missing processes and delivery structure</li>
+            <li>Late feasibility reviews causing delays</li>
+          </ul>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <!-- Tile 02 — Misaligned Priorities -->
+      <div class="hiw-tile r r-late d4">
+        <span class="hiw-num" aria-hidden="true">02</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="3" y1="9" x2="20" y2="9"/>
+              <polyline points="17,6 20,9 17,12"/>
+              <line x1="21" y1="15" x2="4" y2="15"/>
+              <polyline points="7,12 4,15 7,18"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title"><strong>Misaligned</strong> Priorities</div>
+          <p class="hiw-short">Competing definitions of success across teams.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title"><strong>Misaligned</strong> Priorities</div>
+          <ul class="hiw-bullets">
+            <li>Competing definitions of success</li>
+            <li>Multiple roadmaps across teams</li>
+            <li>Product decisions driven by outputs instead of outcomes</li>
+          </ul>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <!-- Tile 03 — Missing Customer Signals -->
+      <div class="hiw-tile r r-late d5">
+        <span class="hiw-num" aria-hidden="true">03</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
+              <circle cx="12" cy="12" r="3"/>
+              <line x1="3" y1="3" x2="21" y2="21"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title"><strong>Missing</strong> Customer Signals</div>
+          <p class="hiw-short">Solutions defined before problems were validated.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title"><strong>Missing</strong> Customer Signals</div>
+          <ul class="hiw-bullets">
+            <li>Limited feedback mechanisms</li>
+            <li>Blind spots in user understanding</li>
+            <li>Solutions often defined before problems were validated</li>
+          </ul>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     MY ROLE (overlapping orbits — design + leadership)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-dark vzh-cover" style="padding-top:9rem;padding-bottom:9rem;">
+  <div class="sec-inner">
+    <div class="sec-ch r" style="color:var(--accent-mid);">My Role</div>
+    <h2 class="st-d r d1">Finding my <em>position</em>.</h2>
+    <p class="bp-d r d2">This was the moment I had to decide where I could create the most leverage. As a Principal Designer, my value was not only in producing design work, and not only in directing strategy from above. The team needed someone who could sit between craft and leadership, translating ambiguity into structure, connecting decisions across functions, and turning fragmented effort into shared momentum. I positioned myself in the overlap: close enough to the work to protect quality, and close enough to strategy to shape direction.</p>
+
+    <div class="role-venn r">
+      <div class="role-orbit role-orbit-l">
+        <div class="role-orbit-ring">
+          <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+        </div>
+      </div>
+      <div class="role-orbit role-orbit-r">
+        <div class="role-orbit-ring">
+          <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+        </div>
+      </div>
+      <span class="role-label role-label-l">Design Craft</span>
+      <span class="role-label role-label-r">Leadership &amp; Strategy</span>
+      <span class="role-overlap-label">Bridge<br>&amp;<br>Alignment</span>
+    </div>
+  </div>
+</section>
+
+</div><!-- /.vzh-stack -->
+
+
+<!-- ══════════════════════════════════════
+     APPROACH → 4 MOVES (multi-level parallax cover stack)
+══════════════════════════════════════ -->
+<div class="vzh-stack-multi">
+
+<!-- ── APPROACH (sticky overview at the bottom of the stack) ── -->
+<section class="cs-sec bg-page vzh-sticky" style="padding-top:9rem;padding-bottom:9rem;z-index:1;">
+  <div class="sec-inner">
+    <div class="sec-ch r">Approach</div>
+    <h2 class="st r d1">Four moves. One <em>direction</em>.</h2>
+    <p class="bp r d2">The problems looked different on the surface, but they shared a common cause: a lack of alignment. To restore focus and create momentum, I developed a four-part transformation strategy. Each move built upon the last, turning fragmented efforts into a shared operating model capable of supporting both product quality and long-term growth. Together, these moves created the foundation for every improvement that followed.</p>
+
+    <div class="apr-stepper r d3">
+      <div class="apr-step">
+        <div class="apr-step-node">01</div>
+        <div class="apr-step-eyebrow">Align</div>
+        <div class="apr-step-title">Build Clarity</div>
+        <div class="apr-step-sub">Established structure, ownership, and focus.</div>
+      </div>
+      <div class="apr-step">
+        <div class="apr-step-node">02</div>
+        <div class="apr-step-eyebrow">Systemize</div>
+        <div class="apr-step-title">Create Cadence</div>
+        <div class="apr-step-sub">Brought rhythm through sprint planning and design ops.</div>
+      </div>
+      <div class="apr-step">
+        <div class="apr-step-node">03</div>
+        <div class="apr-step-eyebrow">Instrument</div>
+        <div class="apr-step-title">Guide with Evidence</div>
+        <div class="apr-step-sub">Reframed success metrics, built a shared decision pipeline.</div>
+      </div>
+      <div class="apr-step">
+        <div class="apr-step-node">04</div>
+        <div class="apr-step-eyebrow">Deliver</div>
+        <div class="apr-step-title">Deliver System Change</div>
+        <div class="apr-step-sub">Scaled alignment and trust through Project Janus.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── MOVE 1 — ALIGN (covers APPROACH) ── -->
+<section class="cs-sec bg-warm vzh-stack-cover" style="padding-top:9rem;padding-bottom:9rem;z-index:2;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">01 · Align</div>
+    <h2 class="st r d1">Build <em>clarity</em>.</h2>
+
+    <div class="move-grid">
+      <div class="move-tile r d2">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3"  y="3"  width="3.5" height="3.5" rx="0.5" transform="rotate(15 4.75 4.75)"/>
+          <rect x="13" y="2"  width="3.5" height="3.5" rx="0.5" transform="rotate(-20 14.75 3.75)"/>
+          <rect x="18" y="10" width="3.5" height="3.5" rx="0.5" transform="rotate(35 19.75 11.75)"/>
+          <rect x="5"  y="12" width="3.5" height="3.5" rx="0.5" transform="rotate(-25 6.75 13.75)"/>
+          <rect x="14" y="16" width="3.5" height="3.5" rx="0.5" transform="rotate(10 15.75 17.75)"/>
+          <rect x="3"  y="18" width="3.5" height="3.5" rx="0.5" transform="rotate(-15 4.75 19.75)"/>
+        </svg>
+        <div class="move-tile-label">Problem</div>
+        <div class="move-tile-sub">Chaos</div>
+        <ul class="move-tile-list">
+          <li>10 teams, 10 roadmaps. No shared language or priorities.</li>
+          <li>Endless debates, last-minute changes, missed windows.</li>
+          <li>No clear criteria for what really mattered.</li>
+        </ul>
+      </div>
+      <div class="move-tile r d3">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <circle cx="12" cy="12" r="6"/>
+          <circle cx="12" cy="12" r="2"/>
+        </svg>
+        <div class="move-tile-label">Action</div>
+        <div class="move-tile-sub">Create Clarity and Focus</div>
+        <ul class="move-tile-list">
+          <li>Introduced Priority Query rhythm to separate decision work from exploration work.</li>
+          <li>Consolidated 10 roadmaps into 3 buckets: P1, Debate, Defer.</li>
+          <li>Facilitated Kano studies with Product and Engineering to align on true user value.</li>
+        </ul>
+      </div>
+      <div class="move-tile r d4">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6"  x2="18" y2="6"/>
+          <polyline points="15,3 18,6 15,9"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <polyline points="18,9 21,12 18,15"/>
+          <line x1="3" y1="18" x2="16" y2="18"/>
+          <polyline points="13,15 16,18 13,21"/>
+        </svg>
+        <div class="move-tile-label">Result</div>
+        <div class="move-tile-sub">Alignment and Momentum</div>
+        <ul class="move-tile-list">
+          <li>Teams spoke one language. Decisions became predictable.</li>
+          <li>Release cadence stabilized (15+ releases leading to a consistent quarterly rhythm).</li>
+          <li>Shifted focus from urgency to impact.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MOVE 2 — SYSTEMIZE ── -->
+<section class="cs-sec bg-page vzh-stack-cover" style="padding-top:9rem;padding-bottom:9rem;z-index:3;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">02 · Systemize</div>
+    <h2 class="st r d1">Create <em>cadence</em>.</h2>
+
+    <div class="move-grid">
+      <div class="move-tile r d2">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 5 Q 8 10, 16 4 T 22 8"/>
+          <path d="M2 12 Q 10 8, 18 14 T 22 18"/>
+          <path d="M2 20 Q 6 16, 12 20 T 22 16"/>
+        </svg>
+        <div class="move-tile-label">Problem</div>
+        <div class="move-tile-sub">Lack of Structure, No Accountability</div>
+        <ul class="move-tile-list">
+          <li>Endless meetings without conclusions.</li>
+          <li>No clear flow from Intake → Feasibility → Design → QA → Handoff.</li>
+          <li>Last-minute requirement churn caused by missing feasibility reviews.</li>
+          <li>Teams reacted instead of planned. Design lacked ownership in the process.</li>
+        </ul>
+      </div>
+      <div class="move-tile r d3">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2"  y="9"  width="6" height="6" rx="1"/>
+          <rect x="16" y="9"  width="6" height="6" rx="1"/>
+          <rect x="9"  y="2"  width="6" height="6" rx="1"/>
+          <rect x="9"  y="16" width="6" height="6" rx="1"/>
+          <line x1="12" y1="8"  x2="12" y2="9"/>
+          <line x1="12" y1="15" x2="12" y2="16"/>
+          <line x1="8"  y1="12" x2="9"  y2="12"/>
+          <line x1="15" y1="12" x2="16" y2="12"/>
+        </svg>
+        <div class="move-tile-label">Action</div>
+        <div class="move-tile-sub">Build a System That Enables Freedom</div>
+        <ul class="move-tile-list">
+          <li>Designed an end-to-end operating framework: Intake → Feasibility → Design → QA → Handoff.</li>
+          <li>Introduced structured meeting rhythms focused on decisions and actions, not discussions.</li>
+          <li>Established Jira schema and RACI framework to clarify ownership, gates, and responsibilities.</li>
+          <li>Added feasibility checkpoints to reduce last-minute changes.</li>
+          <li>Elevated Design as a strategic partner, driving user-first thinking across teams.</li>
+        </ul>
+      </div>
+      <div class="move-tile r d4">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/>
+          <polyline points="12,5 12,12 17,15"/>
+        </svg>
+        <div class="move-tile-label">Result</div>
+        <div class="move-tile-sub">Predictability, Focus, and Trust</div>
+        <ul class="move-tile-list">
+          <li>Reduced rework and last-minute churn.</li>
+          <li>Meetings became faster, action-oriented, and outcome-driven.</li>
+          <li>Designers spent more time designing and less time firefighting.</li>
+          <li>Cross-functional teams saw Design as a trusted collaborator rather than a bottleneck.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MOVE 3 — INSTRUMENT ── -->
+<section class="cs-sec bg-warm vzh-stack-cover" style="padding-top:9rem;padding-bottom:9rem;z-index:4;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">03 · Instrument</div>
+    <h2 class="st r d1">Guide with <em>evidence</em>.</h2>
+
+    <div class="move-grid">
+      <div class="move-tile r d2">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/>
+          <circle cx="12" cy="12" r="3"/>
+          <line x1="3" y1="3" x2="21" y2="21"/>
+        </svg>
+        <div class="move-tile-label">Problem</div>
+        <div class="move-tile-sub">Tech-Driven, Not User-Driven</div>
+        <ul class="move-tile-list">
+          <li>Product decisions were driven by technical feasibility rather than user needs.</li>
+          <li>Limited visibility into customer pain points. Teams operated on assumptions.</li>
+          <li>Feedback existed, but it lacked structure, prioritization, and ownership.</li>
+          <li>Without data, design decisions lacked credibility and focus.</li>
+        </ul>
+      </div>
+      <div class="move-tile r d3">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="3" width="20" height="18" rx="1"/>
+          <line x1="2" y1="8" x2="22" y2="8"/>
+          <rect x="5"  y="12" width="3" height="6"/>
+          <rect x="10" y="10" width="3" height="8"/>
+          <rect x="15" y="14" width="3" height="4"/>
+        </svg>
+        <div class="move-tile-label">Action</div>
+        <div class="move-tile-sub">Build an Evidence Pipeline</div>
+        <ul class="move-tile-list">
+          <li>Created a review tracking system that categorized feedback by sentiment and root cause.</li>
+          <li>Connected message logs, UI analytics, and support tickets to real user journeys.</li>
+          <li>Introduced data visibility dashboards so Product, Design, Support, and Engineering could align on the same facts.</li>
+          <li>Facilitated root-cause workshops using first-principles thinking to separate signal from noise.</li>
+          <li>Shifted conversations from fixing symptoms to solving underlying problems.</li>
+        </ul>
+      </div>
+      <div class="move-tile r d4">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="3,17 9,11 13,15 21,7"/>
+          <polyline points="16,7 21,7 21,12"/>
+        </svg>
+        <div class="move-tile-label">Result</div>
+        <div class="move-tile-sub">Clarity, Credibility, and User Focus</div>
+        <ul class="move-tile-list">
+          <li>Teams could see real user pain instead of guessing.</li>
+          <li>Authentication became the first measurable UX improvement area.</li>
+          <li>Support tickets and design rework decreased through clearer prioritization.</li>
+          <li>Data-backed storytelling increased Design’s influence in decision-making.</li>
+          <li>Shifted organizational thinking from tech-driven to user-informed.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MOVE 4 — DELIVER ── -->
+<section class="cs-sec bg-page vzh-stack-cover" style="padding-top:9rem;padding-bottom:9rem;z-index:5;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">04 · Deliver</div>
+    <h2 class="st r d1">Deliver <em>system change</em>.</h2>
+
+    <div class="move-grid">
+      <div class="move-tile r d2">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="5" y="10" width="14" height="11" rx="1"/>
+          <path d="M8 10V6a4 4 0 1 1 8 0v2"/>
+          <line x1="3" y1="3" x2="21" y2="21" stroke-dasharray="2 2"/>
+        </svg>
+        <div class="move-tile-label">Insight</div>
+        <div class="move-tile-sub">“The Front Door Was Broken”</div>
+        <ul class="move-tile-list">
+          <li>Authentication was a top customer pain point.</li>
+          <li>Error messages were unclear.</li>
+          <li>CTAs were generic.</li>
+          <li>UI patterns were inconsistent.</li>
+          <li>Support teams struggled with repetitive tickets and lacked context.</li>
+          <li>Trust was eroding.</li>
+          <li>Fixing login wasn’t cosmetic. It was foundational.</li>
+        </ul>
+      </div>
+      <div class="move-tile r d3">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="5"  cy="12" r="3"/>
+          <circle cx="19" cy="12" r="3"/>
+          <line x1="8"  y1="12" x2="16" y2="12"/>
+          <line x1="11" y1="9"  x2="13" y2="9"/>
+          <line x1="11" y1="15" x2="13" y2="15"/>
+        </svg>
+        <div class="move-tile-label">Action</div>
+        <div class="move-tile-sub">From Craft to System</div>
+        <ul class="move-tile-list">
+          <li>Launched Project Janus, a cross-product authentication initiative connecting App, Web, and Support experiences.</li>
+          <li>Redesigned login and error states from generic failure messages to clear, actionable guidance.</li>
+          <li>Integrated support touchpoints: personalized replies, SMS confirmations, dedicated help links.</li>
+          <li>Applied shared design principles across product, support workflows, and telemetry systems.</li>
+          <li>Aligned Product, Engineering, and Support around a unified customer journey.</li>
+        </ul>
+      </div>
+      <div class="move-tile r d4">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2 L21 6V12c0 5-3.5 9-9 10-5.5-1-9-5-9-10V6z"/>
+          <polyline points="8,12 11,15 16,9"/>
+        </svg>
+        <div class="move-tile-label">Result</div>
+        <div class="move-tile-sub">Trust Restored, System Strengthened</div>
+        <ul class="move-tile-list">
+          <li>App Store rating improved from 1.7 → 4.5.</li>
+          <li>Support tickets reduced by more than 70%.</li>
+          <li>Supported 422K households and stabilized 9.2M sessions.</li>
+          <li>Reduced friction across login, onboarding, and support.</li>
+          <li>Authentication redesign became a model for future cross-product collaboration.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /.vzh-stack-multi -->
+
+
+<!-- ══════════════════════════════════════
+     OUTCOME (Results — 6-card metric grid)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-dark" style="padding-top:9rem;padding-bottom:9rem;">
+  <div class="sec-inner">
+    <div class="sec-ch r" style="color:var(--accent-mid);">Results</div>
+    <h2 class="st-d r d1">From structure to <em>scale</em>.</h2>
+    <p class="bp-d r d2">The goal was never to ship more features. It was to create a product organization capable of delivering consistently, learning continuously, and growing sustainably. These outcomes reflect the cumulative impact of that foundation.</p>
+
+    <div class="outcome-grid">
+
+      <!-- CARD 1 — Total Sessions -->
+      <div class="outcome-card r d3">
+        <div class="oc-label">Total Sessions</div>
+        <div class="oc-metric"><span class="oc-num">28M+</span></div>
+        <svg class="oc-arrow" viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <polyline points="6,10 12,4 18,10"/>
+        </svg>
+      </div>
+
+      <!-- CARD 2 — Total Customers -->
+      <div class="outcome-card r d3">
+        <div class="oc-label">Total Customers</div>
+        <div class="oc-metric"><span class="oc-num">1M+</span></div>
+        <svg class="oc-arrow" viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <polyline points="6,10 12,4 18,10"/>
+        </svg>
+      </div>
+
+      <!-- CARD 3 — Unusable Tickets (line chart + 72%↓ with side-aligned context) -->
+      <div class="outcome-card r d3">
+        <div class="oc-label">Unusable Tickets</div>
+        <svg class="oc-chart" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points="5,25 20,11 35,5 50,16 65,14 80,16 95,20"/>
+        </svg>
+        <div class="oc-bottom-row">
+          <div class="oc-metric">
+            <span class="oc-num">72%</span>
+            <span class="oc-arrow-inline">↓</span>
+          </div>
+          <div class="oc-subs">
+            <div class="oc-sub">v1.0.3 → v1.3.1</div>
+            <div class="oc-sub">1613 → 451 Tickets</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4 — Android Rating -->
+      <div class="outcome-card oc-half r d4">
+        <div class="oc-label">Android Rating</div>
+        <div class="oc-metric">
+          <span class="oc-num-from">2.1</span>
+          <span class="oc-arrow-inline">→</span>
+          <span class="oc-num">4.4</span>
+        </div>
+        <svg class="oc-platform-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24c-2.86-1.21-6.08-1.21-8.94 0L5.65 5.67c-.19-.29-.58-.38-.87-.2-.27.18-.37.54-.22.83l1.84 3.18C2.4 11.78 0 16.32 0 21h24c0-4.68-2.4-9.22-6.4-11.52zM7 17.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25zm10 0c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/>
+        </svg>
+      </div>
+
+      <!-- CARD 5 — iOS Rating -->
+      <div class="outcome-card oc-half r d4">
+        <div class="oc-label">iOS Rating</div>
+        <div class="oc-metric">
+          <span class="oc-num-from">1.7</span>
+          <span class="oc-arrow-inline">→</span>
+          <span class="oc-num">4.5</span>
+        </div>
+        <svg class="oc-platform-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+        </svg>
+      </div>
+
+      <!-- CARD 6 — Releases (full width) -->
+      <div class="outcome-card outcome-card-full r d5">
+        <div class="oc-full-head">
+          <div class="oc-full-meta">
+            <div class="oc-label">Releases</div>
+            <div class="oc-metric">
+              <span class="oc-num">15+</span>
+              <span class="oc-metric-aux">in 18 months</span>
+            </div>
+          </div>
+          <svg class="oc-arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <polyline points="6,10 12,4 18,10"/>
+          </svg>
+        </div>
+        <div class="oc-timeline">
+          <div class="oc-tl-line"></div>
+          <div class="oc-tl-marker" style="--p:0%;     --idx:0"> <div class="oc-tl-dot"></div><div class="oc-tl-label">1.0.0</div></div>
+          <div class="oc-tl-marker" style="--p:7.14%;  --idx:1"> <div class="oc-tl-dot"></div><div class="oc-tl-label">1.0.1</div></div>
+          <div class="oc-tl-marker" style="--p:14.29%; --idx:2"> <div class="oc-tl-dot"></div><div class="oc-tl-label">1.0.2</div></div>
+          <div class="oc-tl-marker" style="--p:21.43%; --idx:3"> <div class="oc-tl-dot"></div><div class="oc-tl-label">1.0.3</div></div>
+          <div class="oc-tl-marker" style="--p:28.57%; --idx:4"> <div class="oc-tl-dot"></div><div class="oc-tl-label">1.0.4</div></div>
+          <div class="oc-tl-marker" style="--p:35.71%; --idx:5"> <div class="oc-tl-dot"></div><div class="oc-tl-label">1.0.5</div></div>
+          <div class="oc-tl-marker" style="--p:42.86%; --idx:6"> <div class="oc-tl-dot"></div><div class="oc-tl-label">1.1.0</div></div>
+          <div class="oc-tl-marker" style="--p:50%;    --idx:7"> <div class="oc-tl-dot"></div><div class="oc-tl-label">1.3.0</div></div>
+          <div class="oc-tl-marker" style="--p:57.14%; --idx:8"> <div class="oc-tl-dot"></div><div class="oc-tl-label">1.4.0</div></div>
+          <div class="oc-tl-marker" style="--p:64.29%; --idx:9"> <div class="oc-tl-dot"></div><div class="oc-tl-label">1.6.0</div></div>
+          <div class="oc-tl-marker" style="--p:71.43%; --idx:10"><div class="oc-tl-dot"></div><div class="oc-tl-label">1.7.0</div></div>
+          <div class="oc-tl-marker" style="--p:78.57%; --idx:11"><div class="oc-tl-dot"></div><div class="oc-tl-label">1.8.0</div></div>
+          <div class="oc-tl-marker" style="--p:85.71%; --idx:12"><div class="oc-tl-dot"></div><div class="oc-tl-label">1.9.0</div></div>
+          <div class="oc-tl-marker" style="--p:92.86%; --idx:13"><div class="oc-tl-dot"></div><div class="oc-tl-label">2.0.0</div></div>
+          <div class="oc-tl-marker" style="--p:100%;   --idx:14"><div class="oc-tl-dot"></div><div class="oc-tl-label">2.1.0</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     VERIZON 1.0 (product walkthrough video)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-warm" style="padding-top:9rem;padding-bottom:9rem;position:relative;overflow:hidden;isolation:isolate;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Verizon 1.0</div>
+    <h2 class="st r d1">The product in <em>motion</em>.</h2>
+    <p class="bp r d2" style="max-width:720px;">The MVP proved the opportunity. Customers were adopting the product, the business was investing, and the roadmap was growing. What became clear, however, was that the product needed more than features. It needed the structure required to scale.</p>
 
     <div class="cs-video-wrap r d3">
       <video controls muted playsinline preload="metadata"
-             aria-label="Verizon Home App 1.0 vision video">
+             aria-label="Verizon Home App 1.0 product walkthrough">
         <source src="assets/verizon-home-app/home-vision-video-1.mp4" type="video/mp4">
       </video>
     </div>
@@ -950,104 +2279,32 @@
 
 
 <!-- ══════════════════════════════════════
-     03 · OPERATIONAL MOVES (dark)
-══════════════════════════════════════ -->
-<section class="cs-sec bg-dark" id="systems">
-  <div class="sec-inner">
-    <div class="ch r d1" style="color:var(--accent-mid);">03 · Operational Restructuring</div>
-    <h2 class="st-d r d2">Principal-level design isn't<br><em>the best IC in the room</em>.</h2>
-    <p class="bp-d r d3" style="max-width:560px;margin-bottom:2.5rem;">It's changing how decisions get made. Not just what the decisions are. Here's how I framed my mandate — and how that shaped what I prioritized.</p>
-
-    <div class="g2" style="gap:1.2rem;">
-      <div class="r d2">
-        <div class="mc" style="margin-bottom:1.2rem;">
-          <div class="mc-num">01</div>
-          <div class="mc-move">Strategic Reframe</div>
-          <div class="mc-title">Redefine the product's reason to exist</div>
-          <p class="mc-body">Before a single screen, I aligned leadership around a new north star: shift from "reduce calls" to "build trust." This reframed priorities across PM, engineering, and content simultaneously.</p>
-        </div>
-        <div class="mc">
-          <div class="mc-num">02</div>
-          <div class="mc-move">Organizational Design</div>
-          <div class="mc-title">Design the operating model, not just the product</div>
-          <p class="mc-body">Established cross-functional rituals — design critiques, shared component libraries, joint sprint reviews — that let 11 teams move with coherence instead of just speed.</p>
-        </div>
-      </div>
-      <div class="r d3">
-        <div class="mc" style="margin-bottom:1.2rem;">
-          <div class="mc-num">03</div>
-          <div class="mc-move">AI Strategy</div>
-          <div class="mc-title">Give the AI strategy a design tether</div>
-          <p class="mc-body">Defined what AI-enabled experience actually meant: proactive, contextual, never novelty for its own sake. The principle — does this make the right action feel inevitable? If not, it doesn't ship.</p>
-        </div>
-        <div class="mc">
-          <div class="mc-num">04</div>
-          <div class="mc-move">Leadership Model</div>
-          <div class="mc-title">Build a team that doesn't need me in every room</div>
-          <p class="mc-body">Mentored by asking better questions, not giving answers. Established critique rituals that raised craft standards without gatekeeping. The goal was a team that could decide without me.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════
-     04 · SEQUENCE: TIMELINE (warm)
-══════════════════════════════════════ -->
-<section class="cs-sec bg-warm">
-  <div class="sec-inner">
-    <div class="g2">
-      <div>
-        <div class="ch r d1">04 · Approach &amp; Sequence</div>
-        <h2 class="st r d2">Sequence matters<br>as much as <em>craft</em>.</h2>
-        <p class="bp r d3">The order in which I attacked problems was as important as how I solved them. Fix trust first. Build infrastructure before features. Earn the room before redefining it.</p>
-        <p class="bp r d4">Rushing to the AI experience without a stable foundation would have compounded every existing failure. Instead, I sequenced deliberately — and by the time we were ready to introduce intelligence, we had something worth being intelligent about.</p>
-      </div>
-      <div>
-        <div class="tl r d1">
-          <div class="tl-item">
-            <div class="tl-phase">Months 1–2</div>
-            <div class="tl-title">Listen before designing</div>
-            <p class="tl-body">Embedded in support, interviewed engineers, audited 18 months of release notes. Built a shared picture of the problem before proposing anything — this credibility lasted years.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-phase">Months 3–4</div>
-            <div class="tl-title">Fix the trust layer</div>
-            <p class="tl-body">Redesigned error states and onboarding before building anything new. Trust is cumulative. One bad moment erases ten good ones. We stopped the bleeding first.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-phase">Months 5–10</div>
-            <div class="tl-title">Build the infrastructure</div>
-            <p class="tl-body">A 900+ component system, cross-platform standards, shared principles. Slowed down initially; by release 4, every team was significantly faster. Accessibility, legal, engineering — all on the same shared language.</p>
-          </div>
-          <div class="tl-item">
-            <div class="tl-phase">Months 11+</div>
-            <div class="tl-title">Introduce intelligence</div>
-            <p class="tl-body">With a stable foundation, introduced the AI advisor model — proactive guidance, smart automation. Launched August 2024. 1M+ customers, 4.5 App Store rating.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════
-     CHAPTER BREAK
+     CHAPTER NAVIGATOR — entering Chapter Two
 ══════════════════════════════════════ -->
 <div class="chap-break r">
   <div class="chap-break-inner">
-    <div class="cb-side">
-      <div class="cb-num">01</div>
-      <div class="cb-chapter">Chapter One · Complete</div>
-      <div class="cb-title done">From Chaos to Cadence</div>
+    <div class="cb-divider"></div>
+    <div class="cb-side cb-other">
+      <div class="cb-default">
+        <div class="cb-num">01</div>
+        <div class="cb-chapter">Chapter One · Stabilize</div>
+        <div class="cb-title">From Chaos to Cadence</div>
+      </div>
+      <div class="cb-hover">
+        <p class="cb-desc">Operational transformation. Leadership. Systems organization. This chapter is about the execution, the unglamorous, high-leverage work of turning fragmentation into infrastructure.</p>
+        <a href="#part1" class="cb-jump cb-jump-back"><span class="cb-jump-arrow">←</span> Jump back to Chapter One</a>
+      </div>
     </div>
     <div class="cb-divider"></div>
-    <div class="cb-side">
-      <div class="cb-num">02</div>
-      <div class="cb-chapter">Chapter Two · Beginning</div>
-      <div class="cb-title next">From Reactive to Proactive</div>
+    <div class="cb-side cb-active">
+      <div class="cb-default">
+        <div class="cb-num">02</div>
+        <div class="cb-chapter">Chapter Two · Transform</div>
+        <div class="cb-title">From Reactive to Proactive</div>
+      </div>
+      <div class="cb-hover">
+        <p class="cb-desc">Product vision. Ecosystem strategy. AI experience. Household intelligence. The pacing slows here intentionally, this chapter earns the breathing room.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -1824,21 +3081,24 @@ function animateCounter(el, target, suffix, duration) {
   })(start);
 }
 
-const vzStatNums = document.querySelectorAll('.vzh-stat-num');
+const vzStatNums = document.querySelectorAll('.vzh-stat-num, .oc-num');
 const vzStatObs  = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (!e.isIntersecting) return;
-    const el       = e.target;
-    const match    = el.textContent.trim().match(/^(\d+\.?\d*)(.*)/);
+    const el        = e.target;
+    const raw       = el.textContent.trim();
+    const hasCommas = raw.includes(',');
+    const match     = raw.replace(/,/g, '').match(/^(\d+\.?\d*)(.*)/);
     if (!match) return;
-    const target   = parseFloat(match[1]);
-    const suffix   = match[2];
-    const decimals = (match[1].split('.')[1] || '').length;
-    const start    = performance.now();
+    const target    = parseFloat(match[1]);
+    const suffix    = match[2];
+    const decimals  = (match[1].split('.')[1] || '').length;
+    const start     = performance.now();
     (function tick(now) {
       const p    = Math.min((now - start) / 1800, 1);
       const ease = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
-      el.textContent = (ease * target).toFixed(decimals) + suffix;
+      const v    = ease * target;
+      el.textContent = (hasCommas ? Math.round(v).toLocaleString() : v.toFixed(decimals)) + suffix;
       if (p < 1) requestAnimationFrame(tick);
     })(start);
     vzStatObs.unobserve(el);
@@ -1846,6 +3106,20 @@ const vzStatObs  = new IntersectionObserver(entries => {
 }, { threshold: 0.6 });
 
 vzStatNums.forEach(el => vzStatObs.observe(el));
+
+// ── Auto-play feature videos when in view (browser controls remain) ──
+const csAutoVideos = document.querySelectorAll('.cs-video-wrap video');
+const csVideoObs   = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    const v = e.target;
+    if (e.isIntersecting) {
+      v.play().catch(() => {});
+    } else {
+      v.pause();
+    }
+  });
+}, { threshold: 0.5 });
+csAutoVideos.forEach(v => csVideoObs.observe(v));
 </script>
 
 </body>

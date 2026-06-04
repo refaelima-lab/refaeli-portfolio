@@ -191,7 +191,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: var(--accent-mid);
-      margin-bottom: 0.55rem;
+      margin-bottom: 0;
       opacity: 0;
       animation: fu 0.5s var(--ease-reveal) 0.2s both;
     }
@@ -201,7 +201,7 @@
       font-weight: var(--weight-regular);
       color: var(--ink);
       line-height: 1.02;
-      margin: 0 0 1.2rem;
+      margin: 0 0 1rem;
       opacity: 0;
       animation: fu 0.6s var(--ease-reveal) 0.35s both;
     }
@@ -292,7 +292,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 0.6rem;
+      margin-bottom: var(--gap-eyebrow);
     }
     .bj-overview-title {
       font-family: var(--font-serif);
@@ -588,7 +588,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: var(--accent-mid);
-      margin-bottom: 0.9rem;
+      margin-bottom: var(--gap-eyebrow);
       display: flex;
       align-items: center;
       gap: 0.55rem;
@@ -606,7 +606,7 @@
       font-weight: var(--weight-regular);
       color: #fff;
       line-height: 1.1;
-      margin-bottom: 1rem;
+      margin-bottom: var(--gap-heading);
       max-width: 640px;
     }
     .part-h em { font-style: italic; color: var(--accent-mid); }
@@ -675,7 +675,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: rgba(141,148,255,0.55);
-      margin-bottom: 1.4rem;
+      margin-bottom: var(--gap-eyebrow);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -696,7 +696,7 @@
       font-weight: var(--weight-regular);
       color: #fff;
       line-height: 1.1;
-      margin: 0 0 1.6rem;
+      margin: 0 0 var(--gap-heading);
     }
     .rl-h em { font-style: italic; color: var(--accent-mid); }
     .rl-desc {
@@ -788,7 +788,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: rgba(141,148,255,0.55);
-      margin-bottom: 1.4rem;
+      margin-bottom: var(--gap-eyebrow);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -809,7 +809,7 @@
       font-weight: var(--weight-regular);
       color: #fff;
       line-height: 1.1;
-      margin: 0 0 1.6rem;
+      margin: 0 0 var(--gap-heading);
     }
     .mt-h em { font-style: italic; color: var(--accent-mid); }
     .mt-desc {
@@ -897,7 +897,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: rgba(141,148,255,0.55);
-      margin-bottom: 1.4rem;
+      margin-bottom: var(--gap-eyebrow);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -918,7 +918,7 @@
       font-weight: var(--weight-regular);
       color: #fff;
       line-height: 1.1;
-      margin: 0 0 1.6rem;
+      margin: 0 0 var(--gap-heading);
     }
     .ds-h em { font-style: italic; color: var(--accent-mid); }
     .ds-desc {
@@ -1236,7 +1236,11 @@
       background-size: var(--dot-size-md);
     }
     .cs-sec.bg-dark,
-    .part-banner,
+    .part-banner {
+      background-image: var(--dot-grid-white-sm);
+      background-size: var(--dot-size-md);
+      position: relative;
+    }
     /* ── Context → Partner scroll-cover ──────────────────── */
     .context-stack {
       position: relative;
@@ -1269,7 +1273,7 @@
       font-weight: var(--weight-regular);
       color: var(--ink);
       line-height: 1.2;
-      margin-bottom: 0.75rem;
+      margin-bottom: var(--gap-eyebrow);
     }
     .st-adopt em { font-style: italic; color: var(--accent); }
 
@@ -1529,7 +1533,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 0.75rem;
+      margin-bottom: var(--gap-eyebrow);
       opacity: 0;
       animation: fu 0.6s var(--ease-reveal) 0.3s both;
     }
@@ -1775,7 +1779,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: rgba(255,255,255,0.48);
-      margin-bottom: 0.75rem;
+      margin-bottom: var(--gap-eyebrow);
       opacity: 0;
       animation: fu 0.6s var(--ease-reveal) 0.3s both;
     }
@@ -1889,7 +1893,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: rgba(255,255,255,0.48);
-      margin-bottom: 0.75rem;
+      margin-bottom: var(--gap-eyebrow);
       opacity: 0;
       animation: fu 0.6s var(--ease-reveal) 0.3s both;
     }
@@ -1961,7 +1965,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: rgba(255,255,255,0.48);
-      margin-bottom: 0.75rem;
+      margin-bottom: var(--gap-eyebrow);
       opacity: 0;
       animation: fu 0.6s var(--ease-reveal) 0.3s both;
     }
@@ -2037,7 +2041,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: rgba(255,255,255,0.48);
-      margin-bottom: 0.75rem;
+      margin-bottom: var(--gap-eyebrow);
     }
     .ads-title {
       font-family: var(--font-serif);
@@ -2045,7 +2049,7 @@
       font-weight: var(--weight-regular);
       color: #fff;
       line-height: 1.05;
-      margin: 0 0 1.5rem;
+      margin: 0 0 var(--gap-heading);
     }
     .ads-title em { font-style: italic; color: var(--accent-mid); }
     /* Text swap container */
@@ -2468,7 +2472,7 @@
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 0.75rem;
+      margin-bottom: var(--gap-eyebrow);
       opacity: 0;
       animation: fu 0.6s var(--ease-reveal) 0.3s both;
     }
@@ -2748,8 +2752,8 @@
 
     <!-- Title block — always visible at bottom -->
     <div class="bj-content">
-      <div class="bj-eyebrow">Verizon · Enterprise · Cloud Video · 2020–2023</div>
       <h1 class="bj-h1">BlueJeans<br><em>by Verizon</em></h1>
+      <div class="bj-eyebrow">Verizon · Enterprise · Cloud Video · 2020–2023</div>
     </div>
 
   </div>

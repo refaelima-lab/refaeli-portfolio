@@ -42,6 +42,13 @@
 | 11 | HOW I WORK hover face: padding-left/right 1.2rem→2.2rem; expand text 13pt→12pt |
 | 11 | Project card copy: VZ Home, BlueJeans, Iconmobile — body, tags, title updated; CTAs and NDA line removed |
 | 12 | cs-vz-home.html: full Verizon Home App case study built — 2-part structure, 15+ sections, all assets wired, cinematic quote moments, product pillars, IA viz, phone frames, videos |
+| 13 | MADE REAL + OTHER THINGS I MAKE breakers: text left-aligned, content-default gutter matched to Design Philosophy, h2 max-width 600→900, kicker inline `justify-content:center` removed, h2 font scale matched to var(--text-heading) |
+| 13 | Section-header rhythm tokenized: `--gap-eyebrow` 0.7rem→1.75rem, `--gap-heading` 1.3rem→0; applied home-wide (Philosophy, How I Work, breakers, Impact, Contact); `.cs-sec` re-scopes back to 0.7/1.3rem so CS pages are untouched |
+| 13 | Custom-class consumers refactored to reference tokens: `.phi-kicker`, `.phi-statement-wrap`, `.cz-kicker`, `.cz-title`; redundant breaker margin overrides removed |
+| 13 | Breaker blueprint illustration explored (wsb-bp wireframe + ob-bp contour stack, 18s loop, scroll-synced play-state) — built then removed at user request (positioning too off) |
+| 13 | COMPONENTS.txt refreshed: §3 breakers rewritten (`.wsb-breaker`/`.ob-breaker`, not `.philosophy-sec`); §16 tokens — new section-header rhythm block + CS scope note; §18 case studies updated to "all four built" + shared CS components inventory |
+| 13 | COMPONENTS.txt §19 added — Case Study Pattern Recipes: 11 reusable recipes (hero stage, marquee, overview grid w/ hover-flip, scroll-cover stacked chapters, sidenav dot rail, image frame, stat/quote, dashboard showcase, orbit rings, pull-quote, standard `.cs-sec`) with skeleton HTML + slots + JS hooks + extraction criteria |
+| 13 | Rhythm tokens unified across all four CS pages: `.cs-sec` re-scope removed (whole site shares 1.75rem / 0); bespoke CS classes refactored to consume the tokens — BJ (.bj-eyebrow, .bj-overview-eyebrow, .bj-h1), VZ Home (.vzh-kicker, .vzh-title, .chap-eyebrow, .chap-h), VZ-ID-Arch (.ia-eyebrow), Iconmobile (.kia/.ford/.bmw-kicker via replace_all). Hero h1s already at margin:0 (matches gap-heading), left as-is |
 
 ---
 
@@ -89,9 +96,9 @@
 
 ### Case Study Pages
 - [x] **`cs-vz-home.html`** — Verizon Home App. Full 2-chapter build: Part 1 (From Chaos to Cadence) + Part 2 (From Reactive to Proactive). All assets wired. Videos, phone frames, pillar cards, IA visualization, cinematic sections.
-- [ ] **`cs-bluejeans.html`** — BlueJeans by Verizon. Reference: `casestudy_vz_fromchaosfinal.html`
-- [ ] **`cs-vz-id-arch.html`** — Verizon Identity Architecture
-- [ ] **`cs-iconmobile.html`** — Iconmobile In-Car Experience
+- [x] **`cs-bluejeans.html`** — BlueJeans by Verizon. Built; most pattern-rich CS page (hero stage, three-block overview w/ hover-flip, sticky-cover stacked chapters, quote grid, partner logos, FTU stage). See COMPONENTS.txt §19 for the recipes derived from this page.
+- [x] **`cs-vz-id-arch.html`** — Verizon Identity Architecture. Built.
+- [x] **`cs-iconmobile.html`** — Iconmobile In-Car Experience. Built; three brand showcases (KIA, Ford, BMW) using full-bleed dashboard showcase pattern.
 
 ### Outstanding Design Decisions
 - [ ] Work card imagery — final visuals for each card

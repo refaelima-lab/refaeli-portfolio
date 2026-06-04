@@ -1569,12 +1569,12 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 
 /* Kicker */
 .phi-kicker {
-  margin-bottom: 1.2rem;
+  margin-bottom: var(--gap-eyebrow);
 }
 
 /* Primary statement */
 .phi-statement-wrap {
-  margin-bottom: 3rem;
+  margin-bottom: var(--gap-heading);
 }
 
 .phi-statement {
@@ -2485,30 +2485,32 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 0 var(--section-padding-x);
 }
 
 .wsb-inner {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
   position: relative;
   z-index: 2;
-  padding: 0 var(--section-padding-x);
+  width: 100%;
+  max-width: var(--content-default);
 }
 
-/* Breaker headings — match BJ CS section 01 scale + contrast */
+/* Breaker headings — match Design Philosophy / How I Work scale */
 .wsb-breaker h2.st-d {
-  font-size: clamp(28pt, 5vw, 62pt);
-  line-height: 1.1;
+  font-size: var(--text-heading);
+  line-height: var(--leading-heading);
 }
 .wsb-breaker .bp-d {
   font-size: var(--text-body-sm);
   color: rgba(255,255,255,0.45);
 }
 .ob-breaker h2.st {
-  font-size: clamp(28pt, 5vw, 62pt);
-  line-height: 1.1;
+  font-size: var(--text-heading);
+  line-height: var(--leading-heading);
 }
 .ob-breaker .bp {
   font-size: var(--text-body-sm);
@@ -2817,6 +2819,7 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 0 var(--section-padding-x);
 }
 
 .gal-stage {
@@ -3327,7 +3330,7 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 /* ── Left column ── */
 
 .cz-kicker {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--gap-eyebrow);
 }
 
 .cz-title {
@@ -3336,7 +3339,7 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   font-weight: var(--weight-regular);
   color: #fff;
   line-height: 1.08;
-  margin-bottom: 1.4rem;
+  margin-bottom: var(--gap-heading);
 }
 
 .cz-title em {
