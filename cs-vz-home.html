@@ -8,6 +8,322 @@
   <link rel="stylesheet" href="styles.css">
   <style>
 
+    /* ── Chapter 2 Hero (mirrors vzh-stage structure, light surface) ── */
+    .ch2-stage {
+      position: relative;
+      height: 220vh;
+    }
+    .ch2-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    /* Neutral base — warm tones on LEFT, light/cool on RIGHT (swapped) */
+    .ch2-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: linear-gradient(95deg,
+        #fbe1cc 0%,
+        #fcefe2 20%,
+        #fdf9f3 55%,
+        #f7f7f9 100%
+      );
+      overflow: hidden;
+    }
+    /* 4 traveling color blobs — biased to the right side (left stays calm) */
+    .ch2-glare {
+      position: absolute;
+      inset: -30%;
+      pointer-events: none;
+      filter: blur(40px);
+      will-change: transform;
+    }
+    /* YELLOW — left-upper area */
+    .ch2-glare-1 {
+      background: radial-gradient(ellipse 50% 55% at 32% 42%,
+        rgba(255, 215, 90, 0.90) 0%,
+        rgba(255, 230, 150, 0.45) 35%,
+        transparent 65%
+      );
+      animation: ch2-glare-1 12s ease-in-out infinite;
+    }
+    /* CORAL RED — left-mid */
+    .ch2-glare-2 {
+      background: radial-gradient(ellipse 45% 50% at 25% 55%,
+        rgba(230, 55, 60, 0.75) 0%,
+        rgba(230, 55, 60, 0.22) 40%,
+        transparent 70%
+      );
+      animation: ch2-glare-2 14s ease-in-out infinite;
+    }
+    /* BLUE — cool contrast, left side */
+    .ch2-glare-3 {
+      background: radial-gradient(ellipse 48% 52% at 28% 38%,
+        rgba(70, 145, 250, 0.65) 0%,
+        rgba(100, 180, 255, 0.22) 38%,
+        transparent 68%
+      );
+      animation: ch2-glare-3 13s ease-in-out infinite;
+    }
+    /* ORANGE — left-lower */
+    .ch2-glare-4 {
+      background: radial-gradient(ellipse 45% 50% at 35% 62%,
+        rgba(255, 125, 45, 0.72) 0%,
+        rgba(255, 170, 90, 0.28) 40%,
+        transparent 70%
+      );
+      animation: ch2-glare-4 11s ease-in-out infinite;
+    }
+    /* Left-biased motion — X stays mostly negative so blobs hover the left half */
+    @keyframes ch2-glare-1 {
+      0%   { transform: translate(5%, -25%)   scale(1); }
+      25%  { transform: translate(-15%, -5%)  scale(1.25); }
+      50%  { transform: translate(-20%, 28%)  scale(1.1); }
+      75%  { transform: translate(-8%, 32%)   scale(1.2); }
+      100% { transform: translate(5%, -25%)   scale(1); }
+    }
+    @keyframes ch2-glare-2 {
+      0%   { transform: translate(-18%, 20%)  scale(1.1); }
+      25%  { transform: translate(2%, 28%)    scale(0.85); }
+      50%  { transform: translate(8%, -22%)   scale(1.2); }
+      75%  { transform: translate(-12%, -30%) scale(1); }
+      100% { transform: translate(-18%, 20%)  scale(1.1); }
+    }
+    @keyframes ch2-glare-3 {
+      0%   { transform: translate(-2%, 28%)   scale(0.9); }
+      25%  { transform: translate(-20%, -22%) scale(1.25); }
+      50%  { transform: translate(-15%, 10%)  scale(1.05); }
+      75%  { transform: translate(8%, -12%)   scale(1.15); }
+      100% { transform: translate(-2%, 28%)   scale(0.9); }
+    }
+    @keyframes ch2-glare-4 {
+      0%   { transform: translate(-22%, -18%) scale(1); }
+      25%  { transform: translate(5%, 30%)    scale(0.9); }
+      50%  { transform: translate(-15%, -25%) scale(1.2); }
+      75%  { transform: translate(-28%, 18%)  scale(1.1); }
+      100% { transform: translate(-22%, -18%) scale(1); }
+    }
+
+
+    /* Dot grid overlay — visible on right, fades out toward the left */
+    .ch2-dots {
+      position: absolute;
+      inset: 0;
+      background-image: var(--dot-grid-mid);
+      background-size: var(--dot-size-md);
+      -webkit-mask-image: linear-gradient(90deg,
+        transparent     20%,
+        rgba(0,0,0,0.3) 45%,
+        rgba(0,0,0,0.7) 75%,
+        rgba(0,0,0,1)   100%
+      );
+              mask-image: linear-gradient(90deg,
+        transparent     20%,
+        rgba(0,0,0,0.3) 45%,
+        rgba(0,0,0,0.7) 75%,
+        rgba(0,0,0,1)   100%
+      );
+      pointer-events: none;
+    }
+
+    /* Phone asset — bottom-aligned, hero-moment scale, right of center */
+    .ch2-phone {
+      position: absolute;
+      left: 58%;
+      bottom: 0;
+      height: 100vh;
+      width: auto;
+      max-width: 70%;
+      object-fit: contain;
+      object-position: bottom;
+      z-index: 1;
+      pointer-events: none;
+      user-select: none;
+      /* Entry — rises up + scales in, preserves centering translateX */
+      opacity: 0;
+      transform-origin: bottom center;
+      transform: translateX(-50%) translateY(40px) scale(0.92);
+      animation: ch2-phone-in 1.4s var(--ease-reveal) 0.2s both;
+    }
+    @keyframes ch2-phone-in {
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+      }
+    }
+
+    /* Frosted glass layer — scroll-driven, rises from bottom (same math as vzh) */
+    .ch2-glass {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.1rem;
+      padding: 2rem clamp(2rem, 6vw, 6rem);
+      text-align: center;
+      pointer-events: none;
+      clip-path: inset(100% 0 0 0);
+    }
+    .ch2-glass-line {
+      font-family: var(--font-serif);
+      font-size: clamp(17pt, 2.9vw, 34pt);
+      font-weight: var(--weight-regular);
+      color: rgba(255,255,255,0.92);
+      line-height: 1.3;
+      max-width: 1020px;
+      width: 90vw;
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: transform, opacity;
+    }
+    .ch2-glass-line em { font-style: italic; color: var(--accent-mid); }
+
+    /* Bottom-left content — eyebrow on TOP of title (different from page hero) */
+    .ch2-content {
+      position: relative;
+      z-index: 4;
+      width: 100%;
+      max-width: 720px;
+      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+    }
+    .ch2-eyebrow {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fu 0.6s var(--ease-reveal) 0.3s both;
+    }
+    .ch2-title {
+      font-family: var(--font-serif);
+      font-size: clamp(26pt, 4.2vw, 48pt);
+      font-weight: var(--weight-regular);
+      color: var(--ink);
+      line-height: 1.08;
+      margin: 0;
+      opacity: 0;
+      animation: fu 0.7s var(--ease-reveal) 0.5s both;
+    }
+    .ch2-title em { font-style: italic; color: var(--ink); }
+
+    /* Notification tile rotation — sits to the RIGHT of the phone, side-by-side */
+    .ch2-tile-stack {
+      position: absolute;
+      right: clamp(6rem, 11vw, 12rem);
+      top: 50%;
+      width: 270px;
+      height: 510px;
+      overflow: hidden;
+      z-index: 2;
+      pointer-events: none;
+      /* Mask: middle tile 100%, top & bottom tiles 30%, soft fade at edges */
+      -webkit-mask-image: linear-gradient(180deg,
+        rgba(0,0,0,0)   0%,
+        rgba(0,0,0,0.3) 4%,
+        rgba(0,0,0,0.3) 32%,
+        rgba(0,0,0,1)   36%,
+        rgba(0,0,0,1)   64%,
+        rgba(0,0,0,0.3) 68%,
+        rgba(0,0,0,0.3) 96%,
+        rgba(0,0,0,0)   100%
+      );
+              mask-image: linear-gradient(180deg,
+        rgba(0,0,0,0)   0%,
+        rgba(0,0,0,0.3) 4%,
+        rgba(0,0,0,0.3) 32%,
+        rgba(0,0,0,1)   36%,
+        rgba(0,0,0,1)   64%,
+        rgba(0,0,0,0.3) 68%,
+        rgba(0,0,0,0.3) 96%,
+        rgba(0,0,0,0)   100%
+      );
+      /* Entry — fades up after title settles */
+      opacity: 0;
+      transform: translateY(calc(-50% + 24px));
+      animation: ch2-tile-stack-in 1.2s var(--ease-reveal) 0.7s both;
+    }
+    @keyframes ch2-tile-stack-in {
+      to {
+        opacity: 1;
+        transform: translateY(-50%);
+      }
+    }
+
+    .ch2-tile-track {
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* center tiles so scale-up grows within stack bounds */
+      gap: 10px;
+      animation: ch2-tile-scroll 14s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+      animation-delay: 1.8s; /* starts shortly after stack lands */
+    }
+    .ch2-tile {
+      width: 88%; /* leaves ~12% horizontal slack so scale(1.12) doesn't get clipped */
+      height: 160px;
+      flex-shrink: 0;
+      object-fit: contain;
+      object-position: top;
+      transform-origin: center center;
+      animation: ch2-tile-scale-pulse 14s ease-in-out infinite both;
+    }
+    /* Each tile scales to 1.12 when in the middle slot, ramps back to 1 when leaving */
+    @keyframes ch2-tile-scale-pulse {
+      0%,   18.75% { transform: scale(1.12); }
+      25%,  93.75% { transform: scale(1); }
+      100%         { transform: scale(1.12); }
+    }
+    /* Stagger each tile's scale peak to align with its middle-position rest period.
+       Track delay is 1.8s; tile offsets repeat every 4 (we have 8 tiles = 4 unique × 2). */
+    .ch2-tile-track > .ch2-tile:nth-child(4n+1) { animation-delay: -1.7s; }  /* track pos 0, 4 */
+    .ch2-tile-track > .ch2-tile:nth-child(4n+2) { animation-delay:  1.8s; }  /* track pos 1, 5 — first focal middle */
+    .ch2-tile-track > .ch2-tile:nth-child(4n+3) { animation-delay: -8.7s; }  /* track pos 2, 6 */
+    .ch2-tile-track > .ch2-tile:nth-child(4n)   { animation-delay: -5.2s; }  /* track pos 3, 7 */
+
+    /* Rest at each position (~4.5s), quick slide to next (~1.5s).
+       Seamless loop: track has 4 unique tiles + 4 duplicates (8 total).
+       End position (-680) shows the 4 duplicates in the same spots as 0 (4 originals). */
+    @keyframes ch2-tile-scroll {
+      0%,   18.75% { transform: translateY(0); }
+      25%,  43.75% { transform: translateY(-170px); }   /* 160 + 10 gap */
+      50%,  68.75% { transform: translateY(-340px); }
+      75%,  93.75% { transform: translateY(-510px); }
+      100%         { transform: translateY(-680px); }
+    }
+
+    @media (max-width: 860px) {
+      .ch2-phone { height: 65vh; right: 0.5rem; opacity: 0.7; }
+      .ch2-content { max-width: 100%; }
+      .ch2-tile-stack { display: none; } /* hide on mobile to keep title space */
+    }
+
+    /* Hero animations gate — paused by default, run only when .ch2-hero enters viewport */
+    .ch2-hero .ch2-eyebrow,
+    .ch2-hero .ch2-title,
+    .ch2-hero .ch2-phone,
+    .ch2-hero .ch2-tile-stack,
+    .ch2-hero .ch2-tile-track,
+    .ch2-hero .ch2-tile {
+      animation-play-state: paused;
+    }
+    .ch2-hero.is-visible .ch2-eyebrow,
+    .ch2-hero.is-visible .ch2-title,
+    .ch2-hero.is-visible .ch2-phone,
+    .ch2-hero.is-visible .ch2-tile-stack,
+    .ch2-hero.is-visible .ch2-tile-track,
+    .ch2-hero.is-visible .ch2-tile {
+      animation-play-state: running;
+    }
+
     /* ── VZH Full-Bleed Hero ── */
     .vzh-stage {
       position: relative;
@@ -620,70 +936,393 @@
       font-style: italic;
     }
 
-    /* ── IA architecture visualization ── */
-    .ia-viz {
-      border: 1px solid var(--rule);
-      border-radius: var(--radius-card-lg);
-      overflow: hidden;
-      background: var(--surface-white);
-      margin-top: 2.5rem;
+    /* ── IA RESTRUCTURE — static two-column intro: title left, body right (bottom-aligned) ── */
+    .ia-intro {
+      display: grid;
+      grid-template-columns: 0.85fr 1.4fr;
+      gap: clamp(3rem, 5vw, 5rem);
+      align-items: end;
+      margin-bottom: 3.5rem;
     }
-    .ia-viz-bar {
-      background: var(--dark);
-      padding: 0.9rem 1.6rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .ia-viz-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
-    .ia-viz-title {
-      font-size: var(--text-nano);
-      font-weight: var(--weight-medium);
-      letter-spacing: var(--tracking-wide);
-      text-transform: uppercase;
-      color: var(--white-a38);
-      margin-left: 0.5rem;
-    }
-    .ia-viz-body {
-      padding: 1.8rem;
+    .ia-intro-right .bp { margin-top: 0; }
+    .ia-intro-right .bp + .bp { margin-top: 1rem; }
+
+    /* 4 IA blocks — dark variant, modeled on BJ .insight-d */
+    .ia-blocks {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 0.8rem;
+      gap: 1.25rem;
     }
-    .ia-tab {
-      background: var(--page);
-      border: 1px solid var(--rule);
+    .ia-block {
+      position: relative;
+      overflow: hidden;
+      background: var(--white-a04);
+      border: 1px solid var(--rule-dark);
       border-radius: var(--radius-card);
-      padding: 0.9rem 0.6rem;
+      padding: 2rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.35s ease, border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+    }
+    .ia-block:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-mid-a25);
+      background: rgba(141, 148, 255, 0.08);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    }
+    .ia-block-num {
+      position: absolute;
+      top: -1rem;
+      right: 0.4rem;
+      font-family: var(--font-serif);
+      font-size: clamp(70pt, 7vw, 100pt);
+      color: rgba(141, 148, 255, 0.10);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+      transition: color 0.35s ease, transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1);
+    }
+    .ia-block:hover .ia-block-num {
+      color: rgba(141, 148, 255, 0.20);
+      transform: translateY(-4px) rotate(-3deg);
+    }
+    .ia-block-emoji,
+    .ia-block-label,
+    .ia-block-tagline,
+    .ia-block-desc { position: relative; z-index: 1; }
+    .ia-block-emoji {
+      font-size: 1.7rem;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .ia-block-label {
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-widest);
+      text-transform: uppercase;
+      color: var(--accent-mid-a50);
+      margin-bottom: 0.55rem;
+    }
+    .ia-block-tagline {
+      font-family: var(--font-serif);
+      font-weight: var(--weight-light);
+      font-size: 14pt;
+      color: rgba(255, 255, 255, 0.88);
+      line-height: 1.3;
+      margin: 0 0 0.8rem;
+    }
+    .ia-block-desc {
+      font-family: var(--font-sans);
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: rgba(255, 255, 255, 0.55);
+      line-height: var(--leading-normal);
+      margin: 0;
+    }
+
+    @media (max-width: 900px) {
+      .ia-intro { grid-template-columns: 1fr; gap: 2rem; margin-bottom: 2.5rem; }
+      .ia-blocks { grid-template-columns: 1fr; gap: 1rem; }
+    }
+
+    /* ── THE LAST 10% — full-bleed breaker: gradient bg + home screens image + scroll-driven glass ── */
+    .l10-stage {
+      position: relative;
+      height: 180vh;
+    }
+    .l10-hero {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    /* Same gradient as .ch2-bg — warm tones on LEFT, light/cool on RIGHT */
+    .l10-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: linear-gradient(95deg,
+        #fbe1cc 0%,
+        #fcefe2 20%,
+        #fdf9f3 55%,
+        #f7f7f9 100%
+      );
+      overflow: hidden;
+      will-change: transform;
+    }
+    /* Full-bleed home screens image — sits on top of bg, transparent regions show gradient through */
+    .l10-screens {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+    /* Glass-revealed items inside the rising glass: eyebrow, title, body */
+    .l10-glass-item {
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: opacity, transform;
+      margin: 0;
+    }
+    .l10-glass-eyebrow {
+      font-family: var(--font-sans);
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .l10-glass-title {
+      font-family: var(--font-serif);
+      font-size: clamp(28pt, 4.6vw, 52pt);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.1;
+      max-width: 18ch;
       text-align: center;
     }
-    .ia-tab.active-tab { background: var(--accent); border-color: var(--accent); }
-    .ia-tab-icon { font-size: 18px; margin-bottom: 0.35rem; }
-    .ia-tab-label {
+    .l10-glass-title em { font-style: italic; color: var(--accent-mid); }
+    .l10-glass-body {
+      font-family: var(--font-sans);
+      font-size: clamp(13pt, 1.4vw, 17pt);
+      font-weight: var(--weight-light);
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1.5;
+      max-width: 960px;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+    .l10-glass-body em { font-style: italic; color: var(--accent-mid); }
+    .l10-glass-note {
+      position: absolute;
+      bottom: clamp(2rem, 4vh, 3.5rem);
+      left: 50%;
+      width: 100%;
+      max-width: 780px;
+      margin: 0;
+      padding: 0 clamp(1.5rem, 4vw, 3rem);
+      font-family: var(--font-sans);
+      font-size: clamp(10pt, 0.95vw, 12.5pt);
+      font-weight: var(--weight-light);
+      color: rgba(255, 255, 255, 0.58);
+      line-height: 1.55;
+      text-align: center;
+      letter-spacing: 0.005em;
+      box-sizing: border-box;
+      transform: translateX(-50%) translateY(18px);
+    }
+
+    /* ── UI SHOWCASE — 4 feature stages arranged as a parallax cover stack ── */
+    .feat-grid {
+      position: relative;
+    }
+    .feat-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(3rem, 5vw, 5rem);
+      align-items: center;
+      width: 100%;
+    }
+    .feat-text { order: 1; }
+    .feat-asset { order: 2; }
+    .feat-item--reverse .feat-text  { order: 2; }
+    .feat-item--reverse .feat-asset { order: 1; }
+
+    .feat-num {
+      font-family: var(--font-serif);
+      font-size: clamp(52pt, 6.8vw, 88pt);
+      color: rgba(60, 73, 255, 0.06);
+      line-height: 0.85;
+      margin: 0 0 -0.3rem;
+      pointer-events: none;
+      user-select: none;
+    }
+    .feat-label {
       font-size: var(--text-nano);
       font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-wide);
+      letter-spacing: var(--tracking-widest);
       text-transform: uppercase;
-      color: var(--ink-mid);
-      display: block;
+      color: var(--accent-mid);
+      margin: 0 0 0.6rem;
     }
-    .ia-tab.active-tab .ia-tab-label { color: #fff; }
-    .ia-sub-items { margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.3rem; }
-    .ia-sub {
-      font-size: 6.8pt;
+    .feat-title {
+      font-family: var(--font-serif);
+      font-size: clamp(22pt, 3.2vw, 34pt);
+      font-weight: var(--weight-regular);
+      color: var(--ink);
+      line-height: 1.1;
+      margin: 0 0 1.4rem;
+      letter-spacing: -0.005em;
+    }
+    .feat-tagline {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 17pt;
+      color: var(--accent-mid);
+      line-height: 1.35;
+      margin: 0 0 1.5rem;
+      max-width: 42ch;
+    }
+    .feat-body {
+      font-family: var(--font-sans);
+      font-size: var(--text-body-sm);
       font-weight: var(--weight-light);
-      color: var(--ink-light);
-      background: #fff;
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      padding: 0.2rem 0.4rem;
-      text-align: left;
+      color: var(--ink-mid);
+      line-height: var(--leading-spacious);
+      margin: 0 0 1rem;
     }
-    .ia-tab.active-tab .ia-sub { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); }
+    .feat-punch {
+      font-family: var(--font-serif);
+      font-size: 14pt;
+      color: var(--ink);
+      line-height: 1.4;
+      font-style: italic;
+      margin: 1rem 0 1rem;
+      padding: 0.9rem 1.1rem;
+      border-left: 2px solid var(--accent-mid-a25);
+      background: rgba(141, 148, 255, 0.04);
+    }
+    .feat-principles {
+      margin-top: 1.6rem;
+    }
+    .feat-principles-label {
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 0.7rem;
+    }
+    .feat-principles-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .feat-principles-list li {
+      font-family: var(--font-sans);
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: var(--ink-mid);
+      line-height: 1.5;
+      padding: 0.35rem 0 0.35rem 1rem;
+      position: relative;
+    }
+    .feat-principles-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.95em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-mid);
+    }
+
+    /* Each stage is a sticky parallax cover (rises over the previous stage on scroll). */
+    .feat-stage {
+      position: sticky;
+      top: 0;
+      height: 200vh;            /* 100vh visible panel + 100vh runway for A→B swap + cover rise */
+      overflow: hidden;          /* contain rounded corners + clip own orbs */
+      background-color: var(--warm);
+      background-image: var(--dot-grid-light);
+      background-size: var(--dot-size-md);
+      border-radius: 1.5rem 1.5rem 0 0;
+      box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.10);
+      isolation: isolate;
+    }
+    /* Alternate stage 2 + 4 to page background so the cover stack reads as warm → page → warm → page */
+    .feat-stage:nth-child(even) { background-color: var(--page); }
+    /* Last stage: only needs the visible panel (100vh) — its sticky scroll runway comes from the
+       .feat-grid::after spacer below so the swap can still play. */
+    .feat-stage:last-child {
+      height: 100vh;
+      min-height: 640px;
+    }
+    /* Spacer after the last stage = scroll runway that gives stage 4 sticky time for its swap.
+       Colored bg-dark so it blends with Section 15 below, avoiding a visible bg-warm gap. */
+    .feat-grid::after {
+      content: '';
+      display: block;
+      height: 100vh;
+      background: var(--dark);
+    }
+    /* The visible content panel — fills the top 100vh of the stage, content centered to sec-wide width */
+    .feat-panel {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      min-height: 640px;
+      display: flex;
+      align-items: center;
+      padding: 0 clamp(2rem, 6vw, 6rem);
+    }
+    .feat-panel > .feat-item {
+      max-width: var(--content-wide);
+      margin: 0 auto;
+    }
+    /* Swap container — stacks two content groups in the same grid cell so the column auto-sizes to the taller one */
+    .feat-swap {
+      position: relative;
+      display: grid;
+    }
+    .feat-swap-a,
+    .feat-swap-b {
+      grid-area: 1 / 1;
+      will-change: opacity, transform;
+    }
+    .feat-swap-a { opacity: 1; transform: translateY(0); }
+    .feat-swap-b { opacity: 0; transform: translateY(14px); pointer-events: none; }
+
+    .feat-asset {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .feat-asset img {
+      width: 100%;
+      max-width: 480px;
+      max-height: 760px;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    @media (max-width: 900px) {
+      .feat-item {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+      .feat-item .feat-text,
+      .feat-item--reverse .feat-text { order: 2; }
+      .feat-item .feat-asset,
+      .feat-item--reverse .feat-asset { order: 1; }
+      .feat-asset img { max-width: 360px; max-height: 580px; }
+      /* Mobile: unlock the parallax stack, render each stage normally */
+      .feat-stage {
+        position: static;
+        height: auto;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        margin-bottom: 4rem;
+      }
+      .feat-stage:last-child { margin-bottom: 0; }
+      .feat-panel { height: auto; min-height: 0; display: block; padding: 0; }
+      .feat-swap { display: block; }
+      .feat-swap-a,
+      .feat-swap-b { position: static; opacity: 1; transform: none; pointer-events: auto; }
+      .feat-swap-b { margin-top: 1.5rem; }
+    }
 
     /* ── Video embed ── */
     .cs-video-wrap {
@@ -794,7 +1433,6 @@
     @media (max-width: 860px) {
       .pillar-grid { grid-template-columns: 1fr; }
       .pillar-body { grid-template-columns: 1fr 1fr; }
-      .ia-viz-body { grid-template-columns: 1fr 1fr; }
       .chap-break-inner { flex-direction: column; gap: 1.5rem; }
       .cb-divider { width: 60px; height: 1px; }
       .mission-cards { grid-template-columns: 1fr; }
@@ -840,6 +1478,9 @@
       background: var(--accent);
     }
     .hiw-bullets li:last-child { margin-bottom: 0; }
+
+    /* Ch2 Challenge tiles run taller — Tile 2's hover has paragraph + question list */
+    .ch2-challenge .hiw-tile { height: 420px; }
 
     /* ── CHALLENGE → MY ROLE sticky-cover stack ── */
     .vzh-stack {
@@ -1170,6 +1811,327 @@
       .move-tile-sub { max-width: 70%; }
     }
 
+    /* ── DUAL MISSION — flat 2D solar-system ecosystem (dark) ── */
+    .dm-system {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      align-items: center;
+      gap: 2.5rem;
+      margin-top: 4.5rem;
+    }
+    .dm-callout { position: relative; }
+    .dm-callout-eyebrow {
+      font-family: var(--font-sans);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 0.7rem;
+    }
+    .dm-callout-body {
+      font-family: var(--font-sans);
+      font-size: var(--text-body-sm);
+      line-height: var(--leading-spacious);
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .dm-visual {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      margin: 0 auto;
+    }
+
+    /* Shell wrappers: handle position + pop-in (no transform conflict with spins) */
+    .dm-orbit-shell {
+      position: absolute;
+      pointer-events: none;
+    }
+    .dm-shell-1    { inset: 33%; }
+    .dm-shell-2    { inset: 22%; }
+    .dm-shell-home { inset: 12%; }
+    .dm-shell-3    { inset:  4%; }
+    .dm-shell-bg-1 { inset: -12%; }
+    .dm-shell-bg-2 { inset: -30%; }
+    .dm-shell-bg-3 { inset: -52%; }
+
+    /* Flat orbit rings — fill their shell, handle spin */
+    .dm-orbit {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px dashed rgba(141, 148, 255, 0.18);
+      pointer-events: none;
+    }
+    .dm-orbit-bg-1 { border-color: rgba(141, 148, 255, 0.11); }
+    .dm-orbit-bg-2 { border-color: rgba(141, 148, 255, 0.08); }
+    .dm-orbit-bg-3 { border-color: rgba(141, 148, 255, 0.05); }
+
+    /* Verizon core — outlined ring, no solid fill */
+    .dm-core {
+      position: absolute;
+      inset: 35%;
+      border: 1.5px solid rgba(141, 148, 255, 0.5);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(141, 148, 255, 0.08) 0%, transparent 70%);
+      box-shadow: 0 0 50px rgba(141, 148, 255, 0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      z-index: 5;
+    }
+    .dm-core-label {
+      font-family: var(--font-serif);
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .dm-core-sub {
+      font-family: var(--font-sans);
+      font-size: 0.58rem;
+      opacity: 0.7;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+      max-width: 80%;
+      line-height: 1.4;
+    }
+
+    /* Home App wrap: rides the home orbit, handles pop-in */
+    .dm-home-wrap {
+      position: absolute;
+      top: -10%;
+      left: 50%;
+      width: 22%;
+      aspect-ratio: 1;
+      margin-left: -11%;
+    }
+
+    /* Home App planet — outlined ring; counter-spins so label stays upright */
+    .dm-home-app {
+      position: absolute;
+      inset: 0;
+      border: 1.5px solid rgba(141, 148, 255, 0.5);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(141, 148, 255, 0.08) 0%, transparent 70%);
+      box-shadow: 0 0 24px rgba(141, 148, 255, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    /* ── Entry animation: hidden until .dm-visual gets .dm-in ── */
+    .dm-visual .dm-core,
+    .dm-visual .dm-orbit-shell,
+    .dm-visual .dm-home-wrap { opacity: 0; }
+
+    @keyframes dm-pop {
+      from { opacity: 0; transform: scale(0); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* Cascade: core → shells zoom in (cascading) → orbits spin (1.5s) → home app pops in (1.8s) */
+    .dm-visual.dm-in .dm-core {
+      animation: dm-pop 0.6s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+    }
+
+    .dm-visual.dm-in .dm-shell-1    { animation: dm-pop 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.45s forwards; }
+    .dm-visual.dm-in .dm-shell-2    { animation: dm-pop 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.60s forwards; }
+    .dm-visual.dm-in .dm-shell-home { animation: dm-pop 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.75s forwards; }
+    .dm-visual.dm-in .dm-shell-3    { animation: dm-pop 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.90s forwards; }
+    .dm-visual.dm-in .dm-shell-bg-1 { animation: dm-pop 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1.05s forwards; }
+    .dm-visual.dm-in .dm-shell-bg-2 { animation: dm-pop 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1.20s forwards; }
+    .dm-visual.dm-in .dm-shell-bg-3 { animation: dm-pop 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1.35s forwards; }
+
+    /* Orbits spin inside their shells — no transform conflict with the pop */
+    .dm-visual.dm-in .dm-shell-1    .dm-orbit { animation: hiw-spin-cw   55s linear infinite 1.5s; }
+    .dm-visual.dm-in .dm-shell-2    .dm-orbit { animation: hiw-spin-ccw  75s linear infinite 1.5s; }
+    .dm-visual.dm-in .dm-shell-home .dm-orbit { animation: hiw-spin-cw   90s linear infinite 1.5s; }
+    .dm-visual.dm-in .dm-shell-3    .dm-orbit { animation: hiw-spin-ccw 110s linear infinite 1.5s; }
+    .dm-visual.dm-in .dm-shell-bg-1 .dm-orbit { animation: hiw-spin-cw  140s linear infinite 1.5s; }
+    .dm-visual.dm-in .dm-shell-bg-2 .dm-orbit { animation: hiw-spin-ccw 175s linear infinite 1.5s; }
+    .dm-visual.dm-in .dm-shell-bg-3 .dm-orbit { animation: hiw-spin-cw  220s linear infinite 1.5s; }
+
+    /* Home App wrap pops in last (carries position with orbit-home rotation) */
+    .dm-visual.dm-in .dm-home-wrap {
+      animation: dm-pop 0.6s cubic-bezier(0.34, 1.4, 0.64, 1) 1.8s forwards;
+    }
+    /* Counter-spin label: matches orbit-home's period & direction inverse so text stays upright */
+    .dm-visual.dm-in .dm-home-app {
+      animation: hiw-spin-ccw 90s linear infinite 1.5s;
+    }
+
+    /* Callouts: hidden until illustration finishes its entry, then fade up */
+    .dm-system .dm-callout { opacity: 0; }
+    @keyframes dm-fade-up {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .dm-system.dm-in .dm-callout:first-child {
+      animation: dm-fade-up 0.7s ease-out 2.5s forwards;
+    }
+    .dm-system.dm-in .dm-callout:last-child {
+      animation: dm-fade-up 0.7s ease-out 2.65s forwards;
+    }
+
+    @media (max-width: 900px) {
+      .dm-system { grid-template-columns: 1fr; gap: 2rem; }
+      .dm-visual { max-width: 420px; }
+    }
+
+    /* ── STRATEGIC PRINCIPLES — 6 tiles, default/hover swap, icon motion ── */
+    .prin-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 3.5rem;
+    }
+    .prin-tile {
+      position: relative;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--accent-mid-a08);
+      border-radius: 1rem;
+      padding: 1.8rem 2rem 2rem;
+      overflow: hidden;
+      min-height: 230px;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+    .prin-tile:hover {
+      background: rgba(255, 255, 255, 0.78);
+      border-color: var(--accent-mid-a25);
+    }
+    .prin-tile-icon {
+      position: absolute;
+      top: -22px;
+      right: -22px;
+      width: 200px;
+      height: 200px;
+      color: var(--accent);
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 1;
+      transition:
+        transform 0.65s cubic-bezier(0.34, 1.4, 0.64, 1),
+        opacity 0.4s ease,
+        color 0.4s ease;
+    }
+    .prin-tile:hover .prin-tile-icon {
+      transform: rotate(-12deg) scale(1.12);
+      opacity: 0.22;
+      color: var(--accent-mid);
+    }
+    .prin-tile-label {
+      position: relative;
+      z-index: 2;
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      max-width: 85%;
+    }
+    /* Default/hover swap: both children share the same grid cell so the tile auto-fits both */
+    .prin-tile-swap {
+      position: relative;
+      z-index: 2;
+      display: grid;
+    }
+    .prin-tile-tagline,
+    .prin-tile-desc {
+      grid-area: 1 / 1;
+      transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .prin-tile-tagline {
+      font-family: var(--font-sans);
+      font-size: 18pt;
+      font-weight: var(--weight-light);
+      color: var(--ink);
+      line-height: 1.25;
+      max-width: 88%;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .prin-tile-desc {
+      font-family: var(--font-sans);
+      font-size: var(--text-body-sm);
+      color: var(--ink-mid);
+      line-height: var(--leading-spacious);
+      opacity: 0;
+      transform: translateY(8px);
+      margin: 0;
+    }
+    .prin-tile:hover .prin-tile-tagline {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    .prin-tile:hover .prin-tile-desc {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .prin-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .prin-tile { min-height: auto; padding: 2rem 1.7rem 2.2rem; }
+      .prin-tile-icon { width: 150px; height: 150px; top: -18px; right: -18px; }
+    }
+
+    /* ── EPIC quote moment — display serif, centered, italic accent on key clause ── */
+    .epic-quote {
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 0 2rem;
+    }
+    .epic-quote-mark {
+      font-family: var(--font-serif);
+      font-size: clamp(6rem, 12vw, 10rem);
+      line-height: 0.5;
+      color: var(--accent);
+      opacity: 0.18;
+      margin-bottom: 2rem;
+      user-select: none;
+    }
+    .epic-quote-text {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: 400;
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin: 0;
+    }
+    .epic-quote-soft {
+      color: var(--ink-mid);
+      opacity: 0.55;
+    }
+    .epic-quote-key {
+      font-style: italic;
+      color: var(--accent);
+    }
+    /* Dark variant for the page color */
+    .bg-dark .epic-quote-text { color: rgba(255, 255, 255, 0.9); }
+    .bg-dark .epic-quote-soft { color: rgba(255, 255, 255, 0.5); opacity: 1; }
+    .bg-dark .epic-quote-key  { color: var(--accent-mid); }
+    .bg-dark .epic-quote-mark { color: var(--accent-mid); opacity: 0.22; }
+
+    @media (max-width: 900px) {
+      .epic-quote-mark { font-size: 4.5rem; margin-bottom: 1rem; }
+    }
+
     /* ── OUTCOME — 6-card metric grid ── */
     .outcome-grid {
       display: grid;
@@ -1382,6 +2344,7 @@
       .oc-tl-label { font-size: 6pt; }
     }
   </style>
+  <script src="https://player.vimeo.com/api/player.js"></script>
 </head>
 <body>
 
@@ -1434,13 +2397,12 @@
 
 <!-- ── IN-PAGE SIDENAV ── -->
 <nav class="cs-sidenav" id="cs-sidenav" aria-label="Page sections">
-  <button class="cs-sidenav-dot active" data-label="Overview"  data-target="overview"></button>
-  <button class="cs-sidenav-dot"        data-label="Part I"    data-target="part1"></button>
-  <button class="cs-sidenav-dot"        data-label="Systems"   data-target="systems"></button>
-  <button class="cs-sidenav-dot"        data-label="Part II"   data-target="part2"></button>
-  <button class="cs-sidenav-dot"        data-label="Pillars"   data-target="pillars"></button>
-  <button class="cs-sidenav-dot"        data-label="Design"    data-target="design"></button>
-  <button class="cs-sidenav-dot"        data-label="Outcomes"  data-target="outcomes"></button>
+  <button class="cs-sidenav-dot active" data-label="Overview"   data-target="overview"></button>
+  <button class="cs-sidenav-dot"        data-label="Part I"     data-target="part1"></button>
+  <button class="cs-sidenav-dot"        data-label="Part II"    data-target="part2"></button>
+  <button class="cs-sidenav-dot"        data-label="Foundation" data-target="design"></button>
+  <button class="cs-sidenav-dot"        data-label="The Last 10%" data-target="last10"></button>
+  <button class="cs-sidenav-dot"        data-label="Features"   data-target="feat-stage-1"></button>
 </nav>
 
 
@@ -2266,13 +3228,17 @@
   <div class="sec-inner" style="position:relative;z-index:2;">
     <div class="sec-ch r">Verizon 1.0</div>
     <h2 class="st r d1">The product in <em>motion</em>.</h2>
-    <p class="bp r d2" style="max-width:720px;">The MVP proved the opportunity. Customers were adopting the product, the business was investing, and the roadmap was growing. What became clear, however, was that the product needed more than features. It needed the structure required to scale.</p>
+    <p class="bp r d2">The MVP proved the opportunity. Customers were adopting the product, the business was investing, and the roadmap was growing. What became clear, however, was that the product needed more than features. It needed the structure required to scale.</p>
 
-    <div class="cs-video-wrap r d3">
-      <video controls muted playsinline preload="metadata"
-             aria-label="Verizon Home App 1.0 product walkthrough">
-        <source src="assets/verizon-home-app/home-vision-video-1.mp4" type="video/mp4">
-      </video>
+    <div class="cs-video-wrap r d3" style="aspect-ratio:16/9;position:relative;">
+      <iframe id="vz1-vimeo"
+              src="https://player.vimeo.com/video/1198892283?title=0&amp;byline=0&amp;portrait=0&amp;logo=0&amp;controls=0&amp;dnt=1&amp;playsinline=1"
+              style="width:100%;height:100%;border:0;display:block;"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+              allowfullscreen
+              title="Verizon Home App 1.0 product walkthrough"></iframe>
+      <button id="vz1-unmute" type="button" aria-label="Click to unmute"
+              style="position:absolute;inset:0;width:100%;height:100%;background:transparent;border:0;cursor:pointer;display:none;"></button>
     </div>
   </div>
 </section>
@@ -2311,589 +3277,743 @@
 
 
 <!-- ══════════════════════════════════════
-     PART 2 — CHAPTER OPENER (cinematic)
+     CHAPTER TWO HERO — full-bleed sticky stage
 ══════════════════════════════════════ -->
-<div class="chap-opener" id="part2" style="min-height:50vh; display:flex; align-items:center;">
-  <div class="chap-ghost">02</div>
-  <div class="chap-opener-inner" style="max-width:700px;">
-    <div class="chap-eyebrow r">Part Two</div>
-    <h2 class="chap-h r d1">From Reactive<br><em>to Proactive</em></h2>
-    <p class="chap-desc r d2">Product vision. Ecosystem strategy. AI experience. Household intelligence. The pacing slows here intentionally — this chapter earns the breathing room.</p>
+<div class="ch2-stage" id="part2">
+<section class="ch2-hero">
+
+  <!-- Abstract motion bg — 4 colored blobs (right-biased) + top-down flare + dot grid -->
+  <div class="ch2-bg" aria-hidden="true">
+    <div class="ch2-glare ch2-glare-1"></div>
+    <div class="ch2-glare ch2-glare-2"></div>
+    <div class="ch2-glare ch2-glare-3"></div>
+    <div class="ch2-glare ch2-glare-4"></div>
+    <div class="ch2-dots"></div>
   </div>
-</div>
+
+  <!-- Transparent hand+phone PNG, bottom-aligned to viewport, 90vh -->
+  <img class="ch2-phone" src="assets/verizon-home-app/hero-shot-with-hand.png" alt="" aria-hidden="true">
+
+  <!-- Animated notification tile stack — right side, real-UI feel, seamless loop -->
+  <div class="ch2-tile-stack" aria-hidden="true">
+    <div class="ch2-tile-track">
+      <img class="ch2-tile" src="assets/verizon-home-app/tile-tiktok.png" alt="">
+      <img class="ch2-tile" src="assets/verizon-home-app/tile-gaming.png" alt="">
+      <img class="ch2-tile" src="assets/verizon-home-app/tile-lag.png" alt="">
+      <img class="ch2-tile" src="assets/verizon-home-app/tile-smart-device.png" alt="">
+      <!-- Full duplicate set so end-of-cycle visual matches start (seamless wrap) -->
+      <img class="ch2-tile" src="assets/verizon-home-app/tile-tiktok.png" alt="">
+      <img class="ch2-tile" src="assets/verizon-home-app/tile-gaming.png" alt="">
+      <img class="ch2-tile" src="assets/verizon-home-app/tile-lag.png" alt="">
+      <img class="ch2-tile" src="assets/verizon-home-app/tile-smart-device.png" alt="">
+    </div>
+  </div>
+
+  <!-- Frosted glass overlay (scroll-driven, rises from bottom) -->
+  <div class="ch2-glass" id="ch2-glass" aria-hidden="true">
+    <p class="ch2-glass-line">Product vision. Ecosystem strategy. AI experience. Household intelligence.</p>
+    <p class="ch2-glass-line">Not simply a connectivity tool. A system capable of understanding, guiding, and supporting the rhythms of the household.</p>
+  </div>
+
+  <!-- Bottom-left content: eyebrow ABOVE title -->
+  <div class="ch2-content">
+    <div class="ch2-eyebrow">Part Two</div>
+    <h2 class="ch2-title">From Reactive<br>to <em>Proactive</em>.</h2>
+  </div>
+
+</section>
+</div><!-- /.ch2-stage -->
 
 
 <!-- ══════════════════════════════════════
-     06 · CORE MISSION (cinematic, dark)
+     CHAPTER TWO CONTEXT (mirrors Chapter One CONTEXT structure)
 ══════════════════════════════════════ -->
-<section class="cinematic-sec">
-  <div class="cin-dots"></div>
-  <div class="cin-glow"></div>
-  <div class="cin-inner">
-    <div class="ch r d1" style="justify-content:center; color:var(--accent-mid);">Core Mission</div>
-    <p class="cin-q r d2">
-      From a <em>Network Utility</em><br>
-      to a Trusted<br>
-      <em>Household Systems Operator</em>
-    </p>
-    <p class="cin-sub r d3">
-      Not simply a connectivity tool. A system capable of understanding, guiding, and supporting the rhythms of the household.
-    </p>
+<section class="cs-sec bg-page" style="padding-top:7rem;padding-bottom:7rem;position:relative;overflow:hidden;isolation:isolate;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Context</div>
+    <h2 class="st r d1">Beyond <em>stability</em>.</h2>
+    <p class="bp r d2" style="max-width:780px;">The Verizon Home App was never broken. It was invisible.</p>
+    <p class="bp r d3" style="max-width:780px;">Customers opened it when something went wrong, then left as quickly as possible. The experience worked, but it occupied no meaningful place in their daily lives. The challenge wasn’t increasing engagement. It was creating relevance.</p>
+    <p class="bp r d4" style="max-width:780px;">This chapter explores the strategic shift from a reactive utility to a trusted household companion, one capable of delivering value before customers think to ask for it.</p>
+    <div class="pullquote r d5" style="max-width:780px;">
+      <p>The goal wasn’t more usage.<br>The goal was higher meaning per launch.</p>
+    </div>
   </div>
 </section>
 
 
 <!-- ══════════════════════════════════════
-     VISION VIDEO 2 (dark)
+     CHAPTER TWO CHALLENGE (3 problem tiles, reuse .hiw-tile)
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-dark">
+<section class="cs-sec bg-warm" style="padding-top:9rem;padding-bottom:11rem;">
   <div class="sec-inner">
-    <div class="ch r d1" style="color:var(--accent-mid);">06 · Vision · From Reactive to Proactive</div>
-    <h2 class="st-d r d2">The intelligent ecosystem<br><em>in motion</em>.</h2>
-    <p class="bp-d r d3" style="max-width:560px;">This vision informed the pacing, framing, and strategic arc of everything that followed. Watch before reading.</p>
+    <div class="sec-ch r">Challenge</div>
+    <h2 class="st r d1">The app worked. The <em>model</em> didn’t.</h2>
+    <p class="bp r d2">The goal of this effort was not to redesign the Home App. It was to understand what the Home App should become. By examining customer behavior, business objectives, and product adoption patterns, we uncovered three fundamental challenges that were limiting the product’s long-term potential. These insights ultimately reshaped how we thought about value, success, and the role Verizon could play in the connected home.</p>
+
+    <div class="challenge-grid ch2-challenge">
+
+      <!-- Tile 01 — Utility, Not Relationship -->
+      <div class="hiw-tile r r-late d3">
+        <span class="hiw-num" aria-hidden="true">01</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 3h6v18h-6"/>
+              <polyline points="11 8 16 12 11 16"/>
+              <line x1="3" y1="12" x2="16" y2="12"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title">Utility, Not <strong>Relationship</strong></div>
+          <p class="hiw-short">Customers opened the app when something broke, then left as quickly as possible.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title">Utility, Not <strong>Relationship</strong></div>
+          <p class="hiw-expand">The experience was associated with troubleshooting rather than value. Success was measured by silence, making it difficult to build habits, trust, or an ongoing relationship with customers.</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <!-- Tile 02 — Success Was Undefined -->
+      <div class="hiw-tile r r-late d4">
+        <span class="hiw-num" aria-hidden="true">02</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/>
+              <line x1="12" y1="16.4" x2="12" y2="17"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title">Success Was <strong>Undefined</strong></div>
+          <p class="hiw-short">The team knew what to measure. We didn’t know what mattered.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title">Success Was <strong>Undefined</strong></div>
+          <p class="hiw-expand">Traditional product metrics like DAU and MAU created conflicting incentives. For a utility product, higher usage often meant customers were experiencing more problems, not more value.</p>
+          <ul class="hiw-bullets">
+            <li>What does success look like for a utility product?</li>
+            <li>Can an app reduce churn?</li>
+            <li>How should value be measured?</li>
+            <li>What outcomes actually matter to the business?</li>
+          </ul>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <!-- Tile 03 — Powerful Features, Hidden Value -->
+      <div class="hiw-tile r r-late d5">
+        <span class="hiw-num" aria-hidden="true">03</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="11" rx="1"/>
+              <path d="M8 10V6a4 4 0 1 1 8 0v4"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title">Powerful Features,<br><strong>Hidden Value</strong></div>
+          <p class="hiw-short">Customers couldn’t benefit from tools they didn’t know existed.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title">Powerful Features,<br><strong>Hidden Value</strong></div>
+          <p class="hiw-expand">The Home App contained powerful capabilities for managing and optimizing home networks, but most users lacked the technical knowledge required to discover or understand them. Like a toolbox without guidance, the tools were there, but customers rarely knew which one they needed, when to use it, or that it existed at all.</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CHAPTER TWO APPROACH → 4 MOVES (multi-level parallax cover stack)
+══════════════════════════════════════ -->
+<div class="vzh-stack-multi">
+
+<!-- ── CHAPTER TWO APPROACH (NotebookLM narrated vision video — scrolls naturally so full video stays viewable) ── -->
+<section class="cs-sec bg-page" style="padding-top:9rem;padding-bottom:9rem;position:relative;overflow:hidden;isolation:isolate;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Approach</div>
+    <h2 class="st r d1">The strategy in <em>five minutes</em>.</h2>
+    <p class="bp r d2">Rather than presenting another slide deck, I wanted a way to communicate the entire strategy as a story. I synthesized the research, customer insights, business considerations, product vision, and future-state concepts into NotebookLM and used it to generate this narrated vision video. Think of it as the executive summary of this chapter. It captures the core diagnosis, the strategic shift from reactive to proactive, and the future I believe Verizon Home should be building toward. <strong>If you’re short on time, start here.</strong></p>
 
     <div class="cs-video-wrap r d3">
-      <video controls muted playsinline preload="metadata"
-             aria-label="From Reactive to Proactive — Verizon Home App vision video">
+      <video controls playsinline preload="metadata"
+             aria-label="From Reactive to Proactive — NotebookLM narrated vision video">
         <source src="assets/verizon-home-app/from-reactive-to-proactive-vision-video.mp4" type="video/mp4">
       </video>
     </div>
   </div>
 </section>
 
-
-<!-- ══════════════════════════════════════
-     07 · DUAL MISSION (page)
-══════════════════════════════════════ -->
-<section class="cs-sec bg-page">
+<!-- ── CH2 MOVE 1 — DUAL MISSION (dark, covers APPROACH) ── -->
+<section class="cs-sec bg-dark vzh-stack-cover" style="padding-top:5rem;padding-bottom:9rem;z-index:2;">
   <div class="sec-inner">
-    <div class="ch r d1">07 · Dual Mission</div>
-    <h2 class="st r d2">Two missions.<br>One <em>product</em>.</h2>
-    <p class="bp r d3" style="max-width:580px;margin-bottom:2.5rem;">The Home App needed to serve two stakeholders simultaneously — and the strategy had to make both missions feel like one coherent direction.</p>
+    <div class="sec-ch r" style="color:var(--accent-mid);">Dual Mission</div>
+    <h2 class="st-d r d1">Power the <em>Household</em>. Strengthen the <em>Brand</em>.</h2>
+    <p class="bp-d r d2">The Home App had to serve two missions at once: create meaningful value for customers by becoming an Intelligent Home OS, and create strategic value for Verizon by becoming a primary gateway into the broader ecosystem.</p>
 
-    <div class="mission-cards r d3" style="background:var(--dark);border-radius:var(--radius-card-lg);padding:2.5rem;">
-      <div class="mc-node">
-        <div class="mc-node-label">For the Customer</div>
-        <div class="mc-node-title">An Intelligent Home OS. Not a connectivity utility, but a system capable of understanding, guiding, and supporting the rhythms of the household.</div>
+    <div class="dm-system r d3">
+      <!-- Customer Mission callout -->
+      <div class="dm-callout">
+        <div class="dm-callout-eyebrow">Customer Mission</div>
+        <p class="dm-callout-body">Become the Intelligent Home OS for the modern household, leveraging the Verizon network to transform complex technology into a proactive, seamless environment where the home doesn’t just connect, it anticipates.</p>
       </div>
-      <div class="mc-arrow">→</div>
-      <div class="mc-node target">
-        <div class="mc-node-label">For the Business</div>
-        <div class="mc-node-title">The Home App becomes a primary gateway into the Verizon ecosystem — transforming the network from a background utility into a trusted daily companion.</div>
+
+      <!-- Flat 2D solar-system ecosystem visual -->
+      <div class="dm-visual" aria-hidden="true">
+        <!-- Background orbs (shell handles pop, orbit handles spin) -->
+        <div class="dm-orbit-shell dm-shell-bg-3"><div class="dm-orbit dm-orbit-bg-3"></div></div>
+        <div class="dm-orbit-shell dm-shell-bg-2"><div class="dm-orbit dm-orbit-bg-2">
+          <span class="hiw-dot-arm" style="--da:55deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:235deg"><span class="hiw-orb-dot"></span></span>
+        </div></div>
+        <div class="dm-orbit-shell dm-shell-bg-1"><div class="dm-orbit dm-orbit-bg-1"></div></div>
+        <!-- Outermost foreground orbit + 4 nodes -->
+        <div class="dm-orbit-shell dm-shell-3"><div class="dm-orbit dm-orbit-3">
+          <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+        </div></div>
+        <!-- Home App orbit (visible dashed ring spins; Home App rides on top) -->
+        <div class="dm-orbit-shell dm-shell-home"><div class="dm-orbit dm-orbit-home">
+          <div class="dm-home-wrap">
+            <div class="dm-home-app"><span>Home<br>App</span></div>
+          </div>
+        </div></div>
+        <!-- Mid orbit + 3 nodes -->
+        <div class="dm-orbit-shell dm-shell-2"><div class="dm-orbit dm-orbit-2">
+          <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+        </div></div>
+        <!-- Inner orbit + 2 nodes -->
+        <div class="dm-orbit-shell dm-shell-1"><div class="dm-orbit dm-orbit-1">
+          <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+        </div></div>
+        <!-- Verizon core — outlined ring -->
+        <div class="dm-core">
+          <span class="dm-core-label">Verizon</span>
+          <span class="dm-core-sub">Network · Trust · Presence</span>
+        </div>
+      </div>
+
+      <!-- Business Mission callout -->
+      <div class="dm-callout">
+        <div class="dm-callout-eyebrow">Business Mission</div>
+        <p class="dm-callout-body">Serve as a primary gateway into the Verizon ecosystem, deepening trust and loyalty by transforming our network from a background utility into an essential, intelligent presence in every customer’s daily life.</p>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ── CH2 MOVE 2 — STRATEGIC PRINCIPLES (page) ── -->
+<section class="cs-sec bg-page vzh-stack-cover" style="padding-top:9rem;padding-bottom:9rem;z-index:3;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Strategic Principles</div>
+    <h2 class="st r d1">The principles behind the <em>vision</em>.</h2>
+    <p class="bp r d2">Before defining features, I defined the principles. These became the decision filters used to evaluate every product direction, helping the team distinguish between what was merely possible and what was strategically valuable.</p>
 
-<!-- ══════════════════════════════════════
-     08 · THE REAL PROBLEM (cinematic)
-══════════════════════════════════════ -->
-<section class="cinematic-sec" style="min-height:62vh;">
-  <div class="cin-dots"></div>
-  <div class="cin-glow"></div>
-  <div class="cin-inner">
-    <div class="ch r d1" style="justify-content:center; color:var(--accent-mid);">The Real Problem</div>
-    <p class="cin-q r d2" style="font-size:clamp(22pt,3.8vw,46pt);">
-      Verizon Home App<br>is not broken.<br>
-      It is <em>invisible</em>.
-    </p>
-    <p class="cin-sub r d3">
-      Utility products succeed quietly. The most dangerous failure mode isn't crashes or errors — it's forgettability. A product customers never think about is a product they'll leave without hesitation.
-    </p>
+    <div class="prin-grid r d3">
+
+      <!-- 1 · Trust Over Engagement (heart) -->
+      <div class="prin-tile">
+        <svg class="prin-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        <div class="prin-tile-label">Trust Over Engagement</div>
+        <div class="prin-tile-swap">
+          <div class="prin-tile-tagline">Meaning beats frequency.</div>
+          <p class="prin-tile-desc">Utility products succeed quietly. High DAU is not the goal. Meaning per launch is. The app should be worth opening, not designed to be opened often.</p>
+        </div>
+      </div>
+
+      <!-- 2 · The App Speaks First (speech bubble) -->
+      <div class="prin-tile">
+        <svg class="prin-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          <circle cx="9" cy="11" r="0.6" fill="currentColor"/>
+          <circle cx="12" cy="11" r="0.6" fill="currentColor"/>
+          <circle cx="15" cy="11" r="0.6" fill="currentColor"/>
+        </svg>
+        <div class="prin-tile-label">The App Speaks First</div>
+        <div class="prin-tile-swap">
+          <div class="prin-tile-tagline">Proactive is the product.</div>
+          <p class="prin-tile-desc">Reliability builds emotional trust. The app should reach out when something matters, before the customer notices, before they call support.</p>
+        </div>
+      </div>
+
+      <!-- 3 · Verizon Owns Intelligence (network nodes) -->
+      <div class="prin-tile">
+        <svg class="prin-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"/>
+          <circle cx="5" cy="5" r="2"/>
+          <circle cx="19" cy="5" r="2"/>
+          <circle cx="5" cy="19" r="2"/>
+          <circle cx="19" cy="19" r="2"/>
+          <line x1="6.5" y1="6.5" x2="10" y2="10"/>
+          <line x1="17.5" y1="6.5" x2="14" y2="10"/>
+          <line x1="6.5" y1="17.5" x2="10" y2="14"/>
+          <line x1="17.5" y1="17.5" x2="14" y2="14"/>
+        </svg>
+        <div class="prin-tile-label">Verizon Owns Intelligence</div>
+        <div class="prin-tile-swap">
+          <div class="prin-tile-tagline">Own the layer above the network.</div>
+          <p class="prin-tile-desc">Not gadget control. We do not compete with smart speakers or device manufacturers. We operate the intelligence layer, the layer they all depend on.</p>
+        </div>
+      </div>
+
+      <!-- 4 · Invisible Security (shield with check) -->
+      <div class="prin-tile">
+        <svg class="prin-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2L4 5v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V5l-8-3z"/>
+          <polyline points="9 12 11 14 15 10"/>
+        </svg>
+        <div class="prin-tile-label">Invisible Security</div>
+        <div class="prin-tile-swap">
+          <div class="prin-tile-tagline">Loyalty is earned through confidence.</div>
+          <p class="prin-tile-desc">Privacy earns loyalty. Security should protect the household without burdening it. No paranoia. No alerts for non-issues. Competence that’s felt, not announced.</p>
+        </div>
+      </div>
+
+      <!-- 5 · Retention Over Novelty (anchor / rooted) -->
+      <div class="prin-tile">
+        <svg class="prin-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="5" r="2"/>
+          <line x1="12" y1="7" x2="12" y2="22"/>
+          <line x1="6" y1="12" x2="18" y2="12"/>
+          <path d="M5 14a8 8 0 0 0 7 8"/>
+          <path d="M19 14a8 8 0 0 1-7 8"/>
+        </svg>
+        <div class="prin-tile-label">Retention Over Novelty</div>
+        <div class="prin-tile-swap">
+          <div class="prin-tile-tagline">Understand people, not devices.</div>
+          <p class="prin-tile-desc">Churn prevention is a feeling. The app raises the bar for leaving by being genuinely useful, not by making leaving harder. Subtle loyalty is durable loyalty.</p>
+        </div>
+      </div>
+
+      <!-- 6 · Household-Aware (home with members) -->
+      <div class="prin-tile">
+        <svg class="prin-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 12L12 3l9 9"/>
+          <path d="M5 10v10h14V10"/>
+          <circle cx="9" cy="15.5" r="1.1"/>
+          <circle cx="12" cy="15.5" r="1.1"/>
+          <circle cx="15" cy="15.5" r="1.1"/>
+        </svg>
+        <div class="prin-tile-label">Household-Aware, Not Device-Aware</div>
+        <div class="prin-tile-swap">
+          <div class="prin-tile-tagline">The household is the unit.</div>
+          <p class="prin-tile-desc">The household is the unit. Not the router, not the device. The household’s rhythms, needs, and vulnerabilities are what the system learns to understand.</p>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
-
-<!-- ══════════════════════════════════════
-     09 · KEY STRATEGIC THEMES (warm)
-══════════════════════════════════════ -->
-<section class="cs-sec bg-warm">
+<!-- ── CH2 MOVE 3 — EPIC QUOTE 1 (dark) ── -->
+<section class="cs-sec bg-dark vzh-stack-cover" style="padding-top:13rem;padding-bottom:13rem;z-index:4;">
   <div class="sec-inner">
-    <div class="ch r d1">09 · Strategic Framing</div>
-    <h2 class="st r d2">Six ideas that<br>shaped everything <em>downstream</em>.</h2>
-    <p class="bp r d3" style="max-width:540px;margin-bottom:2.5rem;">These weren't taglines. They were decision filters. Every product decision was tested against them before it advanced.</p>
-
-    <div class="g3" style="gap:1rem;">
-      <div class="ic r d2">
-        <div class="ic-label">Trust over engagement</div>
-        <p class="ic-body"><strong>Utility products succeed quietly.</strong> High DAU is not the goal. Meaning per launch is. The app should be worth opening — not designed to be opened often.</p>
-      </div>
-      <div class="ic r d3">
-        <div class="ic-label">The app speaks first</div>
-        <p class="ic-body"><strong>Reliability builds emotional trust.</strong> The app should reach out when something matters — before the customer notices, before they call support. Proactive is the product.</p>
-      </div>
-      <div class="ic r d4">
-        <div class="ic-label">Verizon owns intelligence</div>
-        <p class="ic-body"><strong>Not gadget control.</strong> We do not compete with smart speakers or device manufacturers. We operate the intelligence layer — the layer they all depend on.</p>
-      </div>
-      <div class="ic r d2">
-        <div class="ic-label">Invisible security</div>
-        <p class="ic-body"><strong>Privacy earns loyalty.</strong> Security should protect the household without burdening it. No paranoia. No alerts for non-issues. Competence that's felt, not announced.</p>
-      </div>
-      <div class="ic r d3">
-        <div class="ic-label">Retention over novelty</div>
-        <p class="ic-body"><strong>Churn prevention is a feeling.</strong> The app raises the bar for leaving by being genuinely useful — not by making leaving harder. Subtle loyalty is durable loyalty.</p>
-      </div>
-      <div class="ic r d4">
-        <div class="ic-label">Household-aware, not device-aware</div>
-        <p class="ic-body"><strong>The household is the unit.</strong> Not the router, not the device — the household's rhythms, needs, and vulnerabilities are what the system learns to understand.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════
-     10 · CUSTOMER VOICE
-══════════════════════════════════════ -->
-<section class="cs-sec bg-page">
-  <div class="sec-inner" style="max-width:680px;">
-    <div class="ch r d1">10 · The Emotional Goal</div>
-    <div class="pullquote r d2" style="margin-top:1.5rem;">
-      <p>"I chose Verizon because my home just works, and when it doesn't, someone competent is watching."</p>
-      <cite>Target Customer Sentiment · Design North Star</cite>
-    </div>
-    <p class="bp r d3">This is the sentence we designed toward. Not a metric — a feeling. Every pillar, every feature, every product decision was stress-tested against it.</p>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════
-     11 · PRODUCT PILLARS
-══════════════════════════════════════ -->
-<section class="cs-sec bg-warm" id="pillars">
-  <div class="sec-inner">
-    <div class="ch r d1">11 · Product Pillars</div>
-    <h2 class="st r d2">Four pillars.<br>Each one <em>strategically bounded</em>.</h2>
-    <p class="bp r d3" style="max-width:560px;margin-bottom:0.5rem;">The "what it excludes" column is as important as what's included. Strategic restraint is a design skill. Boundaries that are explicit are boundaries that hold.</p>
-
-    <div class="pillar-grid r d3">
-
-      <!-- Pillar 1 -->
-      <div class="pillar-card">
-        <div class="pillar-head">
-          <div class="pillar-num">1</div>
-          <div class="pillar-title">Home Reliability &amp; Resilience</div>
-        </div>
-        <div class="pillar-body">
-          <div class="pillar-col inc">
-            <div class="pillar-col-label inc">Includes</div>
-            <ul>
-              <li>Proactive outage alerts</li>
-              <li>Self-healing diagnostics</li>
-              <li>Speed &amp; signal monitoring</li>
-              <li>Guided recovery flows</li>
-            </ul>
-          </div>
-          <div class="pillar-col exc">
-            <div class="pillar-col-label exc">Excludes</div>
-            <ul>
-              <li>Third-party ISP comparisons</li>
-              <li>Manual network tuning</li>
-              <li>Raw technical data dumps</li>
-            </ul>
-          </div>
-          <div class="pillar-col why">
-            <div class="pillar-col-label why">Why it matters</div>
-            <ul>
-              <li>First failure moment defines the relationship. We own the recovery.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pillar 2 -->
-      <div class="pillar-card">
-        <div class="pillar-head">
-          <div class="pillar-num">2</div>
-          <div class="pillar-title">Household Control</div>
-        </div>
-        <div class="pillar-body">
-          <div class="pillar-col inc">
-            <div class="pillar-col-label inc">Includes</div>
-            <ul>
-              <li>Device naming &amp; grouping</li>
-              <li>Parental controls</li>
-              <li>Guest network management</li>
-              <li>Usage scheduling</li>
-            </ul>
-          </div>
-          <div class="pillar-col exc">
-            <div class="pillar-col-label exc">Excludes</div>
-            <ul>
-              <li>Smart home device control</li>
-              <li>IoT integrations</li>
-              <li>Voice assistant features</li>
-            </ul>
-          </div>
-          <div class="pillar-col why">
-            <div class="pillar-col-label why">Why it matters</div>
-            <ul>
-              <li>Parents need calm authority over what connects to their home.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pillar 3 -->
-      <div class="pillar-card">
-        <div class="pillar-head">
-          <div class="pillar-num">3</div>
-          <div class="pillar-title">Invisible Security &amp; Privacy</div>
-        </div>
-        <div class="pillar-body">
-          <div class="pillar-col inc">
-            <div class="pillar-col-label inc">Includes</div>
-            <ul>
-              <li>Unknown device alerts</li>
-              <li>Threat detection signals</li>
-              <li>Privacy health summary</li>
-              <li>Quiet auto-protections</li>
-            </ul>
-          </div>
-          <div class="pillar-col exc">
-            <div class="pillar-col-label exc">Excludes</div>
-            <ul>
-              <li>Security theater alerts</li>
-              <li>Antivirus upsells</li>
-              <li>Paranoia-inducing UI</li>
-            </ul>
-          </div>
-          <div class="pillar-col why">
-            <div class="pillar-col-label why">Why it matters</div>
-            <ul>
-              <li>Competence felt, not announced. Trust is built by what you don't say.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pillar 4 -->
-      <div class="pillar-card">
-        <div class="pillar-head">
-          <div class="pillar-num">4</div>
-          <div class="pillar-title">Value Visibility &amp; Unlocks</div>
-        </div>
-        <div class="pillar-body">
-          <div class="pillar-col inc">
-            <div class="pillar-col-label inc">Includes</div>
-            <ul>
-              <li>Plan benefits summary</li>
-              <li>Upgrade recommendations</li>
-              <li>Service visibility</li>
-              <li>Loyalty moments</li>
-            </ul>
-          </div>
-          <div class="pillar-col exc">
-            <div class="pillar-col-label exc">Excludes</div>
-            <ul>
-              <li>Aggressive upsell flows</li>
-              <li>Dark patterns</li>
-              <li>Plan switching pressure</li>
-            </ul>
-          </div>
-          <div class="pillar-col why">
-            <div class="pillar-col-label why">Why it matters</div>
-            <ul>
-              <li>Customers who understand their value don't shop around. Clarity earns retention.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════
-     12 · STRATEGIC METRICS (dark)
-══════════════════════════════════════ -->
-<section class="cs-sec bg-dark">
-  <div class="sec-inner">
-    <div class="ch r d1" style="color:var(--accent-mid);">12 · Strategic Metrics</div>
-    <h2 class="st-d r d2">What we measure<br>and <em>why it matters</em>.</h2>
-    <p class="bp-d r d3" style="max-width:560px;margin-bottom:0;">The distinction between churn reduction, trust preservation, and cost-to-serve reduction is not semantic. Each metric tells a different story about what the product is actually doing for the business.</p>
-
-    <div class="metric-row r d3">
-      <div class="metric-cell">
-        <div class="metric-num"><em>↓</em>Churn</div>
-        <div class="metric-label">Indirect Reduction</div>
-        <p class="metric-sub">Measured as reduced likelihood — not prevented events. The app raises the bar for leaving.</p>
-      </div>
-      <div class="metric-cell">
-        <div class="metric-num"><em>↑</em>Trust</div>
-        <div class="metric-label">Preservation Signal</div>
-        <p class="metric-sub">Measured via 4.5★ rating, CSAT, and support ticket trends. Trust compounds differently than engagement.</p>
-      </div>
-      <div class="metric-cell">
-        <div class="metric-num"><em>↓</em>Cost</div>
-        <div class="metric-label">Cost-to-Serve</div>
-        <p class="metric-sub">71% fewer "app unusable" tickets. Self-service recovery reduces call-center load and support costs.</p>
-      </div>
-    </div>
-
-    <!-- Strategic quote -->
-    <div style="margin-top:4rem; text-align:center;" class="r d4">
-      <p class="cin-q" style="font-size:clamp(18pt,2.8vw,34pt); max-width:680px; margin:0 auto;">
-        "The Home App does not prevent churn.<br>
-        It <em>raises the bar for leaving</em>."
+    <div class="epic-quote r d1">
+      <div class="epic-quote-mark" aria-hidden="true">“</div>
+      <p class="epic-quote-text">
+        Instead of <span class="epic-quote-soft">“Why open the app?”</span>, we ask: <em class="epic-quote-key">When should it speak first?</em>
       </p>
     </div>
   </div>
 </section>
 
+<!-- ── CH2 MOVE 4 — EPIC QUOTE 2 (page) ── -->
+<section class="cs-sec bg-page vzh-stack-cover" style="padding-top:13rem;padding-bottom:13rem;z-index:5;">
+  <div class="sec-inner">
+    <div class="epic-quote r d1">
+      <div class="epic-quote-mark" aria-hidden="true">“</div>
+      <p class="epic-quote-text">
+        The app becomes essential by asking for <em class="epic-quote-key">less attention</em>, not more.
+      </p>
+    </div>
+  </div>
+</section>
+
+</div><!-- /.vzh-stack-multi -->
+
 
 <!-- ══════════════════════════════════════
      13 · HOME APP 2.0 — IA RESTRUCTURE
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-page" id="design">
-  <div class="sec-inner">
-    <div class="ch r d1">13 · Home App 2.0 — IA &amp; Navigation</div>
-    <h2 class="st r d2">Restructuring the<br><em>information architecture</em>.</h2>
-    <p class="bp r d3" style="max-width:580px;">The original navigation was organized around features. The redesign is organized around <strong>user intent</strong>. Four clear entry points — each scoped to a distinct household need — replacing an overloaded flat list.</p>
+<section class="cs-sec bg-dark" id="design" style="padding-top:9rem;padding-bottom:9rem;">
+  <div class="sec-wide">
 
-    <!-- IA visualization (reinterpreted, not raw reference) -->
-    <div class="ia-viz r d3">
-      <div class="ia-viz-bar">
-        <div class="ia-viz-dot" style="background:#ff5f57;"></div>
-        <div class="ia-viz-dot" style="background:#ffbd2e; margin-left:4px;"></div>
-        <div class="ia-viz-dot" style="background:#27c93f; margin-left:4px;"></div>
-        <div class="ia-viz-title">New IA — Organized by User Intent</div>
+    <!-- Two-column intro: title left, body right (static, no scroll-lock) -->
+    <div class="ia-intro">
+      <div class="ia-intro-left">
+        <div class="sec-ch r" style="color:var(--accent-mid);">Foundation</div>
+        <h2 class="st-d r d1">Rebuilding the product around <em>intent</em>.</h2>
       </div>
-      <div class="ia-viz-body">
-        <div class="ia-tab active-tab">
-          <div class="ia-tab-icon">🏠</div>
-          <span class="ia-tab-label">Home</span>
-          <div class="ia-sub-items">
-            <div class="ia-sub">Network health</div>
-            <div class="ia-sub">AI insights</div>
-            <div class="ia-sub">Quick actions</div>
-          </div>
-        </div>
-        <div class="ia-tab">
-          <div class="ia-tab-icon">📱</div>
-          <span class="ia-tab-label">Devices</span>
-          <div class="ia-sub-items">
-            <div class="ia-sub">Connected devices</div>
-            <div class="ia-sub">Parental controls</div>
-            <div class="ia-sub">Guest network</div>
-          </div>
-        </div>
-        <div class="ia-tab">
-          <div class="ia-tab-icon">🔒</div>
-          <span class="ia-tab-label">Security</span>
-          <div class="ia-sub-items">
-            <div class="ia-sub">Threat alerts</div>
-            <div class="ia-sub">Unknown devices</div>
-            <div class="ia-sub">Privacy health</div>
-          </div>
-        </div>
-        <div class="ia-tab">
-          <div class="ia-tab-icon">✦</div>
-          <span class="ia-tab-label">Services</span>
-          <div class="ia-sub-items">
-            <div class="ia-sub">Plan &amp; benefits</div>
-            <div class="ia-sub">Add-ons</div>
-            <div class="ia-sub">Support</div>
-          </div>
-        </div>
+      <div class="ia-intro-right">
+        <p class="bp-d r d2">The existing Home App was organized around Verizon’s feature inventory. Customers were expected to understand networking concepts, know which tool solved which problem, and navigate the product accordingly. But customers don’t think in features. They think in goals, frustrations, and outcomes. To support a more proactive experience, we first needed to restructure the information architecture around user intent. This shift not only simplified navigation, it created the foundation required for AI, automation, and household intelligence to operate across the entire experience.</p>
       </div>
     </div>
 
-    <div class="g2" style="margin-top:2rem;">
-      <div class="r d3">
-        <p class="bp"><strong>Before:</strong> Flat feature list organized by capability — settings, diagnostics, billing, devices all at the same level. No clear hierarchy. No user goal in sight.</p>
-        <p class="bp">Every support call that started with "I couldn't find…" was a navigation failure wearing a design mask.</p>
+    <!-- 4 IA blocks: Home / Services / Devices / Advisor -->
+    <div class="ia-blocks r">
+      <div class="ia-block">
+        <div class="ia-block-num">01</div>
+        <div class="ia-block-emoji">🏡</div>
+        <div class="ia-block-label">Home</div>
+        <p class="ia-block-tagline">At a glance. Not everything. What matters now.</p>
+        <p class="ia-block-desc">The Home screen surfaces the most relevant information across the household, prioritizing awareness, recommendations, and proactive guidance over feature discovery.</p>
       </div>
-      <div class="r d4">
-        <p class="bp"><strong>After:</strong> Four intent zones, each serving a distinct mindset. The AI assistant lives inside Home — surfacing when it has something relevant, not as a permanent modal.</p>
-        <p class="bp">The restructure reduced task completion time by an average of 34% in usability testing across the primary five workflows.</p>
+
+      <div class="ia-block">
+        <div class="ia-block-num">02</div>
+        <div class="ia-block-emoji">🎛️</div>
+        <div class="ia-block-label">Services</div>
+        <p class="ia-block-tagline">Rules, automation, and household policies.</p>
+        <p class="ia-block-desc">Services define how the home should behave. Parental controls, device prioritization, security, and future household experiences all live here because they establish rules that operate across devices.</p>
+      </div>
+
+      <div class="ia-block">
+        <div class="ia-block-num">03</div>
+        <div class="ia-block-emoji">📱</div>
+        <div class="ia-block-label">Devices</div>
+        <p class="ia-block-tagline">The physical layer.</p>
+        <p class="ia-block-desc">Devices are the inventory of everything connected to the network. This space exists for troubleshooting, diagnostics, and managing specific pieces of hardware when direct intervention is needed.</p>
+      </div>
+
+      <div class="ia-block">
+        <div class="ia-block-num">04</div>
+        <div class="ia-block-emoji">🧭</div>
+        <div class="ia-block-label">Advisor</div>
+        <p class="ia-block-tagline">The intelligence layer.</p>
+        <p class="ia-block-desc">Advisor combines assistant, notifications, recommendations, search, and future AI capabilities into a single destination. This is where customers go when they need guidance, context, or answers.</p>
       </div>
     </div>
+
   </div>
 </section>
+
+
+<!-- ══════════════════════════════════════
+     THE LAST 10% — full-bleed breaker (gradient + home screens + scroll-driven blur glass)
+══════════════════════════════════════ -->
+<div class="l10-stage" id="last10">
+<section class="l10-hero">
+
+  <!-- Gradient base + 4 traveling color glares + dot grid (reuses Ch2 hero patterns) -->
+  <div class="l10-bg" aria-hidden="true">
+    <div class="ch2-glare ch2-glare-1"></div>
+    <div class="ch2-glare ch2-glare-2"></div>
+    <div class="ch2-glare ch2-glare-3"></div>
+    <div class="ch2-glare ch2-glare-4"></div>
+    <div class="ch2-dots"></div>
+  </div>
+
+  <!-- Full-bleed transparent PNG of home screens, gradient shows through transparent regions -->
+  <img class="l10-screens" src="assets/verizon-home-app/vz-home-screens.png" alt="" aria-hidden="true">
+
+  <!-- Frosted glass overlay (scroll-driven; reveals eyebrow, title, body as it rises) -->
+  <div class="ch2-glass" id="l10-glass" aria-hidden="true">
+    <div class="l10-glass-item l10-glass-eyebrow">The Last 10%</div>
+    <h2 class="l10-glass-item l10-glass-title">From strategy to <em>experience</em>.</h2>
+    <p class="l10-glass-item l10-glass-body">Strategy only matters if it changes the experience. The following work explores how the principles, architecture, and product vision translated into tangible <em>experiences for customers</em>.</p>
+    <p class="l10-glass-item l10-glass-note">* The concepts shown below represent a selection of the work. Due to confidentiality and ongoing development, some experiences have been simplified, redacted, or remain unreleased. The focus here is on the thinking, systems, and product direction behind the work.</p>
+  </div>
+
+</section>
+</div><!-- /.l10-stage -->
 
 
 <!-- ══════════════════════════════════════
      14 · UI SHOWCASE (warm)
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-warm">
-  <div class="sec-wide">
-    <div class="ch r d1">14 · Design Work</div>
-    <h2 class="st r d2">A few of the features.<br>More importantly — <em>why</em> they exist.</h2>
-    <p class="bp r d2" style="max-width:560px;margin-bottom:3.5rem;">Every screen here is the output of a strategic decision made upstream. The UI is the last 10% — the part customers see. Here's the 90% that made it worth building.</p>
+<section class="cs-sec bg-warm" style="position:relative;padding:0;">
+  <div class="feat-grid">
 
-    <!-- Feature 1: Home Dashboard -->
-    <div class="feature-item r" style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:4.5rem;padding-bottom:4.5rem;border-bottom:1px solid var(--rule);">
-      <div>
-        <div style="font-family:var(--font-serif);font-size:52pt;color:rgba(60,73,255,0.06);line-height:1;margin-bottom:-0.5rem;">01</div>
-        <div style="font-size:var(--text-nano);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-widest);text-transform:uppercase;color:var(--accent-mid);margin-bottom:0.5rem;">Home Dashboard</div>
-        <h3 style="font-family:var(--font-serif);font-size:18pt;color:var(--ink);line-height:1.2;margin-bottom:0.9rem;">From status board<br>to ambient advisor</h3>
-        <p class="bp">The original home screen was a list of settings. It told customers their router was connected. It never told them anything <strong>actionable or useful.</strong></p>
-        <p class="bp">The redesign centers around three zones: network health at a glance, an AI insight card surfacing the most relevant action for that customer right now, and quick access to the tasks they return to most often.</p>
-        <div class="pullquote">
-          <p><strong>Design decision:</strong> The AI card gets prime real estate — above the fold, above everything. Because if we're repositioning this product as an advisor, the advice needs to be the first thing you see.</p>
+      <!-- Feature 01 — Home Dashboard (parallax cover, bottom half swaps on scroll) -->
+      <div class="feat-stage" id="feat-stage-1" style="z-index:2;">
+        <div class="hiw-orbs" aria-hidden="true">
+          <div class="hiw-orb hiw-orb-tr">
+            <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+          </div>
+          <div class="hiw-orb hiw-orb-bl">
+            <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+          </div>
         </div>
-      </div>
-      <div style="display:flex;justify-content:center;">
-        <div class="phone-frame">
-          <div class="pf-notch"></div>
-          <div class="pf-screen">
-            <img src="assets/verizon-home-app/home.png" alt="Verizon Home App — Home Dashboard screen">
+        <div class="feat-panel">
+          <div class="feat-item r">
+            <div class="feat-text">
+              <!-- Persistent top: number, eyebrow, title -->
+              <div class="feat-num">01</div>
+              <div class="feat-label">Home Dashboard</div>
+              <h3 class="feat-title">Awareness before action.</h3>
+              <!-- Swap zone: A (tagline + body) → B (punch + principles) -->
+              <div class="feat-swap">
+                <div class="feat-swap-a">
+                  <p class="feat-tagline">Customers don’t come looking for tools. They come because something matters.</p>
+                  <p class="feat-body">The original product behaved like a toolbox. It expected customers to know what feature they needed, where it lived, and how to use it. Most people don’t think that way.</p>
+                  <p class="feat-body">The Home Dashboard was redesigned as an attention layer. Instead of exposing features, it surfaces what needs action right now and provides the shortest path to resolution.</p>
+                  <p class="feat-body">Every card is intentional. Every recommendation is actionable. If something doesn’t require attention, it stays out of the way.</p>
+                </div>
+                <div class="feat-swap-b">
+                  <p class="feat-punch">The goal isn’t to help customers find the hammer. The goal is to hand them the hammer before they realize they need one.</p>
+                  <div class="feat-principles">
+                    <div class="feat-principles-label">Key Design Principles</div>
+                    <ul class="feat-principles-list">
+                      <li>Network health at a glance</li>
+                      <li>AI-driven insights surface what matters now</li>
+                      <li>One-tap resolution whenever possible</li>
+                      <li>Progressive disclosure of complexity</li>
+                      <li>Action over information</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="feat-asset">
+              <img src="assets/verizon-home-app/home.png" alt="Verizon Home App — Home Dashboard screen">
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Feature 2: AI Assistant -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:4.5rem;padding-bottom:4.5rem;border-bottom:1px solid var(--rule);direction:rtl;" class="r">
-      <div style="direction:ltr;">
-        <div style="font-family:var(--font-serif);font-size:52pt;color:rgba(60,73,255,0.06);line-height:1;margin-bottom:-0.5rem;">02</div>
-        <div style="font-size:var(--text-nano);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-widest);text-transform:uppercase;color:var(--accent-mid);margin-bottom:0.5rem;">AI Home Advisor</div>
-        <h3 style="font-family:var(--font-serif);font-size:18pt;color:var(--ink);line-height:1.2;margin-bottom:0.9rem;">Intelligence that<br>earns its place</h3>
-        <p class="bp">The AI strategy existed as a slide deck. It had no design expression — no answer to "what does this actually look like, feel like, or say?" My job was to give it one.</p>
-        <p class="bp">The Advisor is not a chatbot. It's a <strong>contextual intelligence layer</strong> that monitors network health, usage patterns, and device behavior to surface the right insight at the right moment — in plain language, with a clear next action.</p>
-        <div class="pullquote">
-          <p><strong>Design principle:</strong> AI earns trust through restraint. One well-timed insight beats ten generic ones. We established a strict relevance threshold — if an insight doesn't change what a customer would do, it doesn't surface.</p>
+      <!-- Feature 02 — Services (parallax cover, bottom half swaps on scroll) -->
+      <div class="feat-stage" id="feat-stage-2" style="z-index:3;">
+        <div class="hiw-orbs" aria-hidden="true">
+          <div class="hiw-orb hiw-orb-tr">
+            <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+          </div>
+          <div class="hiw-orb hiw-orb-bl">
+            <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+          </div>
         </div>
-      </div>
-      <div style="display:flex;justify-content:center;direction:ltr;">
-        <div class="phone-frame">
-          <div class="pf-notch"></div>
-          <div class="pf-screen">
-            <img src="assets/verizon-home-app/home-assistant-default.png" alt="Verizon Home App — AI Home Advisor screen">
+        <div class="feat-panel">
+          <div class="feat-item feat-item--reverse r">
+            <div class="feat-text">
+              <div class="feat-num">02</div>
+              <div class="feat-label">Services</div>
+              <h3 class="feat-title">Managing intent, not infrastructure.</h3>
+              <div class="feat-swap">
+                <div class="feat-swap-a">
+                  <p class="feat-tagline">Customers care about outcomes, not routers.</p>
+                  <p class="feat-body">The Services layer reorganizes Verizon’s capabilities around customer goals.</p>
+                  <p class="feat-body">Instead of configuring network settings, customers manage experiences like Safety, Entertainment, Security, and Performance. Services become understandable because they are framed around intent rather than technology.</p>
+                  <p class="feat-body">This is also where Verizon’s ecosystem becomes visible. Customers can discover relevant capabilities based on household needs rather than generic promotions or disconnected upsell moments.</p>
+                </div>
+                <div class="feat-swap-b">
+                  <p class="feat-punch">If gaming performance becomes a recurring issue, the right solution appears in context, at the moment it becomes useful.</p>
+                  <div class="feat-principles">
+                    <div class="feat-principles-label">Key Design Principles</div>
+                    <ul class="feat-principles-list">
+                      <li>Organize around goals rather than technology</li>
+                      <li>Surface value before selling features</li>
+                      <li>Contextual service discovery</li>
+                      <li>Household-first mental model</li>
+                      <li>Reduce technical complexity</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="feat-asset">
+              <img src="assets/verizon-home-app/services.png" alt="Verizon Home App — Services screen">
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Feature 3: Devices -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-bottom:4.5rem;padding-bottom:4.5rem;border-bottom:1px solid var(--rule);" class="r">
-      <div>
-        <div style="font-family:var(--font-serif);font-size:52pt;color:rgba(60,73,255,0.06);line-height:1;margin-bottom:-0.5rem;">03</div>
-        <div style="font-size:var(--text-nano);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-widest);text-transform:uppercase;color:var(--accent-mid);margin-bottom:0.5rem;">Devices</div>
-        <h3 style="font-family:var(--font-serif);font-size:18pt;color:var(--ink);line-height:1.2;margin-bottom:0.9rem;">The household,<br>as a system</h3>
-        <p class="bp">Not a list of MAC addresses. A named, organized map of every device in the home — each one understood in context of the household's needs.</p>
-        <p class="bp">Parents set schedules. Guests get isolated access. Security alerts are contextual and actionable. The system knows which devices matter most and treats them accordingly.</p>
-        <div class="pullquote">
-          <p><strong>Strategic scope:</strong> We deliberately excluded smart home device control (thermostats, locks, etc.). Verizon owns the network layer — adding smart home control would create a competitive conflict without adding strategic value.</p>
+      <!-- Feature 03 — Devices (parallax cover, bottom half swaps on scroll) -->
+      <div class="feat-stage" id="feat-stage-3" style="z-index:4;">
+        <div class="hiw-orbs" aria-hidden="true">
+          <div class="hiw-orb hiw-orb-tr">
+            <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+          </div>
+          <div class="hiw-orb hiw-orb-bl">
+            <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+          </div>
         </div>
-      </div>
-      <div style="display:flex;justify-content:center;">
-        <div class="phone-frame">
-          <div class="pf-notch"></div>
-          <div class="pf-screen">
-            <img src="assets/verizon-home-app/devices.png" alt="Verizon Home App — Devices screen">
+        <div class="feat-panel">
+          <div class="feat-item r">
+            <div class="feat-text">
+              <div class="feat-num">03</div>
+              <div class="feat-label">Devices</div>
+              <h3 class="feat-title">Every device has context.</h3>
+              <div class="feat-swap">
+                <div class="feat-swap-a">
+                  <p class="feat-tagline">A device list is inventory. A household model is understanding.</p>
+                  <p class="feat-body">Most networking products present devices as a technical inventory of connected hardware. The redesign treats devices as part of a household system.</p>
+                  <p class="feat-body">Instead of forcing customers to interpret MAC addresses and technical identifiers, devices are organized around people, activity, and relevance. Search, filtering, health indicators, and household grouping make the network understandable without requiring technical expertise.</p>
+                  <p class="feat-body">The strategic decision was equally important. We intentionally excluded smart home device control. Verizon’s role is not to compete with thermostat manufacturers or smart home platforms.</p>
+                </div>
+                <div class="feat-swap-b">
+                  <p class="feat-punch">Verizon owns the network layer that connects them all.</p>
+                  <div class="feat-principles">
+                    <div class="feat-principles-label">Key Design Principles</div>
+                    <ul class="feat-principles-list">
+                      <li>Organize devices around people</li>
+                      <li>Health and relevance over technical metadata</li>
+                      <li>Searchable and filterable at scale</li>
+                      <li>Household-aware grouping</li>
+                      <li>Focus on network intelligence</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="feat-asset">
+              <img src="assets/verizon-home-app/devices.png" alt="Verizon Home App — Devices screen">
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Feature 4: Services + Video -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;" class="r">
-      <div style="direction:rtl;">
-        <div style="direction:ltr;">
-          <div style="font-family:var(--font-serif);font-size:52pt;color:rgba(60,73,255,0.06);line-height:1;margin-bottom:-0.5rem;">04</div>
-          <div style="font-size:var(--text-nano);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-widest);text-transform:uppercase;color:var(--accent-mid);margin-bottom:0.5rem;">Services &amp; AI Prototype</div>
-          <h3 style="font-family:var(--font-serif);font-size:18pt;color:var(--ink);line-height:1.2;margin-bottom:0.9rem;">Value made visible.<br>AI made <em>usable</em>.</h3>
-          <p class="bp">The Services view makes plan benefits visible without upsell pressure. Customers see what they have, what's available, and how to use it — without feeling hunted.</p>
-          <p class="bp">The AI assistant prototype below shows the interaction model in motion — how the advisor surfaces, frames, and resolves a household insight without demanding attention.</p>
-        </div>
-      </div>
-      <div style="display:flex;gap:1.5rem;align-items:flex-start;direction:ltr;">
-        <div class="phone-frame" style="width:180px;">
-          <div class="pf-notch"></div>
-          <div class="pf-screen">
-            <img src="assets/verizon-home-app/services.png" alt="Verizon Home App — Services screen">
+      <!-- Feature 04 — Home Advisor (parallax cover, bottom half swaps on scroll) -->
+      <div class="feat-stage" id="feat-stage-4" style="z-index:5;">
+        <div class="hiw-orbs" aria-hidden="true">
+          <div class="hiw-orb hiw-orb-tr">
+            <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+          </div>
+          <div class="hiw-orb hiw-orb-bl">
+            <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+            <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
           </div>
         </div>
-        <div style="flex:1;border-radius:var(--radius-card-lg);overflow:hidden;background:#000;border:1px solid var(--rule);align-self:stretch;min-height:320px;display:flex;align-items:center;">
-          <video controls muted playsinline preload="metadata" style="width:100%;display:block;"
-                 aria-label="Home AI assistant interaction prototype">
-            <source src="assets/verizon-home-app/home-assistant-prototype.mov" type="video/quicktime">
-            <source src="assets/verizon-home-app/home-assistant-prototype.mov" type="video/mp4">
-          </video>
+        <div class="feat-panel">
+          <div class="feat-item feat-item--reverse r">
+            <div class="feat-text">
+              <div class="feat-num">04</div>
+              <div class="feat-label">Home Advisor</div>
+              <h3 class="feat-title">The intelligence layer.</h3>
+              <div class="feat-swap">
+                <div class="feat-swap-a">
+                  <p class="feat-tagline">AI earns trust through relevance.</p>
+                  <p class="feat-body">The Advisor is not a chatbot. It is the intelligence layer connecting network health, household behavior, services, and device activity into a single understanding of the home.</p>
+                  <p class="feat-body">Most AI experiences begin with a conversation. Advisor begins with context. Instead of waiting for customers to ask questions, the system identifies meaningful moments and presents recommendations in plain language, with a clear next action.</p>
+                </div>
+                <div class="feat-swap-b">
+                  <p class="feat-body">The constraint that guided every decision was simple:</p>
+                  <p class="feat-punch">If a Verizon technician wouldn’t walk up to a homeowner and say it, the AI shouldn’t surface it.</p>
+                  <p class="feat-body">This principle prevented noise, protected trust, and ensured every insight had a purpose.</p>
+                  <div class="feat-principles">
+                    <div class="feat-principles-label">Key Design Principles</div>
+                    <ul class="feat-principles-list">
+                      <li>Context before conversation</li>
+                      <li>Proactive rather than reactive</li>
+                      <li>Plain language over technical jargon</li>
+                      <li>Every insight must lead to action</li>
+                      <li>High relevance threshold</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="feat-asset">
+              <img src="assets/verizon-home-app/home-assistant-default.png" alt="Verizon Home App — Home Advisor screen">
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════
-     15 · AI ASSISTANT NARRATIVE (dark)
-══════════════════════════════════════ -->
-<section class="cs-sec bg-dark">
-  <div class="sec-inner">
-    <div class="ch r d1" style="color:var(--accent-mid);">15 · AI Assistant</div>
-    <h2 class="st-d r d2">The household advisor.<br>Not a <em>utility dashboard</em>.</h2>
-
-    <div class="g2" style="margin-top:2.5rem;gap:3rem;">
-      <div>
-        <p class="bp-d r d2">The AI assistant is the product's most strategically important surface — and the one most likely to be built wrong. Most AI features in utility products are novelty: a chatbot that answers questions nobody was asking, a widget that surfaces data without context.</p>
-        <p class="bp-d r d3">The Home Advisor is designed around a different model: <strong>contextual intelligence that earns the right to surface</strong>. It only appears when it has something genuinely useful to say. It frames issues in household language, not network jargon. And it always ends with a clear, optional action — never a demand.</p>
-        <p class="bp-d r d4">The constraint that shaped everything: <strong>every insight must pass the "would I say this to a homeowner?" test.</strong> If a Verizon technician wouldn't walk up to your door and say it, the AI doesn't surface it.</p>
-      </div>
-      <div class="r d3">
-        <div class="ai-card-d" style="margin-bottom:1.2rem;">
-          <div class="ai-card-title">✦ Advisor Principle 01</div>
-          <p class="ai-card-q">"Restraint is the feature. One well-timed, genuinely helpful insight builds more trust than ten correct but low-value ones."</p>
-        </div>
-        <div class="ai-card-d" style="margin-bottom:1.2rem;">
-          <div class="ai-card-title">✦ Advisor Principle 02</div>
-          <p class="ai-card-q">"The advisor speaks in household terms, not network terms. 'Your evening video calls may be slower' — not 'upstream packet loss detected on port 8080.'"</p>
-        </div>
-        <div class="ai-card-d">
-          <div class="ai-card-title">✦ Advisor Principle 03</div>
-          <p class="ai-card-q">"The app becomes a household advisor. Not a utility dashboard. Not a feature list. An advisor."</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════
-     OUTCOMES
-══════════════════════════════════════ -->
-<section class="cs-sec bg-accent" id="outcomes">
-  <div class="sec-inner">
-    <div class="ch r d1">Outcomes</div>
-    <h2 class="st r d2">What actually <em>moved</em>.</h2>
-    <p class="bp r d3" style="max-width:540px;margin-bottom:2.5rem;">The metrics that matter aren't just the ones on a dashboard. A 4.5 App Store rating means customers chose to say something positive, unprompted. That's trust. That's the product.</p>
-
-    <div class="g4" style="margin-bottom:1.2rem;">
-      <div class="oc r d1"><div class="oc-num">1M+</div><div class="oc-label">Customers at Launch · Aug 2024</div></div>
-      <div class="oc r d2"><div class="oc-num">4.5★</div><div class="oc-label">App Store · Google Play 4.4</div></div>
-      <div class="oc r d3"><div class="oc-num">71%</div><div class="oc-label">Fewer "App Unusable" Tickets</div></div>
-      <div class="oc r d4"><div class="oc-num">85%</div><div class="oc-label">Faster Design-to-Dev Velocity</div></div>
-    </div>
-    <div class="g4">
-      <div class="oc r d1"><div class="oc-num">10+</div><div class="oc-label">Releases Shipped · v1.0–v2.2.1</div></div>
-      <div class="oc r d2"><div class="oc-num">900+</div><div class="oc-label">Design System Components</div></div>
-      <div class="oc r d3"><div class="oc-num">11</div><div class="oc-label">Teams on Shared Design Language</div></div>
-      <div class="oc r d4"><div class="oc-num">12%</div><div class="oc-label">Feature Adoption Increase</div></div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════
-     CLOSING CINEMATIC
-══════════════════════════════════════ -->
-<section class="cinematic-sec" style="min-height:auto; padding:6rem clamp(1.25rem,5vw,4rem);">
-  <div class="cin-dots"></div>
-  <div class="cin-glow"></div>
-  <div class="cin-inner">
-    <p class="cin-q r d1" style="font-size:clamp(16pt,2.5vw,28pt); color:rgba(255,255,255,0.7);">
-      "This designer can operate at every layer simultaneously:<br>
-      execution, systems, operations, product strategy,<br>
-      organizational alignment, and <em>future-state experience vision</em>."
-    </p>
-    <p class="cin-attr r d2">Design Goal · Verizon Home App</p>
   </div>
 </section>
 
@@ -2965,6 +4085,119 @@ function tickVzhHero(t) {
   });
 }
 
+// ── Chapter 2 Hero sticky scroll + rising glass (mirrors vzh hero) ──
+const ch2StageEl   = document.querySelector('.ch2-stage');
+const ch2BgEl      = document.querySelector('.ch2-bg');
+const ch2PhoneEl   = document.querySelector('.ch2-phone');
+const ch2GlassEl   = document.getElementById('ch2-glass');
+const ch2Lines     = ch2GlassEl ? ch2GlassEl.querySelectorAll('.ch2-glass-line') : [];
+const ch2ContentEl = document.querySelector('.ch2-content');
+
+// ── Feature stages (parallax cover stack + bottom-half content swap) ──
+// Recompute the .feat-grid document anchor on every tick — feat-grid is NOT sticky,
+// so its getBoundingClientRect().top is reliable. Each stage's natural top = gridTop + i * stageHeight.
+const featGrid   = document.querySelector('.feat-grid');
+const featStages = Array.from(document.querySelectorAll('.feat-stage')).map(stage => ({
+  el: stage,
+  a:  stage.querySelector('.feat-swap-a'),
+  b:  stage.querySelector('.feat-swap-b'),
+}));
+
+function tickFeatStages(t) {
+  if (!featGrid || !featStages.length) return;
+  const gridDocTop = featGrid.getBoundingClientRect().top + t;
+  const stageHeight = 2 * window.innerHeight; // 200vh
+  featStages.forEach((entry, i) => {
+    const { a, b } = entry;
+    if (!a || !b) return;
+    const stageTop = gridDocTop + i * stageHeight;
+    const within   = Math.max(0, t - stageTop);
+    const p        = Math.min(within / stageHeight, 1);
+
+    // Phase A fades out p 0.10 → 0.32; Phase B fades in p 0.22 → 0.42
+    const aP = 1 - Math.min(Math.max((p - 0.10) / 0.22, 0), 1);
+    a.style.opacity       = aP;
+    a.style.transform     = `translateY(${(1 - aP) * -14}px)`;
+    a.style.pointerEvents = aP > 0.1 ? 'auto' : 'none';
+
+    const bP = Math.min(Math.max((p - 0.22) / 0.20, 0), 1);
+    b.style.opacity       = bP;
+    b.style.transform     = `translateY(${(1 - bP) * 14}px)`;
+    b.style.pointerEvents = bP > 0.5 ? 'auto' : 'none';
+  });
+}
+
+// ── The Last 10% breaker: scroll-driven glass rise (same math as Ch2 hero) ──
+const l10StageEl = document.getElementById('last10');
+const l10GlassEl = document.getElementById('l10-glass');
+const l10Items   = l10GlassEl ? l10GlassEl.querySelectorAll('.l10-glass-item') : [];
+
+function tickLast10(t) {
+  if (!l10StageEl || !l10GlassEl) return;
+
+  const stageTop   = l10StageEl.getBoundingClientRect().top + t;
+  const stageRange = l10StageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1);
+
+  // Glass rises from bottom
+  const riseP  = Math.min(p / 0.55, 1);
+  const topPct = (1 - riseP) * 100;
+  l10GlassEl.style.clipPath             = `inset(${topPct}% 0 0 0)`;
+  l10GlassEl.style.background           = `rgba(8,8,20,${riseP * 0.62})`;
+  l10GlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
+  l10GlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
+
+  // Stagger reveal of each item (eyebrow → title → body → note) once glass is mostly up
+  l10Items.forEach((el, i) => {
+    const entryP = Math.max(0, Math.min(1, (p - 0.46 - i * 0.10) / 0.26));
+    const postP  = Math.max(0, Math.min(1, (p - 0.66) / 0.34));
+    const scaleV = 1 + postP * 0.04;
+    const floatY = (1 - entryP) * 18 - postP * 18;
+    const isNote = el.classList.contains('l10-glass-note');
+    const xCenter = isNote ? 'translateX(-50%) ' : '';
+    el.style.opacity   = entryP;
+    el.style.transform = `${xCenter}translateY(${floatY}px) scale(${scaleV})`;
+  });
+}
+
+function tickCh2Hero(t) {
+  if (!ch2StageEl || !ch2GlassEl) return;
+
+  const stageTop   = ch2StageEl.getBoundingClientRect().top + t;
+  const stageRange = ch2StageEl.offsetHeight - window.innerHeight;
+  const within     = Math.max(0, t - stageTop);
+  const p          = Math.min(within / stageRange, 1); // 0→1 across stage
+
+  // Subtle bg parallax — phone stays anchored at viewport bottom
+  if (ch2BgEl) ch2BgEl.style.transform = `translateY(${within * 0.10}px)`;
+
+  // Glass rises from bottom
+  const riseP  = Math.min(p / 0.55, 1);
+  const topPct = (1 - riseP) * 100;
+  ch2GlassEl.style.clipPath             = `inset(${topPct}% 0 0 0)`;
+  ch2GlassEl.style.background           = `rgba(8,8,20,${riseP * 0.62})`;
+  ch2GlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
+  ch2GlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
+
+  // Bottom content dissolves as glass climbs over it
+  if (ch2ContentEl) {
+    const fade = 1 - Math.max(0, Math.min(1, (p - 0.28) / 0.32));
+    ch2ContentEl.style.opacity   = fade;
+    ch2ContentEl.style.transform = `translateY(${(1 - fade) * 14}px)`;
+  }
+
+  // Glass lines entrance + parallax scale-up
+  ch2Lines.forEach((line, i) => {
+    const entryP = Math.max(0, Math.min(1, (p - 0.48 - i * 0.14) / 0.28));
+    const postP  = Math.max(0, Math.min(1, (p - 0.62) / 0.38));
+    const scaleV = 1 + postP * 0.07;
+    const floatY = (1 - entryP) * 18 - postP * 24;
+    line.style.opacity   = entryP;
+    line.style.transform = `translateY(${floatY}px) scale(${scaleV})`;
+  });
+}
+
 // ── Scroll progress + nav state ──
 window.addEventListener('scroll', () => {
   const t = window.scrollY;
@@ -2975,6 +4208,9 @@ window.addEventListener('scroll', () => {
   document.getElementById('back-top').classList.toggle('visible', t > 400);
   updateSidenav();
   tickVzhHero(t);
+  tickCh2Hero(t);
+  tickLast10(t);
+  tickFeatStages(t);
 }, { passive: true });
 
 // ── Back to top ──
@@ -2992,7 +4228,7 @@ snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
 });
 
 function updateSidenav() {
-  const targets = ['overview','part1','systems','part2','pillars','design','outcomes'];
+  const targets = ['overview','part1','part2','design','last10','feat-stage-1'];
   let active = targets[0];
   const offset = window.innerHeight * 0.45;
   targets.forEach(id => {
@@ -3002,8 +4238,27 @@ function updateSidenav() {
   snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.target === active);
   });
+  // Light-bg detection: when on a feature stage we don't know which stage the user is actually
+  // looking at (sticky covers shuffle z-index), so detect by scroll position within the
+  // .feat-grid bounds. Also treat the "Last 10%" stage (gradient bg) as light.
   const activeEl = document.getElementById(active);
-  const isLight = activeEl && (activeEl.classList.contains('bg-page') || activeEl.classList.contains('bg-warm'));
+  let isLight = activeEl && (
+    activeEl.classList.contains('bg-page') ||
+    activeEl.classList.contains('bg-warm') ||
+    activeEl.classList.contains('l10-stage')
+  );
+  // While in the feature cover stack: alternate light/dark detection per stage as user scrolls
+  if (featGrid && active.startsWith('feat-stage-')) {
+    const t = window.scrollY;
+    const gridDocTop = featGrid.getBoundingClientRect().top + t;
+    const stageHeight = 2 * window.innerHeight;
+    const idx = Math.min(Math.max(Math.floor((t - gridDocTop) / stageHeight), 0), 3);
+    // Stages 1+3 (idx 0, 2) are warm; 2+4 (idx 1, 3) are page — both are light backgrounds
+    isLight = true;
+    // But after stage 4 unsticks into the bg-dark spacer, sidenav should switch back to dark mode
+    const stage4End = gridDocTop + 3 * stageHeight + window.innerHeight; // stage 4 = 100vh
+    if (t > stage4End) isLight = false;
+  }
   snav.classList.toggle('on-light', !!isLight);
 }
 
@@ -3107,19 +4362,98 @@ const vzStatObs  = new IntersectionObserver(entries => {
 
 vzStatNums.forEach(el => vzStatObs.observe(el));
 
-// ── Auto-play feature videos when in view (browser controls remain) ──
+// ── Chapter 2 hero — trigger entry animations only when hero scrolls into view ──
+const ch2HeroEl = document.querySelector('.ch2-hero');
+if (ch2HeroEl) {
+  const ch2HeroObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        ch2HeroObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.25 });
+  ch2HeroObs.observe(ch2HeroEl);
+}
+
+// ── Auto-play feature videos when in view (try unmuted, fall back to muted) ──
 const csAutoVideos = document.querySelectorAll('.cs-video-wrap video');
 const csVideoObs   = new IntersectionObserver(entries => {
   entries.forEach(e => {
     const v = e.target;
     if (e.isIntersecting) {
-      v.play().catch(() => {});
+      v.muted  = false;
+      v.volume = 1;
+      v.play().catch(() => {
+        // Browser blocked sound autoplay — fall back to muted
+        v.muted = true;
+        v.play().catch(() => {});
+      });
     } else {
       v.pause();
     }
   });
 }, { threshold: 0.5 });
 csAutoVideos.forEach(v => csVideoObs.observe(v));
+
+// ── Dual Mission solar visual: trigger entry animation on scroll-into-view ──
+const dmVisualEl = document.querySelector('.dm-visual');
+const dmSystemEl = document.querySelector('.dm-system');
+if (dmVisualEl) {
+  const dmObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('dm-in');
+        if (dmSystemEl) dmSystemEl.classList.add('dm-in');
+        dmObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  dmObs.observe(dmVisualEl);
+}
+
+// ── Auto-play Vimeo embed (Verizon 1.0) when in view, full volume ──
+const vzVimeoEl   = document.getElementById('vz1-vimeo');
+const vzUnmuteBtn = document.getElementById('vz1-unmute');
+if (vzVimeoEl && window.Vimeo) {
+  const vzVimeoPlayer = new Vimeo.Player(vzVimeoEl);
+  vzVimeoPlayer.setVolume(1).catch(() => {});
+  vzVimeoPlayer.setMuted(false).catch(() => {});
+
+  const tryUnmutedPlay = () => {
+    return vzVimeoPlayer.setMuted(false)
+      .then(() => vzVimeoPlayer.setVolume(1))
+      .then(() => vzVimeoPlayer.play())
+      .catch(() => {
+        // Browser blocked sound autoplay — fall back to muted, expose click-to-unmute
+        return vzVimeoPlayer.setMuted(true)
+          .then(() => vzVimeoPlayer.play())
+          .then(() => { if (vzUnmuteBtn) vzUnmuteBtn.style.display = 'block'; })
+          .catch(() => {});
+      });
+  };
+
+  const vzVimeoObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        tryUnmutedPlay();
+      } else {
+        vzVimeoPlayer.pause().catch(() => {});
+      }
+    });
+  }, { threshold: 0.5 });
+  vzVimeoObs.observe(vzVimeoEl);
+
+  if (vzUnmuteBtn) {
+    vzUnmuteBtn.addEventListener('click', () => {
+      vzVimeoPlayer.setMuted(false)
+        .then(() => vzVimeoPlayer.setVolume(1))
+        .then(() => vzVimeoPlayer.play())
+        .then(() => { vzUnmuteBtn.style.display = 'none'; })
+        .catch(() => {});
+    });
+  }
+}
 </script>
 
 </body>

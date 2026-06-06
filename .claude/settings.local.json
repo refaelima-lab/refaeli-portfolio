@@ -32,7 +32,14 @@
       "Bash(awk '/^    \\\\./{cls=$0; line=NR} /background-image:.*dot-grid/ {print line\": \"cls}' /Users/rari/Downloads/refaeli-portfolio/cs-bluejeans.html)",
       "Bash(grep -n \"</div>$\\\\|</section>$\\\\|<script>\\\\|apr-stepper\" /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)",
       "Bash(awk 'NR==1 || \\(/apr-stepper|<script>/ && NR > 1\\) { print }')",
-      "Bash(awk 'NR>=1690 && NR<=1720' /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)"
+      "Bash(awk 'NR>=1690 && NR<=1720' /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)",
+      "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 /Users/rari/Downloads/refaeli-portfolio/assets/iconmobile/ford/Mustang-vision.mov)",
+      "Bash(/usr/bin/sips -g pixelWidth -g pixelHeight /Users/rari/Downloads/refaeli-portfolio/assets/iconmobile/ford/Mustang-vision.mov)",
+      "Bash(mdls -name kMDItemPixelWidth -name kMDItemPixelHeight /Users/rari/Downloads/refaeli-portfolio/assets/iconmobile/ford/Mustang-vision.mov)",
+      "Bash(cp /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html /tmp/cs-vz-home.bak.html)",
+      "Bash(sed -i '' '3381,3661d' /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)",
+      "Bash(grep -n \"14 · UI SHOWCASE\\\\|id=\\\\\"design\\\\\"\\\\|/section>\\\\s*$\" /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)",
+      "Bash(awk '/14 · UI SHOWCASE/,/15 · AI ASSISTANT/' /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)"
     ]
   }
 }
