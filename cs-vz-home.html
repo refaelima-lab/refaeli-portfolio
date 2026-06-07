@@ -626,6 +626,22 @@
       position: relative;
       min-height: 300px;
     }
+    /* Inactive chapter side: smaller numerals + text so the active chapter dominates visually */
+    .chap-break-inner { align-items: flex-end; }
+    .cb-side.cb-other {
+      flex: 0.7;
+      min-height: 180px;
+      opacity: 0.85;
+    }
+    .cb-side.cb-other .cb-num {
+      font-size: clamp(48pt, 7vw, 96pt);
+    }
+    .cb-side.cb-other .cb-chapter {
+      font-size: 8pt;
+    }
+    .cb-side.cb-other .cb-title {
+      font-size: clamp(11pt, 1.4vw, 15pt);
+    }
 
     /* Two stacked faces — default + hover, cross-fade on hover */
     .cb-default,
@@ -634,7 +650,7 @@
       inset: 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-end;
       transition: opacity 0.4s ease;
     }
     .cb-default { opacity: 1; pointer-events: auto; }
@@ -647,9 +663,9 @@
       font-size: clamp(80pt, 13vw, 180pt);
       color: var(--accent-mid-a08);
       line-height: 1;
-      margin-bottom: -0.15em;
+      margin-bottom: 0;
     }
-    /* Shimmer on the active chapter's number (looping highlight sweep) */
+    /* Shimmer on the active chapter's number (looping highlight sweep + indigo glow halo) */
     .cb-side.cb-active .cb-num {
       background-image: linear-gradient(
         100deg,
@@ -662,6 +678,9 @@
       -webkit-background-clip: text;
               background-clip: text;
       color: transparent;
+      filter:
+        drop-shadow(0 0 30px rgba(141, 148, 255, 0.35))
+        drop-shadow(0 0 60px rgba(141, 148, 255, 0.18));
       animation: cb-shimmer 5s ease-in-out infinite;
     }
     @keyframes cb-shimmer {
@@ -712,11 +731,13 @@
 
     .cb-divider {
       width: 1px;
-      height: 120px;
       background: var(--accent-mid-a12);
       flex-shrink: 0;
-      align-self: center;
+      align-self: flex-end;
     }
+    /* Each divider matches the height of the content section that follows it (right neighbor) */
+    .cb-divider:has(+ .cb-side.cb-active) { height: 300px; }
+    .cb-divider:has(+ .cb-side.cb-other)  { height: 180px; }
 
     /* ── Cinematic quote section ── */
     .cinematic-sec {
@@ -939,8 +960,8 @@
     /* ── IA RESTRUCTURE — static two-column intro: title left, body right (bottom-aligned) ── */
     .ia-intro {
       display: grid;
-      grid-template-columns: 0.85fr 1.4fr;
-      gap: clamp(3rem, 5vw, 5rem);
+      grid-template-columns: 0.85fr 1.55fr;
+      gap: clamp(1.5rem, 2.5vw, 2.5rem);
       align-items: end;
       margin-bottom: 3.5rem;
     }
@@ -2056,7 +2077,7 @@
       transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .prin-tile-tagline {
-      font-family: var(--font-sans);
+      font-family: var(--font-serif);
       font-size: 18pt;
       font-weight: var(--weight-light);
       color: var(--ink);
@@ -2398,11 +2419,10 @@
 <!-- ── IN-PAGE SIDENAV ── -->
 <nav class="cs-sidenav" id="cs-sidenav" aria-label="Page sections">
   <button class="cs-sidenav-dot active" data-label="Overview"   data-target="overview"></button>
-  <button class="cs-sidenav-dot"        data-label="Part I"     data-target="part1"></button>
-  <button class="cs-sidenav-dot"        data-label="Part II"    data-target="part2"></button>
-  <button class="cs-sidenav-dot"        data-label="Foundation" data-target="design"></button>
-  <button class="cs-sidenav-dot"        data-label="The Last 10%" data-target="last10"></button>
-  <button class="cs-sidenav-dot"        data-label="Features"   data-target="feat-stage-1"></button>
+  <button class="cs-sidenav-dot"        data-label="Part One"   data-target="part1"></button>
+  <button class="cs-sidenav-dot"        data-label="Metrics"    data-target="metrics"></button>
+  <button class="cs-sidenav-dot"        data-label="Part Two"   data-target="part2"></button>
+  <button class="cs-sidenav-dot"        data-label="Experience" data-target="last10"></button>
 </nav>
 
 
@@ -2496,12 +2516,12 @@
     <div class="vzh-stat-label">App Store · Google Play 4.4</div>
   </div>
   <div class="vzh-stat-cell">
-    <div class="vzh-stat-num">71%</div>
+    <div class="vzh-stat-num">72%</div>
     <div class="vzh-stat-label">Fewer Support Escalations</div>
   </div>
   <div class="vzh-stat-cell">
-    <div class="vzh-stat-num">85%</div>
-    <div class="vzh-stat-label">Faster Design-to-Dev Velocity</div>
+    <div class="vzh-stat-num">15+</div>
+    <div class="vzh-stat-label">Releases in 18 Months</div>
   </div>
 </div>
 
@@ -3036,7 +3056,7 @@
           <path d="M8 10V6a4 4 0 1 1 8 0v2"/>
           <line x1="3" y1="3" x2="21" y2="21" stroke-dasharray="2 2"/>
         </svg>
-        <div class="move-tile-label">Insight</div>
+        <div class="move-tile-label">Problem</div>
         <div class="move-tile-sub">“The Front Door Was Broken”</div>
         <ul class="move-tile-list">
           <li>Authentication was a top customer pain point.</li>
@@ -3091,7 +3111,7 @@
 <!-- ══════════════════════════════════════
      OUTCOME (Results — 6-card metric grid)
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-dark" style="padding-top:9rem;padding-bottom:9rem;">
+<section class="cs-sec bg-dark" id="metrics" style="padding-top:9rem;padding-bottom:9rem;">
   <div class="sec-inner">
     <div class="sec-ch r" style="color:var(--accent-mid);">Results</div>
     <h2 class="st-d r d1">From structure to <em>scale</em>.</h2>
@@ -3247,7 +3267,7 @@
 <!-- ══════════════════════════════════════
      CHAPTER NAVIGATOR — entering Chapter Two
 ══════════════════════════════════════ -->
-<div class="chap-break r">
+<div class="chap-break r" id="part2">
   <div class="chap-break-inner">
     <div class="cb-divider"></div>
     <div class="cb-side cb-other">
@@ -3279,7 +3299,7 @@
 <!-- ══════════════════════════════════════
      CHAPTER TWO HERO — full-bleed sticky stage
 ══════════════════════════════════════ -->
-<div class="ch2-stage" id="part2">
+<div class="ch2-stage" id="ch2-hero">
 <section class="ch2-hero">
 
   <!-- Abstract motion bg — 4 colored blobs (right-biased) + top-down flare + dot grid -->
@@ -4228,7 +4248,7 @@ snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
 });
 
 function updateSidenav() {
-  const targets = ['overview','part1','part2','design','last10','feat-stage-1'];
+  const targets = ['overview','part1','metrics','part2','last10'];
   let active = targets[0];
   const offset = window.innerHeight * 0.45;
   targets.forEach(id => {
@@ -4238,28 +4258,21 @@ function updateSidenav() {
   snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.target === active);
   });
-  // Light-bg detection: when on a feature stage we don't know which stage the user is actually
-  // looking at (sticky covers shuffle z-index), so detect by scroll position within the
-  // .feat-grid bounds. Also treat the "Last 10%" stage (gradient bg) as light.
-  const activeEl = document.getElementById(active);
-  let isLight = activeEl && (
-    activeEl.classList.contains('bg-page') ||
-    activeEl.classList.contains('bg-warm') ||
-    activeEl.classList.contains('l10-stage')
-  );
-  // While in the feature cover stack: alternate light/dark detection per stage as user scrolls
-  if (featGrid && active.startsWith('feat-stage-')) {
-    const t = window.scrollY;
-    const gridDocTop = featGrid.getBoundingClientRect().top + t;
-    const stageHeight = 2 * window.innerHeight;
-    const idx = Math.min(Math.max(Math.floor((t - gridDocTop) / stageHeight), 0), 3);
-    // Stages 1+3 (idx 0, 2) are warm; 2+4 (idx 1, 3) are page — both are light backgrounds
-    isLight = true;
-    // But after stage 4 unsticks into the bg-dark spacer, sidenav should switch back to dark mode
-    const stage4End = gridDocTop + 3 * stageHeight + window.innerHeight; // stage 4 = 100vh
-    if (t > stage4End) isLight = false;
+
+  // Light/dark detection — sample the element actually at the center of the viewport.
+  // This handles sticky cover stacks, gradient backgrounds, and any section the user is on,
+  // not just the active anchor (which may lag behind what's visible).
+  let isLight = false;
+  let walker = document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2);
+  while (walker && walker !== document.body) {
+    const cls = walker.classList;
+    if (cls.contains('bg-dark')) { isLight = false; break; }
+    if (cls.contains('bg-page') || cls.contains('bg-warm') || cls.contains('bg-white')) { isLight = true; break; }
+    // Sections that are light but don't use a bg-* class directly
+    if (cls.contains('feat-stage') || cls.contains('l10-stage')) { isLight = true; break; }
+    walker = walker.parentElement;
   }
-  snav.classList.toggle('on-light', !!isLight);
+  snav.classList.toggle('on-light', isLight);
 }
 
 // ── Mobile nav ──

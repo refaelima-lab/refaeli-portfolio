@@ -2715,12 +2715,11 @@
 
 <!-- ── IN-PAGE SIDENAV ── -->
 <nav class="cs-sidenav" id="cs-sidenav" aria-label="Page sections">
-  <button class="cs-sidenav-dot active" data-label="Overview"       data-target="overview"></button>
-  <button class="cs-sidenav-dot"        data-label="Remote Learning" data-target="remote-learning"></button>
-  <button class="cs-sidenav-dot"        data-label="Video Layouts"   data-target="video-layouts"></button>
-  <button class="cs-sidenav-dot"        data-label="Meetings"        data-target="meetings"></button>
-  <button class="cs-sidenav-dot"        data-label="Design System"   data-target="design-system"></button>
-  <button class="cs-sidenav-dot"        data-label="Outcomes"        data-target="outcomes"></button>
+  <button class="cs-sidenav-dot active" data-label="Overview"    data-target="bj-overview"></button>
+  <button class="cs-sidenav-dot"        data-label="Section One" data-target="remote-learning"></button>
+  <button class="cs-sidenav-dot"        data-label="Section Two" data-target="meetings"></button>
+  <button class="cs-sidenav-dot"        data-label="Section Three" data-target="design-system"></button>
+  <button class="cs-sidenav-dot"        data-label="Metrics"     data-target="outcomes"></button>
 </nav>
 
 
@@ -2926,7 +2925,7 @@
     <div class="rl-yt-layer" id="rl-yt-layer">
       <div class="rl-yt-frame">
         <iframe id="rl-yt"
-          src="https://www.youtube.com/embed/axm-bN7bJ8k?enablejsapi=1&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&showinfo=0&autoplay=1&mute=1"
+          src="https://www.youtube.com/embed/axm-bN7bJ8k?enablejsapi=1&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&showinfo=0&autoplay=0&mute=0"
           allow="autoplay; encrypted-media; fullscreen"
           allowfullscreen
           title="Remote Learning — BlueJeans by Verizon">
@@ -2959,7 +2958,7 @@
   <div class="sec-inner">
     <div class="sec-ch r">02 · Partner Adoption</div>
     <h2 class="st r d1">Adopted across enterprise<br>and <em>higher education</em>.</h2>
-    <p class="bp r d2" style="max-width:860px;">Adopted by organizations including Verizon Training, the University of Michigan, and the Wharton School, the platform served educators, students, and enterprise learners during a period when digital communication became a critical part of everyday life. Its success across diverse learning environments demonstrated that the experience could support far more than video conferencing, accommodating the complexity of real classrooms, training programs, and collaborative learning at scale.</p>
+    <p class="bp r d2">Adopted by organizations including Verizon Training, the University of Michigan, and the Wharton School, the platform served educators, students, and enterprise learners during a period when digital communication became a critical part of everyday life. Its success across diverse learning environments demonstrated that the experience could support far more than video conferencing, accommodating the complexity of real classrooms, training programs, and collaborative learning at scale.</p>
 
     <!-- Partner logos -->
     <div class="phi-recog-card r d3" style="margin-top:2.5rem;">
@@ -3111,8 +3110,8 @@
 <section class="cs-sec bg-page bj-partner-cover" style="z-index: 2;">
   <div class="sec-inner">
     <div class="sec-ch r d1">04 · Feature Architecture</div>
-    <h2 class="st r d2">Four themes.<br>One <em>coherent system</em>.</h2>
-    <p class="bp r d2" style="max-width:580px;margin-bottom:0;">Rather than a feature list, the platform was organized around the real jobs an instructor and learner perform simultaneously.</p>
+    <h2 class="st r d2">Four themes. One <em>coherent system</em>.</h2>
+    <p class="bp r d2" style="margin-bottom:0;">Rather than a feature list, the platform was organized around the real jobs an instructor and learner perform simultaneously.</p>
 
     <div class="fc-grid">
 
@@ -3524,7 +3523,7 @@
     <div class="mt-yt-layer" id="mt-yt-layer">
       <div class="mt-yt-frame">
         <iframe id="mt-yt"
-          src="https://www.youtube.com/embed/AgjdPxQYazI?enablejsapi=1&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&showinfo=0&autoplay=1&mute=1"
+          src="https://www.youtube.com/embed/AgjdPxQYazI?enablejsapi=1&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&showinfo=0&autoplay=0&mute=0"
           allow="autoplay; encrypted-media; fullscreen"
           allowfullscreen
           title="BlueJeans Meetings">
@@ -4256,7 +4255,7 @@ function sampleNavBg() {
 }
 
 function updateSidenav() {
-  const targets = ['overview','remote-learning','video-layouts','meetings','design-system','outcomes'];
+  const targets = ['bj-overview','remote-learning','meetings','design-system','outcomes'];
   let active = targets[0];
   const offset = window.innerHeight * 0.45;
   targets.forEach(id => {

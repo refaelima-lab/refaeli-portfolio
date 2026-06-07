@@ -8,132 +8,2250 @@
   <link rel="stylesheet" href="styles.css">
   <style>
 
-    /* ── IA Hero — sticky scroll stage ── */
-    @keyframes ia-img-in {
-      from { opacity: 0; transform: scale(1.06); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-
-    .ia-stage { position: relative; height: 260vh; }
-
-    .ia-hero {
-      position: sticky;
-      top: 0;
+    /* ══════════════════════════════════════
+       Cinematic Solar-System Hero
+       Phase 1 Chaos → Phase 2 Discovery → Phase 3 Attraction →
+       Phase 4 Connection → Phase 5 Intelligence (ambient loop)
+    ══════════════════════════════════════ */
+    .solar-hero {
+      position: relative;
+      width: 100%;
       height: 100vh;
       min-height: 640px;
       overflow: hidden;
       display: flex;
-      align-items: flex-end;
+      align-items: center;
+      justify-content: center;
+      background-color: #060812;
+      background-image:
+        var(--dot-grid-white-sm),
+        linear-gradient(135deg, #060812 0%, #0c1422 40%, #080f1e 70%, #040810 100%);
+      background-size: var(--dot-size-md), cover;
+      background-repeat: repeat, no-repeat;
     }
-
-    /* Dark background */
-    .ia-bg {
-      position: absolute;
-      inset: -12% 0;
-      background: linear-gradient(135deg, #060812 0%, #0c1422 40%, #080f1e 70%, #040810 100%);
-      will-change: transform;
-      z-index: 0;
-    }
-    .ia-bg::before {
+    .solar-hero::before {
       content: '';
       position: absolute;
       inset: 0;
       background:
         radial-gradient(ellipse 55% 55% at 68% 48%, rgba(180,30,30,0.07) 0%, transparent 65%),
-        radial-gradient(ellipse 40% 50% at 15% 60%, rgba(50,70,180,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 30% 30% at 85% 20%, rgba(80,40,160,0.05) 0%, transparent 50%);
+        radial-gradient(ellipse 40% 50% at 15% 60%, rgba(50,70,180,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 30% 30% at 85% 20%, rgba(80,40,160,0.06) 0%, transparent 50%);
+      pointer-events: none;
     }
 
-    /* Cover image — full bleed, parallax wrapper */
-    .ia-img-wrap {
+    /* ── SVG canvas (orbit paths + connection lines) ── */
+    .solar-svg {
       position: absolute;
-      inset: -12% 0;
-      z-index: 2;
-      pointer-events: none;
-      will-change: transform;
-    }
-    .ia-img {
+      inset: 0;
       width: 100%;
       height: 100%;
-      display: block;
-      object-fit: cover;
-      object-position: center center;
+      pointer-events: none;
+    }
+    .orbit-path {
+      fill: none;
+      stroke: rgba(141, 148, 255, 0.18);
+      stroke-width: 1;
+      stroke-dasharray: 3 6;
       opacity: 0;
-      animation: ia-img-in 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
+      transition: opacity 1.6s ease;
+    }
+    .solar-hero[data-phase="3"] .orbit-path,
+    .solar-hero[data-phase="4"] .orbit-path,
+    .solar-hero[data-phase="5"] .orbit-path { opacity: 1; }
+    /* Stagger orbit paths: each ring waits ~1.5s after the previous one starts */
+    .orbit-path-1 { transition-delay: 0s; }
+    .orbit-path-2 { transition-delay: 0.9s; }
+    .orbit-path-3 { transition-delay: 1.8s; }
+    .orbit-path-4 { transition-delay: 2.7s; }
+
+    .connection-lines { opacity: 0; transition: opacity 1.6s ease; }
+    .solar-hero[data-phase="4"] .connection-lines,
+    .solar-hero[data-phase="5"] .connection-lines { opacity: 1; }
+    .conn-line {
+      stroke: rgba(141, 148, 255, 0.22);
+      stroke-width: 1;
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+      transition: stroke-dashoffset 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .solar-hero[data-phase="4"] .conn-line,
+    .solar-hero[data-phase="5"] .conn-line { stroke-dashoffset: 0; }
+
+    /* Celestial outer orbits — very big, dim, slow rotation. Phase 5 only.
+       Visible as arcs at the corners of the viewport; rotation is read via dashed pattern. */
+    .outer-orbit {
+      fill: none;
+      stroke: rgba(141, 148, 255, 0.10);
+      stroke-width: 1;
+      stroke-dasharray: 14 22;
+      opacity: 0;
+      transform-box: view-box;
+      transform-origin: center;
+      transition: opacity 2.4s ease;
+    }
+    .solar-hero[data-phase="5"] .outer-orbit { opacity: 1; }
+
+    .outer-orbit-1 {
+      transition-delay: 0.6s;
+      animation: outer-spin-cw 240s linear infinite;
+    }
+    .outer-orbit-2 {
+      stroke-dasharray: 10 30;
+      stroke: rgba(141, 148, 255, 0.08);
+      transition-delay: 1.5s;
+      animation: outer-spin-ccw 360s linear infinite;
+    }
+    .outer-orbit-3 {
+      stroke-dasharray: 20 40;
+      stroke: rgba(141, 148, 255, 0.06);
+      transition-delay: 2.4s;
+      animation: outer-spin-cw 520s linear infinite;
     }
 
-    /* Vignette — top for nav, bottom for title */
-    .ia-vignette {
+    @keyframes outer-spin-cw  { to { transform: rotate(360deg); } }
+    @keyframes outer-spin-ccw { to { transform: rotate(-360deg); } }
+
+    /* ── Mega celestial orbits — far beyond the visible viewport, only arcs visible.
+       Each has 2 rotating dots. Creates the "always more" cosmic-context feeling. ── */
+    .mega-stage {
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, transparent 18%),
-        linear-gradient(to top,   rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.18) 38%, transparent 58%);
-      z-index: 3;
       pointer-events: none;
+      z-index: 0;
+    }
+    .mega-orbit {
+      position: absolute;
+      /* Center each orbit at the main visual's center via negative-margin offset
+         (can't use transform: translate because the rotation animation owns transform) */
+      left: 50%;
+      top: 50%;
+      border-radius: 50%;
+      border: 1px dashed rgba(141, 148, 255, 0.08);
+      opacity: 0;
+      transition: opacity 2.4s ease;
+      animation-play-state: paused;
+    }
+    .solar-hero[data-phase="5"] .mega-orbit {
+      opacity: 1;
+      animation-play-state: running;
+    }
+    /* Each mega orbit appears after the last outer-orbit reveals (~+4.8s into phase 5) */
+    .mega-orbit-1 {
+      width: 105vmin; height: 105vmin;
+      margin-left: -52.5vmin; margin-top: -52.5vmin;
+      border-color: rgba(141, 148, 255, 0.08);
+      transition-delay: 5.0s;
+      animation: outer-spin-cw 480s linear infinite;
+    }
+    .mega-orbit-2 {
+      width: 135vmin; height: 135vmin;
+      margin-left: -67.5vmin; margin-top: -67.5vmin;
+      border-color: rgba(141, 148, 255, 0.06);
+      transition-delay: 6.5s;
+      animation: outer-spin-ccw 720s linear infinite;
+    }
+    .mega-orbit-3 {
+      width: 175vmin; height: 175vmin;
+      margin-left: -87.5vmin; margin-top: -87.5vmin;
+      border-color: rgba(141, 148, 255, 0.05);
+      transition-delay: 8.0s;
+      animation: outer-spin-cw 1080s linear infinite;
     }
 
-    /* Glass reveal — 3 lines, scroll-driven */
-    .ia-glass {
+    /* Two dots per mega orbit — placed at top and bottom; rotate with the orbit container */
+    .mega-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(189, 194, 255, 0.85);
+      box-shadow:
+        0 0 6px rgba(141, 148, 255, 0.7),
+        0 0 14px rgba(141, 148, 255, 0.3);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .mega-dot-1 { top: -3px; }
+    .mega-dot-2 { bottom: -3px; }
+
+    /* Reduced motion: keep mega orbits frozen at phase 5 visible state */
+    @media (prefers-reduced-motion: reduce) {
+      .mega-orbit { animation: none !important; }
+    }
+
+    /* ── Hero content overlay — fades in right after Ring 4 fully reveals
+       Ring 4 lands at phase 3 + 4.5s delay + 1.6s transition = ~6.1s after phase 3.
+       Overlay triggers off phase 3 with matching delays. ── */
+    .hero-overlay {
       position: absolute;
       inset: 0;
-      z-index: 4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      padding: 2rem clamp(2rem, 6vw, 6rem);
-      text-align: center;
+      z-index: 20;
       pointer-events: none;
-      clip-path: inset(100% 0 0 0);
-      will-change: clip-path;
+      padding: clamp(2.5rem, 5vh, 4rem) clamp(2rem, 6vw, 6rem);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(2rem, 4vw, 4rem);
     }
-    .ia-glass-line {
-      font-family: var(--font-serif);
-      font-size: clamp(13pt, 2.2vw, 26pt);
-      font-weight: var(--weight-regular);
-      color: rgba(255,255,255,0.88);
-      line-height: 1.45;
-      max-width: 900px;
-      width: 90vw;
+    .hero-overlay-left,
+    .hero-overlay-right {
       opacity: 0;
       transform: translateY(18px);
-      will-change: transform, opacity;
+      transition:
+        opacity 1.4s ease,
+        transform 1.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .ia-glass-line em {
-      font-style: italic;
-      color: rgba(190,205,255,0.92);
+    .hero-overlay-left {
+      align-self: end;                /* bottom-left */
+      transition-delay: 0.9s;          /* fades in alongside Ring 2's reveal */
+    }
+    .hero-overlay-right {
+      align-self: start;               /* top-right */
+      justify-self: end;
+      max-width: 320px;                /* narrower (kept just wide enough for 6 lines) */
+      margin-top: clamp(3rem, 7vh, 5rem); /* clearance below the fixed nav */
+      transition-delay: 1.4s;          /* slightly after the left block */
     }
 
-    /* Title block — always visible at bottom */
-    .ia-content {
-      position: relative;
-      z-index: 5;
-      width: 100%;
-      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+    /* Trigger once Ring 4 is settling in — phase 3 onwards */
+    .solar-hero[data-phase="3"] .hero-overlay-left,
+    .solar-hero[data-phase="4"] .hero-overlay-left,
+    .solar-hero[data-phase="5"] .hero-overlay-left,
+    .solar-hero[data-phase="3"] .hero-overlay-right,
+    .solar-hero[data-phase="4"] .hero-overlay-right,
+    .solar-hero[data-phase="5"] .hero-overlay-right {
+      opacity: 1;
+      transform: translateY(0);
     }
-    .ia-eyebrow {
+
+    .hero-eyebrow {
       font-size: var(--text-micro);
       font-weight: var(--weight-semibold);
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
-      color: rgba(255,255,255,0.44);
-      margin-bottom: 0;
-      opacity: 0;
-      animation: fu 0.5s var(--ease-reveal) 0.2s both;
+      color: rgba(255, 255, 255, 0.55);
+      margin-bottom: 1rem;
     }
-    .ia-h1 {
+    .hero-title {
       font-family: var(--font-serif);
-      font-size: clamp(30pt, 5.5vw, 60pt);
+      font-size: clamp(26pt, 4.2vw, 50pt);
       font-weight: var(--weight-regular);
       color: #fff;
-      line-height: 1.02;
-      margin: 0 0 1rem;
-      opacity: 0;
-      animation: fu 0.6s var(--ease-reveal) 0.35s both;
+      line-height: 1.05;
+      margin: 0;
     }
-    .ia-h1 em { font-style: italic; color: var(--accent-mid); }
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent-mid);
+    }
+
+    .hero-note {
+      font-family: var(--font-sans);
+      font-size: clamp(0.65rem, 0.85vw, 0.8rem);
+      font-weight: var(--weight-light);
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.55;
+      margin: 0;
+      text-align: right;
+      letter-spacing: 0.005em;
+    }
+    .hero-note em {
+      font-style: italic;
+      color: rgba(189, 194, 255, 0.85);
+    }
+
+    /* Reduced motion: overlay appears instantly in phase 5 */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-overlay-left,
+      .hero-overlay-right { transition: none; }
+    }
+
+    /* ── Video embed (matches VZ Home App treatment) ── */
+    .cs-video-wrap {
+      overflow: hidden;
+      background: transparent;
+      margin-top: 2.5rem;
+    }
+    .cs-video-wrap video { width: 100%; display: block; max-height: 72vh; object-fit: cover; }
+
+    /* ── Classic dot-grid backdrop on every content section ──
+       (Don't set position here — it would override position:sticky on the
+       parallax cover stack via specificity.) */
+    .cs-sec.bg-page,
+    .cs-sec.bg-warm {
+      background-image: var(--dot-grid-light);
+      background-size: var(--dot-size-md);
+    }
+    .cs-sec.bg-dark {
+      background-image: var(--dot-grid-white-sm);
+      background-size: var(--dot-size-md);
+    }
+    /* Inline emphasis on dark body copy */
+    .bp-d strong { font-weight: var(--weight-medium); color: #fff; }
+    .bp-d em     { font-style: italic; color: rgba(255, 255, 255, 0.85); }
+
+    /* ── CHALLENGE → 5 SUB-DIVS multi-level parallax cover stack ──
+       Base (CHALLENGE) pins at top:0 while each subsequent cover slides up
+       and covers the previous one. Mirrors the VZ Home APPROACH → 4 MOVES pattern. */
+    .cs-stack-multi { position: relative; }
+    .cs-stack-base {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      will-change: transform;
+    }
+    .cs-stack-cover {
+      position: sticky;
+      top: 0;
+      border-radius: 1.5rem 1.5rem 0 0;
+      box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.10);
+      overflow: hidden;
+      isolation: isolate;
+      /* Each cover needs scroll runway so the previous one has time to "land"
+         before the next one covers it. Remove once real content fills the section. */
+      min-height: 100vh;
+    }
+
+    /* ── CHALLENGE — 4-step stepper (mirrors VZ Home APPROACH apr-stepper) ── */
+    .apr-stepper {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      margin-top: 3.5rem;
+    }
+    .apr-stepper::before {
+      content: '';
+      position: absolute;
+      top: 30px;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        var(--accent-mid-a25) 0%,
+        var(--accent) 50%,
+        var(--accent-mid-a25) 100%
+      );
+      background-size: 200% 100%;
+      animation: apr-line-slide 5s ease-in-out infinite;
+      z-index: 0;
+    }
+    .apr-stepper::after {
+      content: '';
+      position: absolute;
+      top: 30px;
+      left: 10%;
+      width: 6px;
+      height: 6px;
+      margin-top: -3px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: apr-dot-travel 5s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes apr-line-slide {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    @keyframes apr-dot-travel {
+      0%   { left: 10%; opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { left: 90%; opacity: 0; }
+    }
+    .apr-step {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 0 0 20%;
+      max-width: 260px;
+      text-align: center;
+      font-family: var(--font-sans);
+    }
+    .apr-step-node {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--page);
+      border: 1px solid var(--accent-mid-a25);
+      font-family: var(--font-serif);
+      font-size: 18pt;
+      color: var(--accent);
+      margin: 0 0 1.2rem;
+      flex-shrink: 0;
+    }
+    .apr-step-eyebrow {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .apr-step-title {
+      font-family: var(--font-serif);
+      font-size: 14pt;
+      color: var(--ink);
+      margin-bottom: 0.55rem;
+      line-height: 1.2;
+    }
+    .apr-step-sub {
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: var(--ink-mid);
+      line-height: 1.5;
+      max-width: 100%;
+    }
+    @media (max-width: 760px) {
+      .apr-stepper {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding-top: 0;
+      }
+      .apr-stepper::before { display: none; }
+      .apr-step {
+        flex: 0 0 auto;
+        max-width: none;
+        width: 100%;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 1rem;
+        text-align: left;
+      }
+      .apr-step-node { margin: 0; width: 44px; height: 44px; font-size: 14pt; }
+      .apr-step-eyebrow,
+      .apr-step-title,
+      .apr-step-sub { text-align: left; max-width: none; margin: 0 0 0.3rem; }
+    }
+
+    /* ── CHALLENGE sub-div tiles (mirrors VZ Home move-tile pattern,
+       but 2:1 grid instead of 3 equal columns) ── */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.2rem;
+      margin-top: 3.5rem;
+    }
+    .move-tile {
+      position: relative;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--accent-mid-a08);
+      border-radius: 1rem;
+      padding: 2.2rem 2rem 2.5rem;
+      overflow: hidden;
+    }
+    .move-tile-icon {
+      position: absolute;
+      top: -22px;
+      right: -22px;
+      width: 200px;
+      height: 200px;
+      color: var(--accent);
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .move-tile-label,
+    .move-tile-sub,
+    .move-tile-body,
+    .move-tile-list { position: relative; z-index: 2; }
+    .move-tile-label {
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .move-tile-sub {
+      font-family: var(--font-serif);
+      font-size: 18pt;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 1.2rem;
+    }
+    .move-tile-body {
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: var(--ink-mid);
+      line-height: var(--leading-spacious);
+      margin: 0 0 1rem;
+    }
+    .move-tile-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1rem;
+      font-size: var(--text-body-sm);
+      color: var(--ink-mid);
+      line-height: var(--leading-spacious);
+    }
+    .move-tile-list > li {
+      padding-left: 1.25rem;
+      position: relative;
+      margin-bottom: 0.45rem;
+    }
+    .move-tile-list > li::before {
+      content: '';
+      position: absolute;
+      left: 0.25rem;
+      top: 0.7em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* Right-hand "Key Insight" tile — vertically centered serif statement */
+    .chl-tile-aside {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .chl-tile-aside .move-tile-sub {
+      font-size: 22pt;
+      line-height: 1.35;
+      color: var(--ink);
+      margin-bottom: 0;
+      font-style: italic;
+    }
+
+    @media (max-width: 900px) {
+      .challenge-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .move-tile-icon { width: 150px; height: 150px; top: -18px; right: -18px; }
+    }
+
+    /* ── Epic quote (final CHALLENGE sub-div) ── */
+    .chl-epic-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+    }
+    .chl-epic-mark {
+      font-family: var(--font-serif);
+      font-size: clamp(6rem, 12vw, 10rem);
+      line-height: 0.5;
+      color: var(--accent);
+      opacity: 0.20;
+      margin-bottom: 2rem;
+      user-select: none;
+    }
+    .chl-epic-quote {
+      font-family: var(--font-serif);
+      font-size: clamp(20pt, 2.8vw, 32pt);
+      font-weight: var(--weight-regular);
+      color: var(--ink);
+      line-height: 1.4;
+      text-align: center;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .chl-epic-quote em {
+      color: var(--accent);
+      font-style: italic;
+    }
+    @media (max-width: 900px) {
+      .chl-epic-mark { font-size: 4.5rem; margin-bottom: 1rem; }
+    }
+
+    /* ── MY ROLE — Three Orbiting Systems (extends VZ Home role-venn to 3 circles) ── */
+    .role-system {
+      position: relative;
+      height: 620px;
+      margin-top: 0.5rem;
+      overflow: visible;
+    }
+    .role-system.r { opacity: 1; transform: none; transition: none; }
+
+    .role-circle {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      top: 50%;
+      left: 50%;
+      margin-top: -150px;
+      margin-left: -150px;
+      opacity: 0;
+      transition:
+        transform 4s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 1.6s ease;
+    }
+    /* Initial positions — 3 circles spread in a triangle */
+    .role-c1 { transform: translate(0,    -210px); }   /* top — Customer Experience */
+    .role-c2 { transform: translate(-280px, 140px); }  /* bottom-left — Enterprise Architecture */
+    .role-c3 { transform: translate( 280px, 140px); }  /* bottom-right — Business Strategy */
+
+    .role-system.on .role-circle { opacity: 1; }
+    /* Converged — all 3 overlap at center forming a Venn intersection */
+    .role-system.on .role-c1 { transform: translate(0,    -90px); }
+    .role-system.on .role-c2 { transform: translate(-100px, 55px); }
+    .role-system.on .role-c3 { transform: translate( 100px, 55px); }
+
+    .role-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px dashed rgba(141, 148, 255, 0.30);
+    }
+    .role-c1 .role-ring { animation: hiw-spin-cw  90s linear infinite; }
+    .role-c2 .role-ring { animation: hiw-spin-ccw 100s linear infinite; }
+    .role-c3 .role-ring { animation: hiw-spin-cw 110s linear infinite; }
+
+    @keyframes hiw-spin-cw  { to { transform: rotate(360deg); } }
+    @keyframes hiw-spin-ccw { to { transform: rotate(-360deg); } }
+
+    /* Discipline name inside each ring — offset toward the outer edge of each circle
+       so they don't collide with orbiting node labels or the central Identity word
+       when the rings converge. */
+    .role-discipline {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(13pt, 1.4vw, 16pt);
+      color: var(--accent-mid);
+      text-align: center;
+      width: 70%;
+      line-height: 1.2;
+      opacity: 0;
+      transition: opacity 1.4s ease;
+      transition-delay: 2.2s;
+    }
+    .role-c1 .role-discipline { top: 25%; }   /* Customer Experience — shift up toward top of ring */
+    .role-c2 .role-discipline,
+    .role-c3 .role-discipline { top: 75%; }   /* Architecture / Strategy — shift down toward bottom of ring */
+    .role-system.on .role-discipline { opacity: 1; }
+
+    /* Orbiting node labels — 4 around each ring at N/E/S/W, just outside the ring edge */
+    .role-node {
+      position: absolute;
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.75);
+      white-space: nowrap;
+      padding-left: 0.6rem;
+      opacity: 0;
+      transition: opacity 1.3s ease;
+      transition-delay: 3s;
+    }
+    .role-node::before {
+      content: '';
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-mid);
+    }
+    .role-system.on .role-node { opacity: 1; }
+
+    /* Node anchor positions: N (top) / E (right) / S (bottom) / W (left) of each ring */
+    .role-n-n { top: -10px;  left: 50%;  transform: translate(-50%, -100%); padding-left: 0; text-align: center; }
+    .role-n-n::before { top: 100%; left: 50%; transform: translate(-50%, 4px); }
+    .role-n-e { top: 50%;    right: -10px; transform: translate(100%, -50%); }
+    .role-n-e::before { left: -10px; top: 50%; transform: translate(-100%, -50%); }
+    .role-n-s { bottom: -10px; left: 50%; transform: translate(-50%, 100%); padding-left: 0; text-align: center; }
+    .role-n-s::before { bottom: 100%; left: 50%; transform: translate(-50%, -4px); }
+    .role-n-w { top: 50%;    left: -10px; transform: translate(-100%, -50%); padding-left: 0; padding-right: 0.6rem; }
+    .role-n-w::before { right: -10px; top: 50%; transform: translate(100%, -50%); }
+
+    /* Central Identity word — last to appear, sits at the Venn intersection */
+    .role-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(24pt, 3vw, 36pt);
+      color: var(--accent-mid);
+      text-align: center;
+      opacity: 0;
+      transition: opacity 2s ease;
+      transition-delay: 4.8s;
+      z-index: 10;
+    }
+    .role-system.on .role-center { opacity: 1; }
+
+    /* ── DISCOVERY — 3-tile flip-card grid (mirrors VZ Home Ch2 Challenge) ── */
+    .disc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 3.5rem;
+    }
+    .disc-grid .hiw-face-hover {
+      align-items: flex-start;
+      text-align: left;
+    }
+    /* Tile 3 (Impact) carries 3 sub-grouped bullet lists — give the row enough height to fit them */
+    .disc-grid .hiw-tile { height: 500px; }
+
+    /* Titles sit at the bottom (default spacer behavior), but equalize the description
+       block height so all 3 titles land at the same Y. */
+    .disc-grid .hiw-face-default .hiw-short { min-height: 11rem; }
+    /* Reserve 2 lines of title height across all 3 tiles so the description (and
+       everything below) starts at the same Y, regardless of natural line wrap. */
+    .disc-grid .hiw-title { min-height: 2.4em; }
+
+    /* Hover-state tagline — short serif italic punchline shown when the tile flips */
+    .disc-tagline {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(13pt, 1.4vw, 16pt);
+      color: var(--accent);
+      line-height: 1.3;
+      margin-bottom: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    /* Bullet list inside the hover face (same look as VZ Home .hiw-bullets) */
+    .hiw-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0.8rem 0 0;
+      font-size: var(--text-body-sm);
+      font-weight: var(--weight-light);
+      color: var(--ink-mid);
+      line-height: 1.55;
+    }
+    .hiw-bullets li {
+      padding-left: 1rem;
+      position: relative;
+      margin-bottom: 0.55rem;
+    }
+    .hiw-bullets li::before {
+      content: '';
+      position: absolute;
+      left: 0.15rem;
+      top: 0.55em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .hiw-bullets li:last-child { margin-bottom: 0; }
+
+    /* Sub-section label inside Tile 3 (Customer Layer / Business Layer / Strategic Layer) */
+    .hiw-section-label {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0.85rem 0 0.25rem;
+    }
+    .hiw-section-label:first-child { margin-top: 0; }
+    /* Tighter bullet rhythm inside Tile 3 so all 3 groups fit */
+    .disc-tile-impact .hiw-bullets { margin-top: 0.2rem; }
+    .disc-tile-impact .hiw-bullets li { margin-bottom: 0.2rem; line-height: 1.4; }
+    .disc-tile-impact .hiw-bullets li::before { top: 0.5em; }
+
+    @media (max-width: 900px) {
+      .disc-grid { grid-template-columns: 1fr; }
+      .disc-grid .hiw-tile { height: auto; }
+    }
+
+    /* ── IMPACT — horizontal scroll-driven 3-phase timeline ──
+       Header sits INSIDE the pin so it stays visible during the entire
+       phase rotation. Total scroll runway = 300vh (3 phase dwells). */
+    .impact-timeline-wrap {
+      position: relative;
+      width: 100%;
+      height: 300vh;
+    }
+    .impact-timeline-pin {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      /* Header + track sit toward the top; progress is pushed to the bottom
+         (via margin-top: auto on .impact-progress) while keeping its current
+         bottom offset via the pin's padding-bottom. */
+      padding-top: 3.5rem;
+      padding-bottom: 7.5rem;
+      background-color: var(--dark);
+      background-image: var(--dot-grid-white-sm);
+      background-size: var(--dot-size-md);
+    }
+    /* Header lives inside the pin, sized smaller than a standard section header
+       so it shares the viewport with the timeline panel. */
+    .impact-pin-header {
+      flex-shrink: 0;
+      width: 100%;
+      max-width: var(--content-default);
+      margin: 0 auto;
+      /* Horizontal padding intentionally omitted — the parent .cs-sec already
+         supplies --section-padding-x. Adding more here would double-inset the
+         content past every other section's left edge. */
+      padding: 1.4rem 0 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    }
+    /* Keep typography at the standard page sizes — let .sec-ch / h2.st-d / .bp-d
+       inherit their default scale so the in-pin header reads like every other
+       section header on the page. */
+    .impact-pin-header .bp-d { max-width: 880px; }
+
+    /* Track wrapper has explicit height (not flex:1) so it sits tight to the header
+       and progress instead of absorbing all the leftover viewport space. */
+    .impact-timeline-track-outer {
+      flex-shrink: 0;
+      width: 100%;
+      height: 42vh;
+      overflow: hidden;
+      position: relative;
+    }
+    .impact-timeline-track {
+      display: flex;
+      width: 300%;
+      height: 100%;
+      will-change: transform;
+      transform: translate3d(0, 0, 0);
+    }
+    .impact-panel {
+      width: 33.333%;
+      height: 100%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: flex-start;  /* panel content at top of track-outer */
+      /* 5rem top = 80px gap between the header spacer line and the panel content */
+      padding: 5rem clamp(1.25rem, 5vw, 4rem) 1.5rem;
+    }
+    .impact-panel-inner {
+      width: 100%;
+      max-width: var(--content-default);
+      margin: 0 auto;
+      display: grid;
+      /* Left column auto-sizes to its content (eyebrow + year) so the right
+         column starts closer to the left edge instead of being held back by
+         a 1fr-wide left column. Gap fixed at 200px between them. */
+      grid-template-columns: auto 1fr;
+      gap: 12.5rem;
+      align-items: start;
+    }
+    .impact-panel-left {
+      padding-left: 2.5rem;  /* 40px — shifts the eyebrow + year cluster right */
+    }
+    .impact-panel-eyebrow {
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 1.2rem;
+    }
+    .impact-panel-year {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      font-family: var(--font-serif);
+      line-height: 0.92;
+      color: var(--accent-mid);
+      letter-spacing: -0.04em;
+    }
+    .impact-panel-year-num {
+      font-size: clamp(5rem, 13vw, 11rem);
+    }
+    .impact-panel-year-label {
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      color: rgba(255, 255, 255, 0.6);
+      font-style: italic;
+      letter-spacing: 0;
+    }
+    .impact-panel-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+      font-weight: var(--weight-regular);
+      color: #fff;
+      line-height: 1.2;
+      margin: 0 0 1.4rem;
+    }
+    .impact-panel-headline em {
+      font-style: italic;
+      color: var(--accent-mid);
+    }
+    .impact-panel-desc {
+      font-size: var(--text-body);
+      font-weight: var(--weight-light);
+      color: rgba(255, 255, 255, 0.65);
+      line-height: var(--leading-spacious);
+      margin: 0 0 1.8rem;
+    }
+    .impact-panel-section-label {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent-mid);
+      margin-bottom: 0.7rem;
+    }
+    .impact-panel-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: var(--text-body-sm);
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+    }
+    .impact-panel-bullets li {
+      padding-left: 1.1rem;
+      position: relative;
+      margin-bottom: 0.45rem;
+    }
+    .impact-panel-bullets li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-mid);
+    }
+
+    /* Phase progress indicator (bottom of pinned panel) */
+    .impact-progress {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 1.4rem clamp(1.5rem, 5vw, 4rem) 0;
+      flex-shrink: 0;
+      margin-top: auto;  /* push to the bottom of the pin */
+    }
+    .impact-progress-segment {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: default;
+    }
+    .impact-progress-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      transition: background 0.4s ease, transform 0.4s ease;
+    }
+    .impact-progress-segment.active .impact-progress-dot {
+      background: var(--accent-mid);
+      transform: scale(1.25);
+    }
+    .impact-progress-label {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      transition: color 0.4s ease;
+    }
+    .impact-progress-segment.active .impact-progress-label {
+      color: var(--accent-mid);
+    }
+    .impact-progress-line {
+      width: 60px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    /* Roadmap panel extras — insight quote above description + closing tagline below bullets */
+    .rm-panel-quote {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(13pt, 1.4vw, 16pt);
+      color: rgba(255, 255, 255, 0.88);
+      line-height: 1.35;
+      margin: 0 0 1.2rem;
+    }
+    .rm-panel-tagline {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(12pt, 1.3vw, 14pt);
+      color: var(--accent-mid);
+      line-height: 1.5;
+      margin: 1.4rem 0 0;
+    }
+
+    /* Mobile fallback: stack panels vertically, no horizontal scroll */
+    @media (max-width: 760px) {
+      .impact-timeline-wrap { height: auto; margin-top: 3rem; }
+      .impact-timeline-pin {
+        position: relative;
+        height: auto;
+        overflow: visible;
+        background: transparent;
+      }
+      .impact-timeline-track {
+        width: 100%;
+        flex-direction: column;
+        transform: none !important;
+      }
+      .impact-panel {
+        width: 100%;
+        height: auto;
+        padding: 3rem clamp(1.25rem, 5vw, 2rem);
+        border-top: 1px solid var(--accent-mid-a08);
+      }
+      .impact-panel:first-child { border-top: 0; }
+      .impact-panel-inner { grid-template-columns: 1fr; gap: 1.5rem; }
+      .impact-progress { display: none; }
+    }
+
+    @media (max-width: 900px) {
+      .role-system { height: 560px; margin-top: 3rem; }
+      .role-circle { width: 220px; height: 220px; margin-top: -110px; margin-left: -110px; }
+      .role-c1 { transform: translate(0, -170px); }
+      .role-c2 { transform: translate(-200px, 100px); }
+      .role-c3 { transform: translate( 200px, 100px); }
+      .role-system.on .role-c1 { transform: translate(0, -70px); }
+      .role-system.on .role-c2 { transform: translate(-70px, 45px); }
+      .role-system.on .role-c3 { transform: translate( 70px, 45px); }
+      .role-node { font-size: 6pt; }
+    }
+
+    /* Data pulse (small particle traveling along a connection line in phase 5) */
+    .data-pulse {
+      fill: rgba(255, 255, 255, 0.95);
+      filter: drop-shadow(0 0 6px rgba(141, 148, 255, 0.9));
+      opacity: 0;
+    }
+    .solar-hero[data-phase="5"] .data-pulse { opacity: 1; animation: pulse-along 6s linear infinite; }
+    .solar-hero[data-phase="5"] .data-pulse:nth-child(2) { animation-delay: -2s; }
+    .solar-hero[data-phase="5"] .data-pulse:nth-child(3) { animation-delay: -4s; }
+    @keyframes pulse-along {
+      0%   { offset-distance: 0%;   opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { offset-distance: 100%; opacity: 0; }
+    }
+
+    /* ── Phase 1 chaos: floating disconnected concepts ── */
+    .chaos-layer {
+      position: absolute;
+      inset: 0;
+      opacity: 1;
+      transition: opacity 1.2s ease;
+    }
+    .solar-hero[data-phase="2"] .chaos-layer,
+    .solar-hero[data-phase="3"] .chaos-layer,
+    .solar-hero[data-phase="4"] .chaos-layer,
+    .solar-hero[data-phase="5"] .chaos-layer { opacity: 0; pointer-events: none; }
+
+    .chaos-node {
+      position: absolute;
+      /* Position by left/top so the percentages are viewport-relative (not element-relative) */
+      left: var(--cx);
+      top: var(--cy);
+      font-family: var(--font-sans);
+      font-size: clamp(0.65rem, 1vw, 0.85rem);
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.32);
+      white-space: nowrap;
+      transform: translate(-50%, -50%);
+      animation: chaos-drift var(--cd, 10s) ease-in-out infinite;
+    }
+    @keyframes chaos-drift {
+      0%   { transform: translate(-50%, -50%); }
+      25%  { transform: translate(calc(-50% + 22px), calc(-50% - 16px)); }
+      50%  { transform: translate(calc(-50% - 14px), calc(-50% + 20px)); }
+      75%  { transform: translate(calc(-50% + 8px),  calc(-50% + 6px)); }
+      100% { transform: translate(-50%, -50%); }
+    }
+
+    /* ── Orbital stage ── */
+    .orbit-stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ring {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 0;
+      height: 0;
+      opacity: 0;
+      transition: opacity 1.6s ease;
+    }
+    .solar-hero[data-phase="3"] .ring,
+    .solar-hero[data-phase="4"] .ring,
+    .solar-hero[data-phase="5"] .ring { opacity: 1; }
+
+    /* Per-ring config + staggered fade-in (closest first, ~1.5s gap between rings) */
+    .ring-1 { --speed: 60s;  --radius: 13vmin; transition-delay: 0s; }
+    .ring-2 { --speed: 85s;  --radius: 23vmin; transition-delay: 0.9s; }
+    .ring-3 { --speed: 115s; --radius: 33vmin; transition-delay: 1.8s; }
+    .ring-4 { --speed: 150s; --radius: 43vmin; transition-delay: 2.7s; }
+
+    /* Each "arm" is a rotating wrapper that carries one node on its rim */
+    .arm {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      animation: arm-spin var(--speed) linear infinite;
+      animation-play-state: paused;
+    }
+    .solar-hero[data-phase="3"] .arm,
+    .solar-hero[data-phase="4"] .arm,
+    .solar-hero[data-phase="5"] .arm { animation-play-state: running; }
+
+    /* Counter-rotate rings 2 and 4 for visual depth */
+    .ring-2 .arm,
+    .ring-4 .arm { animation-direction: reverse; }
+
+    @keyframes arm-spin { to { transform: rotate(360deg); } }
+
+    /* Spread 4 nodes per ring using animation-delay (phase offsets) */
+    .arm.a-0 { animation-delay: 0s; }
+    .arm.a-1 { animation-delay: calc(var(--speed) * -0.25); }
+    .arm.a-2 { animation-delay: calc(var(--speed) * -0.50); }
+    .arm.a-3 { animation-delay: calc(var(--speed) * -0.75); }
+
+    /* Node sits at the top of its arm, then we counter-rotate to keep label upright */
+    .node {
+      position: absolute;
+      left: 0;
+      top: calc(var(--radius) * -1);
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      transform-origin: center;
+      animation: arm-counter var(--speed) linear infinite;
+      animation-play-state: paused;
+    }
+    .solar-hero[data-phase="3"] .node,
+    .solar-hero[data-phase="4"] .node,
+    .solar-hero[data-phase="5"] .node { animation-play-state: running; }
+
+    .ring-2 .node,
+    .ring-4 .node { animation-direction: reverse; }
+
+    @keyframes arm-counter { to { transform: rotate(-360deg); } }
+
+    .arm.a-0 .node { animation-delay: 0s; }
+    .arm.a-1 .node { animation-delay: calc(var(--speed) * -0.25); }
+    .arm.a-2 .node { animation-delay: calc(var(--speed) * -0.50); }
+    .arm.a-3 .node { animation-delay: calc(var(--speed) * -0.75); }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(189, 194, 255, 0.95);
+      box-shadow:
+        0 0 6px rgba(141, 148, 255, 0.85),
+        0 0 14px rgba(141, 148, 255, 0.4);
+      flex-shrink: 0;
+      animation: dot-breathe 4.5s ease-in-out infinite;
+    }
+    /* Dot sizing scales inward: closer to Identity = bigger.
+       Ring 4 keeps the default 7px (smallest); rings 1–3 step up. */
+    .ring-3 .dot {
+      width: 9px; height: 9px;
+      box-shadow:
+        0 0 7px rgba(141, 148, 255, 0.85),
+        0 0 16px rgba(141, 148, 255, 0.42);
+    }
+    .ring-2 .dot {
+      width: 11px; height: 11px;
+      box-shadow:
+        0 0 8px rgba(141, 148, 255, 0.85),
+        0 0 19px rgba(141, 148, 255, 0.45);
+    }
+    .ring-1 .dot {
+      width: 13px; height: 13px;
+      box-shadow:
+        0 0 10px rgba(141, 148, 255, 0.9),
+        0 0 22px rgba(141, 148, 255, 0.48);
+    }
+    @keyframes dot-breathe {
+      0%, 100% { opacity: 0.85; transform: scale(1); }
+      50%      { opacity: 1;    transform: scale(1.2); }
+    }
+
+    .label {
+      font-family: var(--font-sans);
+      font-size: clamp(0.5rem, 0.65vw, 0.65rem);
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.72);
+      white-space: nowrap;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+    }
+
+    /* ── Center Identity orb ── */
+    .solar-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 11vmin;
+      height: 11vmin;
+      min-width: 90px;
+      min-height: 90px;
+      transform: translate(-50%, -50%) scale(0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 1.4s ease, transform 1.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+    }
+    .solar-hero[data-phase="2"] .solar-center,
+    .solar-hero[data-phase="3"] .solar-center,
+    .solar-hero[data-phase="4"] .solar-center,
+    .solar-hero[data-phase="5"] .solar-center {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .orb-glow {
+      position: absolute;
+      inset: -120%;
+      background: radial-gradient(circle,
+        rgba(141, 148, 255, 0.28) 0%,
+        rgba(141, 148, 255, 0.10) 35%,
+        transparent 62%);
+      filter: blur(22px);
+      animation: orb-breathe 5s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+    @keyframes orb-breathe {
+      0%, 100% { opacity: 0.45; transform: scale(1); }
+      50%      { opacity: 0.85; transform: scale(1.20); }
+    }
+
+    /* Identity = double-outlined ring (no fill), both outlines glow indigo */
+    .orb-core {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      background: rgba(141, 148, 255, 0.04);
+      box-shadow:
+        0 0 16px rgba(141, 148, 255, 0.65),
+        0 0 36px rgba(141, 148, 255, 0.35),
+        0 0 70px rgba(141, 148, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: orb-pulse 4s ease-in-out infinite;
+    }
+    .orb-core::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      border: 1px solid rgba(141, 148, 255, 0.55);
+      box-shadow:
+        0 0 8px rgba(141, 148, 255, 0.5),
+        inset 0 0 4px rgba(141, 148, 255, 0.25);
+      pointer-events: none;
+    }
+    @keyframes orb-pulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.035); }
+    }
+
+    .orb-label {
+      font-family: var(--font-sans);
+      font-size: clamp(0.55rem, 0.75vw, 0.75rem);
+      font-weight: var(--weight-bold, 700);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.95);
+      text-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Reduced motion: jump to phase 5 ambient state, freeze all motion */
+    @media (prefers-reduced-motion: reduce) {
+      .arm, .node, .orb-core, .orb-glow, .dot, .chaos-node, .data-pulse {
+        animation: none !important;
+      }
+    }
+
+    /* ══════════════════════════════════════
+       SHIFT sub-div (vision-1) — 3-part visual: Today (disconnected planets) |
+       SHIFT arrow | Tomorrow (orbiting planets). Final reveal pushes arrow up
+       and drops the Context-Aware Experiences block below it.
+       ══════════════════════════════════════ */
+    .shift-stage {
+      position: relative;
+      width: 100%;
+      margin-top: 4.75rem;  /* +4px from 4.5rem — pushes visual + captions down together */
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+      min-height: 460px;
+    }
+    .shift-side {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    /* Push left side toward left edge, right side toward right edge */
+    .shift-today    { transform: translateX(-30px); }
+    .shift-tomorrow { transform: translateX(30px); }
+    .shift-label {
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-top: -32px;  /* pulled up 32px total */
+      margin-bottom: 4rem;  /* pushes orbit down so People planet (top of orbit) doesn't overlap the header label */
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+    /* Today label visible from phase 1+ (always when stage has any phase) */
+    .shift-stage[data-phase] .shift-today-label { opacity: 1; }
+    /* Tomorrow label held back until phase 7 (after SHIFT center reveals) */
+    .shift-stage[data-phase="7"] .shift-tomorrow-label,
+    .shift-stage[data-phase="8"] .shift-tomorrow-label,
+    .shift-stage[data-phase="9"] .shift-tomorrow-label,
+    .shift-stage[data-phase="10"] .shift-tomorrow-label,
+    .shift-stage[data-phase="11"] .shift-tomorrow-label,
+    .shift-stage[data-phase="12"] .shift-tomorrow-label,
+    .shift-stage[data-phase="13"] .shift-tomorrow-label { opacity: 1; }
+
+    /* Today area — random floating disconnected planets */
+    .shift-today-field {
+      position: relative;
+      width: 100%;
+      max-width: 280px;
+      height: 240px;
+      margin: 0 auto;
+    }
+    .shift-today-planet {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+    .shift-today-planet .shift-orb {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-mid-a25);
+      box-shadow: 0 0 16px var(--accent-a15), 0 0 32px var(--accent-a08);
+      animation: shift-breathe 4s ease-in-out infinite;
+    }
+    .shift-today-planet .shift-orb-label {
+      font-size: 10pt;
+      font-weight: var(--weight-medium);
+      color: var(--ink-mid);
+      white-space: nowrap;
+    }
+    /* Each planet placed in a different quadrant, more random drift via multi-step
+       keyframes + non-syncing durations + offset delays. */
+    .shift-today-planet-1 { top: 6%;   left: 12%; animation: shift-float-1 14s ease-in-out infinite; }
+    .shift-today-planet-2 { top: 16%;  right: 6%; animation: shift-float-2 17s ease-in-out infinite; }
+    .shift-today-planet-3 { bottom: 8%;  left: 16%; animation: shift-float-3 12s ease-in-out infinite; }
+    .shift-today-planet-4 { bottom: 18%; right: 12%; animation: shift-float-4 16s ease-in-out infinite; }
+    .shift-today-planet-1 .shift-orb { animation-delay: -0.5s; }
+    .shift-today-planet-2 .shift-orb { animation-delay: -1.5s; }
+    .shift-today-planet-3 .shift-orb { animation-delay: -1.0s; }
+    .shift-today-planet-4 .shift-orb { animation-delay: -2.0s; }
+
+    @keyframes shift-breathe {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.08); }
+    }
+    /* Each planet wanders through 4–5 different positions with larger drift,
+       creating an organic, non-pendulum motion. */
+    @keyframes shift-float-1 {
+      0%   { translate: 0 0; }
+      22%  { translate: 22px -16px; }
+      44%  { translate: 12px 20px; }
+      66%  { translate: -18px 8px; }
+      88%  { translate: 8px -22px; }
+      100% { translate: 0 0; }
+    }
+    @keyframes shift-float-2 {
+      0%   { translate: 0 0; }
+      25%  { translate: -20px 14px; }
+      50%  { translate: 16px 22px; }
+      75%  { translate: -10px -18px; }
+      100% { translate: 0 0; }
+    }
+    @keyframes shift-float-3 {
+      0%   { translate: 0 0; }
+      20%  { translate: 18px 24px; }
+      45%  { translate: -22px 10px; }
+      70%  { translate: 14px -20px; }
+      100% { translate: 0 0; }
+    }
+    @keyframes shift-float-4 {
+      0%   { translate: 0 0; }
+      25%  { translate: -24px -12px; }
+      55%  { translate: 20px -8px; }
+      80%  { translate: -6px 22px; }
+      100% { translate: 0 0; }
+    }
+
+    /* Reveal Today planets one-by-one in phases 2-5, stay visible through phase 13 */
+    .shift-stage[data-phase="2"] .shift-today-planet-1,
+    .shift-stage[data-phase="3"] .shift-today-planet-1, .shift-stage[data-phase="3"] .shift-today-planet-2,
+    .shift-stage[data-phase="4"] .shift-today-planet-1, .shift-stage[data-phase="4"] .shift-today-planet-2, .shift-stage[data-phase="4"] .shift-today-planet-3,
+    .shift-stage[data-phase="5"] .shift-today-planet,
+    .shift-stage[data-phase="6"] .shift-today-planet,
+    .shift-stage[data-phase="7"] .shift-today-planet,
+    .shift-stage[data-phase="8"] .shift-today-planet,
+    .shift-stage[data-phase="9"] .shift-today-planet,
+    .shift-stage[data-phase="10"] .shift-today-planet,
+    .shift-stage[data-phase="11"] .shift-today-planet,
+    .shift-stage[data-phase="12"] .shift-today-planet,
+    .shift-stage[data-phase="13"] .shift-today-planet { opacity: 1; }
+
+    /* Tomorrow area — 4 planets at 12/3/6/9 connected by lines, slow CW rotation */
+    .shift-tomorrow-orbit {
+      position: relative;
+      width: 100%;
+      max-width: 240px;
+      height: 240px;
+      margin: 0 auto;
+      animation: shift-orbit-cw 60s linear infinite;
+      animation-play-state: paused;
+    }
+    .shift-tomorrow-orbit.is-spinning { animation-play-state: running; }
+
+    @keyframes shift-orbit-cw  { to { transform: rotate(360deg); } }
+    @keyframes shift-orbit-ccw { to { transform: rotate(-360deg); } }
+
+    .shift-pos {
+      position: absolute;
+      width: 56px;
+      height: 56px;
+      margin-left: -28px;
+      margin-top: -28px;
+    }
+    .shift-pos-12 { top: 0;    left: 50%; }
+    .shift-pos-3  { top: 50%;  left: 100%; }
+    .shift-pos-6  { top: 100%; left: 50%; }
+    .shift-pos-9  { top: 50%;  left: 0; }
+
+    .shift-tomorrow-planet {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+      animation: shift-orbit-ccw 60s linear infinite;
+      animation-play-state: paused;
+    }
+    .shift-tomorrow-orbit.is-spinning .shift-tomorrow-planet { animation-play-state: running; }
+
+    .shift-tomorrow-planet .shift-orb {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 1.5px solid var(--accent);
+      box-shadow: 0 0 18px var(--accent-a25), 0 0 36px var(--accent-a10);
+      animation: shift-breathe 4s ease-in-out infinite;
+    }
+    .shift-tomorrow-planet .shift-orb-label {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translate(-50%, 4px);
+      font-size: 10pt;
+      font-weight: var(--weight-medium);
+      color: var(--ink);
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+    /* Label position outside each planet (away from orbit center) */
+    .shift-pos-12 .shift-orb-label { top: auto; bottom: 100%; transform: translate(-50%, -4px); }
+    .shift-pos-3  .shift-orb-label { top: 50%; left: 100%; transform: translate(6px, -50%); }
+    .shift-pos-9  .shift-orb-label { top: 50%; left: auto; right: 100%; transform: translate(-6px, -50%); }
+
+    /* Tomorrow planet reveal sequence (phases 8-11) */
+    .shift-stage[data-phase="8"] .shift-tomorrow-12,
+    .shift-stage[data-phase="9"] .shift-tomorrow-12, .shift-stage[data-phase="9"] .shift-tomorrow-3,
+    .shift-stage[data-phase="10"] .shift-tomorrow-12, .shift-stage[data-phase="10"] .shift-tomorrow-3, .shift-stage[data-phase="10"] .shift-tomorrow-6,
+    .shift-stage[data-phase="11"] .shift-tomorrow-planet,
+    .shift-stage[data-phase="12"] .shift-tomorrow-planet,
+    .shift-stage[data-phase="13"] .shift-tomorrow-planet { opacity: 1; }
+
+    /* Connecting lines (SVG) — draw one segment per phase as next planet reveals */
+    .shift-connect-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .shift-connect-line {
+      stroke: var(--accent-mid-a25);
+      stroke-width: 1;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      transition: stroke-dashoffset 0.6s ease;
+      fill: none;
+    }
+    .shift-stage[data-phase="9"]  .shift-connect-12-3,
+    .shift-stage[data-phase="10"] .shift-connect-12-3, .shift-stage[data-phase="10"] .shift-connect-3-6,
+    .shift-stage[data-phase="11"] .shift-connect-12-3, .shift-stage[data-phase="11"] .shift-connect-3-6, .shift-stage[data-phase="11"] .shift-connect-6-9,
+    .shift-stage[data-phase="12"] .shift-connect-line,
+    .shift-stage[data-phase="13"] .shift-connect-line { stroke-dashoffset: 0; }
+
+    /* Captions below each side */
+    .shift-caption {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(17pt, 1.9vw, 21pt);  /* bumped up */
+      line-height: 1.4;
+      color: var(--ink-mid);
+      margin-top: 5rem;
+      max-width: 320px;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+    }
+    /* Today caption reveals at phase 6 */
+    .shift-stage[data-phase="6"]  .shift-today-caption,
+    .shift-stage[data-phase="7"]  .shift-today-caption,
+    .shift-stage[data-phase="8"]  .shift-today-caption,
+    .shift-stage[data-phase="9"]  .shift-today-caption,
+    .shift-stage[data-phase="10"] .shift-today-caption,
+    .shift-stage[data-phase="11"] .shift-today-caption,
+    .shift-stage[data-phase="12"] .shift-today-caption,
+    .shift-stage[data-phase="13"] .shift-today-caption,
+    /* Tomorrow caption reveals at phase 12 */
+    .shift-stage[data-phase="12"] .shift-tomorrow-caption,
+    .shift-stage[data-phase="13"] .shift-tomorrow-caption { opacity: 1; }
+
+    /* Center column — SHIFT label + chevrons swap with final text in same spot.
+       Grid layout with both items in the same cell so they overlap at center;
+       arrow fades out as final fades/expands in, replacing it cleanly. */
+    .shift-center {
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+    .shift-center > .shift-arrow-wrap,
+    .shift-center > .shift-final {
+      grid-area: 1 / 1;
+    }
+    /* Arrow wrap starts hidden, reveals on phase 7 */
+    .shift-arrow-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.9rem;
+      opacity: 0;
+      transform: scale(0.94) translateY(8px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .shift-stage[data-phase="7"]  .shift-arrow-wrap,
+    .shift-stage[data-phase="8"]  .shift-arrow-wrap,
+    .shift-stage[data-phase="9"]  .shift-arrow-wrap,
+    .shift-stage[data-phase="10"] .shift-arrow-wrap,
+    .shift-stage[data-phase="11"] .shift-arrow-wrap,
+    .shift-stage[data-phase="12"] .shift-arrow-wrap {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    /* Phase 13 — arrow fades out so the final text can take the center.
+       Arrow's existing 0.9s opacity transition + final's 1.1s expand cross-fade. */
+    .shift-stage[data-phase="13"] .shift-arrow-wrap {
+      opacity: 0;
+      transform: scale(0.96);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .shift-arrow-label {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(18pt, 2.2vw, 26pt);
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+    /* Chevron arrow — 3 thin ">" shapes, opacity pulses in sequence
+       (left→right flow). Elegant alternative to the previous SVG arrow. */
+    .shift-chevrons {
+      width: clamp(70px, 8vw, 100px);
+      height: 24px;
+    }
+    .shift-chevrons svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .shift-chev {
+      stroke: var(--accent);
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.22;
+      animation: shift-chev-pulse 1.6s ease-in-out infinite;
+    }
+    .shift-chev-1 { animation-delay: 0s; }
+    .shift-chev-2 { animation-delay: 0.2s; }
+    .shift-chev-3 { animation-delay: 0.4s; }
+    @keyframes shift-chev-pulse {
+      0%, 100% { opacity: 0.22; }
+      50%      { opacity: 1; }
+    }
+
+    /* Final text — collapses into 0 height until phase 13, then expands below arrow.
+       Narrower than the column so it doesn't pull the eye too wide. */
+    .shift-final {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      text-align: center;
+      max-width: 320px;
+      transition: max-height 1.1s ease, opacity 0.9s ease 0.2s, margin-top 1.1s ease;
+      margin-top: 0;
+    }
+    .shift-final-title {
+      font-family: var(--font-serif);
+      font-size: clamp(17pt, 2.1vw, 23pt);
+      font-weight: var(--weight-regular);
+      color: var(--ink);
+      margin: 0 0 0.8rem;
+      line-height: 1.25;
+    }
+    .shift-final-body {
+      font-size: clamp(11.5pt, 1.2vw, 13pt);
+      font-weight: var(--weight-light);
+      line-height: 1.6;
+      color: var(--ink-mid);
+      margin: 0;
+    }
+    .shift-stage[data-phase="13"] .shift-final {
+      max-height: 280px;
+      opacity: 1;
+    }
+
+    @media (max-width: 900px) {
+      .shift-stage { grid-template-columns: 1fr; gap: 2.5rem; }
+      .shift-today-field, .shift-tomorrow-orbit { max-width: 100%; }
+    }
+
+    /* ══════════════════════════════════════
+       THE VALUE (vision-4) — 3 flip tiles. Default face: eyebrow + title +
+       italic accent quote. Hover face: Outcomes label + bullet list.
+       Reuses .hiw-tile flip mechanism (same as DISCOVERY).
+       ══════════════════════════════════════ */
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      margin-top: 3.5rem;
+    }
+    .value-grid .hiw-tile { height: 380px; }
+    .value-grid .hiw-face-default {
+      padding: 2rem 1.6rem;
+      text-align: left;
+      align-items: flex-start;
+    }
+    .value-grid .hiw-face-hover {
+      align-items: flex-start;
+      text-align: left;
+      padding: 2rem 1.6rem;
+    }
+
+    /* Oversized line icon in the top-right corner, mirrors prin-tile-icon
+       (strategic principles tiles on cs-vz-home). Animates on hover. */
+    .value-tile-icon {
+      position: absolute;
+      top: -22px;
+      right: -22px;
+      width: 200px;
+      height: 200px;
+      color: var(--accent);
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 1;
+      transition:
+        transform 0.65s cubic-bezier(0.34, 1.4, 0.64, 1),
+        opacity 0.4s ease,
+        color 0.4s ease;
+    }
+    .value-grid .hiw-tile:hover .value-tile-icon {
+      transform: rotate(-12deg) scale(1.12);
+      opacity: 0.22;
+      color: var(--accent-mid);
+    }
+    @media (max-width: 900px) {
+      .value-tile-icon { width: 150px; height: 150px; top: -18px; right: -18px; }
+    }
+
+    .value-eyebrow {
+      position: relative;
+      z-index: 2;
+      font-size: var(--text-caption);  /* bumped from --text-micro (+2pt) */
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.4rem;
+    }
+    .value-title {
+      font-family: var(--font-sans);  /* sans for cleaner read (was serif) */
+      font-size: clamp(17pt, 2vw, 22pt);
+      font-weight: var(--weight-light);
+      color: var(--ink-mid);
+      line-height: 1.25;
+      margin: 0;
+      flex-shrink: 0;
+    }
+    .value-title strong {
+      font-weight: var(--weight-semibold);
+      color: var(--ink);
+    }
+    /* Push title to the bottom of the default face (eyebrow stays at top) */
+    .value-grid .hiw-face-default .value-title { margin-top: auto; }
+
+    .value-tagline {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(13pt, 1.4vw, 16pt);
+      color: var(--accent);
+      line-height: 1.5;
+      margin: 0;
+      flex-shrink: 0;
+    }
+    /* Tagline sits just below the bullets (small fixed gap, not pushed all the way down) */
+    .value-grid .hiw-face-hover .value-tagline { margin-top: 1.2rem; }
+
+    .value-outcomes-label {
+      font-size: var(--text-micro);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.9rem;
+    }
+
+    @media (max-width: 900px) {
+      .value-grid { grid-template-columns: 1fr; }
+      .value-grid .hiw-tile { height: auto; }
+    }
+
+    /* ── SHIFT dark-mode overrides (vision-1 is bg-dark) ── */
+    #vision-1 .shift-label             { color: rgba(255, 255, 255, 0.55); }
+    #vision-1 .shift-today-planet .shift-orb-label    { color: rgba(255, 255, 255, 0.7); }
+    #vision-1 .shift-tomorrow-planet .shift-orb-label { color: #fff; }
+    #vision-1 .shift-arrow-label       { color: var(--accent-mid); }
+    #vision-1 .shift-chev              { stroke: var(--accent-mid); }
+    #vision-1 .shift-connect-line      { stroke: rgba(255, 255, 255, 0.30); }
+    #vision-1 .shift-caption           { color: rgba(255, 255, 255, 0.7); }
+    #vision-1 .shift-caption em        { color: var(--accent-mid); font-style: italic; }
+    #vision-1 .shift-final-title       { color: #fff; }
+    #vision-1 .shift-final-body        { color: rgba(255, 255, 255, 0.65); }
+    /* Planet orbs — softer fill on dark, brighter accent-mid glow */
+    #vision-1 .shift-today-planet .shift-orb {
+      background: rgba(141, 148, 255, 0.10);
+      border-color: rgba(141, 148, 255, 0.45);
+      box-shadow: 0 0 18px rgba(141, 148, 255, 0.30), 0 0 36px rgba(141, 148, 255, 0.15);
+    }
+    /* Opaque planet fill so the connecting arc gets hidden where it passes behind */
+    #vision-1 .shift-tomorrow-planet .shift-orb {
+      background: var(--dark);
+      border-color: var(--accent-mid);
+      box-shadow: 0 0 22px rgba(141, 148, 255, 0.45), 0 0 44px rgba(141, 148, 255, 0.20);
+    }
+
+    /* ══════════════════════════════════════
+       VISION — 12-phase solar system animation
+       Phase 1: intro text "What makes Verizon Uniquely Powerful"
+       Phase 2: text dissolves → VERIZON center orb appears
+       Phase 3: Household ring + 4 nodes
+       Phase 4: Ecosystem ring + 4 nodes
+       Phase 5: Intelligence ring + 4 nodes
+       Phase 6: Ring 4 (outer boundary, no nodes) + 5 divider lines draw on
+       Phases 7–11: 5 emit dots fire sequentially from center to Ring 4
+                    at specific clock positions, each revealing a label
+       Phase 12: solar visual shifts right; body text reveals on the left
+       ══════════════════════════════════════ */
+    .vision-solar {
+      position: relative;
+      width: 100%;
+      height: 70vh;
+      min-height: 580px;
+      margin-top: 1.25rem;  /* pulled 20px closer to the title */
+      overflow: visible;
+    }
+
+    /* Wrapper that holds the entire solar system. Scaled to 85% at rest (was 95%,
+       now 90% of that) so the 6-o'clock node clears the visible viewport.
+       Shifts LEFT on phase 12 to make room for the body text card on the right. */
+    .vis-system {
+      position: absolute;
+      inset: 0;
+      transform: scale(0.85);
+      transition: transform 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .vision-solar[data-phase="12"] .vis-system {
+      transform: scale(0.85) translateX(-25%);
+    }
+
+    /* Phase 1 intro text */
+    .vis-intro {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(20pt, 3vw, 32pt);
+      color: var(--accent);
+      text-align: center;
+      max-width: 620px;
+      line-height: 1.3;
+      transition: opacity 1.2s ease;
+      z-index: 10;
+    }
+    .vision-solar:not([data-phase="1"]) .vis-intro { opacity: 0; }
+
+    /* Center orb — VERIZON */
+    .vis-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent);
+      background: var(--accent-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 1.2s ease 0.5s;
+      z-index: 5;
+    }
+    .vis-center::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 1px solid var(--accent-a25);
+      border-radius: 50%;
+    }
+    .vis-center-label {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 12pt;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      position: relative;
+      z-index: 2;
+    }
+    .vision-solar:not([data-phase="1"]) .vis-center { opacity: 1; }
+
+    /* Concentric dashed rings */
+    .vis-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      border: 1px dashed var(--accent-a25);
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.6);
+      transition: opacity 1.1s ease, transform 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .vis-ring-1 { width: 28vmin; height: 28vmin; min-width: 220px; min-height: 220px; }
+    .vis-ring-2 { width: 44vmin; height: 44vmin; min-width: 350px; min-height: 350px; }
+    .vis-ring-3 { width: 60vmin; height: 60vmin; min-width: 480px; min-height: 480px; }
+    .vis-ring-4 { width: 76vmin; height: 76vmin; min-width: 610px; min-height: 610px; }
+
+    /* Ring reveal — each ring activates from its own phase onward */
+    .vision-solar[data-phase="3"] .vis-ring-1,
+    .vision-solar[data-phase="4"] .vis-ring-1,
+    .vision-solar[data-phase="5"] .vis-ring-1,
+    .vision-solar[data-phase="6"] .vis-ring-1,
+    .vision-solar[data-phase="7"] .vis-ring-1,
+    .vision-solar[data-phase="8"] .vis-ring-1,
+    .vision-solar[data-phase="9"] .vis-ring-1,
+    .vision-solar[data-phase="10"] .vis-ring-1,
+    .vision-solar[data-phase="11"] .vis-ring-1,
+    .vision-solar[data-phase="12"] .vis-ring-1,
+    .vision-solar[data-phase="4"] .vis-ring-2,
+    .vision-solar[data-phase="5"] .vis-ring-2,
+    .vision-solar[data-phase="6"] .vis-ring-2,
+    .vision-solar[data-phase="7"] .vis-ring-2,
+    .vision-solar[data-phase="8"] .vis-ring-2,
+    .vision-solar[data-phase="9"] .vis-ring-2,
+    .vision-solar[data-phase="10"] .vis-ring-2,
+    .vision-solar[data-phase="11"] .vis-ring-2,
+    .vision-solar[data-phase="12"] .vis-ring-2,
+    .vision-solar[data-phase="5"] .vis-ring-3,
+    .vision-solar[data-phase="6"] .vis-ring-3,
+    .vision-solar[data-phase="7"] .vis-ring-3,
+    .vision-solar[data-phase="8"] .vis-ring-3,
+    .vision-solar[data-phase="9"] .vis-ring-3,
+    .vision-solar[data-phase="10"] .vis-ring-3,
+    .vision-solar[data-phase="11"] .vis-ring-3,
+    .vision-solar[data-phase="12"] .vis-ring-3,
+    .vision-solar[data-phase="6"] .vis-ring-4,
+    .vision-solar[data-phase="7"] .vis-ring-4,
+    .vision-solar[data-phase="8"] .vis-ring-4,
+    .vision-solar[data-phase="9"] .vis-ring-4,
+    .vision-solar[data-phase="10"] .vis-ring-4,
+    .vision-solar[data-phase="11"] .vis-ring-4,
+    .vision-solar[data-phase="12"] .vis-ring-4 {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* 5 divider lines from center to Ring 4 perimeter — draw on in phase 6,
+       giving the emit dots a visual path to follow. */
+    .vis-lines-svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 80vmin;
+      height: 80vmin;
+      min-width: 640px;
+      min-height: 640px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      overflow: visible;
+      z-index: 1;
+    }
+    .vis-line {
+      stroke: var(--accent-a25);
+      stroke-width: 0.4;
+      fill: none;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      transition: stroke-dashoffset 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .vision-solar[data-phase="6"] .vis-line,
+    .vision-solar[data-phase="7"] .vis-line,
+    .vision-solar[data-phase="8"] .vis-line,
+    .vision-solar[data-phase="9"] .vis-line,
+    .vision-solar[data-phase="10"] .vis-line,
+    .vision-solar[data-phase="11"] .vis-line,
+    .vision-solar[data-phase="12"] .vis-line {
+      stroke-dashoffset: 0;
+    }
+
+    /* Ring label (Household / Ecosystem / Intelligence) — italic serif tag
+       at the top edge of each ring */
+    .vis-ring-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(12pt, 1.3vw, 15pt);
+      color: var(--accent);
+      background: var(--warm);
+      padding: 0 0.5rem;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.8s ease 0.4s;
+      z-index: 4;
+    }
+    .vis-rlabel-1 { transform: translate(-50%, -50%) translateY(calc(-14vmin)); }
+    .vis-rlabel-2 { transform: translate(-50%, -50%) translateY(calc(-22vmin)); }
+    .vis-rlabel-3 { transform: translate(-50%, -50%) translateY(calc(-30vmin)); }
+    @media (max-width: 900px) {
+      .vis-rlabel-1 { transform: translate(-50%, -50%) translateY(-110px); }
+      .vis-rlabel-2 { transform: translate(-50%, -50%) translateY(-175px); }
+      .vis-rlabel-3 { transform: translate(-50%, -50%) translateY(-240px); }
+    }
+    .vision-solar[data-phase="3"] .vis-rlabel-1,
+    .vision-solar[data-phase="4"] .vis-rlabel-1,
+    .vision-solar[data-phase="5"] .vis-rlabel-1,
+    .vision-solar[data-phase="6"] .vis-rlabel-1,
+    .vision-solar[data-phase="7"] .vis-rlabel-1,
+    .vision-solar[data-phase="8"] .vis-rlabel-1,
+    .vision-solar[data-phase="9"] .vis-rlabel-1,
+    .vision-solar[data-phase="10"] .vis-rlabel-1,
+    .vision-solar[data-phase="11"] .vis-rlabel-1,
+    .vision-solar[data-phase="12"] .vis-rlabel-1,
+    .vision-solar[data-phase="4"] .vis-rlabel-2,
+    .vision-solar[data-phase="5"] .vis-rlabel-2,
+    .vision-solar[data-phase="6"] .vis-rlabel-2,
+    .vision-solar[data-phase="7"] .vis-rlabel-2,
+    .vision-solar[data-phase="8"] .vis-rlabel-2,
+    .vision-solar[data-phase="9"] .vis-rlabel-2,
+    .vision-solar[data-phase="10"] .vis-rlabel-2,
+    .vision-solar[data-phase="11"] .vis-rlabel-2,
+    .vision-solar[data-phase="12"] .vis-rlabel-2,
+    .vision-solar[data-phase="5"] .vis-rlabel-3,
+    .vision-solar[data-phase="6"] .vis-rlabel-3,
+    .vision-solar[data-phase="7"] .vis-rlabel-3,
+    .vision-solar[data-phase="8"] .vis-rlabel-3,
+    .vision-solar[data-phase="9"] .vis-rlabel-3,
+    .vision-solar[data-phase="10"] .vis-rlabel-3,
+    .vision-solar[data-phase="11"] .vis-rlabel-3,
+    .vision-solar[data-phase="12"] .vis-rlabel-3 {
+      opacity: 1;
+    }
+
+    /* Orbiting nodes — small dot + label, positioned at diagonal angles
+       (NE/SE/SW/NW = -45/45/135/-135 deg) so the 5 cardinal emit dots
+       don't collide with them. */
+    .vis-node {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--ink-mid);
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.7s ease 0.6s;
+      transform: translate(-50%, -50%)
+                 translate(calc(cos(var(--ra)) * var(--rad)),
+                           calc(sin(var(--ra)) * var(--rad)));
+    }
+    .vis-node::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent-mid);
+      flex-shrink: 0;
+    }
+
+    /* Same phase-show pattern as rings, scoped per node */
+    .vision-solar[data-phase="3"] .vis-node-r1,
+    .vision-solar[data-phase="4"] .vis-node-r1,
+    .vision-solar[data-phase="5"] .vis-node-r1,
+    .vision-solar[data-phase="6"] .vis-node-r1,
+    .vision-solar[data-phase="7"] .vis-node-r1,
+    .vision-solar[data-phase="8"] .vis-node-r1,
+    .vision-solar[data-phase="9"] .vis-node-r1,
+    .vision-solar[data-phase="10"] .vis-node-r1,
+    .vision-solar[data-phase="11"] .vis-node-r1,
+    .vision-solar[data-phase="12"] .vis-node-r1,
+    .vision-solar[data-phase="4"] .vis-node-r2,
+    .vision-solar[data-phase="5"] .vis-node-r2,
+    .vision-solar[data-phase="6"] .vis-node-r2,
+    .vision-solar[data-phase="7"] .vis-node-r2,
+    .vision-solar[data-phase="8"] .vis-node-r2,
+    .vision-solar[data-phase="9"] .vis-node-r2,
+    .vision-solar[data-phase="10"] .vis-node-r2,
+    .vision-solar[data-phase="11"] .vis-node-r2,
+    .vision-solar[data-phase="12"] .vis-node-r2,
+    .vision-solar[data-phase="5"] .vis-node-r3,
+    .vision-solar[data-phase="6"] .vis-node-r3,
+    .vision-solar[data-phase="7"] .vis-node-r3,
+    .vision-solar[data-phase="8"] .vis-node-r3,
+    .vision-solar[data-phase="9"] .vis-node-r3,
+    .vision-solar[data-phase="10"] .vis-node-r3,
+    .vision-solar[data-phase="11"] .vis-node-r3,
+    .vision-solar[data-phase="12"] .vis-node-r3 {
+      opacity: 1;
+    }
+
+    /* 5 emit dots — start at center, travel to specified angle on outer ring,
+       then reveal label just outside the ring. */
+    .vis-emit {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+    .vis-emit-dot {
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent), 0 0 24px var(--accent-a35);
+      opacity: 0;
+      transform: translate(0, 0);
+      transition: opacity 0.3s ease, transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .vis-emit-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      letter-spacing: var(--tracking-kicker);
+      text-transform: uppercase;
+      color: var(--accent);
+      text-align: center;
+      line-height: 1.25;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      /* Position label just past where the dot lands (outer ring radius + extra).
+         --label-offset is overridden per emit so labels in the upper half push
+         further up and labels in the lower half push further down — gives each
+         label clear breathing room from its dot. */
+      --label-offset: 24px;
+      transform: translate(-50%, -50%)
+                 translate(calc(cos(var(--angle)) * (var(--rad) + var(--label-offset))),
+                           calc(sin(var(--angle)) * (var(--rad) + var(--label-offset))));
+    }
+    /* Household + Smart Bundling — upper labels nudged further up */
+    .vis-emit-2 .vis-emit-label,
+    .vis-emit-3 .vis-emit-label { --label-offset: 72px; }
+    /* AI + Hardware — lower labels nudged further down to clear the dots
+       (2-line Hardware label needed extra room) */
+    .vis-emit-4 .vis-emit-label,
+    .vis-emit-5 .vis-emit-label { --label-offset: 80px; }
+
+    /* Phase 7 — emit dot 1 (12 o'clock, Proactive Care) */
+    .vision-solar[data-phase="7"] .vis-emit-1 .vis-emit-dot,
+    .vision-solar[data-phase="8"] .vis-emit-1 .vis-emit-dot,
+    .vision-solar[data-phase="9"] .vis-emit-1 .vis-emit-dot,
+    .vision-solar[data-phase="10"] .vis-emit-1 .vis-emit-dot,
+    .vision-solar[data-phase="11"] .vis-emit-1 .vis-emit-dot,
+    .vision-solar[data-phase="12"] .vis-emit-1 .vis-emit-dot {
+      opacity: 1;
+      transform: translate(calc(cos(var(--angle)) * var(--rad)),
+                           calc(sin(var(--angle)) * var(--rad)));
+    }
+    .vision-solar[data-phase="7"] .vis-emit-1 .vis-emit-label,
+    .vision-solar[data-phase="8"] .vis-emit-1 .vis-emit-label,
+    .vision-solar[data-phase="9"] .vis-emit-1 .vis-emit-label,
+    .vision-solar[data-phase="10"] .vis-emit-1 .vis-emit-label,
+    .vision-solar[data-phase="11"] .vis-emit-1 .vis-emit-label,
+    .vision-solar[data-phase="12"] .vis-emit-1 .vis-emit-label {
+      opacity: 1;
+      transition-delay: 0.85s;
+    }
+
+    /* Phase 8 — emit dot 2 (10 o'clock, Household Personalization) */
+    .vision-solar[data-phase="8"] .vis-emit-2 .vis-emit-dot,
+    .vision-solar[data-phase="9"] .vis-emit-2 .vis-emit-dot,
+    .vision-solar[data-phase="10"] .vis-emit-2 .vis-emit-dot,
+    .vision-solar[data-phase="11"] .vis-emit-2 .vis-emit-dot,
+    .vision-solar[data-phase="12"] .vis-emit-2 .vis-emit-dot {
+      opacity: 1;
+      transform: translate(calc(cos(var(--angle)) * var(--rad)),
+                           calc(sin(var(--angle)) * var(--rad)));
+    }
+    .vision-solar[data-phase="8"] .vis-emit-2 .vis-emit-label,
+    .vision-solar[data-phase="9"] .vis-emit-2 .vis-emit-label,
+    .vision-solar[data-phase="10"] .vis-emit-2 .vis-emit-label,
+    .vision-solar[data-phase="11"] .vis-emit-2 .vis-emit-label,
+    .vision-solar[data-phase="12"] .vis-emit-2 .vis-emit-label {
+      opacity: 1;
+      transition-delay: 0.85s;
+    }
+
+    /* Phase 9 — emit dot 3 (2 o'clock, Smart Bundling) */
+    .vision-solar[data-phase="9"] .vis-emit-3 .vis-emit-dot,
+    .vision-solar[data-phase="10"] .vis-emit-3 .vis-emit-dot,
+    .vision-solar[data-phase="11"] .vis-emit-3 .vis-emit-dot,
+    .vision-solar[data-phase="12"] .vis-emit-3 .vis-emit-dot {
+      opacity: 1;
+      transform: translate(calc(cos(var(--angle)) * var(--rad)),
+                           calc(sin(var(--angle)) * var(--rad)));
+    }
+    .vision-solar[data-phase="9"] .vis-emit-3 .vis-emit-label,
+    .vision-solar[data-phase="10"] .vis-emit-3 .vis-emit-label,
+    .vision-solar[data-phase="11"] .vis-emit-3 .vis-emit-label,
+    .vision-solar[data-phase="12"] .vis-emit-3 .vis-emit-label {
+      opacity: 1;
+      transition-delay: 0.85s;
+    }
+
+    /* Phase 10 — emit dot 4 (8 o'clock, AI Assistant) */
+    .vision-solar[data-phase="10"] .vis-emit-4 .vis-emit-dot,
+    .vision-solar[data-phase="11"] .vis-emit-4 .vis-emit-dot,
+    .vision-solar[data-phase="12"] .vis-emit-4 .vis-emit-dot {
+      opacity: 1;
+      transform: translate(calc(cos(var(--angle)) * var(--rad)),
+                           calc(sin(var(--angle)) * var(--rad)));
+    }
+    .vision-solar[data-phase="10"] .vis-emit-4 .vis-emit-label,
+    .vision-solar[data-phase="11"] .vis-emit-4 .vis-emit-label,
+    .vision-solar[data-phase="12"] .vis-emit-4 .vis-emit-label {
+      opacity: 1;
+      transition-delay: 0.85s;
+    }
+
+    /* Phase 11 — emit dot 5 (4 o'clock, Hardware + Software Integration) */
+    .vision-solar[data-phase="11"] .vis-emit-5 .vis-emit-dot,
+    .vision-solar[data-phase="12"] .vis-emit-5 .vis-emit-dot {
+      opacity: 1;
+      transform: translate(calc(cos(var(--angle)) * var(--rad)),
+                           calc(sin(var(--angle)) * var(--rad)));
+    }
+    .vision-solar[data-phase="11"] .vis-emit-5 .vis-emit-label,
+    .vision-solar[data-phase="12"] .vis-emit-5 .vis-emit-label {
+      opacity: 1;
+      transition-delay: 0.85s;
+    }
+
+    /* Phase 12 — body text on the RIGHT, vertically centered. Two-tier hierarchy:
+       a bold sans-serif lead line, then the rest of the paragraph in body style. */
+    .vis-overlay {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      max-width: 380px;
+      opacity: 0;
+      transition: opacity 1.1s ease 0.4s, transform 1.1s ease 0.4s;
+      transform: translate(0, -50%) translateY(8px);
+      z-index: 8;
+    }
+    .vis-overlay-lead {
+      font-family: var(--font-serif);
+      font-size: clamp(16pt, 1.9vw, 22pt);
+      font-weight: var(--weight-regular);
+      color: var(--ink);
+      line-height: 1.25;
+      margin: 0 0 1rem;
+    }
+    .vis-overlay-body {
+      font-size: var(--text-body);
+      font-weight: var(--weight-light);
+      line-height: var(--leading-spacious);
+      color: var(--ink-mid);
+      margin: 0;
+    }
+    .vis-overlay-body strong { font-weight: var(--weight-medium); color: var(--ink); }
+    .vision-solar[data-phase="12"] .vis-overlay {
+      opacity: 1;
+      transform: translate(0, -50%);
+    }
 
   </style>
 </head>
@@ -197,50 +2315,137 @@
 </div>
 
 
-<!-- ══════════════════════════════════════
-     IN-PAGE SIDE NAV
-══════════════════════════════════════ -->
+<!-- ── IN-PAGE SIDENAV ── -->
 <nav class="cs-sidenav" id="cs-sidenav" aria-label="Page sections">
   <button class="cs-sidenav-dot active" data-label="Overview"  data-target="overview"></button>
-  <button class="cs-sidenav-dot"        data-label="Diagnosis" data-target="diagnosis"></button>
   <button class="cs-sidenav-dot"        data-label="Challenge" data-target="challenge"></button>
+  <button class="cs-sidenav-dot"        data-label="Insight"   data-target="insight"></button>
   <button class="cs-sidenav-dot"        data-label="Vision"    data-target="vision"></button>
-  <button class="cs-sidenav-dot"        data-label="Execution" data-target="execution"></button>
-  <button class="cs-sidenav-dot"        data-label="Impact"    data-target="impact"></button>
+  <button class="cs-sidenav-dot"        data-label="Roadmap"   data-target="roadmap"></button>
 </nav>
 
 
 <!-- ══════════════════════════════════════
-     HERO STAGE
+     HERO — Cinematic Solar System
 ══════════════════════════════════════ -->
-<div class="ia-stage">
-<section class="ia-hero" id="overview">
+<section class="solar-hero" id="overview" data-phase="1" aria-label="Identity architecture as a solar system">
 
-  <div class="ia-bg"></div>
+  <!-- SVG canvas: orbit paths + connection lines + data pulses -->
+  <svg class="solar-svg" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMidYMid meet">
+    <!-- Orbit path rings (visual guides; staggered fade-in matches HTML .ring radii) -->
+    <circle class="orbit-path orbit-path-1" cx="0" cy="0" r="130"/>
+    <circle class="orbit-path orbit-path-2" cx="0" cy="0" r="230"/>
+    <circle class="orbit-path orbit-path-3" cx="0" cy="0" r="330"/>
+    <circle class="orbit-path orbit-path-4" cx="0" cy="0" r="430"/>
 
-  <!-- Cover image -->
-  <div class="ia-img-wrap" id="ia-img-wrap">
-    <img class="ia-img"
-         src="assets/verizon-identity-architecture/idarch-cover.png"
-         alt="Verizon Identity Architecture — ecosystem diagram">
+    <!-- Connection lines (radial spokes reaching the outer ring at radius 430) -->
+    <g class="connection-lines">
+      <line class="conn-line" x1="0" y1="0" x2="0"    y2="-430"/>
+      <line class="conn-line" x1="0" y1="0" x2="372"  y2="-215"/>
+      <line class="conn-line" x1="0" y1="0" x2="372"  y2="215"/>
+      <line class="conn-line" x1="0" y1="0" x2="0"    y2="430"/>
+      <line class="conn-line" x1="0" y1="0" x2="-372" y2="215"/>
+      <line class="conn-line" x1="0" y1="0" x2="-372" y2="-215"/>
+    </g>
+
+    <!-- Data pulses (small particles that travel along the spokes in phase 5) -->
+    <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L 0 -430');"/>
+    <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L 372 215');"/>
+    <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L -372 215');"/>
+
+    <!-- Celestial outer orbits — very big slowly rotating rings (phase 5 ambient context) -->
+    <circle class="outer-orbit outer-orbit-1" cx="0" cy="0" r="540"/>
+    <circle class="outer-orbit outer-orbit-2" cx="0" cy="0" r="680"/>
+    <circle class="outer-orbit outer-orbit-3" cx="0" cy="0" r="850"/>
+  </svg>
+
+  <!-- MEGA orbits — far beyond the visible viewport, 2 rotating dots each -->
+  <div class="mega-stage" aria-hidden="true">
+    <div class="mega-orbit mega-orbit-1">
+      <span class="mega-dot mega-dot-1"></span>
+      <span class="mega-dot mega-dot-2"></span>
+    </div>
+    <div class="mega-orbit mega-orbit-2">
+      <span class="mega-dot mega-dot-1"></span>
+      <span class="mega-dot mega-dot-2"></span>
+    </div>
+    <div class="mega-orbit mega-orbit-3">
+      <span class="mega-dot mega-dot-1"></span>
+      <span class="mega-dot mega-dot-2"></span>
+    </div>
   </div>
 
-  <div class="ia-vignette"></div>
-
-  <!-- Glass reveal — 3 lines -->
-  <div class="ia-glass" id="ia-glass" aria-hidden="true">
-    <p class="ia-glass-line">Verizon already owns the physical and digital household infrastructure. The challenge is no longer connectivity. It is <em>understanding relationships.</em></p>
-    <p class="ia-glass-line">Identity Architecture rethinks how Verizon recognizes households, devices, behaviors, and intent, transforming fragmented systems into a <em>connected intelligence layer</em> capable of powering future AI-driven experiences.</p>
+  <!-- PHASE 1: scattered concepts floating freely across the entire viewport -->
+  <div class="chaos-layer" aria-hidden="true">
+    <div class="chaos-node" style="--cx:12%;--cy:18%;--cd:9s;">Accounts</div>
+    <div class="chaos-node" style="--cx:78%;--cy:14%;--cd:11s;">Products</div>
+    <div class="chaos-node" style="--cx:8%;--cy:56%;--cd:8s;">Systems</div>
+    <div class="chaos-node" style="--cx:90%;--cy:62%;--cd:13s;">Accounts</div>
+    <div class="chaos-node" style="--cx:48%;--cy:10%;--cd:10s;">Products</div>
+    <div class="chaos-node" style="--cx:30%;--cy:82%;--cd:12s;">Systems</div>
+    <div class="chaos-node" style="--cx:72%;--cy:86%;--cd:9.5s;">Accounts</div>
+    <div class="chaos-node" style="--cx:18%;--cy:38%;--cd:11.5s;">Products</div>
+    <div class="chaos-node" style="--cx:62%;--cy:42%;--cd:10.5s;">Systems</div>
+    <div class="chaos-node" style="--cx:88%;--cy:32%;--cd:12.5s;">Accounts</div>
   </div>
 
-  <!-- Title block -->
-  <div class="ia-content">
-    <h1 class="ia-h1">Verizon Identity<br><em>Architecture</em></h1>
-    <div class="ia-eyebrow">Verizon · Experience Architecture · 2026–Present</div>
+  <!-- Orbital stage: 4 rings × 4 nodes = 16 orbiting concepts -->
+  <div class="orbit-stage">
+
+    <!-- Ring 1 — Foundational concepts -->
+    <div class="ring ring-1">
+      <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Authentication</span></div></div>
+      <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Profile</span></div></div>
+      <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Permissions</span></div></div>
+      <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Relationships</span></div></div>
+    </div>
+
+    <!-- Ring 2 — Customer context -->
+    <div class="ring ring-2">
+      <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Devices</span></div></div>
+      <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Services</span></div></div>
+      <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Households</span></div></div>
+      <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Behaviors</span></div></div>
+    </div>
+
+    <!-- Ring 3 — Business intelligence -->
+    <div class="ring ring-3">
+      <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Support</span></div></div>
+      <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Promotion</span></div></div>
+      <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Personalization</span></div></div>
+      <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">AI Assistant</span></div></div>
+    </div>
+
+    <!-- Ring 4 — Outcomes (celestial) -->
+    <div class="ring ring-4">
+      <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Trust</span></div></div>
+      <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Context</span></div></div>
+      <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Intelligence</span></div></div>
+      <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Growth</span></div></div>
+    </div>
+
+  </div>
+
+  <!-- Center Identity orb — phase 2 reveal, slow pulse, gravity center -->
+  <div class="solar-center" aria-hidden="true">
+    <div class="orb-glow"></div>
+    <div class="orb-core">
+      <span class="orb-label">Identity</span>
+    </div>
+  </div>
+
+  <!-- Hero content overlay — fades in last, once the full animation sequence completes -->
+  <div class="hero-overlay">
+    <div class="hero-overlay-left">
+      <div class="hero-eyebrow">Verizon · Experience Architecture · 2026–Present</div>
+      <h1 class="hero-title">Verizon Identity <em>Architecture</em></h1>
+    </div>
+    <div class="hero-overlay-right">
+      <p class="hero-note">The most important outcomes of this project were not screens, frameworks, or organizational artifacts. While many of those remain confidential, the problem-solving approach, strategic thinking, and systems design principles behind them can be shared. This case study focuses on the <em>work beneath the work</em>.</p>
+    </div>
   </div>
 
 </section>
-</div><!-- /.ia-stage -->
 
 
 <!-- ══════════════════════════════════════
@@ -256,7 +2461,7 @@
     <span class="marquee-item">Human-Centered AI <span class="marquee-sep"></span></span>
     <span class="marquee-item">Context-Aware Design <span class="marquee-sep"></span></span>
     <span class="marquee-item">Intelligent Interface <span class="marquee-sep"></span></span>
-    <!-- duplicate for seamless loop -->
+    <!-- Duplicate set for seamless loop -->
     <span class="marquee-item">Experience Architecture <span class="marquee-sep"></span></span>
     <span class="marquee-item">Identity System <span class="marquee-sep"></span></span>
     <span class="marquee-item">Platform Strategy <span class="marquee-sep"></span></span>
@@ -270,109 +2475,1205 @@
 
 
 <!-- ══════════════════════════════════════
-     CORE DIAGNOSIS
+     SECTION 01 · OVERVIEW
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-page" id="diagnosis">
-  <div class="sec-inner">
-    <div class="ch r d1">Core Diagnosis</div>
-    <h2 class="st r d2" style="max-width:640px;">How did we get <em>here?</em></h2>
-    <p class="bp r d3" style="max-width:600px;">Verizon's identity ecosystem grew through acquisition and parallel product development, not design. Dozens of product lines, separate account models, and inconsistent data definitions left customers navigating a fragmented experience, and teams building on unstable ground.</p>
-    <div class="cs-img-frame r d4">
-      <img src="assets/verizon-identity-architecture/core-diagnosis.png"
-           alt="Core diagnosis: fragmentation across Verizon's identity systems and product lines">
-      <div class="cs-img-caption">Core diagnosis — fragmentation across product lines, account models, and data definitions</div>
+<section class="cs-sec bg-page" id="overview-sec" style="padding-top:7rem;padding-bottom:7rem;position:relative;overflow:hidden;isolation:isolate;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Overview</div>
+    <h2 class="st r d1">Identity <em>Architecture</em>.</h2>
+    <p class="bp r d2" style="max-width:780px;">This is the work nobody notices, until it breaks. Identity architecture rarely appears in product launches, marketing campaigns, or design showcases. Yet it quietly influences every login, every recommendation, every support interaction, and every personalized experience.</p>
+
+    <div class="cs-video-wrap r d3">
+      <video controls playsinline preload="metadata"
+             aria-label="Identity Architecture — mission overview">
+        <source src="assets/verizon-identity-architecture/id-arch-mission.mp4" type="video/mp4">
+      </video>
     </div>
   </div>
 </section>
 
 
 <!-- ══════════════════════════════════════
-     THE CHALLENGE
+     SECTION 02 · CONTEXT
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-warm" id="challenge">
-  <div class="sec-inner">
-    <div class="ch r d1">The Challenge</div>
-    <h2 class="st r d2" style="max-width:640px;">Why this is so <em>hard.</em></h2>
-    <p class="bp r d3" style="max-width:600px;">When the surface area spans consumer, small business, enterprise, and IoT, coherent decision-making requires shared infrastructure. Every team is doing the right thing locally. The system still fails globally. And the consequences of doing nothing compound quietly, year over year.</p>
-    <div class="cs-2col r d4">
-      <div class="cs-img-frame" style="margin:0;">
-        <img src="assets/verizon-identity-architecture/why-this-is-so-hard-at-verizon.png"
-             alt="Why identity architecture change is uniquely hard at Verizon's scale">
-        <div class="cs-img-caption">Why this is uniquely hard at Verizon's scale</div>
+<section class="cs-sec bg-dark" id="context" style="padding-top:10rem;padding-bottom:10rem;position:relative;overflow:hidden;isolation:isolate;">
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r" style="color:var(--accent-mid);">Context</div>
+    <h2 class="st-d r d1">The problem beneath the <em>problem</em>.</h2>
+    <p class="bp-d r d2" style="max-width:1100px;">By the time I joined, Verizon had already invested years into solving identity from multiple angles. Despite meaningful progress in individual areas, the organization still lacked a <strong>unified framework</strong> for understanding customers across products, services, devices, and households. The need was widely recognized; the challenge was defining <strong>what problem we were actually trying to solve</strong>.</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 03 · CHALLENGE → 5 SUB-DIVS
+     (multi-level parallax cover stack — CHALLENGE pins, sub-divs slide up over it)
+══════════════════════════════════════ -->
+<div class="cs-stack-multi">
+
+<!-- ── CHALLENGE (base — pinned underneath) ── -->
+<section class="cs-sec bg-page cs-stack-base" id="challenge" style="padding-top:7rem;padding-bottom:7rem;overflow:hidden;isolation:isolate;">
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Challenge</div>
+    <h2 class="st r d1">A problem hidden in <em>plain sight</em>.</h2>
+    <p class="bp r d2">On the surface, identity appeared to be a technical challenge. In reality, it was an organizational one. Ownership was fragmented, incentives were misaligned, and the work often required teams to prioritize long-term customer understanding over short-term product goals. These forces made identity one of the most important, and most difficult problems to solve.</p>
+
+    <div class="apr-stepper r d3">
+      <div class="apr-step">
+        <div class="apr-step-node">01</div>
+        <div class="apr-step-eyebrow">Challenge</div>
+        <div class="apr-step-title">Nobody Owned the Customer</div>
+        <div class="apr-step-sub">Everyone owned a piece. Nobody owned the whole.</div>
       </div>
-      <div class="cs-img-frame" style="margin:0;">
-        <img src="assets/verizon-identity-architecture/if-we-do-not-fix-this.png"
-             alt="The compounding consequences if identity fragmentation continues">
-        <div class="cs-img-caption">What's at risk if fragmentation continues</div>
+      <div class="apr-step">
+        <div class="apr-step-node">02</div>
+        <div class="apr-step-eyebrow">Challenge</div>
+        <div class="apr-step-title">The Incentives Worked Against Unification</div>
+        <div class="apr-step-sub">Identity was important, but never urgent.</div>
+      </div>
+      <div class="apr-step">
+        <div class="apr-step-node">03</div>
+        <div class="apr-step-eyebrow">Challenge</div>
+        <div class="apr-step-title">Legacy Systems Made Change Expensive</div>
+        <div class="apr-step-sub">The deeper the problem, the harder it was to touch.</div>
+      </div>
+      <div class="apr-step">
+        <div class="apr-step-node">04</div>
+        <div class="apr-step-eyebrow">Challenge</div>
+        <div class="apr-step-title">Identity Was Framed as a Technical Problem</div>
+        <div class="apr-step-sub">The organization saw infrastructure. The customer felt experience.</div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ── SUB-DIV 01 (covers CHALLENGE) ── -->
+<section class="cs-sec bg-warm cs-stack-cover" id="challenge-1" style="padding-top:7rem;padding-bottom:7rem;z-index:2;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Challenge 01</div>
+    <h2 class="st r d1">Nobody owned the <em>customer</em>.</h2>
+    <div class="pullquote r d2" style="max-width:780px;">
+      <p>Everyone owned a piece. Nobody owned the whole.</p>
+    </div>
+
+    <div class="challenge-grid r d3">
+      <div class="move-tile">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="6" cy="6" r="1.8"/>
+          <path d="M3 11c0-1.65 1.35-3 3-3s3 1.35 3 3"/>
+          <circle cx="18" cy="6" r="1.8"/>
+          <path d="M15 11c0-1.65 1.35-3 3-3s3 1.35 3 3"/>
+          <circle cx="6" cy="17" r="1.8"/>
+          <path d="M3 22c0-1.65 1.35-3 3-3s3 1.35 3 3"/>
+          <circle cx="18" cy="17" r="1.8"/>
+          <path d="M15 22c0-1.65 1.35-3 3-3s3 1.35 3 3"/>
+        </svg>
+        <div class="move-tile-label">Description</div>
+        <p class="move-tile-body">Identity spanned nearly every part of Verizon, yet no single organization was responsible for the customer as a complete entity.</p>
+        <ul class="move-tile-list">
+          <li>Mobile owned mobile identity</li>
+          <li>Home owned home identity</li>
+          <li>Family owned family experiences</li>
+          <li>My Verizon sat above them all</li>
+        </ul>
+        <p class="move-tile-body">As a result, initiatives focused on optimizing products rather than understanding customers across products.</p>
+      </div>
+      <div class="move-tile chl-tile-aside">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0-4 10.5V16h8v-2.5A6 6 0 0 0 12 3z"/>
+          <line x1="9" y1="19" x2="15" y2="19"/>
+          <line x1="10.5" y1="21.5" x2="13.5" y2="21.5"/>
+          <line x1="12" y1="6.5" x2="12" y2="11"/>
+          <line x1="10" y1="11" x2="14" y2="11"/>
+        </svg>
+        <div class="move-tile-label">Key Insight</div>
+        <div class="move-tile-sub">Verizon had accounts, lines, products, and systems, but no shared customer model.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SUB-DIV 02 ── -->
+<section class="cs-sec bg-page cs-stack-cover" id="challenge-2" style="padding-top:7rem;padding-bottom:7rem;z-index:3;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Challenge 02</div>
+    <h2 class="st r d1">The incentives worked against <em>unification</em>.</h2>
+    <div class="pullquote r d2" style="max-width:780px;">
+      <p>Identity was important, but never urgent.</p>
+    </div>
+
+    <div class="challenge-grid r d3">
+      <div class="move-tile">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="12" y1="12" x2="12" y2="3"/>
+          <polyline points="9,6 12,3 15,6"/>
+          <line x1="12" y1="12" x2="21" y2="12"/>
+          <polyline points="18,9 21,12 18,15"/>
+          <line x1="12" y1="12" x2="12" y2="21"/>
+          <polyline points="9,18 12,21 15,18"/>
+          <line x1="12" y1="12" x2="3" y2="12"/>
+          <polyline points="6,9 3,12 6,15"/>
+        </svg>
+        <div class="move-tile-label">Description</div>
+        <p class="move-tile-body">Teams were rewarded for product-specific outcomes, not cross-product customer understanding. Success was measured by:</p>
+        <ul class="move-tile-list">
+          <li>Feature delivery</li>
+          <li>Quarterly goals</li>
+          <li>Adoption metrics</li>
+          <li>Business-unit growth</li>
+        </ul>
+        <p class="move-tile-body">Identity work required coordination, patience, and long-term investment while distributing benefits across multiple teams. As a result, it consistently lost priority to more immediate initiatives.</p>
+      </div>
+      <div class="move-tile chl-tile-aside">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0-4 10.5V16h8v-2.5A6 6 0 0 0 12 3z"/>
+          <line x1="9" y1="19" x2="15" y2="19"/>
+          <line x1="10.5" y1="21.5" x2="13.5" y2="21.5"/>
+          <line x1="12" y1="6.5" x2="12" y2="11"/>
+          <line x1="10" y1="11" x2="14" y2="11"/>
+        </svg>
+        <div class="move-tile-label">Key Insight</div>
+        <div class="move-tile-sub">Everyone benefited from unified identity, but no single team was rewarded for creating it.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SUB-DIV 03 ── -->
+<section class="cs-sec bg-warm cs-stack-cover" id="challenge-3" style="padding-top:7rem;padding-bottom:7rem;z-index:4;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Challenge 03</div>
+    <h2 class="st r d1">Legacy systems made change <em>expensive</em>.</h2>
+    <div class="pullquote r d2" style="max-width:780px;">
+      <p>The deeper the problem, the harder it was to touch.</p>
+    </div>
+
+    <div class="challenge-grid r d3">
+      <div class="move-tile">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <ellipse cx="12" cy="5" rx="8" ry="2"/>
+          <path d="M4 5v6c0 1.1 3.6 2 8 2s8-0.9 8-2V5"/>
+          <path d="M4 11v6c0 1.1 3.6 2 8 2s8-0.9 8-2v-6"/>
+        </svg>
+        <div class="move-tile-label">Description</div>
+        <p class="move-tile-body">Years of growth created fragmented identity systems, inconsistent schemas, and fragile integrations. Many stakeholders viewed identity work as inherently risky:</p>
+        <ul class="move-tile-list">
+          <li>Multiple back-end systems</li>
+          <li>Inconsistent customer records</li>
+          <li>Complex dependencies</li>
+          <li>Fear of disrupting existing experiences</li>
+        </ul>
+        <p class="move-tile-body">This encouraged incremental fixes instead of structural change.</p>
+      </div>
+      <div class="move-tile chl-tile-aside">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0-4 10.5V16h8v-2.5A6 6 0 0 0 12 3z"/>
+          <line x1="9" y1="19" x2="15" y2="19"/>
+          <line x1="10.5" y1="21.5" x2="13.5" y2="21.5"/>
+          <line x1="12" y1="6.5" x2="12" y2="11"/>
+          <line x1="10" y1="11" x2="14" y2="11"/>
+        </svg>
+        <div class="move-tile-label">Key Insight</div>
+        <div class="move-tile-sub">The perception of risk often outweighed the perceived value of transformation.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SUB-DIV 04 ── -->
+<section class="cs-sec bg-page cs-stack-cover" id="challenge-4" style="padding-top:7rem;padding-bottom:7rem;z-index:5;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Challenge 04</div>
+    <h2 class="st r d1">Identity was framed as a <em>technical</em> problem.</h2>
+    <div class="pullquote r d2" style="max-width:780px;">
+      <p>The organization saw infrastructure. The customer felt experience.</p>
+    </div>
+
+    <div class="challenge-grid r d3">
+      <div class="move-tile">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="4" width="11" height="8" rx="0.5"/>
+          <line x1="4" y1="6.5" x2="7" y2="6.5"/>
+          <line x1="4" y1="8" x2="9" y2="8"/>
+          <line x1="4" y1="9.5" x2="6" y2="9.5"/>
+          <circle cx="18" cy="14" r="2"/>
+          <path d="M14 21c0-2.2 1.8-4 4-4s4 1.8 4 4"/>
+        </svg>
+        <div class="move-tile-label">Description</div>
+        <p class="move-tile-body">Most previous efforts focused on authentication, account consolidation, or technical cleanup. While valuable, these initiatives positioned identity as a back-end capability rather than a strategic business asset.</p>
+        <p class="move-tile-body">The result was a disconnect between:</p>
+        <ul class="move-tile-list">
+          <li>What teams were building</li>
+          <li>What customers were experiencing</li>
+          <li>What leadership hoped to achieve</li>
+        </ul>
+      </div>
+      <div class="move-tile chl-tile-aside">
+        <svg class="move-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0-4 10.5V16h8v-2.5A6 6 0 0 0 12 3z"/>
+          <line x1="9" y1="19" x2="15" y2="19"/>
+          <line x1="10.5" y1="21.5" x2="13.5" y2="21.5"/>
+          <line x1="12" y1="6.5" x2="12" y2="11"/>
+          <line x1="10" y1="11" x2="14" y2="11"/>
+        </svg>
+        <div class="move-tile-label">Key Insight</div>
+        <div class="move-tile-sub">Identity isn't a back-end problem. It's the foundation of every experience, every insight, and every future AI capability.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SUB-DIV 05 — epic quote moment (light) ── -->
+<section class="cs-sec bg-warm cs-stack-cover" id="challenge-5" style="padding-top:7rem;padding-bottom:7rem;z-index:6;">
+  <div class="sec-inner chl-epic-stage" style="position:relative;z-index:2;">
+    <div class="chl-epic-mark r d1" aria-hidden="true">“</div>
+    <p class="chl-epic-quote r d2">The more I investigated, the clearer it became: this wasn't a data problem or a technology problem. <em>It was an understanding problem.</em> Before defining a solution, we first needed to understand what was actually broken.</p>
+  </div>
+</section>
+
+</div><!-- /.cs-stack-multi -->
+
 
 <!-- ══════════════════════════════════════
-     STRATEGIC VISION
+     SECTION 04 · MY ROLE
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-page" id="vision">
-  <div class="sec-inner">
-    <div class="ch r d1">Strategic Vision</div>
-    <h2 class="st r d2" style="max-width:640px;">From fragmentation to a<br><em>unified identity core.</em></h2>
-    <p class="bp r d3" style="max-width:600px;">The work begins with shared language. Defining what identity means across every product surface, and building the architecture that allows individual teams to operate independently while contributing to a coherent whole. Less integration tax. More compound value over time.</p>
-    <div class="cs-img-frame r d4">
-      <img src="assets/verizon-identity-architecture/current-state-strategic-vision.png"
-           alt="Current state vs strategic vision for Verizon's identity and profile architecture">
-      <div class="cs-img-caption">Current state to strategic vision — the architecture transition model</div>
+<section class="cs-sec bg-dark" id="role" style="padding-top:9rem;padding-bottom:5rem;position:relative;overflow:hidden;isolation:isolate;">
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r" style="color:var(--accent-mid);">My Role</div>
+    <h2 class="st-d r d1">A problem between <em>disciplines</em>.</h2>
+    <p class="bp-d r d2">Leading Verizon Home gave me a unique vantage point into the ecosystem. I had experienced the consequences of fragmented identity firsthand, from authentication failures and account confusion to disconnected customer journeys across products and services. Combined with a passion for navigating ambiguity and solving large-scale systems problems, this perspective allowed me to connect <em>customer experience</em>, <em>business strategy</em>, and <em>enterprise architecture</em>.</p>
+
+    <div class="role-system r">
+
+      <!-- Circle 1 — Customer Experience (top) -->
+      <div class="role-circle role-c1">
+        <div class="role-ring"></div>
+        <div class="role-discipline">Customer<br>Experience</div>
+        <span class="role-node role-n-n">Authentication</span>
+        <span class="role-node role-n-e">Support</span>
+        <span class="role-node role-n-s">Personalization</span>
+        <span class="role-node role-n-w">Customer Journey</span>
+      </div>
+
+      <!-- Circle 2 — Enterprise Architecture (bottom-left) -->
+      <div class="role-circle role-c2">
+        <div class="role-ring"></div>
+        <div class="role-discipline">Enterprise<br>Architecture</div>
+        <span class="role-node role-n-n">Data Models</span>
+        <span class="role-node role-n-e">Systems</span>
+        <span class="role-node role-n-s">Ownership</span>
+        <span class="role-node role-n-w">Integration</span>
+      </div>
+
+      <!-- Circle 3 — Business Strategy (bottom-right) -->
+      <div class="role-circle role-c3">
+        <div class="role-ring"></div>
+        <div class="role-discipline">Business<br>Strategy</div>
+        <span class="role-node role-n-n">Growth</span>
+        <span class="role-node role-n-e">Ecosystem</span>
+        <span class="role-node role-n-s">AI</span>
+        <span class="role-node role-n-w">Retention</span>
+      </div>
+
+      <!-- Central Identity label — appears last at the Venn intersection -->
+      <div class="role-center">Identity</div>
     </div>
   </div>
 </section>
 
 
 <!-- ══════════════════════════════════════
-     EXECUTION
+     SECTION 05 · INSIGHT → QUOTE
+     (parallax cover stack — quote sub-div slides up over INSIGHT)
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-warm" id="execution">
-  <div class="sec-inner">
-    <div class="ch r d1">Execution</div>
-    <h2 class="st r d2" style="max-width:640px;">Sequence over <em>speed.</em></h2>
-    <p class="bp r d3" style="max-width:600px;">A phased model that respects organizational reality. The first 30 days establish vocabulary and identify the highest-leverage integration points. The next 60 validate the model against live products. By day 90, the architecture is de-risked, documented, and adopted by the first wave of product teams.</p>
-    <div class="cs-img-frame r d4">
-      <img src="assets/verizon-identity-architecture/execution-strategy-30-60-90-plan.png"
-           alt="30-60-90 day execution strategy for identity architecture rollout across product lines">
-      <div class="cs-img-caption">30–60–90 execution plan — phased adoption designed around organizational constraints</div>
+<div class="cs-stack-multi">
+
+<!-- ── INSIGHT (base — pinned underneath) ── -->
+<section class="cs-sec bg-page cs-stack-base" id="insight" style="padding-top:7rem;padding-bottom:7rem;overflow:hidden;isolation:isolate;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Insight</div>
+    <h2 class="st r d1">Diagnosing the <em>system</em>.</h2>
+    <p class="bp r d2">The symptoms appeared everywhere, but they all traced back to the same underlying issue: Verizon understood <em>accounts</em> better than it understood <strong>people</strong>.</p>
+
+    <div class="disc-grid">
+
+      <!-- Tile 01 — The Customer Didn't Exist -->
+      <div class="hiw-tile r r-late d3">
+        <span class="hiw-num" aria-hidden="true">01</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="8" r="3" stroke-dasharray="2.5 2"/>
+              <path d="M5 21c0-3.87 3.13-7 7-7s7 3.13 7 7" stroke-dasharray="2.5 2"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title">The Customer<br>Didn't <strong>Exist</strong></div>
+          <p class="hiw-short">Verizon had accounts, products, and services, but no unified customer model. As people moved across the ecosystem, their information fragmented into separate records. The same person could appear as multiple customers depending on where they entered.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="disc-tagline">Identity was tied to accounts, not people.</div>
+          <ul class="hiw-bullets">
+            <li>Identity ambiguity at login</li>
+            <li>Multiple credentials and ownership models</li>
+            <li>No reliable source of truth</li>
+            <li>Duplicate customer records</li>
+          </ul>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <!-- Tile 02 — The Data Couldn't Tell a Story -->
+      <div class="hiw-tile r r-late d4">
+        <span class="hiw-num" aria-hidden="true">02</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="5" cy="6" r="1.6"/>
+              <circle cx="12" cy="4" r="1.6"/>
+              <circle cx="19" cy="7" r="1.6"/>
+              <circle cx="8" cy="13" r="1.6"/>
+              <circle cx="16" cy="14" r="1.6"/>
+              <circle cx="5" cy="20" r="1.6"/>
+              <circle cx="13" cy="21" r="1.6"/>
+              <circle cx="20" cy="19" r="1.6"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title">The Data Couldn't<br>Tell a <strong>Story</strong></div>
+          <p class="hiw-short">Verizon collected enormous amounts of customer data, yet teams struggled to connect it into a meaningful picture. We weren't missing data. We were missing relationships between data.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="disc-tagline">Data existed everywhere. Relationships existed nowhere.</div>
+          <ul class="hiw-bullets">
+            <li>Personalization remained limited</li>
+            <li>Lifecycle tracking was incomplete</li>
+            <li>Support lacked context</li>
+            <li>Business decisions relied on assumptions</li>
+          </ul>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <!-- Tile 03 — The Impact Extended Beyond Experience -->
+      <div class="hiw-tile r r-late d5 disc-tile-impact">
+        <span class="hiw-num" aria-hidden="true">03</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="2"/>
+              <circle cx="12" cy="12" r="6"/>
+              <circle cx="12" cy="12" r="10"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title">The Impact Extended<br>Beyond <strong>Experience</strong></div>
+          <p class="hiw-short">Identity problems compounded across customer, business, and strategic outcomes. What appeared to be isolated UX issues created ripple effects throughout the organization.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="disc-tagline">Identity wasn't a feature problem. It was foundational.</div>
+          <div class="hiw-section-label">Customer Layer</div>
+          <ul class="hiw-bullets">
+            <li>Login confusion</li>
+            <li>Broken onboarding</li>
+            <li>Incorrect experiences</li>
+          </ul>
+          <div class="hiw-section-label">Business Layer</div>
+          <ul class="hiw-bullets">
+            <li>Poor targeting</li>
+            <li>Higher support costs</li>
+            <li>Inefficient operations</li>
+          </ul>
+          <div class="hiw-section-label">Strategic Layer</div>
+          <ul class="hiw-bullets">
+            <li>Limited AI readiness</li>
+            <li>Reduced ecosystem value</li>
+            <li>Increased churn risk</li>
+          </ul>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── INSIGHT QUOTE — epic quote moment (covers INSIGHT) ── -->
+<section class="cs-sec bg-warm cs-stack-cover" id="insight-quote" style="padding-top:7rem;padding-bottom:7rem;z-index:2;">
+  <div class="sec-inner chl-epic-stage" style="position:relative;z-index:2;">
+    <div class="chl-epic-mark r d1" aria-hidden="true">“</div>
+    <p class="chl-epic-quote r d2">In the telecom world, the same person often exists as <em>three different customers</em>: the mobile subscriber, the home internet user, and the person calling support.<br><em>The system treated them as strangers.</em></p>
+  </div>
+</section>
+
+</div><!-- /.cs-stack-multi -->
+
+
+<!-- ══════════════════════════════════════
+     SECTION 06 · IMPACT
+══════════════════════════════════════ -->
+<section class="cs-sec bg-dark" id="impact" style="padding-top:3rem;padding-bottom:0;position:relative;isolation:isolate;">
+
+  <!-- Horizontal scroll-driven timeline (3 phases × 100vh runway).
+       Header sits inside the pin so it stays visible during the phase rotation. -->
+  <div class="impact-timeline-wrap" id="impact-timeline">
+    <div class="impact-timeline-pin">
+
+      <!-- Header (inside the pin — always visible) -->
+      <div class="impact-pin-header">
+        <div class="sec-ch r" style="color:var(--accent-mid);">Impact</div>
+        <h2 class="st-d r d1">The cost of doing <em>nothing</em>.</h2>
+        <p class="bp-d r d2">The risks weren't immediate, which is precisely what made them dangerous. Fragmented identity rarely causes a single catastrophic failure. Instead, it <strong>quietly compounds inefficiencies</strong>, distorts decision-making, and limits an organization's ability to adapt to the future.</p>
+      </div>
+
+      <!-- Horizontal timeline track (3 panels slide left as user scrolls) -->
+      <div class="impact-timeline-track-outer">
+        <div class="impact-timeline-track" id="impact-track">
+
+        <!-- Phase 1 — Friction -->
+        <div class="impact-panel" data-phase="1">
+          <div class="impact-panel-inner">
+            <div class="impact-panel-left">
+              <div class="impact-panel-eyebrow">Friction</div>
+              <div class="impact-panel-year">
+                <span class="impact-panel-year-num">1</span>
+                <span class="impact-panel-year-label">Year</span>
+              </div>
+            </div>
+            <div class="impact-panel-right">
+              <h3 class="impact-panel-headline">Nothing breaks. Everything gets <em>harder</em>.</h3>
+              <p class="impact-panel-desc">Customers continue experiencing fragmented journeys while teams compensate with more features, campaigns, and support efforts.</p>
+              <div class="impact-panel-section-label">Key Outcomes</div>
+              <ul class="impact-panel-bullets">
+                <li>Login friction persists</li>
+                <li>Support costs remain elevated</li>
+                <li>Personalization underperforms</li>
+                <li>Customer confusion grows</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 2 — Misalignment -->
+        <div class="impact-panel" data-phase="2">
+          <div class="impact-panel-inner">
+            <div class="impact-panel-left">
+              <div class="impact-panel-eyebrow">Misalignment</div>
+              <div class="impact-panel-year">
+                <span class="impact-panel-year-num">3</span>
+                <span class="impact-panel-year-label">Years</span>
+              </div>
+            </div>
+            <div class="impact-panel-right">
+              <h3 class="impact-panel-headline">We start optimizing the <em>wrong things</em>.</h3>
+              <p class="impact-panel-desc">Without a shared understanding of customers, product decisions become increasingly driven by fragmented data and incomplete signals.</p>
+              <div class="impact-panel-section-label">Key Outcomes</div>
+              <ul class="impact-panel-bullets">
+                <li>Roadmaps drift from customer needs</li>
+                <li>AI initiatives underperform</li>
+                <li>Analytics become less reliable</li>
+                <li>Leadership loses visibility</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 3 — Irrelevance -->
+        <div class="impact-panel" data-phase="3">
+          <div class="impact-panel-inner">
+            <div class="impact-panel-left">
+              <div class="impact-panel-eyebrow">Irrelevance</div>
+              <div class="impact-panel-year">
+                <span class="impact-panel-year-num">6</span>
+                <span class="impact-panel-year-label">Years</span>
+              </div>
+            </div>
+            <div class="impact-panel-right">
+              <h3 class="impact-panel-headline">The competitive gap becomes <em>structural</em>.</h3>
+              <p class="impact-panel-desc">As competitors build intelligent ecosystems around people and households, Verizon remains organized around accounts and products.</p>
+              <div class="impact-panel-section-label">Key Outcomes</div>
+              <ul class="impact-panel-bullets">
+                <li>AI becomes less effective</li>
+                <li>Ecosystem growth slows</li>
+                <li>Customer loyalty weakens</li>
+                <li>Competitive differentiation erodes</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      </div><!-- /.impact-timeline-track-outer -->
+
+      <!-- Phase progress indicator -->
+      <div class="impact-progress" id="impact-progress">
+        <div class="impact-progress-segment active" data-phase="1">
+          <span class="impact-progress-dot"></span>
+          <span class="impact-progress-label">1 Year</span>
+        </div>
+        <div class="impact-progress-line"></div>
+        <div class="impact-progress-segment" data-phase="2">
+          <span class="impact-progress-dot"></span>
+          <span class="impact-progress-label">3 Years</span>
+        </div>
+        <div class="impact-progress-line"></div>
+        <div class="impact-progress-segment" data-phase="3">
+          <span class="impact-progress-dot"></span>
+          <span class="impact-progress-label">6 Years</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 08 · VISION → 5 SUB-DIVS
+     (multi-level parallax cover stack — VISION pins, sub-divs slide up over it)
+══════════════════════════════════════ -->
+<div class="cs-stack-multi">
+
+<!-- ── VISION (base — pinned underneath) ── -->
+<section class="cs-sec bg-warm cs-stack-base" id="vision" style="padding-top:7rem;padding-bottom:3rem;overflow:hidden;isolation:isolate;min-height:100vh;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Vision</div>
+    <h2 class="st r d1">Identity as the <em>central nervous system</em>.</h2>
+
+    <!-- VISION solar system animation -->
+    <div class="vision-solar" id="vision-solar" data-phase="1">
+
+      <!-- Wrapper that translates right on phase 12 (leaves space for body text on left) -->
+      <div class="vis-system">
+
+        <!-- Phase 1: intro text -->
+        <div class="vis-intro">What makes Verizon <em>uniquely powerful</em></div>
+
+        <!-- Phase 2: center orb -->
+        <div class="vis-center"><span class="vis-center-label">VERIZON</span></div>
+
+        <!-- Phase 3–6: four concentric rings (dashed) — ring 4 is the outer boundary, no nodes -->
+        <div class="vis-ring vis-ring-1"></div>
+        <div class="vis-ring vis-ring-2"></div>
+        <div class="vis-ring vis-ring-3"></div>
+        <div class="vis-ring vis-ring-4"></div>
+
+        <!-- Ring labels (Household / Ecosystem / Intelligence) — at 12 o'clock of each ring -->
+        <span class="vis-ring-label vis-rlabel-1">Household</span>
+        <span class="vis-ring-label vis-rlabel-2">Ecosystem</span>
+        <span class="vis-ring-label vis-rlabel-3">Intelligence</span>
+
+        <!-- Ring 1 (Household) nodes — 4 at diagonal angles to avoid collision with emit dots -->
+        <span class="vis-node vis-node-r1" style="--ra:-45deg;  --rad:14vmin;">People</span>
+        <span class="vis-node vis-node-r1" style="--ra:45deg;   --rad:14vmin;">Family</span>
+        <span class="vis-node vis-node-r1" style="--ra:135deg;  --rad:14vmin;">Roles</span>
+        <span class="vis-node vis-node-r1" style="--ra:-135deg; --rad:14vmin;">Permissions</span>
+
+        <!-- Ring 2 (Ecosystem) nodes -->
+        <span class="vis-node vis-node-r2" style="--ra:-45deg;  --rad:22vmin;">Mobile</span>
+        <span class="vis-node vis-node-r2" style="--ra:45deg;   --rad:22vmin;">Home</span>
+        <span class="vis-node vis-node-r2" style="--ra:135deg;  --rad:22vmin;">Devices</span>
+        <span class="vis-node vis-node-r2" style="--ra:-135deg; --rad:22vmin;">Services</span>
+
+        <!-- Ring 3 (Intelligence) nodes -->
+        <span class="vis-node vis-node-r3" style="--ra:-45deg;  --rad:30vmin;">Behavior</span>
+        <span class="vis-node vis-node-r3" style="--ra:45deg;   --rad:30vmin;">Patterns</span>
+        <span class="vis-node vis-node-r3" style="--ra:135deg;  --rad:30vmin;">Context</span>
+        <span class="vis-node vis-node-r3" style="--ra:-135deg; --rad:30vmin;">Intent</span>
+
+        <!-- Phase 6: 5 divider lines drawn from center to Ring 4 perimeter at
+             5 equal 72° slices, anchored at 6 o'clock (Proactive Care). -->
+        <svg class="vis-lines-svg" viewBox="-100 -100 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <line class="vis-line" x1="0" y1="0" x2="0"     y2="95"    pathLength="100"/>
+          <line class="vis-line" x1="0" y1="0" x2="-90.4" y2="29.4"  pathLength="100"/>
+          <line class="vis-line" x1="0" y1="0" x2="-55.9" y2="-76.9" pathLength="100"/>
+          <line class="vis-line" x1="0" y1="0" x2="55.9"  y2="-76.9" pathLength="100"/>
+          <line class="vis-line" x1="0" y1="0" x2="90.4"  y2="29.4"  pathLength="100"/>
+        </svg>
+
+        <!-- Phases 7–11: 5 emit dots fire sequentially along the divider lines,
+             at 5 equal 72° slices anchored from Proactive Care at 6 o'clock.
+             Firing order matches user spec: 6 → 10 → 2 → 8 → 4 (clock approx). -->
+        <span class="vis-emit vis-emit-1" style="--angle:90deg;   --rad:38vmin;">
+          <span class="vis-emit-dot"></span>
+          <span class="vis-emit-label">Proactive Care</span>
+        </span>
+        <span class="vis-emit vis-emit-2" style="--angle:-126deg; --rad:38vmin;">
+          <span class="vis-emit-dot"></span>
+          <span class="vis-emit-label">Household<br>Personalization</span>
+        </span>
+        <span class="vis-emit vis-emit-3" style="--angle:-54deg;  --rad:38vmin;">
+          <span class="vis-emit-dot"></span>
+          <span class="vis-emit-label">Smart Bundling</span>
+        </span>
+        <span class="vis-emit vis-emit-4" style="--angle:162deg;  --rad:38vmin;">
+          <span class="vis-emit-dot"></span>
+          <span class="vis-emit-label">AI Assistant</span>
+        </span>
+        <span class="vis-emit vis-emit-5" style="--angle:18deg;   --rad:38vmin;">
+          <span class="vis-emit-dot"></span>
+          <span class="vis-emit-label">Hardware + Software<br>Integration</span>
+        </span>
+
+      </div><!-- /.vis-system -->
+
+      <!-- Phase 12: body text overlay (right side, vertically centered).
+           Two-tier hierarchy: sans-serif lead line + body paragraph. -->
+      <div class="vis-overlay">
+        <p class="vis-overlay-lead">Verizon's advantage isn't just connectivity.</p>
+        <p class="vis-overlay-body">It sits at the center of the modern household, connecting people, devices, services, and networks. By unifying identity across those touchpoints, Verizon can move beyond understanding accounts to <strong>understanding households</strong>, creating the foundation for proactive care, personalization, intelligent recommendations, AI-powered experiences, and deeper hardware-software integration.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── SUB-DIV 01 (covers VISION) ── -->
+<section class="cs-sec bg-dark cs-stack-cover" id="vision-1" style="padding-top:7rem;padding-bottom:7rem;z-index:2;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r" style="color:var(--accent-mid);">The Shift</div>
+    <h2 class="st-d r d1">From selling products to <em>understanding households</em>.</h2>
+
+    <!-- SHIFT visual: 3-part (today | shift arrow | tomorrow), phase-driven -->
+    <div class="shift-stage" id="shift-stage" data-phase="1">
+
+      <!-- LEFT — Today: disconnected floating planets -->
+      <div class="shift-side shift-today">
+        <div class="shift-label shift-today-label">Today</div>
+        <div class="shift-today-field">
+          <div class="shift-today-planet shift-today-planet-1">
+            <div class="shift-orb"></div>
+            <div class="shift-orb-label">Products</div>
+          </div>
+          <div class="shift-today-planet shift-today-planet-2">
+            <div class="shift-orb"></div>
+            <div class="shift-orb-label">Accounts</div>
+          </div>
+          <div class="shift-today-planet shift-today-planet-3">
+            <div class="shift-orb"></div>
+            <div class="shift-orb-label">Transactions</div>
+          </div>
+          <div class="shift-today-planet shift-today-planet-4">
+            <div class="shift-orb"></div>
+            <div class="shift-orb-label">Offers</div>
+          </div>
+        </div>
+        <div class="shift-caption shift-today-caption">"We promote products based on what we sell."</div>
+      </div>
+
+      <!-- CENTER — SHIFT arrow + final text (collapses below until phase 12) -->
+      <div class="shift-side shift-center">
+        <div class="shift-arrow-wrap">
+          <div class="shift-arrow-label">Shift</div>
+          <div class="shift-chevrons">
+            <svg viewBox="0 0 56 24" aria-hidden="true">
+              <path class="shift-chev shift-chev-1" d="M3 6 L13 12 L3 18"/>
+              <path class="shift-chev shift-chev-2" d="M19 6 L29 12 L19 18"/>
+              <path class="shift-chev shift-chev-3" d="M35 6 L45 12 L35 18"/>
+            </svg>
+          </div>
+        </div>
+        <div class="shift-final">
+          <h3 class="shift-final-title">Context-Aware Experiences</h3>
+          <p class="shift-final-body">By connecting identity, relationships, devices, services, and behaviors, every Verizon touchpoint can evolve from a transaction-driven experience into a context-aware system that understands and supports each household.</p>
+        </div>
+      </div>
+
+      <!-- RIGHT — Tomorrow: 4 planets at 12/3/6/9 connected by lines, slow CW rotation -->
+      <div class="shift-side shift-tomorrow">
+        <div class="shift-label shift-tomorrow-label">Tomorrow</div>
+        <div class="shift-tomorrow-orbit" id="shift-tomorrow-orbit">
+          <!-- Connecting arcs (each segment is a 90° arc of a circle of radius 120
+               centered at the orbit middle, so all four together form a full circle
+               through the 4 planets). Drawn one by one as planets reveal. -->
+          <svg class="shift-connect-svg" viewBox="0 0 240 240" aria-hidden="true">
+            <path class="shift-connect-line shift-connect-12-3" d="M 120 0 A 120 120 0 0 1 240 120" pathLength="100"/>
+            <path class="shift-connect-line shift-connect-3-6"  d="M 240 120 A 120 120 0 0 1 120 240" pathLength="100"/>
+            <path class="shift-connect-line shift-connect-6-9"  d="M 120 240 A 120 120 0 0 1 0 120" pathLength="100"/>
+            <path class="shift-connect-line shift-connect-9-12" d="M 0 120 A 120 120 0 0 1 120 0" pathLength="100"/>
+          </svg>
+          <div class="shift-pos shift-pos-12">
+            <div class="shift-tomorrow-planet shift-tomorrow-12">
+              <div class="shift-orb"></div>
+              <div class="shift-orb-label">People</div>
+            </div>
+          </div>
+          <div class="shift-pos shift-pos-3">
+            <div class="shift-tomorrow-planet shift-tomorrow-3">
+              <div class="shift-orb"></div>
+              <div class="shift-orb-label">Households</div>
+            </div>
+          </div>
+          <div class="shift-pos shift-pos-6">
+            <div class="shift-tomorrow-planet shift-tomorrow-6">
+              <div class="shift-orb"></div>
+              <div class="shift-orb-label">Relationships</div>
+            </div>
+          </div>
+          <div class="shift-pos shift-pos-9">
+            <div class="shift-tomorrow-planet shift-tomorrow-9">
+              <div class="shift-orb"></div>
+              <div class="shift-orb-label">Context</div>
+            </div>
+          </div>
+        </div>
+        <div class="shift-caption shift-tomorrow-caption">"We support households based on <em>what they need</em>."</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── SUB-DIV 04 ── -->
+<section class="cs-sec bg-warm cs-stack-cover" id="vision-4" style="padding-top:7rem;padding-bottom:7rem;z-index:5;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">The Value</div>
+    <h2 class="st r d1">Creating value across the <em>ecosystem</em>.</h2>
+    <p class="bp r d2" style="max-width:780px;">A connected identity foundation creates value at <strong>every level</strong>, from simplifying customer experiences to enabling proactive business capabilities and long-term strategic growth.</p>
+
+    <div class="value-grid">
+
+      <!-- Tile 1 — For Customers -->
+      <div class="hiw-tile r r-late d3">
+        <svg class="value-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/>
+        </svg>
+        <div class="hiw-face hiw-face-default">
+          <div class="value-eyebrow">For Customers</div>
+          <div class="value-title">From Managing Services to <strong>Supporting Lives</strong></div>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="value-outcomes-label">Outcomes</div>
+          <ul class="hiw-bullets">
+            <li>Less friction, more confidence</li>
+            <li>Personalized experiences that feel natural</li>
+            <li>Proactive support before problems escalate</li>
+            <li>Greater visibility and control across the household</li>
+          </ul>
+          <p class="value-tagline">"Verizon understands my household and helps me manage it effortlessly."</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <!-- Tile 2 — For Business -->
+      <div class="hiw-tile r r-late d4">
+        <svg class="value-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9" cy="12" r="5.5"/>
+          <circle cx="15" cy="12" r="5.5"/>
+        </svg>
+        <div class="hiw-face hiw-face-default">
+          <div class="value-eyebrow">For Business</div>
+          <div class="value-title">From Transactions to <strong>Relationships</strong></div>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="value-outcomes-label">Outcomes</div>
+          <ul class="hiw-bullets">
+            <li>Stronger customer retention</li>
+            <li>More meaningful cross-product engagement</li>
+            <li>Lower support and operational costs</li>
+            <li>Smarter recommendations and ecosystem growth</li>
+          </ul>
+          <p class="value-tagline">"We move from reactive support to proactive intelligence."</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <!-- Tile 3 — For Leadership -->
+      <div class="hiw-tile r r-late d5">
+        <svg class="value-tile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="4" rx="1"/>
+          <rect x="3" y="10" width="18" height="4" rx="1"/>
+          <rect x="3" y="16" width="18" height="4" rx="1"/>
+        </svg>
+        <div class="hiw-face hiw-face-default">
+          <div class="value-eyebrow">For Leadership</div>
+          <div class="value-title">From Telecom Provider to <strong>Household Platform</strong></div>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="value-outcomes-label">Outcomes</div>
+          <ul class="hiw-bullets">
+            <li>AI-ready customer foundation</li>
+            <li>Unified ecosystem strategy</li>
+            <li>New service and partnership opportunities</li>
+            <li>Long-term competitive differentiation</li>
+          </ul>
+          <p class="value-tagline">"Identity becomes the operating system for Verizon's future ecosystem."</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+    </div>
+
+    <!-- Closing pullquote under the 3 tiles — full sec-inner width to match the tile grid -->
+    <div class="pullquote r d6" style="margin-top:3.5rem;">
+      <p>The value of identity isn't knowing who customers are.<br>It's understanding what they need before they ask.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SUB-DIV 05 — epic quote moment ── -->
+<section class="cs-sec bg-page cs-stack-cover" id="vision-5" style="padding-top:7rem;padding-bottom:7rem;z-index:6;">
+  <div class="sec-inner chl-epic-stage" style="position:relative;z-index:2;">
+    <div class="chl-epic-mark r d1" aria-hidden="true">“</div>
+    <p class="chl-epic-quote r d2">Identity is not a login system.<br><em>It's the operating system of the<br>customer's digital and physical life.</em></p>
+  </div>
+</section>
+
+</div><!-- /.cs-stack-multi -->
+
+
+<!-- ══════════════════════════════════════
+     SECTION 09 · ROADMAP
+     (matches IMPACT structure — pinned header + 3-panel horizontal scroll timeline)
+══════════════════════════════════════ -->
+<section class="cs-sec bg-dark" id="roadmap" style="padding-top:3rem;padding-bottom:0;position:relative;isolation:isolate;">
+
+  <div class="impact-timeline-wrap" id="roadmap-timeline">
+    <div class="impact-timeline-pin">
+
+      <!-- Header (inside the pin — always visible) -->
+      <div class="impact-pin-header">
+        <div class="sec-ch r" style="color:var(--accent-mid);">Roadmap</div>
+        <h2 class="st-d r d1">Making change <em>inevitable</em>.</h2>
+        <p class="bp-d r d2">We didn't need to start with a platform.<br>We needed to make the <em>cost of not having one</em> visible.</p>
+      </div>
+
+      <!-- Horizontal track (3 phases slide left as user scrolls) -->
+      <div class="impact-timeline-track-outer">
+        <div class="impact-timeline-track" id="roadmap-track">
+
+          <!-- Phase 1 — Creating Clarity (0-30 Days) -->
+          <div class="impact-panel" data-phase="1">
+            <div class="impact-panel-inner">
+              <div class="impact-panel-left">
+                <div class="impact-panel-eyebrow">Phase 01</div>
+                <div class="impact-panel-year">
+                  <span class="impact-panel-year-num">0–30</span>
+                  <span class="impact-panel-year-label">Days</span>
+                </div>
+              </div>
+              <div class="impact-panel-right">
+                <h3 class="impact-panel-headline">Creating <em>clarity</em>.</h3>
+                <p class="rm-panel-quote">"People can't align around something they define differently."</p>
+                <p class="impact-panel-desc">The first step was creating a shared language and decision framework for identity.</p>
+                <div class="impact-panel-section-label">Deliverables</div>
+                <ul class="impact-panel-bullets">
+                  <li>Identity blueprint</li>
+                  <li>Core objects</li>
+                  <li>Relationship model</li>
+                  <li>Decision framework</li>
+                  <li>Example scenarios</li>
+                </ul>
+                <p class="rm-panel-tagline">"Make people stop debating definitions."</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase 2 — Creating Desire (30-60 Days) -->
+          <div class="impact-panel" data-phase="2">
+            <div class="impact-panel-inner">
+              <div class="impact-panel-left">
+                <div class="impact-panel-eyebrow">Phase 02</div>
+                <div class="impact-panel-year">
+                  <span class="impact-panel-year-num">30–60</span>
+                  <span class="impact-panel-year-label">Days</span>
+                </div>
+              </div>
+              <div class="impact-panel-right">
+                <h3 class="impact-panel-headline">Creating <em>desire</em>.</h3>
+                <p class="rm-panel-quote">"People support what they can see."</p>
+                <p class="impact-panel-desc">Rather than pitching a future platform, we demonstrated tangible improvements through high-friction customer journeys.</p>
+                <div class="impact-panel-section-label">Focus Areas</div>
+                <ul class="impact-panel-bullets">
+                  <li>Login &amp; onboarding</li>
+                  <li>Support experiences</li>
+                  <li>Household management</li>
+                </ul>
+                <p class="rm-panel-tagline">"Show what's possible before asking for investment."</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase 3 — Creating Pressure (60-90 Days) -->
+          <div class="impact-panel" data-phase="3">
+            <div class="impact-panel-inner">
+              <div class="impact-panel-left">
+                <div class="impact-panel-eyebrow">Phase 03</div>
+                <div class="impact-panel-year">
+                  <span class="impact-panel-year-num">60–90</span>
+                  <span class="impact-panel-year-label">Days</span>
+                </div>
+              </div>
+              <div class="impact-panel-right">
+                <h3 class="impact-panel-headline">Creating <em>pressure</em>.</h3>
+                <p class="rm-panel-quote">"People move when the cost of inaction becomes visible."</p>
+                <p class="impact-panel-desc">Identity needed to be tied directly to business outcomes and strategic risks.</p>
+                <div class="impact-panel-section-label">Business Signals</div>
+                <ul class="impact-panel-bullets">
+                  <li>Support costs</li>
+                  <li>Churn risk</li>
+                  <li>Conversion impact</li>
+                  <li>AI readiness</li>
+                  <li>Revenue opportunities</li>
+                </ul>
+                <p class="rm-panel-tagline">"Shift the conversation from 'How do we build this?' to 'Can we afford not to?'"</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /.impact-timeline-track-outer -->
+
+      <!-- Phase progress indicator -->
+      <div class="impact-progress" id="roadmap-progress">
+        <div class="impact-progress-segment active" data-phase="1">
+          <span class="impact-progress-dot"></span>
+          <span class="impact-progress-label">Clarity</span>
+        </div>
+        <div class="impact-progress-line"></div>
+        <div class="impact-progress-segment" data-phase="2">
+          <span class="impact-progress-dot"></span>
+          <span class="impact-progress-label">Desire</span>
+        </div>
+        <div class="impact-progress-line"></div>
+        <div class="impact-progress-segment" data-phase="3">
+          <span class="impact-progress-dot"></span>
+          <span class="impact-progress-label">Pressure</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SECTION 12 · OUTCOME
+══════════════════════════════════════ -->
+<section class="cs-sec bg-warm" id="outcome" style="padding-top:7rem;padding-bottom:7rem;position:relative;overflow:hidden;isolation:isolate;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+  </div>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Outcome</div>
+    <h2 class="st r d1">Building the <em>foundation</em>.</h2>
+    <p class="bp r d2" style="max-width:780px;">The immediate goal was never to launch a platform. It was to create <strong>alignment around a problem</strong> that had remained difficult to define for years. The resulting framework established a <em>shared language</em>, a <em>long-term vision</em>, and a <em>practical path forward</em> for the organization.</p>
+
+    <div class="cs-video-wrap r d3">
+      <video controls playsinline preload="metadata"
+             aria-label="Identity Architecture — solution overview">
+        <source src="assets/verizon-identity-architecture/vz-id-arch-solution.mp4" type="video/mp4">
+      </video>
     </div>
   </div>
 </section>
 
 
 <!-- ══════════════════════════════════════
-     IMPACT
+     SECTION 13 · REFLECTION
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-page" id="impact">
-  <div class="sec-inner">
-    <div class="ch r d1">Business &amp; Customer Impact</div>
-    <h2 class="st r d2" style="max-width:640px;">Infrastructure that <em>earns its keep.</em></h2>
-    <p class="bp r d3" style="max-width:600px;">When identity architecture works, it disappears. Customers move between Verizon products without friction. Teams build faster on a shared foundation. And the business gains the intelligence layer needed to deliver genuinely personalized experiences at scale, across every product and surface.</p>
-    <div class="cs-img-frame r d4">
-      <img src="assets/verizon-identity-architecture/business-customer-impact.png"
-           alt="Business and customer impact of unified identity architecture at Verizon">
-      <div class="cs-img-caption">Business and customer impact — how coherent identity creates compounding value across the ecosystem</div>
+<section class="cs-sec bg-page" id="reflection" style="padding-top:7rem;padding-bottom:7rem;position:relative;overflow:hidden;isolation:isolate;">
+  <div class="hiw-orbs" aria-hidden="true">
+    <div class="hiw-orb hiw-orb-tr">
+      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+    </div>
+    <div class="hiw-orb hiw-orb-bl">
+      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
     </div>
   </div>
-</section>
-
-
-<!-- ══════════════════════════════════════
-     NEXT CASE STUDY
-══════════════════════════════════════ -->
-<section class="cta-sec">
-  <div class="cta-d"></div>
-  <div class="cta-g"></div>
-  <div style="font-size:var(--text-micro); font-weight:var(--weight-semibold); letter-spacing:var(--tracking-widest); text-transform:uppercase; color:var(--accent-mid); margin-bottom:1.2rem; position:relative; z-index:2;">Next Case Study</div>
-  <h2 class="cta-title"><em>02 /</em> Verizon Home App</h2>
-  <p class="cta-sub">From a reactive utility into a proactive, intelligent home experience.</p>
-  <div style="display:flex; gap:0.75rem; justify-content:center; align-items:center; flex-wrap:wrap; position:relative; z-index:2;">
-    <a href="cs-vz-home.html" class="cz-book-btn">See the case study</a>
-    <a href="index.html#work" class="cz-ghost-btn">Back to portfolio</a>
+  <div class="sec-inner" style="position:relative;z-index:2;">
+    <div class="sec-ch r">Reflection</div>
+    <h2 class="st r d1">Beyond <em>Verizon</em>.</h2>
+    <p class="bp r d2" style="max-width:780px;">Body text to come — this section will reflect on what the work teaches about identity, infrastructure, and the role of design in shaping systems that operate at scale.</p>
   </div>
 </section>
 
@@ -385,47 +3686,22 @@
 const prog = document.getElementById('prog');
 const nav  = document.getElementById('nav');
 
-/* ── IA HERO SCROLL ── */
-const iaStageEl   = document.querySelector('.ia-stage');
-const iaBgEl      = document.querySelector('.ia-bg');
-const iaImgWrapEl = document.getElementById('ia-img-wrap');
-const iaGlassEl   = document.getElementById('ia-glass');
-const iaLines     = iaGlassEl ? iaGlassEl.querySelectorAll('.ia-glass-line') : [];
-const iaContentEl = document.querySelector('.ia-content');
-
-function tickIaHero(t) {
-  if (!iaStageEl) return;
-  const stageTop   = iaStageEl.getBoundingClientRect().top + t;
-  const stageRange = iaStageEl.offsetHeight - window.innerHeight;
-  const within     = Math.max(0, t - stageTop);
-  const p          = Math.min(within / stageRange, 1);
-
-  iaBgEl.style.transform = `translateY(${within * 0.12}px)`;
-
-  if (iaImgWrapEl) {
-    iaImgWrapEl.style.transform = `translateY(${within * 0.08}px)`;
+/* ── CINEMATIC SOLAR HERO — phase timeline ──
+   Chaos → Discovery → Attraction → Connection → Intelligence
+   Each phase change just sets data-phase on the hero section;
+   CSS handles all the visual transitions and ambient orbital loop. */
+const solarHero = document.getElementById('overview');
+if (solarHero) {
+  // Respect reduced-motion: jump straight to the final settled state.
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    solarHero.setAttribute('data-phase', '5');
+  } else {
+    setTimeout(() => solarHero.setAttribute('data-phase', '2'), 1500);   // Discovery — Identity orb emerges
+    setTimeout(() => solarHero.setAttribute('data-phase', '3'), 2700);   // Attraction — rings stagger in: ring 1 → +0.9s → ring 2 → +0.9s → ring 3 → +0.9s → ring 4
+    setTimeout(() => solarHero.setAttribute('data-phase', '4'), 6400);   // Connection — lines form (after ring 4 lands at ~2.7 + 3.7)
+    setTimeout(() => solarHero.setAttribute('data-phase', '5'), 8200);   // Intelligence — ambient loop
   }
-
-  const riseP = Math.min(p / 0.55, 1);
-  iaGlassEl.style.clipPath             = `inset(${(1 - riseP) * 100}% 0 0 0)`;
-  iaGlassEl.style.background           = `rgba(6,8,18,${riseP * 0.65})`;
-  iaGlassEl.style.backdropFilter       = `blur(${riseP * 22}px)`;
-  iaGlassEl.style.webkitBackdropFilter = `blur(${riseP * 22}px)`;
-
-  if (iaContentEl) {
-    const fade = 1 - Math.max(0, Math.min(1, (p - 0.28) / 0.32));
-    iaContentEl.style.opacity   = fade;
-    iaContentEl.style.transform = `translateY(${(1 - fade) * 14}px)`;
-  }
-
-  iaLines.forEach((line, i) => {
-    const entryP = Math.max(0, Math.min(1, (p - 0.48 - i * 0.12) / 0.26));
-    const postP  = Math.max(0, Math.min(1, (p - 0.76) / 0.24));
-    const scaleV = 1 + postP * 0.06;
-    const floatY = (1 - entryP) * 18 - postP * 20;
-    line.style.opacity   = entryP;
-    line.style.transform = `translateY(${floatY}px) scale(${scaleV})`;
-  });
 }
 
 window.addEventListener('scroll', () => {
@@ -434,7 +3710,6 @@ window.addEventListener('scroll', () => {
   prog.style.width = (t / h * 100) + '%';
   nav.classList.toggle('scrolled', t > 60);
   nav.classList.toggle('nav--light', t < 80);
-  tickIaHero(t);
 
   const bt = document.getElementById('back-top');
   bt.classList.toggle('visible', t > 400);
@@ -467,38 +3742,269 @@ mobNav.querySelectorAll('a').forEach(a => {
   });
 });
 
+/* ── Heading line-split (matches home / VZ Home heading reveal — without this,
+       h2.st.r keeps its translateY(40px) and never lands, causing the title to sit too
+       low and overlap the body) ── */
+function splitLines(el) {
+  const base = el.classList.contains('d3') ? 0.25
+             : el.classList.contains('d2') ? 0.15
+             : el.classList.contains('d1') ? 0.08
+             : 0;
+  const parts = el.innerHTML.split(/<br\s*\/?>/i);
+  el.innerHTML = parts.map((part, i) =>
+    `<span class="line-wrap"><span class="line-inner" style="transition-delay:${(base + i * 0.13).toFixed(3)}s">${part.trim()}</span></span>`
+  ).join('');
+  el.classList.add('line-split');
+}
+document.querySelectorAll('h2.st, h2.st-d').forEach(splitLines);
+
 /* ── SCROLL REVEAL ── */
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
-}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
 document.querySelectorAll('.r').forEach(el => obs.observe(el));
 
-/* ── CS SIDE NAV SCROLL-SPY ── */
-const snavDots = document.querySelectorAll('.cs-sidenav-dot');
-
-snavDots.forEach(dot => {
-  dot.addEventListener('click', () => {
-    const target = document.getElementById(dot.dataset.target);
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
-  });
-});
-
-const sidenav = document.getElementById('cs-sidenav');
-
-const secObs = new IntersectionObserver(entries => {
+/* ── Auto-play .cs-video-wrap videos when in view (try unmuted, fall back to muted) ── */
+const csAutoVideos = document.querySelectorAll('.cs-video-wrap video');
+const csVideoObs   = new IntersectionObserver(entries => {
   entries.forEach(e => {
+    const v = e.target;
     if (e.isIntersecting) {
-      snavDots.forEach(d => d.classList.remove('active'));
-      const match = document.querySelector(`.cs-sidenav-dot[data-target="${e.target.id}"]`);
-      if (match) match.classList.add('active');
-      const isLight = e.target.classList.contains('bg-page') || e.target.classList.contains('bg-warm');
-      sidenav.classList.toggle('on-light', isLight);
+      v.muted  = false;
+      v.volume = 1;
+      v.play().catch(() => {
+        // Browser blocked sound autoplay — fall back to muted
+        v.muted = true;
+        v.play().catch(() => {});
+      });
+    } else {
+      v.pause();
     }
   });
-}, { threshold: 0.4 });
+}, { threshold: 0.5 });
+csAutoVideos.forEach(v => csVideoObs.observe(v));
 
-document.querySelectorAll('section[id]').forEach(s => secObs.observe(s));
+/* ── IMPACT timeline — translate horizontal track based on vertical scroll progress
+   through the pin container. 3 panels (33.333% each) of a 300%-wide track;
+   maximum translation is -66.667% (showing panel 3). ── */
+const impactWrap     = document.getElementById('impact-timeline');
+const impactTrack    = document.getElementById('impact-track');
+const impactProgress = document.getElementById('impact-progress');
+if (impactWrap && impactTrack && impactProgress) {
+  const segments = impactProgress.querySelectorAll('.impact-progress-segment');
+  let ticking = false;
+
+  // Stepped progress so each panel "locks" on screen for a dwell window before
+  // the track translates to the next panel. Returns 0 → 66.667 (% to translate).
+  // Dwell zones (panel pinned): 0.00–0.30, 0.42–0.65, 0.77–1.00
+  // Transitions:                0.30–0.42, 0.65–0.77
+  function steppedProgress(p) {
+    if (p < 0.30) return 0;
+    if (p < 0.42) return ((p - 0.30) / 0.12) * 33.333;
+    if (p < 0.65) return 33.333;
+    if (p < 0.77) return 33.333 + ((p - 0.65) / 0.12) * 33.333;
+    return 66.667;
+  }
+
+  function updateImpactTimeline() {
+    const rect          = impactWrap.getBoundingClientRect();
+    const containerH    = impactWrap.offsetHeight;
+    const viewportH     = window.innerHeight;
+    const scrolledInto  = -rect.top;
+    const totalRunway   = containerH - viewportH;
+    const progress      = Math.max(0, Math.min(1, scrolledInto / totalRunway));
+
+    const move = steppedProgress(progress);
+    impactTrack.style.transform = `translate3d(${-move}%, 0, 0)`;
+
+    // Active segment: switch at the midpoint of each transition window
+    let activeIndex = 0;
+    if (progress >= 0.36) activeIndex = 1;
+    if (progress >= 0.71) activeIndex = 2;
+    segments.forEach((seg, i) => seg.classList.toggle('active', i <= activeIndex));
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => { updateImpactTimeline(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', updateImpactTimeline, { passive: true });
+  updateImpactTimeline();
+}
+
+/* ── VISION solar system — 12-phase reveal triggered by scroll into view.
+   Phase 1: intro text → Phase 2: orb appears → Phases 3-5: 3 rings →
+   Phase 6: Ring 4 + 5 divider lines → Phases 7-11: 5 emit dots fire sequentially
+   from center to Ring 4 → Phase 12: visual shifts right + body text on left. ── */
+const visionSolar = document.getElementById('vision-solar');
+if (visionSolar) {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    // Jump to end state — everything visible, no animation
+    visionSolar.setAttribute('data-phase', '12');
+  } else {
+    // Trigger sequence on first scroll-into-view, then disconnect observer
+    const setPhase = (n, delay) => setTimeout(() => visionSolar.setAttribute('data-phase', String(n)), delay);
+    const visIo = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        visIo.disconnect();
+        setPhase(2, 1400);   // intro text dissolves → VERIZON orb
+        setPhase(3, 2400);   // Ring 1 — Household
+        setPhase(4, 3400);   // Ring 2 — Ecosystem
+        setPhase(5, 4400);   // Ring 3 — Intelligence
+        setPhase(6, 5400);   // Ring 4 (outer boundary) + 5 divider lines draw on
+        setPhase(7, 6600);   // Emit dot 1 — Proactive Care (12 o'clock)
+        setPhase(8, 7600);   // Emit dot 2 — Household Personalization (10 o'clock)
+        setPhase(9, 8600);   // Emit dot 3 — Smart Bundling (2 o'clock)
+        setPhase(10, 9600);  // Emit dot 4 — AI Assistant (8 o'clock)
+        setPhase(11, 10600); // Emit dot 5 — Hardware + Software Integration (4 o'clock)
+        setPhase(12, 12000); // Visual shifts right + body text reveals on left
+      });
+    }, { threshold: 0.25 });
+    visIo.observe(visionSolar);
+  }
+}
+
+/* ── IN-PAGE SIDENAV — smooth scroll, active tracking, and light/dark detection
+   so the dots stay visible on every section background. ── */
+const snav = document.getElementById('cs-sidenav');
+if (snav) {
+  const snavTargets = ['overview', 'challenge', 'insight', 'vision', 'roadmap'];
+
+  // Click → smooth scroll to section
+  snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.target;
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  function updateSidenav() {
+    // Active dot — last anchor whose top has crossed 45% of viewport
+    let active = snavTargets[0];
+    const offset = window.innerHeight * 0.45;
+    snavTargets.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top < offset) active = id;
+    });
+    snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.target === active);
+    });
+
+    // Light/dark detection — sample the element at viewport center.
+    // Walks up the DOM looking for a bg-* class so sticky covers, dot grids,
+    // and any background change all flip the sidenav color correctly.
+    let isLight = false;
+    let walker = document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 2);
+    while (walker && walker !== document.body) {
+      const cls = walker.classList;
+      if (cls.contains('bg-dark')) { isLight = false; break; }
+      if (cls.contains('bg-page') || cls.contains('bg-warm') || cls.contains('bg-white')) { isLight = true; break; }
+      walker = walker.parentElement;
+    }
+    snav.classList.toggle('on-light', isLight);
+  }
+
+  window.addEventListener('scroll', updateSidenav, { passive: true });
+  window.addEventListener('resize', updateSidenav, { passive: true });
+  updateSidenav();
+}
+
+
+/* ── ROADMAP timeline — mirror of IMPACT scroll-driven horizontal timeline.
+   3 panels translate horizontally with stepped dwell zones; progress dots
+   highlight cumulatively. ── */
+const roadmapWrap     = document.getElementById('roadmap-timeline');
+const roadmapTrack    = document.getElementById('roadmap-track');
+const roadmapProgress = document.getElementById('roadmap-progress');
+if (roadmapWrap && roadmapTrack && roadmapProgress) {
+  const rmSegments = roadmapProgress.querySelectorAll('.impact-progress-segment');
+  let rmTicking = false;
+
+  function rmSteppedProgress(p) {
+    if (p < 0.30) return 0;
+    if (p < 0.42) return ((p - 0.30) / 0.12) * 33.333;
+    if (p < 0.65) return 33.333;
+    if (p < 0.77) return 33.333 + ((p - 0.65) / 0.12) * 33.333;
+    return 66.667;
+  }
+
+  function updateRoadmapTimeline() {
+    const rect          = roadmapWrap.getBoundingClientRect();
+    const containerH    = roadmapWrap.offsetHeight;
+    const viewportH     = window.innerHeight;
+    const scrolledInto  = -rect.top;
+    const totalRunway   = containerH - viewportH;
+    const progress      = Math.max(0, Math.min(1, scrolledInto / totalRunway));
+
+    const move = rmSteppedProgress(progress);
+    roadmapTrack.style.transform = `translate3d(${-move}%, 0, 0)`;
+
+    let activeIndex = 0;
+    if (progress >= 0.36) activeIndex = 1;
+    if (progress >= 0.71) activeIndex = 2;
+    rmSegments.forEach((seg, i) => seg.classList.toggle('active', i <= activeIndex));
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!rmTicking) {
+      requestAnimationFrame(() => { updateRoadmapTimeline(); rmTicking = false; });
+      rmTicking = true;
+    }
+  }, { passive: true });
+
+  window.addEventListener('resize', updateRoadmapTimeline, { passive: true });
+  updateRoadmapTimeline();
+}
+
+/* ── SHIFT sub-div (vision-1) — 13-phase reveal in left → center → right order:
+   1) Today label + planets + caption fully reveal first
+   2) SHIFT center (label + chevrons) appears + Tomorrow label
+   3) Tomorrow planets reveal sequentially with connecting lines
+   4) Tomorrow orbit starts rotating + Tomorrow caption
+   5) Final "Context-Aware Experiences" text drops in below the SHIFT arrow.
+   Triggered on scroll into view. ── */
+const shiftStage = document.getElementById('shift-stage');
+const shiftOrbit = document.getElementById('shift-tomorrow-orbit');
+if (shiftStage) {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    shiftStage.setAttribute('data-phase', '13');
+    if (shiftOrbit) shiftOrbit.classList.add('is-spinning');
+  } else {
+    const setShiftPhase = (n, delay) => setTimeout(() => shiftStage.setAttribute('data-phase', String(n)), delay);
+    const shiftIo = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        shiftIo.disconnect();
+        // LEFT first — Today planets reveal one by one, then caption
+        setShiftPhase(2, 900);    // Products
+        setShiftPhase(3, 1500);   // Accounts
+        setShiftPhase(4, 2100);   // Transactions
+        setShiftPhase(5, 2700);   // Offers
+        setShiftPhase(6, 3500);   // Today caption appears
+        // CENTER + RIGHT LABEL — SHIFT chevrons reveal + Tomorrow label
+        setShiftPhase(7, 4500);   // SHIFT center (label + chevrons) + Tomorrow label
+        // RIGHT — Tomorrow planets reveal sequentially with connecting lines
+        setShiftPhase(8, 5600);   // People (12)
+        setShiftPhase(9, 6400);   // line 12→3 + Households (3)
+        setShiftPhase(10, 7200);  // line 3→6 + Relationships (6)
+        setShiftPhase(11, 8000);  // line 6→9 + Context (9)
+        setShiftPhase(12, 8800);  // line 9→12 close + start rotation + Tomorrow caption
+        setShiftPhase(13, 10200); // Final "Context-Aware Experiences" text drops in
+        // Start rotation at phase 12
+        setTimeout(() => shiftOrbit && shiftOrbit.classList.add('is-spinning'), 8800);
+      });
+    }, { threshold: 0.25 });
+    shiftIo.observe(shiftStage);
+  }
+}
 
 /* ── CUSTOM CURSOR ── */
 const dot  = document.getElementById('cur-dot');
