@@ -40,7 +40,10 @@
       "Bash(sed -i '' '3381,3661d' /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)",
       "Bash(grep -n \"14 · UI SHOWCASE\\\\|id=\\\\\"design\\\\\"\\\\|/section>\\\\s*$\" /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)",
       "Bash(awk '/14 · UI SHOWCASE/,/15 · AI ASSISTANT/' /Users/rari/Downloads/refaeli-portfolio/cs-vz-home.html)",
-      "Bash(grep -n \"^\\\\.cs-sec\\\\|^\\\\.cs-sec[ {.,]\\\\|^\\\\.sec-inner\" /Users/rari/Downloads/refaeli-portfolio/styles.css)"
+      "Bash(grep -n \"^\\\\.cs-sec\\\\|^\\\\.cs-sec[ {.,]\\\\|^\\\\.sec-inner\" /Users/rari/Downloads/refaeli-portfolio/styles.css)",
+      "Bash(awk '/ORBITAL VISUAL BREAKER/,/^\\\\/\\\\* ─/' /Users/rari/Downloads/refaeli-portfolio/styles.css)",
+      "Bash(awk -F: '$1 > 2720')",
+      "Bash(awk *)"
     ]
   }
 }

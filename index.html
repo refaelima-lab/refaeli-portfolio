@@ -169,13 +169,13 @@
         <p class="phi-statement">I design for the problem<br><em>beneath the problem.</em></p>
       </div>
 
-      <div class="phi-pullquote r d2">
-        <p>Most products fail not in execution, but in definition, solving the wrong thing beautifully.</p>
-      </div>
-
       <p class="phi-body r d3">My work begins before the interface, in the tensions and misalignments no one has named yet. I don't start with screens. I start with structure. Then I build systems that resolve what actually matters, shaping behavior until the right action feels natural, almost inevitable.</p>
 
       <p class="phi-body r d4"><em>Good design, to me, is invisible.</em> Not because it lacks craft, but because it removes the need for attention. Everything works as it should: quietly, precisely, on purpose.</p>
+
+      <div class="phi-pullquote r d5">
+        <p>Most products fail not in execution, but in definition,<br>solving the wrong thing beautifully.</p>
+      </div>
     </div>
 
   </div>
@@ -309,95 +309,141 @@
      IMPACT & RECOGNITION
 ══════════════════════════════════════ -->
 <section class="sec impact-sec" id="impact">
-  <div class="sec-inner impact-inner">
+  <!-- Runway provides scroll length; pin keeps everything (header + stats + active card) visible together -->
+  <div class="impact-runway" id="impact-runway">
+    <div class="impact-pin">
 
-    <div class="impact-hd">
-      <div class="r d1"><div class="ch">Impact &amp; Recognition</div></div>
-      <h2 class="st r d2">Built Along <em>the Way</em></h2>
-      <p class="bp r d3" style="max-width:640px;">A decade of building products, shaping teams, and contributing to the design community through collaboration, mentorship, and industry recognition.</p>
-    </div>
-
-    <div class="phi-right">
-      <div class="phi-stat-card r r-late d2">
-        <div class="phi-stat-num">10+</div>
-        <div class="phi-stat-label">Years Experience</div>
-      </div>
-      <div class="phi-stat-card r r-late d3">
-        <div class="phi-stat-num">40+</div>
-        <div class="phi-stat-label">Products Shipped</div>
-      </div>
-      <div class="phi-stat-card r r-late d4">
-        <div class="phi-stat-num">100M+</div>
-        <div class="phi-stat-label">Users Impacted</div>
-      </div>
-    </div>
-
-    <div class="phi-recog-grid">
-
-      <div class="phi-recog-card r r-late d2">
-        <div class="phi-recog-meta">
-          <div class="phi-recog-title">Built With</div>
-          <p class="phi-recog-body">Products, platforms, and brands I've helped bring to life.</p>
+      <!-- Background orb decoration — top-right + bottom-left, anchored to the pin -->
+      <div class="hiw-orbs" aria-hidden="true">
+        <div class="hiw-orb hiw-orb-tr">
+          <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
         </div>
-        <hr class="phi-recog-divider">
-        <div class="phi-recog-logos">
-          <img src="assets/logo/verizon.svg" alt="Verizon">
-          <img src="assets/logo/bluejeans.svg" alt="BlueJeans by Verizon">
-          <img src="assets/logo/amazon.svg" alt="Amazon">
-          <img src="assets/logo/icon.svg" alt="Iconmobile">
-          <img src="assets/logo/kia.svg" alt="Kia">
-          <img src="assets/logo/ford.svg" alt="Ford">
-          <img src="assets/logo/bmw.svg" alt="BMW">
-          <img src="assets/logo/porsche.svg" alt="Porsche">
+        <div class="hiw-orb hiw-orb-bl">
+          <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+          <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
         </div>
       </div>
 
-      <div class="phi-recog-card r r-late d3">
-        <div class="phi-recog-meta">
-          <div class="phi-recog-title">Community &amp; Industry</div>
-          <p class="phi-recog-body">Speaking, judging, teaching, and professional collaboration.</p>
-        </div>
-        <hr class="phi-recog-divider">
-        <div class="phi-recog-logos">
-          <img src="assets/logo/art-center.svg" alt="ArtCenter">
-          <img src="assets/logo/claude.svg" alt="Claude">
-          <img src="assets/logo/anthropic.svg" alt="Anthropic">
-          <img src="assets/logo/ucla.svg" alt="UCLA">
-          <img src="assets/logo/supabase.svg" alt="Supabase">
-          <img src="assets/logo/fetch-ai.svg" alt="Fetch.ai">
-        </div>
-      </div>
+      <div class="sec-inner impact-inner">
 
-      <div class="phi-recog-card r r-late d4">
-        <div class="phi-recog-meta">
-          <div class="phi-recog-title">Recognized By</div>
-          <p class="phi-recog-body">Awards and recognition from the design community.</p>
+        <div class="impact-hd">
+          <div class="r d1"><div class="ch">Impact &amp; Recognition</div></div>
+          <h2 class="st r d2">Built Along <em>the Way</em></h2>
+          <p class="bp r d3" style="max-width:640px;">A decade of building products, shaping teams, and contributing to the design community through collaboration, mentorship, and industry recognition.</p>
         </div>
-        <hr class="phi-recog-divider">
-        <div class="phi-recog-logos">
-          <img src="assets/logo/epda.svg" alt="EPDA">
-          <img src="assets/logo/icff.svg" alt="ICFF">
-          <img src="assets/logo/a-design-award.svg" alt="A' Design Award">
-          <img src="assets/logo/bienenstock.svg" alt="Bienenstock">
-          <img src="assets/logo/byaa.svg" alt="BYAA">
-        </div>
-      </div>
 
-      <div class="phi-recog-card r r-late d5">
-        <div class="phi-recog-meta">
-          <div class="phi-recog-title">Mentored Through</div>
-          <p class="phi-recog-body">Supporting designers, founders, and emerging talent.</p>
-        </div>
-        <hr class="phi-recog-divider">
-        <div class="phi-recog-logos">
-          <img src="assets/logo/ifel.svg" alt="IFEL">
-          <img src="assets/logo/4as.svg" alt="A's Foundation">
-        </div>
-      </div>
+        <div class="phi-recog-grid is-stacked">
 
-    </div>
+        <div class="phi-recog-card is-active">
+          <div class="phi-recog-meta">
+            <div class="phi-recog-title">Built With</div>
+            <p class="phi-recog-body">Products, platforms, and brands I've helped bring to life.</p>
+          </div>
+          <hr class="phi-recog-divider">
+          <div class="phi-recog-logos">
+            <img src="assets/logo/verizon.svg" alt="Verizon">
+            <img src="assets/logo/bluejeans.svg" alt="BlueJeans by Verizon">
+            <img src="assets/logo/amazon.svg" alt="Amazon">
+            <img src="assets/logo/icon.svg" alt="Iconmobile">
+            <img src="assets/logo/kia.svg" alt="Kia">
+            <img src="assets/logo/ford.svg" alt="Ford">
+            <img src="assets/logo/bmw.svg" alt="BMW">
+            <img src="assets/logo/porsche.svg" alt="Porsche">
+          </div>
+        </div>
 
-  </div>
+        <div class="phi-recog-card">
+          <div class="phi-recog-meta">
+            <div class="phi-recog-title">Community &amp; Industry</div>
+            <p class="phi-recog-body">Speaking, judging, teaching, and professional collaboration.</p>
+          </div>
+          <hr class="phi-recog-divider">
+          <div class="phi-recog-logos">
+            <img src="assets/logo/art-center.svg" alt="ArtCenter">
+            <img src="assets/logo/claude.svg" alt="Claude">
+            <img src="assets/logo/anthropic.svg" alt="Anthropic">
+            <img src="assets/logo/ucla.svg" alt="UCLA">
+            <img src="assets/logo/supabase.svg" alt="Supabase">
+            <img src="assets/logo/fetch-ai.svg" alt="Fetch.ai">
+          </div>
+        </div>
+
+        <div class="phi-recog-card">
+          <div class="phi-recog-meta">
+            <div class="phi-recog-title">Recognized By</div>
+            <p class="phi-recog-body">Awards and recognition from the design community.</p>
+          </div>
+          <hr class="phi-recog-divider">
+          <div class="phi-recog-logos">
+            <img src="assets/logo/epda.svg" alt="EPDA">
+            <img src="assets/logo/icff.svg" alt="ICFF">
+            <img src="assets/logo/a-design-award.svg" alt="A' Design Award">
+            <img src="assets/logo/bienenstock.svg" alt="Bienenstock">
+            <img src="assets/logo/byaa.svg" alt="BYAA">
+          </div>
+        </div>
+
+        <div class="phi-recog-card">
+          <div class="phi-recog-meta">
+            <div class="phi-recog-title">Mentored Through</div>
+            <p class="phi-recog-body">Supporting designers, founders, and emerging talent.</p>
+          </div>
+          <hr class="phi-recog-divider">
+          <div class="phi-recog-logos">
+            <img src="assets/logo/ifel.svg" alt="IFEL">
+            <img src="assets/logo/4as.svg" alt="A's Foundation">
+          </div>
+        </div>
+
+        </div>
+
+        <div class="phi-right">
+          <div class="phi-stat-card r r-late d2">
+            <svg class="phi-stat-icon phi-stat-icon--years" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <!-- Mountain range — accumulated peaks / years of climbing -->
+              <polyline points="2 20 7 11 11 15 15 7 19 13 22 9"/>
+            </svg>
+            <div class="phi-stat-label">Years Experience</div>
+            <div class="phi-stat-num">10+</div>
+            <div class="phi-stat-tagline">across product, platform, and physical design</div>
+          </div>
+          <div class="phi-stat-card r r-late d3">
+            <svg class="phi-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="3 8 12 4 21 8 12 12 3 8"/>
+              <polyline points="3 8 3 16 12 20 21 16 21 8"/>
+              <line x1="12" y1="12" x2="12" y2="20"/>
+            </svg>
+            <div class="phi-stat-label">Products Shipped</div>
+            <div class="phi-stat-num">40+</div>
+            <div class="phi-stat-tagline">from chair legs to voice interfaces</div>
+          </div>
+          <div class="phi-stat-card r r-late d4">
+            <svg class="phi-stat-icon phi-stat-icon--users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="8" cy="9" r="2"/>
+              <path d="M4.5 15c0-1.93 1.57-3.5 3.5-3.5s3.5 1.57 3.5 3.5"/>
+              <circle cx="16" cy="9" r="2"/>
+              <path d="M12.5 15c0-1.93 1.57-3.5 3.5-3.5s3.5 1.57 3.5 3.5"/>
+              <circle cx="12" cy="17" r="1.5"/>
+              <path d="M9.5 21.5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5"/>
+            </svg>
+            <div class="phi-stat-label">Users Impacted</div>
+            <div class="phi-stat-num">100M+</div>
+            <div class="phi-stat-tagline">and counting, quietly</div>
+          </div>
+        </div>
+
+      </div><!-- /.impact-inner -->
+    </div><!-- /.impact-pin -->
+  </div><!-- /.impact-runway -->
 </section>
 
 <div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
@@ -409,13 +455,110 @@
 <div class="work-stage" id="work">
   <div class="work-sticky" id="work-sticky">
 
-    <!-- Breaker overlay — intro that fades out as first project card enters -->
+    <!-- Breaker overlay — orbital visual + Made Real text reveal -->
     <div class="wsb-breaker" id="wsb-breaker">
       <div class="hero-glow" style="top:50%;left:50%;"></div>
-      <div class="wsb-inner">
-        <div class="r"><div class="ch ch-d">Made Real</div></div>
-        <h2 class="st-d r d1" style="max-width:900px;">A selection of recent <em>work</em></h2>
-        <p class="bp-d r d2" style="max-width:640px;">Digital product and interaction design, focused on clarity, systems, and intelligent experiences. Not just what shipped, but what it took to get there.</p>
+
+      <!-- Solar-system breaker — ported pattern from cs-vz-id-arch HERO -->
+      <div class="solar-breaker" id="solar-breaker" data-phase="1">
+
+        <!-- SVG canvas: orbit paths + connection spokes + data pulses + outer celestial orbits -->
+        <svg class="solar-svg" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <!-- Concentric orbit paths (visual guides matching the HTML rings) -->
+          <circle class="orbit-path orbit-path-1" cx="0" cy="0" r="130"/>
+          <circle class="orbit-path orbit-path-2" cx="0" cy="0" r="230"/>
+          <circle class="orbit-path orbit-path-3" cx="0" cy="0" r="330"/>
+          <circle class="orbit-path orbit-path-4" cx="0" cy="0" r="430"/>
+
+          <!-- Radial connection spokes from center to outer ring (phase 4) -->
+          <g class="connection-lines">
+            <line class="conn-line" x1="0" y1="0" x2="0"    y2="-430"/>
+            <line class="conn-line" x1="0" y1="0" x2="372"  y2="-215"/>
+            <line class="conn-line" x1="0" y1="0" x2="372"  y2="215"/>
+            <line class="conn-line" x1="0" y1="0" x2="0"    y2="430"/>
+            <line class="conn-line" x1="0" y1="0" x2="-372" y2="215"/>
+            <line class="conn-line" x1="0" y1="0" x2="-372" y2="-215"/>
+          </g>
+
+          <!-- Data pulses traveling outward along three spokes (phase 4) -->
+          <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L 0 -430');"/>
+          <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L 372 215');"/>
+          <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L -372 215');"/>
+
+          <!-- Outer celestial orbits — very slow rotation, ambient context (phase 4) -->
+          <circle class="outer-orbit outer-orbit-1" cx="0" cy="0" r="540"/>
+          <circle class="outer-orbit outer-orbit-2" cx="0" cy="0" r="680"/>
+          <circle class="outer-orbit outer-orbit-3" cx="0" cy="0" r="850"/>
+        </svg>
+
+        <!-- PHASE 1: scattered concept words drifting before they organize -->
+        <div class="chaos-layer" aria-hidden="true">
+          <div class="chaos-node" style="--cx:14%;--cy:22%;--cd:9s;">Pixels</div>
+          <div class="chaos-node" style="--cx:78%;--cy:18%;--cd:11s;">Systems</div>
+          <div class="chaos-node" style="--cx:10%;--cy:62%;--cd:8s;">Patterns</div>
+          <div class="chaos-node" style="--cx:88%;--cy:68%;--cd:13s;">Craft</div>
+          <div class="chaos-node" style="--cx:48%;--cy:12%;--cd:10s;">Detail</div>
+          <div class="chaos-node" style="--cx:28%;--cy:82%;--cd:12s;">Strategy</div>
+          <div class="chaos-node" style="--cx:72%;--cy:86%;--cd:9.5s;">Intent</div>
+          <div class="chaos-node" style="--cx:62%;--cy:42%;--cd:10.5s;">Logic</div>
+        </div>
+
+        <!-- Orbital stage: 4 rings × 4 nodes = 16 orbiting concepts -->
+        <div class="orbit-stage">
+
+          <!-- Ring 1 — Foundations (research/intent) -->
+          <div class="ring ring-1">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">User Intent</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Mental Models</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Problem Framing</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Research</span></div></div>
+          </div>
+
+          <!-- Ring 2 — Architecture (systems/strategy) -->
+          <div class="ring ring-2">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Experience Architecture</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Product Strategy</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Service Design</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Systems Thinking</span></div></div>
+          </div>
+
+          <!-- Ring 3 — Execution (craft/delivery) -->
+          <div class="ring ring-3">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Design Systems</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Interaction Design</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Prototyping</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Design Operations</span></div></div>
+          </div>
+
+          <!-- Ring 4 — Outcomes (business/impact) -->
+          <div class="ring ring-4">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Customer Trust</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Adoption</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Business Impact</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Brand Loyalty</span></div></div>
+          </div>
+
+        </div>
+
+        <!-- Center DESIGN orb — phase 2 reveal, gravity center -->
+        <div class="solar-center" aria-hidden="true">
+          <div class="orb-glow"></div>
+          <div class="orb-core">
+            <span class="orb-label">Digital Experience</span>
+          </div>
+        </div>
+
+        <!-- Text overlay — bottom-left (eyebrow + title) and top-right (note). Phase 4 reveal -->
+        <div class="solar-overlay">
+          <div class="solar-overlay-left">
+            <div class="solar-eyebrow">Made Real</div>
+            <h2 class="solar-title">A selection of recent <em>work</em></h2>
+          </div>
+          <div class="solar-overlay-right">
+            <p class="solar-note">Digital product and interaction design, focused on clarity, systems, and intelligent experiences. Not just what shipped, but what it took to get there.</p>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -921,13 +1064,103 @@
 <div class="gal-stage" id="object">
   <div class="gal-sticky">
 
-    <!-- Breaker overlay — fades out as gallery enters -->
+    <!-- Breaker overlay — fades out as gallery enters. Solar-system pattern, light mode. -->
     <div class="ob-breaker" id="ob-breaker">
-      <div class="hero-glow" style="top:50%;left:50%;"></div>
-      <div class="wsb-inner">
-        <div class="r"><div class="ch">Other Things I Make</div></div>
-        <h2 class="st r d1" style="max-width:900px;">Not everything<br>lives on a <em>screen</em></h2>
-        <p class="bp r d2" style="max-width:640px;">Some ideas take shape in materials, form, and experiments. The studio practice deepens a systems-thinking approach to product and experience design.</p>
+      <div class="solar-breaker is-light" id="ob-solar-breaker" data-phase="1">
+
+        <!-- SVG canvas: orbit paths + connection spokes + data pulses + outer orbits -->
+        <svg class="solar-svg" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <circle class="orbit-path orbit-path-1" cx="0" cy="0" r="130"/>
+          <circle class="orbit-path orbit-path-2" cx="0" cy="0" r="230"/>
+          <circle class="orbit-path orbit-path-3" cx="0" cy="0" r="330"/>
+          <circle class="orbit-path orbit-path-4" cx="0" cy="0" r="430"/>
+
+          <g class="connection-lines">
+            <line class="conn-line" x1="0" y1="0" x2="0"    y2="-430"/>
+            <line class="conn-line" x1="0" y1="0" x2="372"  y2="-215"/>
+            <line class="conn-line" x1="0" y1="0" x2="372"  y2="215"/>
+            <line class="conn-line" x1="0" y1="0" x2="0"    y2="430"/>
+            <line class="conn-line" x1="0" y1="0" x2="-372" y2="215"/>
+            <line class="conn-line" x1="0" y1="0" x2="-372" y2="-215"/>
+          </g>
+
+          <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L 0 -430');"/>
+          <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L 372 215');"/>
+          <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L -372 215');"/>
+
+          <circle class="outer-orbit outer-orbit-1" cx="0" cy="0" r="540"/>
+          <circle class="outer-orbit outer-orbit-2" cx="0" cy="0" r="680"/>
+          <circle class="outer-orbit outer-orbit-3" cx="0" cy="0" r="850"/>
+        </svg>
+
+        <!-- PHASE 1: physical-making concepts drifting before they organize -->
+        <div class="chaos-layer" aria-hidden="true">
+          <div class="chaos-node" style="--cx:14%;--cy:22%;--cd:9s;">Material</div>
+          <div class="chaos-node" style="--cx:78%;--cy:18%;--cd:11s;">Form</div>
+          <div class="chaos-node" style="--cx:10%;--cy:62%;--cd:8s;">Texture</div>
+          <div class="chaos-node" style="--cx:88%;--cy:68%;--cd:13s;">Light</div>
+          <div class="chaos-node" style="--cx:48%;--cy:12%;--cd:10s;">Volume</div>
+          <div class="chaos-node" style="--cx:28%;--cy:82%;--cd:12s;">Surface</div>
+          <div class="chaos-node" style="--cx:72%;--cy:86%;--cd:9.5s;">Mass</div>
+          <div class="chaos-node" style="--cx:62%;--cy:42%;--cd:10.5s;">Weight</div>
+        </div>
+
+        <!-- Orbital stage: 4 rings × 4 nodes -->
+        <div class="orbit-stage">
+
+          <!-- Ring 1 — Foundations (qualities of form) -->
+          <div class="ring ring-1">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Material</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Weight</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Volume</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Texture</span></div></div>
+          </div>
+
+          <!-- Ring 2 — Process -->
+          <div class="ring ring-2">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Sketch</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Model</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Prototype</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Refine</span></div></div>
+          </div>
+
+          <!-- Ring 3 — Craft -->
+          <div class="ring ring-3">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Tooling</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Detail</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Joinery</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Finish</span></div></div>
+          </div>
+
+          <!-- Ring 4 — Output (categories of work) -->
+          <div class="ring ring-4">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Furniture</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Industrial</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Jewelry</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Apparel</span></div></div>
+          </div>
+
+        </div>
+
+        <!-- Center OBJECT orb — phase 2 reveal -->
+        <div class="solar-center" aria-hidden="true">
+          <div class="orb-glow"></div>
+          <div class="orb-core">
+            <span class="orb-label">Object</span>
+          </div>
+        </div>
+
+        <!-- Text overlay — eyebrow + title bottom-left, note top-right. Phase 4 reveal -->
+        <div class="solar-overlay">
+          <div class="solar-overlay-left">
+            <div class="solar-eyebrow">Other Things I Make</div>
+            <h2 class="solar-title">Not everything lives<br>on a <em>screen</em></h2>
+          </div>
+          <div class="solar-overlay-right">
+            <p class="solar-note">Some ideas take shape in materials, form, and experiments. The studio practice deepens a systems-thinking approach to product and experience design.</p>
+          </div>
+        </div>
+
       </div>
     </div>
     <div class="gal-frame" id="gal-frame">
@@ -1193,6 +1426,158 @@ const statObs = new IntersectionObserver(entries => {
 }, { threshold: 0.6 });
 
 statNums.forEach(el => statObs.observe(el));
+
+
+/* ── IMPACT & RECOGNITION — scroll-driven card swap.
+   The whole .impact-inner is pinned (via .impact-pin sticky) for the duration
+   of the .impact-runway scroll. Header + stats + active card stay visible
+   together while scroll progress swaps which card is shown. ── */
+const impactRunway = document.getElementById('impact-runway');
+if (impactRunway) {
+  const recogCards = impactRunway.querySelectorAll('.phi-recog-grid.is-stacked .phi-recog-card');
+  let recogTicking = false;
+
+  function updateRecogStack() {
+    const rect       = impactRunway.getBoundingClientRect();
+    const wrapH      = impactRunway.offsetHeight;
+    const viewportH  = window.innerHeight;
+    const scrolledIn = -rect.top;
+    const runway     = wrapH - viewportH;
+    const progress   = Math.max(0, Math.min(1, scrolledIn / runway));
+
+    // Map progress [0, 1] to card index [0, n-1]
+    const activeIndex = Math.min(recogCards.length - 1, Math.floor(progress * recogCards.length));
+    recogCards.forEach((card, i) => card.classList.toggle('is-active', i === activeIndex));
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!recogTicking) {
+      requestAnimationFrame(() => { updateRecogStack(); recogTicking = false; });
+      recogTicking = true;
+    }
+  }, { passive: true });
+  window.addEventListener('resize', updateRecogStack, { passive: true });
+  updateRecogStack();
+}
+
+
+/* ── SOLAR-SYSTEM BREAKER — additive phase reveal on scroll into view.
+   1: chaos (scattered concept words drift across the viewport)
+   2: chaos fades, DESIGN orb scales in at center
+   3: orbit paths fade in (staggered), rings begin spinning
+   4: text overlay reveals + connection spokes draw + outer orbits + data pulses
+   ── */
+function bootSolarBreaker(el) {
+  if (!el) return;
+  const setPhase = (n, delay) => setTimeout(() => el.setAttribute('data-phase', String(n)), delay);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      setPhase(2, 1600);  // chaos fades, center orb scales in
+      setPhase(3, 3500);  // orbit paths fade in (staggered), rings start spinning
+      setPhase(4, 8000);  // text overlay + spokes + outer orbits + data pulses
+    });
+  }, { threshold: 0.3 });
+  io.observe(el);
+}
+bootSolarBreaker(document.getElementById('solar-breaker'));
+bootSolarBreaker(document.getElementById('ob-solar-breaker'));
+
+/* ── Solar-system label batch cycle.
+   Every 6s once rings are visible (phase ≥ 3), all 16 labels swap to the next
+   batch of 4 items from their ring's pool. Staggered fade-out → swap → fade-in. */
+const DIGITAL_POOLS = {
+  1: ['User Intent', 'Mental Models', 'Behavioral Signals', 'Decision Making', 'Trust', 'Motivation',
+      'Customer Needs', 'Human Factors', 'Jobs To Be Done', 'Problem Framing', 'Systems Thinking',
+      'Cognitive Load', 'User Research', 'Ethnography', 'Journey Mapping', 'Experience Mapping',
+      'Service Blueprinting', 'Information Architecture', 'Taxonomy', 'Content Strategy', 'Accessibility'],
+  2: ['Experience Architecture', 'Digital Product Design', 'Interaction Design', 'UX Design',
+      'Systems Design', 'Service Design', 'Product Strategy', 'Experience Strategy', 'Platform Design',
+      'Ecosystem Design', 'Cross-Platform Design', 'Omnichannel Experience', 'Design Leadership',
+      'Design Operations', 'AI Experience Design', 'Conversational Design', 'Behavior Design',
+      'Identity Systems', 'Journey Orchestration', 'Scalable Frameworks'],
+  3: ['User Flows', 'Wireframing', 'Prototyping', 'UI Design', 'Visual Systems', 'Design Systems',
+      'Component Libraries', 'Rapid Iteration', 'Design QA', 'Usability Testing', 'Analytics',
+      'Experimentation', 'A/B Testing', 'Product Requirements', 'Roadmapping', 'Cross-Functional Alignment',
+      'Stakeholder Management', 'Engineering Collaboration', 'Accessibility Standards',
+      'AI Integration', 'Launch Strategy'],
+  4: ['Customer Trust', 'Retention', 'Engagement', 'Adoption', 'Revenue', 'Business Impact',
+      'Operational Efficiency', 'Scalability', 'Platform Growth', 'Brand Loyalty',
+      'Customer Satisfaction', 'Reduced Friction', 'Proactive Experiences', 'Household Intelligence',
+      'Behavioral Insights', 'AI Readiness']
+};
+
+const OBJECT_POOLS = {
+  1: ['Ergonomics', 'Anthropometrics', 'Proportion', 'Balance', 'Form', 'Function', 'Materiality',
+      'Craft', 'Emotion', 'Behavior', 'Usability', 'Perception', 'Movement', 'Tactility', 'Comfort',
+      'Accessibility', 'Simplicity', 'Durability', 'Context'],
+  2: ['Industrial Design', 'Product Design', 'Furniture Design', 'Automotive Design', 'Jewelry Design',
+      'Consumer Products', 'Concept Design', 'Object Design', 'Lifestyle Products', 'Luxury Products',
+      'Physical Interfaces', 'Spatial Products', 'Wearables', 'Mobility Design', 'Future Concepts',
+      'Design Innovation'],
+  3: ['Sketching', 'Concept Development', 'Storyboarding', '3D Modeling', 'CAD', 'Rapid Prototyping',
+      'CMF', 'Material Selection', 'Manufacturing', 'Injection Molding', 'Production Design',
+      'Mechanical Integration', 'Packaging', 'Vendor Collaboration', 'Design Validation', 'Tooling',
+      'Quality Control'],
+  4: ['Brand Experience', 'Product Ecosystems', 'Physical-Digital Experiences', 'User Adoption',
+      'Emotional Connection', 'Behavior Change', 'Customer Delight', 'Premium Perception',
+      'Luxury Experience', 'Market Differentiation', 'Product Strategy', 'Design Leadership',
+      'Cross-Disciplinary Collaboration', 'Innovation', 'Future Vision', 'Cultural Relevance']
+};
+
+function startSolarLabelCycle(rootEl, POOLS) {
+  if (!rootEl) return;
+  const rings = {
+    1: rootEl.querySelectorAll('.ring-1 .label'),
+    2: rootEl.querySelectorAll('.ring-2 .label'),
+    3: rootEl.querySelectorAll('.ring-3 .label'),
+    4: rootEl.querySelectorAll('.ring-4 .label')
+  };
+  let cursor = 0;
+  let intervalId = null;
+
+  function tick() {
+    // Stagger the 16 labels so the batch swap feels like a wave, not a snap.
+    // Order: ring 1 → ring 4, each label offset 80ms within the wave.
+    let staggerIdx = 0;
+    for (let r = 1; r <= 4; r++) {
+      const pool = POOLS[r];
+      rings[r].forEach((labelEl, nodeIdx) => {
+        const startDelay = staggerIdx * 80;
+        staggerIdx++;
+        setTimeout(() => {
+          const idx = (cursor + nodeIdx) % pool.length;
+          labelEl.classList.add('is-swap');
+          setTimeout(() => {
+            labelEl.textContent = pool[idx];
+            labelEl.classList.remove('is-swap');
+          }, 600);  // matches CSS transition duration
+        }, startDelay);
+      });
+    }
+    cursor += 4;
+  }
+
+  function start() { if (!intervalId) { tick(); intervalId = setInterval(tick, 6000); } }
+  function stop()  { if (intervalId)  { clearInterval(intervalId); intervalId = null; } }
+
+  // Watch data-phase; start cycling at phase ≥ 3
+  const phaseObserver = new MutationObserver(() => {
+    if (parseInt(rootEl.getAttribute('data-phase'), 10) >= 3) start();
+  });
+  phaseObserver.observe(rootEl, { attributes: true, attributeFilter: ['data-phase'] });
+  // In case phase is already ≥ 3 when this runs
+  if (parseInt(rootEl.getAttribute('data-phase'), 10) >= 3) start();
+
+  // Pause when tab is hidden
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stop();
+    else if (parseInt(rootEl.getAttribute('data-phase'), 10) >= 3) start();
+  });
+}
+startSolarLabelCycle(document.getElementById('solar-breaker'),    DIGITAL_POOLS);
+startSolarLabelCycle(document.getElementById('ob-solar-breaker'), OBJECT_POOLS);
 
 
 /* ── HERO PARALLAX SETUP ── */

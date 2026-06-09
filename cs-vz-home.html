@@ -3252,13 +3252,11 @@
 
     <div class="cs-video-wrap r d3" style="aspect-ratio:16/9;position:relative;">
       <iframe id="vz1-vimeo"
-              src="https://player.vimeo.com/video/1198892283?title=0&amp;byline=0&amp;portrait=0&amp;logo=0&amp;controls=0&amp;dnt=1&amp;playsinline=1"
+              src="https://player.vimeo.com/video/1199586918?title=0&amp;byline=0&amp;portrait=0&amp;logo=0&amp;controls=1&amp;muted=1&amp;dnt=1&amp;playsinline=1"
               style="width:100%;height:100%;border:0;display:block;"
               allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
               allowfullscreen
               title="Verizon Home App 1.0 product walkthrough"></iframe>
-      <button id="vz1-unmute" type="button" aria-label="Click to unmute"
-              style="position:absolute;inset:0;width:100%;height:100%;background:transparent;border:0;cursor:pointer;display:none;"></button>
     </div>
   </div>
 </section>
@@ -3497,11 +3495,13 @@
     <h2 class="st r d1">The strategy in <em>five minutes</em>.</h2>
     <p class="bp r d2">Rather than presenting another slide deck, I wanted a way to communicate the entire strategy as a story. I synthesized the research, customer insights, business considerations, product vision, and future-state concepts into NotebookLM and used it to generate this narrated vision video. Think of it as the executive summary of this chapter. It captures the core diagnosis, the strategic shift from reactive to proactive, and the future I believe Verizon Home should be building toward. <strong>If you’re short on time, start here.</strong></p>
 
-    <div class="cs-video-wrap r d3">
-      <video controls playsinline preload="metadata"
-             aria-label="From Reactive to Proactive — NotebookLM narrated vision video">
-        <source src="assets/verizon-home-app/from-reactive-to-proactive-vision-video.mp4" type="video/mp4">
-      </video>
+    <div class="cs-video-wrap r d3" style="aspect-ratio:16/9;position:relative;">
+      <iframe id="vz2-vision-vimeo"
+              src="https://player.vimeo.com/video/1199586482?title=0&amp;byline=0&amp;portrait=0&amp;logo=0&amp;controls=1&amp;muted=1&amp;dnt=1&amp;playsinline=1"
+              style="width:100%;height:100%;border:0;display:block;"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+              allowfullscreen
+              title="From Reactive to Proactive — NotebookLM narrated vision video"></iframe>
     </div>
   </div>
 </section>
@@ -4425,48 +4425,23 @@ if (dmVisualEl) {
   dmObs.observe(dmVisualEl);
 }
 
-// ── Auto-play Vimeo embed (Verizon 1.0) when in view, full volume ──
-const vzVimeoEl   = document.getElementById('vz1-vimeo');
-const vzUnmuteBtn = document.getElementById('vz1-unmute');
-if (vzVimeoEl && window.Vimeo) {
-  const vzVimeoPlayer = new Vimeo.Player(vzVimeoEl);
-  vzVimeoPlayer.setVolume(1).catch(() => {});
-  vzVimeoPlayer.setMuted(false).catch(() => {});
-
-  const tryUnmutedPlay = () => {
-    return vzVimeoPlayer.setMuted(false)
-      .then(() => vzVimeoPlayer.setVolume(1))
-      .then(() => vzVimeoPlayer.play())
-      .catch(() => {
-        // Browser blocked sound autoplay — fall back to muted, expose click-to-unmute
-        return vzVimeoPlayer.setMuted(true)
-          .then(() => vzVimeoPlayer.play())
-          .then(() => { if (vzUnmuteBtn) vzUnmuteBtn.style.display = 'block'; })
-          .catch(() => {});
-      });
-  };
-
-  const vzVimeoObs = new IntersectionObserver(entries => {
+// ── Vimeo embeds: start muted, autoplay when in view, pause when out.
+//    Vimeo's native controls let the viewer play/pause and adjust volume. ──
+function setupMutedVimeo(iframeId) {
+  const el = document.getElementById(iframeId);
+  if (!el || !window.Vimeo) return;
+  const player = new Vimeo.Player(el);
+  player.setMuted(true).catch(() => {});
+  const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
-        tryUnmutedPlay();
-      } else {
-        vzVimeoPlayer.pause().catch(() => {});
-      }
+      if (e.isIntersecting) player.play().catch(() => {});
+      else player.pause().catch(() => {});
     });
   }, { threshold: 0.5 });
-  vzVimeoObs.observe(vzVimeoEl);
-
-  if (vzUnmuteBtn) {
-    vzUnmuteBtn.addEventListener('click', () => {
-      vzVimeoPlayer.setMuted(false)
-        .then(() => vzVimeoPlayer.setVolume(1))
-        .then(() => vzVimeoPlayer.play())
-        .then(() => { vzUnmuteBtn.style.display = 'none'; })
-        .catch(() => {});
-    });
-  }
+  obs.observe(el);
 }
+setupMutedVimeo('vz1-vimeo');         // Verizon 1.0 product walkthrough
+setupMutedVimeo('vz2-vision-vimeo');  // From Reactive to Proactive — narrated vision
 </script>
 
 </body>

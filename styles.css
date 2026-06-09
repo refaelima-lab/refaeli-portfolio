@@ -1627,15 +1627,19 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   gap: 1.4rem;
 }
 
-/* Metric stat cards */
+/* Metric stat cards — mirrors the value/reflect tile pattern:
+   left-aligned, kicker label on top-left, big number on bottom-left, icon top-right. */
 .phi-stat-card {
+  position: relative;       /* for absolute-positioned .phi-stat-icon */
+  overflow: hidden;         /* clip icon to rounded corners */
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 1.75rem 2rem;
+  align-items: flex-start;
+  justify-content: space-between; /* eyebrow at top, number at bottom */
+  text-align: left;
+  padding: 2.2rem 1.8rem 2.2rem;
+  min-height: 260px;        /* taller — gives the eyebrow + number room to breathe at top/bottom */
   background: var(--white-a04);
   border: 1px solid var(--accent-mid-a18);
   border-radius: var(--radius-card-md);
@@ -1654,22 +1658,66 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   transform: translateY(-2px);
 }
 
-.phi-stat-num {
-  font-family: var(--font-sans);
-  font-size: clamp(26pt, 3.2vw, 40pt);
-  font-weight: var(--weight-regular);
+/* Oversized line icon in the top-right corner — matches value/reflect tile sizing */
+.phi-stat-icon {
+  position: absolute;
+  top: -22px;
+  right: -22px;
+  width: 200px;
+  height: 200px;
+  color: var(--accent);
+  opacity: 0.10;
+  pointer-events: none;
+  z-index: 1;
+  transition:
+    transform 0.65s cubic-bezier(0.34, 1.4, 0.64, 1),
+    opacity 0.4s ease,
+    color 0.4s ease;
+}
+.phi-stat-card:hover .phi-stat-icon {
+  transform: rotate(-12deg) scale(1.12);
+  opacity: 0.22;
   color: var(--accent-mid);
-  line-height: 1;
-  letter-spacing: -0.01em;
-  margin-bottom: 0.6rem;
+}
+/* Per-icon vertical nudges so each icon sits proportionally in its corner */
+.phi-stat-icon--years { top: -34px; }    /* mountain — pull up 12px */
+.phi-stat-icon--users { top: -34px; }    /* silhouettes — pull up 12px */
+
+/* Label sits ABOVE the number now — kicker style (matches value-eyebrow) */
+.phi-stat-label {
+  position: relative;
+  z-index: 2;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-kicker);
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;  /* space-between on the card handles vertical separation */
 }
 
-.phi-stat-label {
-  font-size: var(--text-ui);
-  font-weight: var(--weight-medium);
-  letter-spacing: var(--tracking-wider);
-  text-transform: uppercase;
-  color: var(--white-a42);
+.phi-stat-num {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-sans);
+  font-size: clamp(36pt, 4.2vw, 56pt);
+  font-weight: var(--weight-light);
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  margin: auto 0 0;  /* push number + tagline group to the bottom */
+}
+
+/* Small sans-serif tagline below each number — fits on one line */
+.phi-stat-tagline {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-sans);
+  font-size: clamp(10pt, 1vw, 12pt);
+  font-weight: var(--weight-light);
+  color: var(--ink-mid);
+  line-height: 1.45;
+  margin: 0.6rem 0 0;
+  white-space: nowrap;
 }
 
 /* Kicker */
@@ -1677,9 +1725,12 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   margin-bottom: var(--gap-eyebrow);
 }
 
-/* Primary statement */
+/* Primary statement — explicit margin-bottom restores the breathing room that
+   the pullquote (now moved to the end of the column) used to provide.
+   margin-top pulls the title up 8px so it sits closer to the kicker. */
 .phi-statement-wrap {
-  margin-bottom: var(--gap-heading);
+  margin-top: -8px;
+  margin-bottom: 2.5rem;
 }
 
 .phi-statement {
@@ -1697,21 +1748,23 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   color: var(--accent-mid);
 }
 
-/* Pullquote — left accent rule, serif italic */
+/* Pullquote — left accent rule, serif italic, translucent purple wash */
 .phi-pullquote {
   border-left: 2px solid var(--accent-mid);
-  padding: 0.25rem 0 0.25rem 1.5rem;
+  background: var(--accent-mid-a08);
+  padding: 1.1rem 1.5rem;
   margin: 2.5rem 0;
   max-width: 820px;
+  border-radius: 0 var(--radius-card-sm) var(--radius-card-sm) 0;
 }
 
 .phi-pullquote p {
   font-family: var(--font-serif);
-  font-size: clamp(12pt, 1.4vw, 15pt);
+  font-size: clamp(16pt, 2vw, 20pt);
   font-style: italic;
   font-weight: var(--weight-regular);
   color: var(--white-a60);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 /* Body prose */
@@ -1734,8 +1787,10 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   background: #fff;
   background-image: var(--dot-grid-mid);
   background-size: var(--dot-size-md);
-  padding-top: clamp(9rem, 14vh, 13rem);
-  padding-bottom: clamp(9rem, 14vh, 13rem);
+  /* Smaller padding — the pin already provides the section's visual weight
+     (100vh of locked content); we just need a thin transition above/below. */
+  padding-top: clamp(3rem, 6vh, 5rem);
+  padding-bottom: clamp(3rem, 6vh, 5rem);
   border-top: 1px solid rgba(0,0,0,0.06);
 }
 
@@ -1752,30 +1807,65 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   max-width: 700px;
 }
 
-/* Stat cards — background alpha:0.80 lets dots show through; text stays fully opaque */
+/* Stat cards — transparent so the dot grid reads through; border + hover still define the card */
 .impact-sec .phi-stat-card {
-  background: rgba(255,255,255,0.80);
+  background: transparent;
   border-color: rgba(0,0,0,0.08);
   transition:
     border-color var(--dur-base) var(--ease-base),
     box-shadow var(--dur-base) var(--ease-base),
-    background var(--dur-base) var(--ease-base),
     transform var(--dur-base) var(--ease-spring);
 }
 .impact-sec .phi-stat-card:hover {
   border-color: var(--accent-a25);
   box-shadow: 0 0 0 1px var(--accent-a10), 0 12px 32px var(--accent-a08);
-  background: rgba(255,255,255,0.96);
   transform: translateY(-2px);
 }
-.impact-sec .phi-stat-num  { color: var(--accent); }
-.impact-sec .phi-stat-label { color: var(--ink-light); }
+.impact-sec .phi-stat-num  { color: rgba(24, 24, 32, 0.5); transition: color var(--dur-base) var(--ease-base); }
+.impact-sec .phi-stat-card:hover .phi-stat-num { color: var(--accent); }
+.impact-sec .phi-stat-label { color: var(--accent); }
 
 /* Recognition logo blocks */
 .phi-recog-grid {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+
+/* ── Scroll-driven recognition swap ──
+   The entire .impact-inner is pinned for the duration of the runway. Header,
+   stats, and the active card all stay visible together while scroll drives
+   which card is shown. */
+.impact-runway {
+  position: relative;
+  height: 220vh;  /* runway = ~30vh per card transition × 4 + dwell */
+}
+.impact-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+.impact-pin .impact-inner {
+  width: 100%;
+}
+/* Recog grid in stacked mode — all 4 cards occupy the same cell, fade on swap */
+.phi-recog-grid.is-stacked {
+  display: grid;
+  gap: 0;
+}
+.phi-recog-grid.is-stacked .phi-recog-card {
+  grid-area: 1 / 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.phi-recog-grid.is-stacked .phi-recog-card.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 /* Card is a zero-padding shell — meta and logos own their zones */
@@ -1832,14 +1922,14 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   margin: 0;
 }
 
-/* Logo zone — 80% alpha so dots bleed through */
+/* Logo zone — transparent so the section's dot grid shows through */
 .phi-recog-logos {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 2rem;
-  background: rgba(255,255,255,0.80);
+  background: transparent;
   padding: clamp(1.4rem, 2.5vw, 2rem) clamp(1.8rem, 3vw, 2.8rem);
 }
 
@@ -2563,10 +2653,14 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 
 /* ── 14. WORK STICKY SCROLL ──────────────────────────────── */
 
-/* Stage — unified MADE REAL section (breaker + sticky scroll) */
+/* Stage — unified MADE REAL section (breaker + sticky scroll).
+   Dot grid extends behind the card stack so the surface stays consistent
+   with the breaker once the breaker overlay fades out. */
 .work-stage {
   position: relative;
   background: var(--dark);
+  background-image: var(--dot-grid-white-sm);
+  background-size: var(--dot-size-md);
   border-top: 1px solid var(--accent-mid-a08);
 }
 
@@ -2631,6 +2725,514 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   pointer-events: none;
   z-index: 1;
 }
+
+
+/* ══════════════════════════════════════
+   SOLAR-SYSTEM BREAKER (ported from cs-vz-id-arch HERO)
+   All selectors scoped under .solar-breaker so the generic class names
+   (.ring/.arm/.node/.dot/.label/.orbit-path/etc) don't leak.
+
+   Phase 1: chaos — concept words drift across viewport
+   Phase 2: chaos fades, DESIGN orb scales in
+   Phase 3: orbit paths fade in (staggered), rings start spinning
+   Phase 4: text overlay + connection spokes + outer orbits + data pulses
+   ══════════════════════════════════════ */
+.solar-breaker {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* SVG canvas — orbit paths, connection lines, data pulses, outer orbits */
+.solar-breaker .solar-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.solar-breaker .orbit-path {
+  fill: none;
+  stroke: rgba(141, 148, 255, 0.18);
+  stroke-width: 1;
+  stroke-dasharray: 3 6;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+.solar-breaker[data-phase="3"] .orbit-path,
+.solar-breaker[data-phase="4"] .orbit-path { opacity: 1; }
+.solar-breaker .orbit-path-1 { transition-delay: 0s; }
+.solar-breaker .orbit-path-2 { transition-delay: 0.9s; }
+.solar-breaker .orbit-path-3 { transition-delay: 1.8s; }
+.solar-breaker .orbit-path-4 { transition-delay: 2.7s; }
+
+.solar-breaker .connection-lines {
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+.solar-breaker[data-phase="4"] .connection-lines { opacity: 1; }
+.solar-breaker .conn-line {
+  stroke: rgba(141, 148, 255, 0.22);
+  stroke-width: 1;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.solar-breaker[data-phase="4"] .conn-line { stroke-dashoffset: 0; }
+
+/* Data pulses traveling along spokes — phase 4 ambient */
+.solar-breaker .data-pulse {
+  fill: rgba(255, 255, 255, 0.95);
+  filter: drop-shadow(0 0 6px rgba(141, 148, 255, 0.9));
+  opacity: 0;
+}
+.solar-breaker[data-phase="4"] .data-pulse {
+  opacity: 1;
+  animation: solar-pulse-along 6s linear infinite;
+}
+.solar-breaker[data-phase="4"] .data-pulse:nth-of-type(2) { animation-delay: -2s; }
+.solar-breaker[data-phase="4"] .data-pulse:nth-of-type(3) { animation-delay: -4s; }
+@keyframes solar-pulse-along {
+  0%   { offset-distance: 0%;   opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* Outer celestial orbits — slow rotation, ambient context (phase 4) */
+.solar-breaker .outer-orbit {
+  fill: none;
+  stroke: rgba(141, 148, 255, 0.10);
+  stroke-width: 1;
+  stroke-dasharray: 14 22;
+  opacity: 0;
+  transform-box: view-box;
+  transform-origin: center;
+  transition: opacity 2.4s ease;
+}
+.solar-breaker[data-phase="4"] .outer-orbit { opacity: 1; }
+.solar-breaker .outer-orbit-1 {
+  transition-delay: 0.6s;
+  animation: solar-outer-cw 240s linear infinite;
+}
+.solar-breaker .outer-orbit-2 {
+  stroke-dasharray: 10 30;
+  stroke: rgba(141, 148, 255, 0.08);
+  transition-delay: 1.5s;
+  animation: solar-outer-ccw 360s linear infinite;
+}
+.solar-breaker .outer-orbit-3 {
+  stroke-dasharray: 20 40;
+  stroke: rgba(141, 148, 255, 0.06);
+  transition-delay: 2.4s;
+  animation: solar-outer-cw 520s linear infinite;
+}
+@keyframes solar-outer-cw  { to { transform: rotate(360deg); } }
+@keyframes solar-outer-ccw { to { transform: rotate(-360deg); } }
+
+/* Phase 1 chaos — concept words drifting across the viewport */
+.solar-breaker .chaos-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  transition: opacity 1.2s ease;
+  z-index: 2;
+}
+.solar-breaker[data-phase="2"] .chaos-layer,
+.solar-breaker[data-phase="3"] .chaos-layer,
+.solar-breaker[data-phase="4"] .chaos-layer {
+  opacity: 0;
+  pointer-events: none;
+}
+.solar-breaker .chaos-node {
+  position: absolute;
+  left: var(--cx);
+  top: var(--cy);
+  font-family: var(--font-sans);
+  font-size: clamp(0.65rem, 1vw, 0.85rem);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.32);
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  animation: solar-chaos-drift var(--cd, 10s) ease-in-out infinite;
+}
+@keyframes solar-chaos-drift {
+  0%   { transform: translate(-50%, -50%); }
+  25%  { transform: translate(calc(-50% + 22px), calc(-50% - 16px)); }
+  50%  { transform: translate(calc(-50% - 14px), calc(-50% + 20px)); }
+  75%  { transform: translate(calc(-50% + 8px),  calc(-50% + 6px)); }
+  100% { transform: translate(-50%, -50%); }
+}
+
+/* Orbital stage — 4 rings × 4 nodes, top-down circular orbits */
+.solar-breaker .orbit-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solar-breaker .ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+.solar-breaker[data-phase="3"] .ring,
+.solar-breaker[data-phase="4"] .ring { opacity: 1; }
+/* Per-ring config + staggered fade-in (closest first) */
+.solar-breaker .ring-1 { --speed: 60s;  --radius: 13vmin; transition-delay: 0s; }
+.solar-breaker .ring-2 { --speed: 85s;  --radius: 23vmin; transition-delay: 0.9s; }
+.solar-breaker .ring-3 { --speed: 115s; --radius: 33vmin; transition-delay: 1.8s; }
+.solar-breaker .ring-4 { --speed: 150s; --radius: 43vmin; transition-delay: 2.7s; }
+
+/* Each arm is a zero-size rotating wrapper carrying one node on its rim */
+.solar-breaker .arm {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  animation: solar-arm-spin var(--speed) linear infinite;
+  animation-play-state: paused;
+}
+.solar-breaker[data-phase="3"] .arm,
+.solar-breaker[data-phase="4"] .arm { animation-play-state: running; }
+/* Counter-rotate rings 2 and 4 for visual depth */
+.solar-breaker .ring-2 .arm,
+.solar-breaker .ring-4 .arm { animation-direction: reverse; }
+@keyframes solar-arm-spin { to { transform: rotate(360deg); } }
+
+/* Spread 4 nodes per ring evenly via animation-delay (phase offsets) */
+.solar-breaker .arm.a-0 { animation-delay: 0s; }
+.solar-breaker .arm.a-1 { animation-delay: calc(var(--speed) * -0.25); }
+.solar-breaker .arm.a-2 { animation-delay: calc(var(--speed) * -0.50); }
+.solar-breaker .arm.a-3 { animation-delay: calc(var(--speed) * -0.75); }
+
+/* Node sits at the top of its arm, then counter-rotates to keep label upright */
+.solar-breaker .node {
+  position: absolute;
+  left: 0;
+  top: calc(var(--radius) * -1);
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  transform-origin: center;
+  animation: solar-arm-counter var(--speed) linear infinite;
+  animation-play-state: paused;
+}
+.solar-breaker[data-phase="3"] .node,
+.solar-breaker[data-phase="4"] .node { animation-play-state: running; }
+.solar-breaker .ring-2 .node,
+.solar-breaker .ring-4 .node { animation-direction: reverse; }
+@keyframes solar-arm-counter { to { transform: rotate(-360deg); } }
+.solar-breaker .arm.a-0 .node { animation-delay: 0s; }
+.solar-breaker .arm.a-1 .node { animation-delay: calc(var(--speed) * -0.25); }
+.solar-breaker .arm.a-2 .node { animation-delay: calc(var(--speed) * -0.50); }
+.solar-breaker .arm.a-3 .node { animation-delay: calc(var(--speed) * -0.75); }
+
+/* Dots — solid glowing stars; scaled by ring (closer = bigger / brighter) */
+.solar-breaker .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(189, 194, 255, 0.95);
+  box-shadow: 0 0 6px rgba(141, 148, 255, 0.85),
+              0 0 14px rgba(141, 148, 255, 0.4);
+  flex-shrink: 0;
+  animation: solar-dot-breathe 4.5s ease-in-out infinite;
+}
+.solar-breaker .ring-3 .dot {
+  width: 9px; height: 9px;
+  box-shadow: 0 0 7px rgba(141, 148, 255, 0.85), 0 0 16px rgba(141, 148, 255, 0.42);
+}
+.solar-breaker .ring-2 .dot {
+  width: 11px; height: 11px;
+  box-shadow: 0 0 8px rgba(141, 148, 255, 0.85), 0 0 19px rgba(141, 148, 255, 0.45);
+}
+.solar-breaker .ring-1 .dot {
+  width: 13px; height: 13px;
+  box-shadow: 0 0 10px rgba(141, 148, 255, 0.9), 0 0 22px rgba(141, 148, 255, 0.48);
+}
+@keyframes solar-dot-breathe {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.2); }
+}
+
+/* Labels — small uppercase data tags beside each dot. JS cycles text in/out
+   every 3s via .is-swap (opacity 0 mid-swap) so the batch refresh feels smooth. */
+.solar-breaker .label {
+  font-family: var(--font-sans);
+  font-size: clamp(0.5rem, 0.65vw, 0.65rem);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  white-space: nowrap;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.6s ease, filter 0.6s ease;
+}
+.solar-breaker .label.is-swap {
+  opacity: 0;
+  filter: blur(3px);
+}
+
+/* Center DESIGN orb — phase 2 reveal, gravity center */
+.solar-breaker .solar-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 11vmin;
+  height: 11vmin;
+  min-width: 90px;
+  min-height: 90px;
+  transform: translate(-50%, -50%) scale(0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 1.4s ease, transform 1.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.solar-breaker[data-phase="2"] .solar-center,
+.solar-breaker[data-phase="3"] .solar-center,
+.solar-breaker[data-phase="4"] .solar-center {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.solar-breaker .orb-glow {
+  position: absolute;
+  inset: -120%;
+  background: radial-gradient(circle,
+    rgba(141, 148, 255, 0.28) 0%,
+    rgba(141, 148, 255, 0.10) 35%,
+    transparent 62%);
+  filter: blur(22px);
+  animation: solar-orb-breathe 5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+@keyframes solar-orb-breathe {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50%      { opacity: 0.85; transform: scale(1.20); }
+}
+
+/* Double-outlined ring (no fill); both outlines glow indigo */
+.solar-breaker .orb-core {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  background: rgba(141, 148, 255, 0.04);
+  box-shadow: 0 0 16px rgba(141, 148, 255, 0.65),
+              0 0 36px rgba(141, 148, 255, 0.35),
+              0 0 70px rgba(141, 148, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: solar-orb-pulse 4s ease-in-out infinite;
+}
+.solar-breaker .orb-core::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 1px solid rgba(141, 148, 255, 0.55);
+  box-shadow: 0 0 8px rgba(141, 148, 255, 0.5),
+              inset 0 0 4px rgba(141, 148, 255, 0.25);
+  pointer-events: none;
+}
+@keyframes solar-orb-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.035); }
+}
+
+.solar-breaker .orb-label {
+  font-family: var(--font-sans);
+  font-size: clamp(0.55rem, 0.75vw, 0.75rem);
+  font-weight: var(--weight-bold, 700);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  line-height: 1.25;
+  max-width: 100%;
+  padding: 0 4px;
+}
+
+/* Text overlay — eyebrow + title bottom-left, note top-right. Phase 4 reveal. */
+.solar-breaker .solar-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  padding: clamp(2.5rem, 5vh, 4rem) clamp(2rem, 6vw, 6rem);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 4vw, 4rem);
+}
+.solar-breaker .solar-overlay-left,
+.solar-breaker .solar-overlay-right {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 1.4s ease, transform 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.solar-breaker .solar-overlay-left {
+  align-self: end;
+  transition-delay: 0.3s;
+}
+.solar-breaker .solar-overlay-right {
+  align-self: start;
+  justify-self: end;
+  max-width: 360px;
+  margin-top: clamp(3rem, 7vh, 5rem);
+  transition-delay: 0.8s;
+}
+.solar-breaker[data-phase="4"] .solar-overlay-left,
+.solar-breaker[data-phase="4"] .solar-overlay-right {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.solar-breaker .solar-eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-kicker);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0 0 1rem;
+}
+.solar-breaker .solar-title {
+  font-family: var(--font-serif);
+  font-size: clamp(26pt, 4.2vw, 50pt);
+  font-weight: var(--weight-regular);
+  color: #fff;
+  line-height: 1.05;
+  margin: 0;
+}
+.solar-breaker .solar-title em {
+  font-style: italic;
+  color: var(--accent-mid);
+}
+.solar-breaker .solar-note {
+  font-family: var(--font-sans);
+  font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+  font-weight: var(--weight-light);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.55;
+  margin: 0;
+  text-align: right;
+  letter-spacing: 0.005em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solar-breaker .arm,
+  .solar-breaker .node,
+  .solar-breaker .orb-core,
+  .solar-breaker .orb-glow,
+  .solar-breaker .dot,
+  .solar-breaker .chaos-node,
+  .solar-breaker .data-pulse,
+  .solar-breaker .outer-orbit { animation: none !important; }
+  .solar-breaker .solar-overlay-left,
+  .solar-breaker .solar-overlay-right { transition: none; }
+}
+
+/* ── LIGHT-MODE VARIANT ──────────────────────────────────────
+   Recolors the solar-system for a warm light background (OBJECT breaker).
+   Only color/glow tokens shift — structure, timing, and motion stay identical. */
+.solar-breaker.is-light .chaos-node {
+  color: rgba(0, 0, 0, 0.30);
+}
+.solar-breaker.is-light .orbit-path { stroke: rgba(141, 148, 255, 0.45); }
+.solar-breaker.is-light .conn-line  { stroke: rgba(141, 148, 255, 0.50); }
+.solar-breaker.is-light .data-pulse {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 5px rgba(141, 148, 255, 0.85));
+}
+.solar-breaker.is-light .outer-orbit   { stroke: rgba(141, 148, 255, 0.30); }
+.solar-breaker.is-light .outer-orbit-2 { stroke: rgba(141, 148, 255, 0.22); }
+.solar-breaker.is-light .outer-orbit-3 { stroke: rgba(141, 148, 255, 0.16); }
+
+/* Dots become warm off-white stars with stronger purple glow so they read
+   clearly against the cream dot-grid background. */
+.solar-breaker.is-light .dot {
+  background: rgba(255, 252, 245, 0.98);
+  box-shadow: 0 0 6px rgba(141, 148, 255, 0.85),
+              0 0 16px rgba(141, 148, 255, 0.50);
+}
+.solar-breaker.is-light .ring-3 .dot {
+  box-shadow: 0 0 7px rgba(141, 148, 255, 0.85), 0 0 18px rgba(141, 148, 255, 0.52);
+}
+.solar-breaker.is-light .ring-2 .dot {
+  box-shadow: 0 0 9px rgba(141, 148, 255, 0.90), 0 0 22px rgba(141, 148, 255, 0.55);
+}
+.solar-breaker.is-light .ring-1 .dot {
+  box-shadow: 0 0 11px rgba(141, 148, 255, 0.95), 0 0 26px rgba(141, 148, 255, 0.58);
+}
+
+/* Labels — dark ink with a soft white halo for legibility over warm dot grid */
+.solar-breaker.is-light .label {
+  color: var(--ink);
+  text-shadow: 0 0 8px rgba(255, 247, 235, 0.85);
+}
+
+/* Center orb — solid warm-white fill so it reads as a planet (not a hollow ring)
+   and visually eclipses any dot that passes behind it. */
+.solar-breaker.is-light .solar-center { z-index: 30; }
+.solar-breaker.is-light .orb-core {
+  border-color: var(--accent);
+  background: transparent;
+  box-shadow: 0 0 16px rgba(141, 148, 255, 0.45),
+              0 0 36px rgba(141, 148, 255, 0.22),
+              0 0 70px rgba(141, 148, 255, 0.10);
+}
+.solar-breaker.is-light .orb-core::before {
+  border-color: rgba(141, 148, 255, 0.65);
+  box-shadow: 0 0 8px rgba(141, 148, 255, 0.35), inset 0 0 4px rgba(141, 148, 255, 0.20);
+}
+.solar-breaker.is-light .orb-glow {
+  background: radial-gradient(circle,
+    rgba(141, 148, 255, 0.32) 0%,
+    rgba(141, 148, 255, 0.12) 35%,
+    transparent 62%);
+}
+.solar-breaker.is-light .orb-label {
+  color: var(--ink);
+  text-shadow: 0 0 6px rgba(255, 247, 235, 0.7);
+}
+
+/* Text overlay — dark text on warm background */
+.solar-breaker.is-light .solar-eyebrow {
+  color: var(--accent-mid);
+}
+.solar-breaker.is-light .solar-title {
+  color: var(--ink);
+}
+.solar-breaker.is-light .solar-title em {
+  color: var(--accent);
+}
+.solar-breaker.is-light .solar-note {
+  color: var(--ink-mid);
+}
+
 
 /* Background orbs — hiw-orb component reused; JS fades from 0 → 1 */
 .work-orbs {

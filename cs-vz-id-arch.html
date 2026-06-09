@@ -2595,13 +2595,11 @@
 
     <div class="cs-video-wrap r d3" style="aspect-ratio:16/9;position:relative;">
       <iframe id="idarch-mission-vimeo"
-              src="https://player.vimeo.com/video/1199080100?title=0&amp;byline=0&amp;portrait=0&amp;logo=0&amp;controls=1&amp;dnt=1&amp;playsinline=1"
+              src="https://player.vimeo.com/video/1199585967?title=0&amp;byline=0&amp;portrait=0&amp;logo=0&amp;controls=1&amp;muted=1&amp;dnt=1&amp;playsinline=1"
               style="width:100%;height:100%;border:0;display:block;"
               allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
               allowfullscreen
               title="Identity Architecture — mission overview"></iframe>
-      <button id="idarch-mission-unmute" type="button" aria-label="Click to unmute"
-              style="position:absolute;inset:0;width:100%;height:100%;background:transparent;border:0;cursor:pointer;display:none;"></button>
     </div>
     <div class="cs-video-subtitle r d3" id="idarch-mission-subtitle" aria-live="polite">
       <p class="cs-video-subtitle-text"></p>
@@ -3739,13 +3737,11 @@
 
     <div class="cs-video-wrap r d3" style="aspect-ratio:16/9;position:relative;">
       <iframe id="idarch-solution-vimeo"
-              src="https://player.vimeo.com/video/1199080737?title=0&amp;byline=0&amp;portrait=0&amp;logo=0&amp;controls=1&amp;dnt=1&amp;playsinline=1"
+              src="https://player.vimeo.com/video/1199586256?title=0&amp;byline=0&amp;portrait=0&amp;logo=0&amp;controls=1&amp;muted=1&amp;dnt=1&amp;playsinline=1"
               style="width:100%;height:100%;border:0;display:block;"
               allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
               allowfullscreen
               title="Identity Architecture — solution overview"></iframe>
-      <button id="idarch-solution-unmute" type="button" aria-label="Click to unmute"
-              style="position:absolute;inset:0;width:100%;height:100%;background:transparent;border:0;cursor:pointer;display:none;"></button>
     </div>
     <div class="cs-video-subtitle r d3" id="idarch-solution-subtitle" aria-live="polite">
       <p class="cs-video-subtitle-text"></p>
@@ -3937,45 +3933,21 @@ document.querySelectorAll('.r').forEach(el => obs.observe(el));
    as cs-vz-home's Verizon 1.0 walkthrough.
    Also handles time-synced subtitles — each cue is { start, end, text }
    in seconds. Vimeo's timeupdate event drives the swap. ── */
-function setupVimeoEmbed(iframeId, unmuteBtnId, subtitleId, cues) {
+function setupVimeoEmbed(iframeId, _unusedUnmuteBtnId, subtitleId, cues) {
   const iframeEl = document.getElementById(iframeId);
-  const unmuteBtn = document.getElementById(unmuteBtnId);
   if (!iframeEl || !window.Vimeo) return;
 
   const player = new Vimeo.Player(iframeEl);
-  player.setVolume(1).catch(() => {});
-  player.setMuted(false).catch(() => {});
-
-  const tryUnmutedPlay = () => {
-    return player.setMuted(false)
-      .then(() => player.setVolume(1))
-      .then(() => player.play())
-      .catch(() => {
-        // Browser blocked sound autoplay — fall back to muted, expose click-to-unmute
-        return player.setMuted(true)
-          .then(() => player.play())
-          .then(() => { if (unmuteBtn) unmuteBtn.style.display = 'block'; })
-          .catch(() => {});
-      });
-  };
+  // Start muted; Vimeo's native controls let the viewer play/pause and adjust volume.
+  player.setMuted(true).catch(() => {});
 
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if (e.isIntersecting) tryUnmutedPlay();
+      if (e.isIntersecting) player.play().catch(() => {});
       else player.pause().catch(() => {});
     });
   }, { threshold: 0.5 });
   obs.observe(iframeEl);
-
-  if (unmuteBtn) {
-    unmuteBtn.addEventListener('click', () => {
-      player.setMuted(false)
-        .then(() => player.setVolume(1))
-        .then(() => player.play())
-        .then(() => { unmuteBtn.style.display = 'none'; })
-        .catch(() => {});
-    });
-  }
 
   // Subtitles — listen to timeupdate and swap text when crossing cue boundaries
   if (subtitleId && Array.isArray(cues) && cues.length) {
