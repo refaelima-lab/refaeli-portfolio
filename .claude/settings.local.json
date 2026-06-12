@@ -43,7 +43,8 @@
       "Bash(grep -n \"^\\\\.cs-sec\\\\|^\\\\.cs-sec[ {.,]\\\\|^\\\\.sec-inner\" /Users/rari/Downloads/refaeli-portfolio/styles.css)",
       "Bash(awk '/ORBITAL VISUAL BREAKER/,/^\\\\/\\\\* ─/' /Users/rari/Downloads/refaeli-portfolio/styles.css)",
       "Bash(awk -F: '$1 > 2720')",
-      "Bash(awk *)"
+      "Bash(awk *)",
+      "Bash(sips -s format jpeg profile-g-glow.heic --out profile-g-glow.jpeg)"
     ]
   }
 }
