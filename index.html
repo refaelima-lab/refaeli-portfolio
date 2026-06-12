@@ -77,57 +77,93 @@
 ══════════════════════════════════════ -->
 <section class="hero" id="hero">
 
-  <!-- z-1: scrolling name, background typographic layer -->
-  <div class="hero-name-marquee" aria-hidden="true">
-    <div class="hero-name-track">
-      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-      <!-- duplicate, seamless loop at -50% -->
-      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-      <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+  <!-- ══════════════════════════════════════════════════════════════
+       INTRO SEQUENCE — phases 1-3, sticky-pinned for the first 100vh.
+       Phase 1 = typewriter copy; Phase 2 = "Refaeli" word morphs to center;
+       Phase 3 = solar system blooms, planets respond to hover.
+       After the user scrolls past, the original hero takes over (Phase 4).
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="hero-intro" id="hero-intro" data-phase="1" aria-label="Welcome">
+
+    <!-- Background — light dot-grid in phase 1, slowly transitions to dark in phase 2 -->
+    <div class="hi-bg" aria-hidden="true"></div>
+
+    <!-- Old hero's center orbit ring — visible during Phase 1 as a quiet
+         centerpiece behind the typewriter. Fades out as Phase 3 blooms. -->
+    <div class="hi-orbit-shell" aria-hidden="true">
+      <div class="hi-orbit"><div class="hi-orbit-dot"></div></div>
     </div>
+
+    <!-- PHASE 1: typewriter copy. Each beat is a paragraph that JS types into. -->
+    <div class="hi-copy" id="hi-copy">
+      <p class="hi-beat" data-beat="1"></p>
+      <p class="hi-beat" data-beat="2"></p>
+      <p class="hi-beat" data-beat="3"></p>
+      <span class="hi-caret" id="hi-caret" aria-hidden="true"></span>
+    </div>
+
   </div>
 
-  <!-- z-2: orbit ring — shell handles scale+fade; inner div handles JS rotation -->
-  <div class="orbit-shell"><div class="orbit"><div class="orbit-dot"></div></div></div>
+  <!-- ══════════════════════════════════════════════════════════════
+       PHASE 4 — the original hero, revealed once the user scrolls past
+       the intro pin. Animations trigger on .is-active being added by JS.
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="hero-original" id="hero-original">
 
-  <!-- z-3: profile photo, centered, anchored to bottom -->
-  <div class="hero-photo-wrap">
-    <img
-      src="assets/profile-related/refaeli-ma-profile-picture-side.png"
-      alt="Refaeli Ma, Principal Product Designer"
-      class="hero-photo"
-      fetchpriority="high"
-      decoding="async"
-    >
-  </div>
+    <!-- z-1: scrolling name, background typographic layer -->
+    <div class="hero-name-marquee" aria-hidden="true">
+      <div class="hero-name-track">
+        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
+      </div>
+    </div>
 
-  <!-- z-5: corner text elements -->
+    <!-- z-2: orbit ring — shell handles scale+fade; inner div handles JS rotation -->
+    <div class="orbit-shell"><div class="orbit"><div class="orbit-dot"></div></div></div>
 
-  <!-- Bottom left: typewriter role -->
-  <div class="hero-role">
-    <span id="typewriter-text">Principal Product Designer</span><span class="cursor-blink"></span>
-  </div>
+    <!-- z-3: profile photo, centered, anchored to bottom -->
+    <div class="hero-photo-wrap">
+      <img
+        src="assets/profile-related/profile-g.jpeg"
+        alt="Refaeli Ma, Principal Product Designer"
+        class="hero-photo hero-photo--fill"
+        fetchpriority="high"
+        decoding="async"
+      >
+    </div>
 
-  <!-- Bottom right: location with pulse — aligned with typewriter baseline -->
-  <div class="hero-location">
-    <span class="hero-pulse"></span>
-    Based in Los Angeles, California
+    <!-- z-5: corner text elements -->
+    <div class="hero-role">
+      <span id="typewriter-text">Principal Product Designer</span><span class="cursor-blink"></span>
+    </div>
+
+    <div class="hero-location">
+      <span class="hero-pulse"></span>
+      Based in Los Angeles, California
+    </div>
+
   </div>
 
 </section>
+
 
 
 <!-- ══════════════════════════════════════
      SKILLS MARQUEE
 ══════════════════════════════════════ -->
 <div class="marquee-wrap">
+  <!-- .marquee-inner gets the scroll-driven parallax translateX; .marquee-track
+       keeps its constant left-scroll CSS animation. Two layers because a single
+       transform can't host both. -->
+  <div class="marquee-inner">
   <div class="marquee-track">
     <!-- First set -->
     <span class="marquee-item">Design Leadership <span class="marquee-sep"></span></span>
@@ -154,31 +190,118 @@
     <span class="marquee-item">Cross-Functional Leadership <span class="marquee-sep"></span></span>
     <span class="marquee-item">Visual Direction <span class="marquee-sep"></span></span>
   </div>
+  </div><!-- /.marquee-inner -->
 </div>
 
 <!-- ══════════════════════════════════════
      PHILOSOPHY
 ══════════════════════════════════════ -->
+<!--
+  DESIGN PHILOSOPHY — runway + sticky pin (impact-style pattern).
+  The runway gives the section a 200vh scroll length; the pin stays at
+  the viewport top while the viewer scrolls through it. JS reads scroll
+  progress (0→1) and toggles .is-phase-2 on the section at ~40% in.
+  Eyebrow stays visible across both phases; .phi-stage (statement/body/
+  pullquote) fades out, solar system fades in. First-time orbit reveal
+  runs the staggered fade-in; once `.is-revealed` is added (sticky), the
+  staggered delays are killed so subsequent up/down toggles are instant
+  opacity swaps — no re-animation.
+-->
 <section class="sec philosophy-sec" id="philosophy">
-  <div class="sec-inner phi-inner">
+  <div class="philosophy-runway">
+    <div class="phi-pin">
 
-    <div class="phi-left">
-      <div class="phi-kicker r"><div class="ch ch-d">Design Philosophy</div></div>
+      <div class="sec-inner phi-inner">
+        <div class="phi-left">
 
-      <div class="phi-statement-wrap r d1">
-        <p class="phi-statement">I design for the problem<br><em>beneath the problem.</em></p>
+          <!-- Eyebrow lives OUTSIDE .phi-stage so it doesn't fade with the body. -->
+          <div class="phi-kicker r"><div class="ch ch-d">Design Philosophy</div></div>
+
+          <!-- Phase-2 hint sits under the eyebrow. Hidden in Phase 1, fades in
+               with the solar system. -->
+          <div class="hi-hint" aria-hidden="true">Hover any node to read more</div>
+
+          <!-- Phase-1 body content — fades out when .is-phase-2 is set. -->
+          <div class="phi-stage" id="phi-stage">
+            <div class="phi-statement-wrap r d1">
+              <p class="phi-statement">I design for the problem<br><em>beneath the problem.</em></p>
+            </div>
+
+            <p class="phi-body r d3">My work begins before the interface, in the tensions and misalignments no one has named yet. I don't start with screens. I start with structure. Then I build systems that resolve what actually matters, shaping behavior until the right action feels natural, almost inevitable.</p>
+
+            <p class="phi-body r d4"><em>Good design, to me, is invisible.</em> Not because it lacks craft, but because it removes the need for attention. Everything works as it should: quietly, precisely, on purpose.</p>
+
+            <div class="phi-pullquote r d5">
+              <p>Most products fail not in execution, but in definition,<br>solving the wrong thing beautifully.</p>
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      <p class="phi-body r d3">My work begins before the interface, in the tensions and misalignments no one has named yet. I don't start with screens. I start with structure. Then I build systems that resolve what actually matters, shaping behavior until the right action feels natural, almost inevitable.</p>
+      <!-- Phase-2 solar system — absolute-positioned, fades in when .is-phase-2 is set. -->
+      <div class="hi-atom" id="hi-atom" aria-hidden="true">
 
-      <p class="phi-body r d4"><em>Good design, to me, is invisible.</em> Not because it lacks craft, but because it removes the need for attention. Everything works as it should: quietly, precisely, on purpose.</p>
+        <div class="hi-wobbler" data-planet="design" style="--inclination: -4deg; --wobble-amp: 3deg; --wobble-period: 10s;">
+          <div class="hi-wobble-plane">
+            <svg class="hi-wobble-line" style="--rx: 160px;" viewBox="-180 -180 360 360" aria-hidden="true"><circle cx="0" cy="0" r="160"/></svg>
+          </div>
+          <span class="hi-planet" style="--rx: 160px; --speed: 24s; --size: 10px;" data-planet="design" tabindex="0" aria-label="Design">
+            <i class="hi-dot"></i><b class="hi-label">Design</b>
+          </span>
+        </div>
 
-      <div class="phi-pullquote r d5">
-        <p>Most products fail not in execution, but in definition,<br>solving the wrong thing beautifully.</p>
+        <div class="hi-wobbler" data-planet="art" style="--inclination:  6deg; --wobble-amp: 4deg; --wobble-period: 17s;">
+          <div class="hi-wobble-plane">
+            <svg class="hi-wobble-line" style="--rx: 245px;" viewBox="-265 -265 530 530" aria-hidden="true"><circle cx="0" cy="0" r="245"/></svg>
+          </div>
+          <span class="hi-planet" style="--rx: 245px; --speed: 32s; --size: 13px;" data-planet="art" tabindex="0" aria-label="Art">
+            <i class="hi-dot"></i><b class="hi-label">Art</b>
+          </span>
+        </div>
+
+        <div class="hi-wobbler" data-planet="science" style="--inclination: -3deg; --wobble-amp: 5deg; --wobble-period: 22s;">
+          <div class="hi-wobble-plane">
+            <svg class="hi-wobble-line" style="--rx: 330px;" viewBox="-350 -350 700 700" aria-hidden="true"><circle cx="0" cy="0" r="330"/></svg>
+          </div>
+          <span class="hi-planet" style="--rx: 330px; --speed: 44s; --size: 16px;" data-planet="science" tabindex="0" aria-label="Science &amp; Nature">
+            <i class="hi-dot"></i><b class="hi-label">Science<br>&amp; Nature</b>
+          </span>
+        </div>
+
+        <div class="hi-wobbler" data-planet="philosophy" style="--inclination:  5deg; --wobble-amp: 5deg; --wobble-period: 19s;">
+          <div class="hi-wobble-plane">
+            <svg class="hi-wobble-line" style="--rx: 415px;" viewBox="-435 -435 870 870" aria-hidden="true"><circle cx="0" cy="0" r="415"/></svg>
+          </div>
+          <span class="hi-planet" style="--rx: 415px; --speed: 58s; --size: 11px;" data-planet="philosophy" tabindex="0" aria-label="Philosophy &amp; Spirituality">
+            <i class="hi-dot"></i><b class="hi-label">Philosophy<br>&amp; Spirituality</b>
+          </span>
+        </div>
+
+        <div class="hi-wobbler" data-planet="life" style="--inclination: -7deg; --wobble-amp: 6deg; --wobble-period: 14s;">
+          <div class="hi-wobble-plane">
+            <svg class="hi-wobble-line" style="--rx: 500px;" viewBox="-520 -520 1040 1040" aria-hidden="true"><circle cx="0" cy="0" r="500"/></svg>
+          </div>
+          <span class="hi-planet" style="--rx: 500px; --speed: 76s; --size: 18px;" data-planet="life" tabindex="0" aria-label="Life">
+            <i class="hi-dot"></i><b class="hi-label">Life</b>
+          </span>
+        </div>
+
+        <div class="hi-nucleus" id="hi-nucleus" aria-hidden="true">
+          <div class="hi-nucleus-glow"></div>
+          <div class="hi-nucleus-core"></div>
+        </div>
+
       </div>
-    </div>
 
-  </div>
+      <!-- Info panel — bottom-left of the pin, fades in on planet hover -->
+      <div class="hi-info" id="hi-info" aria-live="polite">
+        <h3 class="hi-info-title" id="hi-info-title"></h3>
+        <p class="hi-info-body" id="hi-info-body"></p>
+      </div>
+
+    </div><!-- /.phi-pin -->
+  </div><!-- /.philosophy-runway -->
 </section>
 
 
@@ -1278,6 +1401,11 @@
             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
           </svg>
         </a>
+        <a class="cz-li-btn" href="https://github.com/refaelima-lab" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
         <a class="cz-book-btn" href="https://calendar.app.google/dEnEYu5EYMdqmN5F6" target="_blank" rel="noopener noreferrer">Book a Call</a>
       </div>
     </div>
@@ -1325,6 +1453,302 @@
      SCRIPTS
 ══════════════════════════════════════ -->
 <script>
+/* ════════════════════════════════════════════════════════════════
+   HERO INTRO SEQUENCE — phases 1-3 (typewriter → morph → solar bloom)
+   then phase 4 (original hero) reveals when the user scrolls past.
+   ════════════════════════════════════════════════════════════════ */
+(function heroIntro() {
+  const intro = document.getElementById('hero-intro');
+  if (!intro) return;
+
+  /* Hero stays UNLOCKED. The viewer can scroll past the typewriter at
+     any time. During beat 1, a wheel listener treats the first scroll
+     gesture as a "skip" and triggers Phase 2 reveal early so the
+     original hero is already in place if they scroll back. Once beat 2
+     starts rendering, the skip listener is removed. */
+
+  const copy        = document.getElementById('hi-copy');
+  const caret       = document.getElementById('hi-caret');
+  const beats       = Array.from(intro.querySelectorAll('.hi-beat'));
+  const nucleus     = document.getElementById('hi-nucleus');
+  const heroOrig    = document.getElementById('hero-original');
+  const planets     = Array.from(intro.querySelectorAll('.hi-planet'));
+  const infoPanel   = document.getElementById('hi-info');
+  const infoTitle   = document.getElementById('hi-info-title');
+  const infoBody    = document.getElementById('hi-info-body');
+
+  const beatTexts = [
+    "Hi, I'm Refaeli. Thanks for stopping by.",
+    "What you'll find here is a snippet of me,",
+    "as a designer, as a builder."
+  ];
+
+  const PLANET_COPY = {
+    design:     { title: "Design", body: "Design cuts across everything: science, art, psychology, technology, and business. It is analytical and intuitive, rational and emotional at the same time. The systems, the constraints, the optimization, the endless pursuit of making things work better, all of it fascinates me.\n\nBut above all, I'm here to keep creating that one thing: the AHA moment. I became a designer because I wanted to build a better world, and I still do." },
+    art:        { title: "Art", body: "Design solves. Art explores.\n\nArt creates space for emotion, ambiguity, and personal expression. It reminds me that not everything needs to be justified by utility or efficiency. Some things exist simply to make us feel. And that is reason enough." },
+    science:    { title: "Science & Nature", body: "Every system I admire already exists somewhere in nature. Physics, biology, evolution, ecosystems. The laws that quietly hold everything together. The deeper I look, the more I realize how much remains beyond understanding. Science teaches me curiosity. Nature teaches me humility. Both remind me that complexity can emerge from remarkably simple rules.\n\nI'm still an observer who hasn't figured out why any of this exists. I just love the universe that collapsed in front of me." },
+    life:       { title: "Life", body: "Good design begins with paying attention. Conversations, travel, food, relationships, music, culture, frustration, joy. The most valuable insights rarely come from a design tool. They come from living. The more fully we engage with life, the more deeply we understand the people we design for. This is where I find the meaning of the work." },
+    philosophy: { title: "Philosophy & Spirituality", body: "This is where I find perspective. Philosophy taught me to hold opposing ideas without rushing to resolve them. Spirituality taught me that not every question needs an answer. Somewhere between certainty and uncertainty is where I do my best thinking.\n\nThe older I get, the more comfortable I become with ambiguity, complexity, contradiction, and the possibility that there is always another way to see the same thing. The more you know, the more you realize how much you don't." }
+  };
+
+  /* ── Typewriter: types HTML char-by-char, but builds the
+        "Refaeli" span correctly as those characters arrive. ── */
+  const wait = (ms) => new Promise(r => setTimeout(r, ms));
+  const CHAR_DELAY_MIN = 35;
+  const CHAR_DELAY_MAX = 50;
+  const randDelay = () => CHAR_DELAY_MIN + Math.random() * (CHAR_DELAY_MAX - CHAR_DELAY_MIN);
+
+  /* Strip HTML tags to get the plain-text version of a beat (for char counting),
+     and remember which char range falls inside a span. */
+  function parseBeat(html) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    const plain = tmp.textContent;
+    // find first <span ...>...</span> — captures "Refaeli" range
+    const m = html.match(/<span([^>]*)>([^<]+)<\/span>/);
+    if (!m) return { plain, spanStart: -1, spanEnd: -1, spanAttrs: '', spanText: '' };
+    const before = html.substring(0, m.index);
+    const beforePlain = before.replace(/<[^>]+>/g, '');
+    return {
+      plain,
+      spanStart: beforePlain.length,
+      spanEnd: beforePlain.length + m[2].length,
+      spanAttrs: m[1],
+      spanText: m[2]
+    };
+  }
+
+  function renderBeat(el, info, charsTyped) {
+    const { plain, spanStart, spanEnd, spanAttrs, spanText } = info;
+    if (spanStart < 0) {
+      el.textContent = plain.substring(0, charsTyped);
+      return;
+    }
+    if (charsTyped <= spanStart) {
+      el.innerHTML = escapeHTML(plain.substring(0, charsTyped));
+    } else if (charsTyped <= spanEnd) {
+      const before  = plain.substring(0, spanStart);
+      const spanNow = plain.substring(spanStart, charsTyped);
+      el.innerHTML  = escapeHTML(before) + '<span' + spanAttrs + '>' + escapeHTML(spanNow) + '</span>';
+    } else {
+      const before  = plain.substring(0, spanStart);
+      const after   = plain.substring(spanEnd, charsTyped);
+      el.innerHTML  = escapeHTML(before)
+                    + '<span' + spanAttrs + '>' + escapeHTML(spanText) + '</span>'
+                    + escapeHTML(after);
+    }
+  }
+
+  function escapeHTML(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function positionCaretAt(beatEl) {
+    if (!caret) return;
+    const rect = beatEl.getBoundingClientRect();
+    const introRect = intro.getBoundingClientRect();
+    // place caret at end of beat's last text node
+    const range = document.createRange();
+    const last = beatEl.lastChild;
+    if (last) {
+      const offset = last.nodeType === 3 ? last.textContent.length : last.childNodes.length;
+      try {
+        range.setStart(last, offset);
+        range.setEnd(last, offset);
+        const cRect = range.getBoundingClientRect();
+        caret.style.left = (cRect.left - introRect.left) + 'px';
+        caret.style.top  = (cRect.top  - introRect.top)  + 'px';
+        caret.classList.add('is-positioned');
+        return;
+      } catch (e) {}
+    }
+    // fallback: end of beat element
+    caret.style.left = (rect.right - introRect.left) + 'px';
+    caret.style.top  = (rect.top   - introRect.top)  + 'px';
+    caret.classList.add('is-positioned');
+  }
+
+  async function typeBeat(el, html) {
+    const info = parseBeat(html);
+    for (let i = 0; i <= info.plain.length; i++) {
+      renderBeat(el, info, i);
+      positionCaretAt(el);
+      if (i < info.plain.length) await wait(randDelay());
+    }
+  }
+
+  async function runPhase1() {
+    await wait(1200);
+    // No skip behavior — the page is unlocked from the start, so the
+    // viewer can scroll past the hero freely while the typewriter keeps
+    // typing in the background. The full sequence (beats → hold →
+    // reveal) plays out regardless of whether they're looking.
+    for (let i = 0; i < beats.length; i++) {
+      await typeBeat(beats[i], beatTexts[i]);
+      if (i < beats.length - 1) await wait(700);
+    }
+    await wait(800);
+    triggerHeroPhase2();
+  }
+
+  /* Reveal the original hero (Phase 2 — internal name "phase 4" so the
+     existing CSS rules still match). One-way: once shown, stays shown. */
+  function triggerHeroPhase2() {
+    intro.dataset.phase = '4';
+    if (heroOrig) heroOrig.classList.add('is-shown');
+  }
+
+  /* (IntersectionObserver removed — .hero-original is now layered in the
+     same viewport as .hero-intro and would fire immediately on page load,
+     starting the reveals too early. Phase 4 trigger above adds .is-shown
+     at the correct moment.) */
+
+  /* Kick off Phase 1 once layout settles (one frame after load) */
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    requestAnimationFrame(runPhase1);
+  } else {
+    window.addEventListener('DOMContentLoaded', () => requestAnimationFrame(runPhase1), { once: true });
+  }
+})();
+
+
+/* ════════════════════════════════════════════════════════════════
+   DESIGN PHILOSOPHY — scroll-progress phase swap (impact pattern).
+   Reads scroll progress through the 200vh runway and toggles
+   .is-phase-2 on the section at ~40% progress. No scroll lock, no
+   wheel interception — browser owns scrolling. Solar's first-time
+   staggered reveal is gated by .is-revealed (sticky); after that,
+   up/down toggles are instant opacity swaps with no re-animation.
+   ════════════════════════════════════════════════════════════════ */
+(function philosophySolar() {
+  const sec     = document.getElementById('philosophy');
+  if (!sec) return;
+  const runway  = sec.querySelector('.philosophy-runway');
+  if (!runway) return;
+
+  const PLANET_COPY = {
+    design:     { title: "Design",                    body: "Design cuts across everything: science, art, psychology, technology, and business. It is analytical and intuitive, rational and emotional at the same time. The systems, the constraints, the optimization, the endless pursuit of making things work better, all of it fascinates me.\n\nBut above all, I'm here to keep creating that one thing: the AHA moment. I became a designer because I wanted to build a better world, and I still do." },
+    art:        { title: "Art",                       body: "Design solves. Art explores.\n\nArt creates space for emotion, ambiguity, and personal expression. It reminds me that not everything needs to be justified by utility or efficiency. Some things exist simply to make us feel. And that is reason enough." },
+    science:    { title: "Science & Nature",          body: "Every system I admire already exists somewhere in nature. Physics, biology, evolution, ecosystems. The laws that quietly hold everything together. The deeper I look, the more I realize how much remains beyond understanding. Science teaches me curiosity. Nature teaches me humility. Both remind me that complexity can emerge from remarkably simple rules.\n\nI'm still an observer who hasn't figured out why any of this exists. I just love the universe that collapsed in front of me." },
+    life:       { title: "Life",                      body: "Good design begins with paying attention. Conversations, travel, food, relationships, music, culture, frustration, joy. The most valuable insights rarely come from a design tool. They come from living. The more fully we engage with life, the more deeply we understand the people we design for. This is where I find the meaning of the work." },
+    philosophy: { title: "Philosophy & Spirituality", body: "This is where I find perspective. Philosophy taught me to hold opposing ideas without rushing to resolve them. Spirituality taught me that not every question needs an answer. Somewhere between certainty and uncertainty is where I do my best thinking.\n\nThe older I get, the more comfortable I become with ambiguity, complexity, contradiction, and the possibility that there is always another way to see the same thing. The more you know, the more you realize how much you don't." }
+  };
+
+  const planets   = Array.from(sec.querySelectorAll('.hi-planet'));
+  const wobblers  = Array.from(sec.querySelectorAll('.hi-wobbler'));
+  const infoPanel = document.getElementById('hi-info');
+  const infoTitle = document.getElementById('hi-info-title');
+  const infoBody  = document.getElementById('hi-info-body');
+
+  let active = null;
+  let mx = -9999, my = -9999;
+  const HOVER_RADIUS = 50;
+
+  function showPlanet(planet) {
+    if (!planet || planet === active) return;
+    if (active) active.classList.remove('is-hovered');
+    active = planet;
+    wobblers.forEach(w => w.classList.add('is-paused'));
+    planet.classList.add('is-hovered');
+    const c = PLANET_COPY[planet.dataset.planet];
+    if (c && infoTitle && infoBody && infoPanel) {
+      infoTitle.textContent = c.title;
+      infoBody.textContent  = c.body;
+      infoPanel.classList.add('is-shown');
+    }
+  }
+  function hidePlanet() {
+    if (!active) return;
+    active.classList.remove('is-hovered');
+    active = null;
+    wobblers.forEach(w => w.classList.remove('is-paused'));
+    if (infoPanel) infoPanel.classList.remove('is-shown');
+  }
+
+  /* Proximity-based hover (rAF). Only active when Phase 2 is showing. */
+  function tickProximity() {
+    if (sec.classList.contains('is-phase-2')) {
+      const rect = sec.getBoundingClientRect();
+      const inView = rect.bottom > 0 && rect.top < window.innerHeight;
+      if (inView) {
+        let nearest = null, dMin = HOVER_RADIUS + 1;
+        for (const planet of planets) {
+          const dot = planet.querySelector('.hi-dot') || planet;
+          const r = dot.getBoundingClientRect();
+          const dx = mx - (r.left + r.width  / 2);
+          const dy = my - (r.top  + r.height / 2);
+          const d  = Math.sqrt(dx * dx + dy * dy);
+          if (d < dMin) { nearest = planet; dMin = d; }
+        }
+        if (nearest && dMin <= HOVER_RADIUS) {
+          if (nearest !== active) showPlanet(nearest);
+        } else if (active) {
+          hidePlanet();
+        }
+      } else if (active) {
+        hidePlanet();
+      }
+    } else if (active) {
+      hidePlanet();
+    }
+    requestAnimationFrame(tickProximity);
+  }
+
+  document.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
+  requestAnimationFrame(tickProximity);
+
+  // Keyboard + touch fallback
+  planets.forEach((p) => {
+    p.addEventListener('focus', () => { if (sec.classList.contains('is-phase-2')) showPlanet(p); });
+    p.addEventListener('blur',  () => { if (p === active) hidePlanet(); });
+    p.addEventListener('click', (e) => {
+      if (!sec.classList.contains('is-phase-2')) return;
+      e.stopPropagation();
+      if (p === active) hidePlanet(); else showPlanet(p);
+    });
+  });
+
+  /* ── Scroll-progress phase swap (impact-style; no scroll interception) ──
+     Runway is 200vh, pin is sticky 100vh. So the runway's "scrolled-in"
+     range is 100vh (200vh − 100vh viewport). progress 0 = top of section
+     at viewport top; progress 1 = section's bottom at viewport bottom.
+     Threshold ~0.4 → Phase 2 activates as the viewer scrolls in. */
+  const PHASE_THRESHOLD = 0.40;
+  let ticking = false;
+  let everRevealed = false;   // becomes true the first time we cross threshold
+
+  function updatePhase() {
+    const rect      = runway.getBoundingClientRect();
+    const wrapH     = runway.offsetHeight;
+    const viewportH = window.innerHeight;
+    const scrolledIn = -rect.top;
+    const total     = Math.max(1, wrapH - viewportH);
+    const progress  = Math.max(0, Math.min(1, scrolledIn / total));
+
+    const inPhase2 = progress >= PHASE_THRESHOLD;
+    sec.classList.toggle('is-phase-2', inPhase2);
+
+    // Sticky reveal flag — once we've hit Phase 2 ONCE and the orbit
+    // staggered reveal has had time to complete, set .is-revealed so
+    // subsequent toggles skip the staggered delays (instant opacity swap).
+    if (inPhase2 && !everRevealed) {
+      everRevealed = true;
+      // Last orbit reveal delay is 2.4s + 0.9s transition ≈ 3.3s.
+      setTimeout(() => { sec.classList.add('is-revealed'); }, 3500);
+    }
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(() => { updatePhase(); ticking = false; });
+      ticking = true;
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', updatePhase, { passive: true });
+  updatePhase();
+})();
+
 /* ── PROGRESS BAR + NAV SCROLL STATE ── */
 const prog = document.getElementById('prog');
 const nav  = document.getElementById('nav');
@@ -1338,10 +1762,17 @@ window.addEventListener('scroll', () => {
   /* hero parallax — three depth layers */
   const hh = heroEl.offsetHeight;
   if (t < hh * 1.5) {
-    /* layer 1: marquee — slowest, hangs back */
-    pxMarquee.style.transform = `translateY(calc(-50% + ${t * 0.45}px))`;
-    /* layer 2: photo — medium */
-    if (pxPhotoReady) pxPhotoWrap.style.transform = `translateX(-50%) translateY(${t * 0.25}px)`;
+    /* layer 1: marquee — slowest, hangs back. Skipped when the photo is in
+       full-bleed mode (marquee is re-anchored to bottom, not center). */
+    if (!pxPhotoWrap.querySelector('.hero-photo--fill')) {
+      pxMarquee.style.transform = `translateY(calc(-50% + ${t * 0.45}px))`;
+    }
+    /* layer 2: photo — medium. Skipped when the image is in full-bleed
+       background mode (.hero-photo--fill) — that variant pins the wrapper
+       to inset:0 and shouldn't translate on scroll. */
+    if (pxPhotoReady && !pxPhotoWrap.querySelector('.hero-photo--fill')) {
+      pxPhotoWrap.style.transform = `translateX(-50%) translateY(${t * 0.25}px)`;
+    }
     /* layer 3: corner text — barely moves */
     if (pxCornerReady) {
       pxRole.style.transform = `translateY(${t * 0.09}px)`;
@@ -1357,6 +1788,9 @@ window.addEventListener('scroll', () => {
 
   /* philosophy dot-grid parallax */
   tickPhilosophyParallax();
+
+  /* skills marquee parallax */
+  tickMarqueeParallax();
 });
 
 
@@ -1398,6 +1832,32 @@ function tickImpactParallax() {
   /* shift background-position-y so dots drift at ~75% of scroll speed */
   const scrolled = vh - rect.top;
   impactSection.style.backgroundPositionY = `${scrolled * 0.25}px`;
+}
+
+
+/* ── SKILLS MARQUEE PARALLAX ──
+   Sets --mq-parallax on .marquee-inner based on the marquee's vertical
+   position in the viewport. Maps t∈[0,1] (top→bottom) to an offset of
+   ±MAX_OFFSET px so as the viewer scrolls down past the marquee, the
+   text drifts left (additive to the constant CSS marquee animation).
+   Subtle by design — bump MAX_OFFSET if you want a stronger effect. */
+const marqueeWrap  = document.querySelector('.marquee-wrap');
+const marqueeInner = document.querySelector('.marquee-inner');
+const MQ_MAX_OFFSET = 60;  /* px — left/right travel; ~60 reads as gentle */
+
+function tickMarqueeParallax() {
+  if (!marqueeWrap || !marqueeInner) return;
+  const rect = marqueeWrap.getBoundingClientRect();
+  const vh   = window.innerHeight;
+  if (rect.bottom < 0 || rect.top > vh) return;
+  /* t = 0 when marquee center is at viewport top, 1 at viewport bottom */
+  const t = (rect.top + rect.height / 2) / vh;
+  /* Map t [0,1] → offset [-MAX, +MAX]: bottom = +MAX (right), top = -MAX (left).
+     So as viewer scrolls DOWN (marquee moves from bottom to top of viewport),
+     offset travels from +MAX to -MAX — additional leftward drift on top of
+     the constant marquee animation. */
+  const offset = (0.5 - t) * 2 * MQ_MAX_OFFSET;
+  marqueeInner.style.setProperty('--mq-parallax', `${offset}px`);
 }
 
 
@@ -1814,11 +2274,43 @@ document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
     var overlay = document.getElementById('gal-overlay');
     if (overlay && overlay.classList.contains('visible')) isDark = true;
 
+    /* Hero intro: phases 2 & 3 use a dark dot-grid background — nav
+       needs light text. Phase 4 is the full-bleed color portrait
+       (profile-g) whose top edge is a dark night scene, so light nav
+       text reads cleanly there too. The dark-halo text-shadow on
+       .nav--light handles bokeh-light blowouts in the upper-right.
+       Additionally, when nav is actually intersecting the hero photo,
+       we set .nav--on-photo so the nav text is SOLID white (rather
+       than the faded rgba used on other dark sections). */
+    var onHeroPhoto = false;
+    var intro = document.getElementById('hero-intro');
+    if (intro) {
+      var p = intro.getAttribute('data-phase');
+      if (p === '2' || p === '3' || p === '4') isDark = true;
+      if (p === '4') {
+        var rIntro = intro.getBoundingClientRect();
+        if (rIntro.top < navH && rIntro.bottom > 0) onHeroPhoto = true;
+      }
+    }
+
     nav.classList.toggle('nav--light', isDark);
+    nav.classList.toggle('nav--on-photo', onHeroPhoto);
     if (backTop) backTop.classList.toggle('btn--on-dark', isDark);
   }
 
   window.addEventListener('scroll', updateNavColor, { passive: true });
+
+  /* Also re-run when the hero intro's phase changes (scroll is locked
+     during the intro sequence, so scroll-based recompute alone wouldn't
+     pick up the phase 1 → 2 → 3 background swap). */
+  var introEl = document.getElementById('hero-intro');
+  if (introEl) {
+    new MutationObserver(updateNavColor).observe(introEl, {
+      attributes: true,
+      attributeFilter: ['data-phase']
+    });
+  }
+
   updateNavColor();
 }());
 

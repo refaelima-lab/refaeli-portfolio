@@ -2158,6 +2158,26 @@
       transform: translateY(20px);
       will-change: opacity, transform;
     }
+    /* Stat-card a11y override for the dark Atomic-Design panel. The
+       default .phi-stat-card uses --ink (#181820) on a --dark (#181821)
+       background — contrast ~1.0, essentially invisible. Scope to this
+       panel only and switch to white-on-dark with --accent-mid labels. */
+    .ds2-hero .phi-stat-card {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+    .ds2-hero .phi-stat-card:hover {
+      background: rgba(255, 255, 255, 0.10);
+      border-color: rgba(141, 148, 255, 0.55); /* accent-mid @55% */
+      box-shadow: 0 0 0 1px rgba(141, 148, 255, 0.22),
+                  0 12px 32px rgba(141, 148, 255, 0.18);
+    }
+    .ds2-hero .phi-stat-num {
+      color: #fff;                /* ~16:1 vs --dark, AAA */
+    }
+    .ds2-hero .phi-stat-label {
+      color: var(--accent-mid);   /* #8D94FF on --dark ≈ 8:1, AAA */
+    }
 
     /* ── Weather Person Mode Stage ── */
     .wpm-stage {

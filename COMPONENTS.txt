@@ -61,26 +61,35 @@ rhythm via tokens (no inline margins).
 .philosophy-sec   (#philosophy)
   Dark surface. background: var(--dark) + --dot-grid-white-sm.
   min-height:100vh. display:flex; align-items:center.
-  Inner: .sec-inner.phi-inner — left column with the type stack
-  (.phi-kicker → .phi-statement-wrap → .phi-pullquote → .phi-body).
-  Has decorative dot-grid parallax tied to scroll.
+  Inner: .sec-inner.phi-inner — left column with the type stack:
+  .phi-kicker → .phi-statement-wrap → .phi-body × 2 → .phi-pullquote.
+  Note: the pullquote sits at the END of the column (was originally
+  between statement+body). .phi-statement-wrap carries explicit
+  margin-top: -8px + margin-bottom: 2.5rem to retain rhythm now that
+  the pullquote isn't providing in-flow spacing. .phi-pullquote has
+  var(--accent-mid-a08) background + right-side border-radius and
+  size clamp(16pt, 2vw, 20pt). Has decorative dot-grid parallax.
 
 .wsb-breaker      (#work — "MADE REAL")
   Dark surface. background: var(--dark) + --dot-grid-white-sm.
   position:absolute; inset:0 inside .work-sticky.
   display:flex; align-items:center; justify-content:center.
   padding: 0 var(--section-padding-x) — matches .philosophy-sec gutter.
-  Inner: .wsb-inner — flex column, left-aligned, max-width
-  var(--content-default), centered via auto margin.
-  Has .hero-glow centered overlay; canvas ripple active.
+  Inner: .hero-glow overlay + .solar-breaker (see §20).
+  No longer wraps .wsb-inner / .ch / h2.st-d / .bp-d content stack —
+  the whole text block + visual is owned by .solar-breaker now.
   Scroll-driven opacity (fades out as first work card enters).
+  .work-stage parent gets var(--dot-grid-white-sm) on its background
+  so the dot pattern extends behind the entire card stack, not just
+  the breaker overlay.
 
 .ob-breaker       (#object — "OTHER THINGS I MAKE")
   Warm surface. background: var(--warm) + --dot-grid-mid.
   position:absolute; inset:0 inside .gal-sticky.
   display:flex; align-items:center; justify-content:center.
   padding: 0 var(--section-padding-x).
-  Inner: reuses .wsb-inner class (same layout rules).
+  Inner: .solar-breaker.is-light (see §20) — same solar pattern,
+  light-mode color overrides. No .hero-glow; no .wsb-inner.
   Scroll-driven opacity (fades out as gallery enters).
 
 Typography rhythm inside breakers (driven by tokens — never hardcode):
@@ -1218,6 +1227,194 @@ Promote to a shared class (like the existing .cs-sec, .cs-sidenav,
   - Styling differences are token-level (color, padding) not
     structural
   - You'd rather edit one rule than four
+
+
+═══════════════════════════════════════════════════════════════════
+20. SOLAR-SYSTEM BREAKER PATTERN  (.solar-breaker)
+═══════════════════════════════════════════════════════════════════
+
+Reusable cinematic breaker pattern. Both index breakers (#work,
+#object) wrap an instance, and cs-vz-id-arch HERO is the original
+source (.solar-hero — same pattern, slightly different scoping).
+
+Top-down view of 4 concentric CIRCULAR orbits with 4 nodes each =
+16 orbiting dots. Center orb anchors the system. Build is additive
+across 4 phases — nothing is ever thrown away, no camera moves,
+no tilt, no cut. Stable composition is the point.
+
+ALL SELECTORS SCOPED UNDER .solar-breaker so the generic class
+names (.ring / .arm / .node / .dot / .label / .orbit-path /
+.connection-lines / .conn-line / .outer-orbit / .chaos-node /
+.solar-center / .orb-core / .orb-glow / .orb-label / .solar-overlay)
+don't leak to other parts of the site.
+
+PHASE TIMING (.solar-breaker[data-phase="N"])
+  Phase 1 (0s)     Chaos words drift across viewport; nothing else.
+  Phase 2 (1.6s)   Chaos fades. Center orb scales 0.25 → 1.
+  Phase 3 (3.5s)   4 orbit paths fade in staggered (closest first,
+                   ring 4 lands at +4.5s). Rings start spinning.
+  Phase 4 (8s)    Text overlay reveals. Connection spokes draw
+                   outward. Outer celestial orbits fade in. Data
+                   pulses start traveling along the spokes.
+
+Driven by bootSolarBreaker(el) in index.html which sets data-phase
+via setTimeout, starting on IntersectionObserver entry (threshold
+0.3). Animations themselves run continuously once activated.
+
+SKELETON
+  <div class="solar-breaker[ is-light]" id="..." data-phase="1">
+    <svg class="solar-svg" viewBox="-500 -500 1000 1000"
+         preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <circle class="orbit-path orbit-path-1" cx="0" cy="0" r="130"/>
+      <circle class="orbit-path orbit-path-2" cx="0" cy="0" r="230"/>
+      <circle class="orbit-path orbit-path-3" cx="0" cy="0" r="330"/>
+      <circle class="orbit-path orbit-path-4" cx="0" cy="0" r="430"/>
+      <g class="connection-lines">
+        <line class="conn-line" x1="0" y1="0" x2="0" y2="-430"/>
+        ... 6 radial spokes total ...
+      </g>
+      <circle class="data-pulse" r="3"
+              style="offset-path: path('M 0 0 L 0 -430');"/>
+      ... 3 data pulses total ...
+      <circle class="outer-orbit outer-orbit-1" cx="0" cy="0" r="540"/>
+      ... 3 outer orbits total ...
+    </svg>
+
+    <div class="chaos-layer" aria-hidden="true">
+      <div class="chaos-node" style="--cx:14%;--cy:22%;--cd:9s;">Word</div>
+      ... 8 chaos nodes total ...
+    </div>
+
+    <div class="orbit-stage">
+      <div class="ring ring-1">
+        <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Label</span></div></div>
+        <div class="arm a-1">...</div>
+        <div class="arm a-2">...</div>
+        <div class="arm a-3">...</div>
+      </div>
+      ... 4 rings total (ring-1 closest, ring-4 farthest) ...
+    </div>
+
+    <div class="solar-center" aria-hidden="true">
+      <div class="orb-glow"></div>
+      <div class="orb-core">
+        <span class="orb-label">Center Label</span>
+      </div>
+    </div>
+
+    <div class="solar-overlay">
+      <div class="solar-overlay-left">
+        <div class="solar-eyebrow">Eyebrow</div>
+        <h2 class="solar-title">Title <em>with italic</em></h2>
+      </div>
+      <div class="solar-overlay-right">
+        <p class="solar-note">Short paragraph copy.</p>
+      </div>
+    </div>
+  </div>
+
+KEY MECHANICS
+  Orbital motion uses the ring/arm/node pattern (NOT cos/sin math):
+    .ring is position-absolute at center, width:0/height:0.
+    .arm is also 0×0 and rotates 360° via @keyframes solar-arm-spin
+         at duration var(--speed) (60s/85s/115s/150s per ring,
+         outer rings slower → physics-like).
+    .node sits at top: calc(var(--radius) * -1) inside the arm, so
+         it rides the arm's rotation. .node counter-rotates the
+         same duration to keep the label upright.
+    Rings 2 and 4 have animation-direction: reverse (counter-
+         rotational depth).
+    4 nodes per ring spread via animation-delay
+         calc(var(--speed) * -0.25/-0.50/-0.75) on .arm.a-0/1/2/3.
+
+  Per-ring config:
+    .ring-1  --speed:  60s  --radius: 13vmin
+    .ring-2  --speed:  85s  --radius: 23vmin
+    .ring-3  --speed: 115s  --radius: 33vmin
+    .ring-4  --speed: 150s  --radius: 43vmin
+
+  Dot sizes scale inward (closer to center = bigger + brighter):
+    .ring-4 .dot   7px,  default glow
+    .ring-3 .dot   9px,  +1 unit glow
+    .ring-2 .dot  11px,  +2 units
+    .ring-1 .dot  13px,  +3 units (most prominent)
+
+  Labels: solid uppercase data tags. clamp(0.5rem, 0.65vw, 0.65rem),
+    letter-spacing 0.16em, text-shadow for legibility on glow.
+    Default opacity transition 0.6s ease + filter 0.6s ease so
+    label-cycle batch swaps feel soft. JS adds .is-swap during
+    swap → opacity:0 + filter: blur(3px).
+
+  Center orb (.solar-center):
+    11vmin × 11vmin (min 90px). z-index 10 (dark) / 30 (light).
+    .orb-glow is a blurred radial gradient halo (inset: -120%,
+      filter: blur(22px), z-index: -1, breathes 5s).
+    .orb-core has double outline: own border + ::before inset 6px
+      border. Both glow indigo. .orb-core pulses 4s (scale 1↔1.035).
+    .orb-label: bold uppercase, letter-spacing 0.18em, line-height
+      1.25, text-align center, max-width 100% so 2-word labels wrap.
+
+  Chaos layer (phase 1 only):
+    .chaos-node positioned by inline --cx/--cy %; drifts via
+    solar-chaos-drift keyframe (varied --cd duration). All fade
+    to opacity 0 at phase 2.
+
+DARK vs. LIGHT VARIANT
+  Default is dark mode (white-text on dark background). Add
+  .is-light to switch to warm-surface mode (e.g. on .ob-breaker):
+    .dot bg            → off-white rgba(255,252,245,0.98) w/
+                         stronger purple glow
+    .label color       → var(--ink) w/ warm halo text-shadow
+    .orb-core border   → var(--accent) (purple outer outline)
+    .orb-core::before  → softer lavender (lighter inner outline)
+    .orb-core bg       → transparent (orb reads as hollow ring,
+                         not solid disk)
+    .solar-center      → z-index 30 (sits above orbits + spokes)
+    .orb-glow          → warmer radial gradient
+    .orb-label         → var(--ink), warm halo
+    .solar-eyebrow     → var(--accent-mid)
+    .solar-title       → var(--ink)
+    .solar-title em    → var(--accent)
+    .solar-note        → var(--ink-mid)
+
+LABEL BATCH CYCLE (index.html)
+  startSolarLabelCycle(rootEl, POOLS) — every 6s once phase ≥ 3,
+  every label advances to the next batch of 4 from its ring's pool.
+  Stagger: 80ms between each of the 16 labels (~1.3s wave total).
+  Per-label fade: 0.6s opacity + 0.6s blur out → swap textContent
+  at 0.6s mark → 0.6s in.
+  Pools live as page-scope consts:
+    DIGITAL_POOLS — { 1: [...], 2: [...], 3: [...], 4: [...] }
+    OBJECT_POOLS  — same shape, OBJECT-themed vocabulary
+  Each pool's array length can be anything; cursor advances by 4
+  and wraps via modulo. Cycle pauses on document.hidden and
+  resumes on visibility change.
+
+JS HOOKS (index.html)
+  bootSolarBreaker(el)       — IO trigger + phase setTimeout chain
+  startSolarLabelCycle(el,P) — MutationObserver on data-phase +
+                                interval-driven label swap
+
+REDUCED MOTION
+  @media (prefers-reduced-motion: reduce) disables all .arm /
+  .node / .orb-core / .orb-glow / .dot / .chaos-node / .data-pulse /
+  .outer-orbit animations and removes the overlay-reveal transition.
+  System ends up in the static phase-4 composition.
+
+WHEN TO USE
+  Anywhere you'd otherwise build a "cinematic chapter opener" — a
+  full-viewport breaker that wants to feel like a system, not a
+  static title card. Drop-in: wrap in any block (or absolute overlay),
+  set #id + data-phase="1", call bootSolarBreaker(el) + optionally
+  startSolarLabelCycle(el, somePools). Add .is-light if the parent
+  surface is warm.
+
+NEVER ADD HERE
+  Camera transforms (translate/scale on .solar-breaker children).
+  Tilt rotation on the orbit-stage.
+  Hard cuts between compositions.
+  All three failed in the pre-port iteration. The HERO pattern's
+  strength is that nothing moves except the orbital animation.
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
