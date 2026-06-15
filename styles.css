@@ -6397,7 +6397,7 @@ nav.nav--light .nav-burger span {
   position: absolute;
   left: clamp(1.25rem, 5vw, 4rem);   /* matches nav padding */
   bottom: clamp(2rem, 5vh, 4rem);    /* lower — closer to the viewport bottom */
-  width: clamp(480px, 62vw, 920px);  /* wider — extra room for paragraph copy */
+  width: clamp(960px, 124vw, 1840px);  /* wider — extra room for paragraph copy */
   opacity: 0;
   transition: opacity 0.6s ease;
   pointer-events: none;
@@ -6457,7 +6457,7 @@ nav.nav--light .nav-burger span {
   color: rgba(255, 255, 255, 0.78);
   line-height: var(--leading-spacious);
   margin: 0;
-  max-width: 520px;
+  max-width: 1040px;
   opacity: 0;
   /* Preserves paragraph breaks (\n\n) from textContent. */
   white-space: pre-line;
