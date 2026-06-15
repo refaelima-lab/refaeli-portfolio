@@ -2274,28 +2274,26 @@ document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
     var overlay = document.getElementById('gal-overlay');
     if (overlay && overlay.classList.contains('visible')) isDark = true;
 
-    /* Hero intro: phases 2 & 3 use a dark dot-grid background — nav
-       needs light text. Phase 4 is the full-bleed color portrait
-       (profile-g) whose top edge is a dark night scene, so light nav
-       text reads cleanly there too. The dark-halo text-shadow on
-       .nav--light handles bokeh-light blowouts in the upper-right.
-       Additionally, when nav is actually intersecting the hero photo,
-       we set .nav--on-photo so the nav text is SOLID white (rather
-       than the faded rgba used on other dark sections). */
+    /* Hero intro: only apply phase-based dark state when the intro is
+       actually intersecting the nav band. Phase advances 1→2→3→4 on
+       a fixed timer and never reverts, so without the rect gate the
+       nav would stay "light text" mode forever once phase 4 was
+       reached — making it invisible on every light section below. */
     var onHeroPhoto = false;
     var intro = document.getElementById('hero-intro');
     if (intro) {
-      var p = intro.getAttribute('data-phase');
-      if (p === '2' || p === '3' || p === '4') isDark = true;
-      if (p === '4') {
-        var rIntro = intro.getBoundingClientRect();
-        if (rIntro.top < navH && rIntro.bottom > 0) onHeroPhoto = true;
+      var rIntro = intro.getBoundingClientRect();
+      var introInNav = rIntro.top < navH && rIntro.bottom > 0;
+      if (introInNav) {
+        var p = intro.getAttribute('data-phase');
+        if (p === '2' || p === '3' || p === '4') isDark = true;
+        if (p === '4') onHeroPhoto = true;
       }
     }
 
     nav.classList.toggle('nav--light', isDark);
     nav.classList.toggle('nav--on-photo', onHeroPhoto);
-    if (backTop) backTop.classList.toggle('btn--on-dark', isDark);
+    /* back-top color flip is handled by the luminance sniffer below */
   }
 
   window.addEventListener('scroll', updateNavColor, { passive: true });
@@ -2325,6 +2323,43 @@ document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
   btn.addEventListener('click', function () {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+}());
+
+/* ── BACK TO TOP — adaptive icon color via bg-luminance sniffer ── */
+(function () {
+  var bt = document.getElementById('back-top');
+  if (!bt) return;
+  function lum(rgb) {
+    var m = (rgb || '').match(/\d+(\.\d+)?/g);
+    if (!m || m.length < 3) return 1;
+    var r = +m[0]/255, g = +m[1]/255, b = +m[2]/255;
+    return 0.2126*r + 0.7152*g + 0.0722*b;
+  }
+  function detect() {
+    var r = bt.getBoundingClientRect();
+    var els = document.elementsFromPoint(r.left + r.width/2, r.top + r.height/2);
+    var el = null;
+    for (var i = 0; i < els.length; i++) {
+      if (els[i] !== bt && !bt.contains(els[i])) { el = els[i]; break; }
+    }
+    var bg = null;
+    while (el && el !== document.documentElement) {
+      var c = getComputedStyle(el).backgroundColor;
+      if (c && c !== 'rgba(0, 0, 0, 0)' && c !== 'transparent') { bg = c; break; }
+      el = el.parentElement;
+    }
+    if (!bg) bg = getComputedStyle(document.body).backgroundColor || 'rgb(255,255,255)';
+    bt.classList.toggle('btn--on-dark', lum(bg) < 0.5);
+  }
+  var pending = false;
+  function schedule() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(function () { pending = false; detect(); });
+  }
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  setTimeout(detect, 50);
 }());
 
 

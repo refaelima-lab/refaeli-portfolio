@@ -3883,6 +3883,43 @@ document.getElementById('back-top').addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
+/* ── BACK TO TOP — adaptive icon color via bg-luminance sniffer ── */
+(function () {
+  var bt = document.getElementById('back-top');
+  if (!bt) return;
+  function lum(rgb) {
+    var m = (rgb || '').match(/\d+(\.\d+)?/g);
+    if (!m || m.length < 3) return 1;
+    var r = +m[0]/255, g = +m[1]/255, b = +m[2]/255;
+    return 0.2126*r + 0.7152*g + 0.0722*b;
+  }
+  function detect() {
+    var r = bt.getBoundingClientRect();
+    var els = document.elementsFromPoint(r.left + r.width/2, r.top + r.height/2);
+    var el = null;
+    for (var i = 0; i < els.length; i++) {
+      if (els[i] !== bt && !bt.contains(els[i])) { el = els[i]; break; }
+    }
+    var bg = null;
+    while (el && el !== document.documentElement) {
+      var c = getComputedStyle(el).backgroundColor;
+      if (c && c !== 'rgba(0, 0, 0, 0)' && c !== 'transparent') { bg = c; break; }
+      el = el.parentElement;
+    }
+    if (!bg) bg = getComputedStyle(document.body).backgroundColor || 'rgb(255,255,255)';
+    bt.classList.toggle('btn--on-dark', lum(bg) < 0.5);
+  }
+  var pending = false;
+  function schedule() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(function () { pending = false; detect(); });
+  }
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  setTimeout(detect, 50);
+}());
+
 /* ── MOBILE BURGER ── */
 const burger  = document.getElementById('nav-burger');
 const mobNav  = document.getElementById('mob-nav');

@@ -449,7 +449,7 @@ nav.scrolled {
 /* ── Nav on dark / full-bleed sections ── */
 nav.nav--light .nav-logo,
 nav.nav--light .nav-links a {
-  color: rgba(255, 255, 255, 0.4);
+  color: #fff;  /* solid white on dark bg — guaranteed visible */
 }
 
 nav.nav--light .nav-logo:hover,
@@ -480,7 +480,7 @@ nav.nav--on-photo .nav-links a {
   font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: rgba(24, 24, 32, 0.7);  /* ~6.3:1 on white — AA pass even on warm/off-white sections */
+  color: var(--ink);  /* solid dark on light bg — guaranteed visible */
   transition: var(--transition-color);
 }
 
@@ -522,7 +522,7 @@ nav.scrolled .nav-back {
   font-weight: var(--weight-medium);
   letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
-  color: rgba(24, 24, 32, 0.7);  /* ~6.3:1 on white — AA pass even on warm/off-white sections */
+  color: var(--ink);  /* solid dark on light bg — guaranteed visible */
   transition: var(--transition-color);
   position: relative;
 }
@@ -551,7 +551,7 @@ nav.scrolled .nav-back {
   transform: translateX(-50%) translateY(6px);
   list-style: none;
   padding: 0.55rem 0;
-  margin: 0.4rem 0 0;
+  margin: 0;  /* flush with parent hover bridge — no dead zone */
   min-width: 300px;
   background: var(--page);
   border: 1px solid var(--accent-mid-a12);
@@ -855,6 +855,9 @@ nav.scrolled .nav-burger span {
 }
 
 /* ── BACK TO TOP ──────────────────────────────────────────── */
+/* Glass-blur fill in both states. The icon + tint colors flip
+   based on .btn--on-dark, which a small luminance sniffer toggles
+   from the page's actual background behind the button. */
 #back-top {
   position: fixed;
   bottom: 5rem;
@@ -862,9 +865,11 @@ nav.scrolled .nav-burger span {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--ink);
-  color: #fff;
-  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.42);
+  color: #0a0a0a;
+  border: 0;
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -872,9 +877,9 @@ nav.scrolled .nav-burger span {
   pointer-events: none;
   transform: translateY(10px);
   transition: opacity 0.25s var(--ease-base), transform 0.25s var(--ease-spring),
-              background 0.3s var(--ease-base), border-color 0.3s var(--ease-base);
+              background 0.3s var(--ease-base), color 0.3s var(--ease-base);
   z-index: 500;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
 
 #back-top.visible {
@@ -885,19 +890,17 @@ nav.scrolled .nav-burger span {
 
 #back-top:hover {
   transform: translateY(-3px);
-  background: var(--ink-mid);
+  background: rgba(255, 255, 255, 0.62);
 }
 
-/* On dark sections — invert to white */
+/* Dark-background state: dark frosted tint with white icon. */
 #back-top.btn--on-dark {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  background: rgba(40, 40, 50, 0.38);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
 }
-
 #back-top.btn--on-dark:hover {
-  background: rgba(255, 255, 255, 0.22);
-  transform: translateY(-3px);
+  background: rgba(40, 40, 50, 0.55);
 }
 
 @media (max-width: 860px) {
@@ -1790,8 +1793,8 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   position: absolute;
   top: -22px;
   right: -22px;
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   color: var(--accent);
   opacity: 0.10;
   pointer-events: none;
@@ -1822,29 +1825,29 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   margin: 0;  /* space-between on the card handles vertical separation */
 }
 
+/* Matches .value-title pattern in cs-vz-id-arch: sans, light tagline with
+   a semibold "strong" emphasis — here the number plays the role of strong. */
 .phi-stat-num {
   position: relative;
   z-index: 2;
   font-family: var(--font-sans);
-  font-size: clamp(36pt, 4.2vw, 56pt);
-  font-weight: var(--weight-light);
+  font-size: clamp(17pt, 2vw, 22pt);
+  font-weight: var(--weight-semibold);
   color: var(--ink);
-  line-height: 1;
+  line-height: 1.25;
   letter-spacing: -0.01em;
   margin: auto 0 0;  /* push number + tagline group to the bottom */
 }
 
-/* Small sans-serif tagline below each number — fits on one line */
 .phi-stat-tagline {
   position: relative;
   z-index: 2;
   font-family: var(--font-sans);
-  font-size: clamp(10pt, 1vw, 12pt);
+  font-size: clamp(8.5pt, 1vw, 11pt);
   font-weight: var(--weight-light);
   color: var(--ink-mid);
-  line-height: 1.45;
+  line-height: 1.25;
   margin: 0.6rem 0 0;
-  white-space: nowrap;
 }
 
 /* Kicker */
@@ -1936,7 +1939,7 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 
 /* Stat cards — transparent so the dot grid reads through; border + hover still define the card */
 .impact-sec .phi-stat-card {
-  background: transparent;
+  background: #fff;
   border-color: rgba(0,0,0,0.08);
   transition:
     border-color var(--dur-base) var(--ease-base),
@@ -1948,7 +1951,8 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   box-shadow: 0 0 0 1px var(--accent-a10), 0 12px 32px var(--accent-a08);
   transform: translateY(-2px);
 }
-.impact-sec .phi-stat-num  { color: rgba(24, 24, 32, 0.5); transition: color var(--dur-base) var(--ease-base); }
+.impact-sec .phi-stat-num     { color: #000; transition: color var(--dur-base) var(--ease-base); }
+.impact-sec .phi-stat-tagline { color: #000; }
 .impact-sec .phi-stat-card:hover .phi-stat-num { color: var(--accent); }
 .impact-sec .phi-stat-label { color: var(--accent); }
 
@@ -1997,7 +2001,7 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 
 /* Card is a zero-padding shell — meta and logos own their zones */
 .phi-recog-card {
-  background: transparent;
+  background: #fff;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: var(--radius-card-lg);
   padding: 0;
@@ -2075,6 +2079,13 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 .phi-recog-card:hover .phi-recog-logos img {
   filter: grayscale(0);
   opacity: 1;
+}
+
+/* Recognized By + Mentored Through — logos 1.3× the default size */
+.phi-recog-card:nth-child(3) .phi-recog-logos img,
+.phi-recog-card:nth-child(4) .phi-recog-logos img {
+  height: 71.5px;
+  max-width: 234px;
 }
 
 
@@ -5512,11 +5523,11 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
     padding: 1.25rem 1rem;
   }
 
-  .phi-stat-num {
-    font-size: clamp(18pt, 5vw, 26pt);
-  }
+  /* No mobile override — clamp on .phi-stat-num/.phi-stat-tagline handles it */
 
   .phi-recog-logos img { height: 38px; }
+  .phi-recog-card:nth-child(3) .phi-recog-logos img,
+  .phi-recog-card:nth-child(4) .phi-recog-logos img { height: 49px; }
 
   /* Hero — full viewport, corner text compresses */
   .hero {
