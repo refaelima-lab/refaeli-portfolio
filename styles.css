@@ -435,29 +435,37 @@ nav {
    faded-white text) the native contrast is already clean, and a blur
    shadow would create a visible halo/glow. */
 nav.nav--on-photo .nav-logo,
-nav.nav--on-photo .nav-links a,
+nav.nav--on-photo .nav-links > li > a,
 nav.nav--on-photo .nav-back {
   text-shadow:
     0 1px 2px rgba(0, 0, 0, 0.55),
     0 0 10px rgba(0, 0, 0, 0.30);
+}
+/* Belt-and-suspenders: dropdown items never get the photo shadow. */
+nav.nav--on-photo .nav-dropdown a,
+nav.nav--light .nav-dropdown a {
+  text-shadow: none !important;
 }
 
 nav.scrolled {
   border-bottom-color: rgba(0, 0, 0, 0.07);
 }
 
-/* ── Nav on dark / full-bleed sections ── */
+/* ── Nav on dark / full-bleed sections ──
+   Scoped to direct .nav-links children (> li > a) so dropdown items
+   (.nav-dropdown a, deeper in the tree) don't inherit the white color
+   and stay readable against the dropdown's white panel. */
 nav.nav--light .nav-logo,
-nav.nav--light .nav-links a {
-  color: #fff;  /* solid white on dark bg — guaranteed visible */
-}
-
-nav.nav--light .nav-logo:hover,
-nav.nav--light .nav-links a:hover {
+nav.nav--light .nav-links > li > a {
   color: #fff;
 }
 
-nav.nav--light .nav-links a.active,
+nav.nav--light .nav-logo:hover,
+nav.nav--light .nav-links > li > a:hover {
+  color: #fff;
+}
+
+nav.nav--light .nav-links > li > a.active,
 nav.nav--light .nav-logo.active {
   color: #fff;
 }
@@ -466,11 +474,10 @@ nav.nav--light .nav-burger span {
   background: #fff;
 }
 
-/* When nav sits over the hero photo specifically, use SOLID white for all
-   nav text (not the faded rgba used over other dark sections like
-   philosophy/work/contact). Toggled by JS via .nav--on-photo. */
+/* When nav sits over the hero photo specifically, use SOLID white.
+   Scoped to direct nav-links children so dropdown items don't inherit. */
 nav.nav--on-photo .nav-logo,
-nav.nav--on-photo .nav-links a {
+nav.nav--on-photo .nav-links > li > a {
   color: #fff;
 }
 
@@ -536,6 +543,20 @@ nav.scrolled .nav-back {
   color: var(--ink);
 }
 
+/* Sub-menu indicator next to WORK */
+.nav-link-caret {
+  display: inline-block;
+  margin-left: 0.35rem;
+  vertical-align: -1px;
+  opacity: 0.7;
+  transition: transform 0.25s var(--ease-base), opacity 0.25s ease;
+}
+.nav-link-dropdown:hover .nav-link-caret,
+.nav-link-dropdown:focus-within .nav-link-caret {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
 /* ── Nav dropdown (e.g. Work → case studies) ── */
 .nav-link-dropdown {
   position: relative;
@@ -547,14 +568,24 @@ nav.scrolled .nav-back {
 .nav-dropdown {
   position: absolute;
   top: 100%;
-  left: 50%;
-  transform: translateX(-50%) translateY(6px);
+  /* Right-anchored so the dropdown's right edge aligns with CONTACT's
+     right edge. --nav-dropdown-right is computed by JS on load/resize. */
+  right: var(--nav-dropdown-right, 0);
+  left: auto;
+  transform: translateY(6px);
   list-style: none;
-  padding: 0.55rem 0;
   margin: 0;  /* flush with parent hover bridge — no dead zone */
-  min-width: 300px;
-  background: var(--page);
-  border: 1px solid var(--accent-mid-a12);
+  /* 2×2 grid of case-study cards — padding and gap matched + bumped */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 1fr;       /* equal row heights */
+  gap: 20px;
+  padding: 20px;
+  width: 600px;
+  max-width: calc(100vw - 32px);  /* always stay within the viewport */
+  /* Solid white panel — fully opaque. */
+  background: #fff;
+  border: 0;
   border-radius: var(--radius-card);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
   opacity: 0;
@@ -568,47 +599,112 @@ nav.scrolled .nav-back {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
+}
+/* Extended invisible hover bridge — keeps the dropdown open while the
+   cursor moves diagonally from WORK to the dropdown. Matches the
+   dropdown's right-anchored horizontal position. */
+.nav-link-dropdown::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: var(--nav-dropdown-right, 0);
+  left: auto;
+  height: 1.2rem;
+  width: 600px;
+  max-width: calc(100vw - 32px);
+  pointer-events: auto;
 }
 .nav-dropdown li {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.nav-dropdown a {
+
+/* Each case-study card inside the dropdown — icon left, title + desc right */
+.nav-dropdown a.nav-dropdown-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  align-content: center;          /* center rows vertically — equal top/bottom space */
+  align-items: center;            /* icon + title centered on same horizontal level */
+  column-gap: 0.7rem;
+  row-gap: 0.4rem;
+  padding: 0.95rem 1.05rem;
+  min-height: 110px;               /* lock matching size across all 4 cards */
+  border: 1px solid var(--rule);   /* visible card border at rest */
+  border-radius: 10px;
+  /* Solid white fill so the card content is always fully readable. */
+  background: #fff;
+  text-decoration: none;
+  white-space: normal;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+  transition: none;  /* instant state change — no fade/drift */
+}
+.nav-dropdown a.nav-dropdown-card:hover {
+  /* Soft purple gradient, light + translucent — sits on top of the
+     white panel without overwhelming the card's content. */
+  background: linear-gradient(135deg,
+    rgba(141, 148, 255, 0.14) 0%,
+    rgba(141, 148, 255, 0.04) 100%);
+  border-color: var(--accent-a25);
+}
+
+.nav-dropdown-icon {
+  /* Icon sits in row 1, col 1 — aligned next to the title (centered
+     by align-items on the card grid). No longer spans both rows. */
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--accent-a25);
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  flex-shrink: 0;
+  /* Defensive: prevent any inherited transform / filter from animating
+     the icon container in response to cursor proximity. */
+  transform: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+.nav-dropdown a.nav-dropdown-card:hover .nav-dropdown-icon {
+  background: #fff;
+  color: var(--accent);
+}
+
+.nav-dropdown-title {
+  /* Matches the main nav links: 9pt, medium weight, wider tracking,
+     uppercase, solid ink color. */
   display: block;
-  padding: 0.65rem 1.3rem;
-  white-space: nowrap;
+  font-family: var(--font-sans);
   font-size: 9pt;
   font-weight: var(--weight-medium);
   letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.nav-dropdown-desc {
+  /* Placed in row 2, column 2 — sits indented under the title */
+  grid-column: 2;
+  grid-row: 2;
+  font-family: var(--font-sans);
+  font-size: 9.5pt;
+  font-weight: var(--weight-regular);
+  letter-spacing: 0;
+  text-transform: none;
   color: rgba(24, 24, 32, 0.55);
-  text-decoration: none;
-  transition: color 0.2s ease, background 0.2s ease;
-}
-.nav-dropdown a:hover {
-  color: var(--accent);
-  background: var(--accent-soft);
-}
-/* When the nav is on a dark section (nav--light is added by JS), the
-   `.nav-links a` rule flips text to white — which would be invisible on the
-   dropdown's white panel. Lock dropdown text to dark regardless of nav state. */
-nav.nav--light .nav-dropdown a {
-  color: rgba(24, 24, 32, 0.55);
-}
-nav.nav--light .nav-dropdown a:hover {
-  color: var(--accent);
-  background: var(--accent-soft);
-}
-nav.nav--light .nav-dropdown-num {
-  color: var(--accent-mid);
-}
-.nav-dropdown-num {
-  display: inline-block;
-  width: 1.6rem;
-  color: var(--accent-mid);
-  font-weight: var(--weight-semibold);
+  line-height: 1.4;
+  /* Clamp to 2 lines so all 4 cards stay the same height */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 @media (max-width: 760px) {
   .nav-dropdown { display: none; }  /* mob-nav has its own list */
@@ -1067,6 +1163,13 @@ h2.st.r, h2.st-d.r, .phi-statement-wrap.r {
   transition-duration: 1.9s;
   transition-timing-function: var(--ease-reveal);
 }
+/* Safety net: when .on fires, snap transform back to none. Without
+   this override, h2.st.r's translateY(40px) outranks the generic
+   .r.on { transform: none } via specificity (0,2,1 vs 0,2,0), and
+   titles would stay 40px below their resting position. */
+h2.st.r.on, h2.st-d.r.on, .phi-statement-wrap.r.on {
+  transform: none;
+}
 
 /* ── Line slide-up reveal ── */
 /* Element-level fade/travel is suppressed once lines are split */
@@ -1143,9 +1246,8 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 .hero {
   height: 100vh;
   min-height: 600px;
-  background-color: var(--page);
-  background-image: var(--dot-grid-mid);
-  background-size: var(--dot-size-md);
+  background-color: #000;
+  background-image: none;
   position: relative;
   overflow: hidden;
 }
@@ -1297,7 +1399,7 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 .hero-role {
   position: absolute;
   bottom: 3.5rem;
-  left: 3rem;
+  left: clamp(1.25rem, 5vw, 4rem);   /* matches nav padding-left */
   right: auto;
   font-size: var(--text-label);
   font-weight: var(--weight-medium);
@@ -1326,7 +1428,7 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 .hero-location {
   position: absolute;
   bottom: 3.5rem;
-  right: 3rem;
+  right: clamp(1.25rem, 5vw, 4rem);  /* matches nav padding-right */
   left: auto;
   display: flex;
   align-items: center;
@@ -1675,10 +1777,62 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 
 .philosophy-sec {
   background: var(--dark);
-  background-image: var(--dot-grid-white-sm);
-  background-size: var(--dot-size-md);
+  background-image: none;  /* dot-grid replaced by .stars-bg layer */
   position: relative;
   border-top: 1px solid var(--accent-mid-a08);
+  /* No overflow: hidden here — it would break .phi-pin's position: sticky.
+     Stars stay clipped via .stars-bg's own overflow: hidden. */
+}
+
+/* ─── Reusable star-field background ──────────────────────────
+   Drop <div class="stars-bg" aria-hidden="true"></div> as the first
+   child of any dark section; JS populates 3 parallax star layers.
+   Optional data attributes on the host:
+     data-star-color="#fff"   (default white)
+     data-star-speed="50"     (small layer duration in seconds)
+     data-star-parallax="0.05"(mouse drift factor)
+   ─────────────────────────────────────────────────────────── */
+.stars-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse at bottom, #262626 0%, #000 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+.stars-bg-parallax {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+.stars-bg-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2000px;
+  animation-name: stars-scroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.stars-bg-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+  border-radius: 50%;
+}
+.stars-bg-dot--lower {
+  top: 2000px;  /* second copy stacked below for seamless loop */
+}
+@keyframes stars-scroll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-2000px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stars-bg-layer { animation: none !important; }
+  .stars-bg-parallax { transition: none !important; }
 }
 
 /* ── Runway + sticky pin pattern (mirrors .impact-runway / .impact-pin) ──
@@ -1697,8 +1851,9 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding-top: clamp(6rem, 10vh, 9rem);
-  padding-bottom: clamp(9rem, 14vh, 13rem);
+  /* -20px (1.25rem) on each side from previous values */
+  padding-top: clamp(4.75rem, calc(10vh - 1.25rem), 7.75rem);
+  padding-bottom: clamp(7.75rem, calc(14vh - 1.25rem), 11.75rem);
 }
 
 /* Phase-1 body wrapper — eyebrow lives outside this, only the statement /
@@ -1718,11 +1873,16 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
    set (sticky, applied after the first staggered reveal completes), the
    staggered transition-delays are killed so subsequent fades are instant
    opacity swaps — no re-running the orbit animation. */
+/* Pre-paint trick: opacity 0.001 (functionally invisible) forces the
+   browser to render the SVG arcs + planets up-front so the transition
+   to phase 2 is smooth, not choppy on first reveal. will-change keeps
+   them promoted to a compositor layer for cheap opacity swaps. */
 .philosophy-sec .hi-atom,
 .philosophy-sec .hi-nucleus,
 .philosophy-sec .hi-hint,
 .philosophy-sec .hi-wobbler {
-  opacity: 0;
+  opacity: 0.001;
+  will-change: opacity, transform;
 }
 .philosophy-sec.is-phase-2 .hi-atom    { opacity: 1; pointer-events: auto; }
 .philosophy-sec.is-phase-2 .hi-nucleus { opacity: 1; }
@@ -1910,6 +2070,70 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 .phi-body em {
   font-style: italic;
   color: var(--white-a60);
+}
+
+/* ─── Reusable cursor-tracked spotlight glow ───────────────────
+   Single accent-color hue (HSL 236, derived from --accent: #3C49FF).
+   JS sets --x and --y as element-relative pixel coords on every
+   .spotlight-glow target on pointermove. Two layers:
+     ::before  — soft inner spotlight on the card surface
+     ::after   — bright border highlight (mask trick keeps only border)
+   ─────────────────────────────────────────────────────────── */
+.spotlight-glow {
+  position: relative;
+  isolation: isolate;
+  /* Tunable per-context: override these to scale the glow up/down. */
+  --spot-inner: 320px;
+  --spot-outer: 420px;
+}
+.spotlight-glow::before,
+.spotlight-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.spotlight-glow::before {
+  /* Inner soft spotlight that fills the card */
+  background: radial-gradient(
+    var(--spot-inner) var(--spot-inner) at
+    calc(var(--x, -9999) * 1px) calc(var(--y, -9999) * 1px),
+    hsla(236, 100%, 62%, 0.22),
+    hsla(236, 100%, 62%, 0.10) 30%,
+    transparent 60%
+  );
+  z-index: 1;
+}
+.spotlight-glow::after {
+  /* Bright border glow — mask shows only the 1.5px ring */
+  background: radial-gradient(
+    var(--spot-outer) var(--spot-outer) at
+    calc(var(--x, -9999) * 1px) calc(var(--y, -9999) * 1px),
+    hsla(236, 100%, 72%, 0.95),
+    hsla(236, 100%, 72%, 0.40) 25%,
+    transparent 50%
+  );
+  padding: 1.5px;
+  -webkit-mask:
+    linear-gradient(#fff, #fff) content-box,
+    linear-gradient(#fff, #fff);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  z-index: 2;
+}
+/* Smaller spotlight scoped to the WORK dropdown cards — they're
+   significantly smaller than the IMPACT tiles so the default values
+   would feel oversized here. */
+.nav-dropdown a.nav-dropdown-card.spotlight-glow {
+  --spot-inner: 150px;
+  --spot-outer: 200px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-glow::before,
+  .spotlight-glow::after { transition: none !important; }
 }
 
 /* ── IMPACT & RECOGNITION — standalone light section ── */
@@ -2825,6 +3049,38 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   padding: 0 var(--section-padding-x);
 }
 
+/* ─── THRESHOLD-DARK SPLINE EXPERIMENT ───────────────────────
+   Spline scene as the breaker's background. Painted behind the
+   solar-system SVG + text (which sit at z-index 2). Activated by
+   .wsb-breaker[data-bg="threshold-dark"]; remove that attribute
+   to revert to the dot-grid background.
+   ─────────────────────────────────────────────────────────── */
+.wsb-spline-bg,
+.ob-spline-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: transparent;
+  /* pointer-events: auto so the scene's own hover interactions fire
+     (e.g. revealing satellite elements when hovering the centerpiece). */
+  pointer-events: auto;
+  z-index: 0;
+}
+/* Hide the "Built with Spline" badge via CSS Parts. JS fallback polls
+   the shadow DOM for older viewer versions. */
+.wsb-spline-bg::part(logo),
+.ob-spline-bg::part(logo) {
+  display: none !important;
+}
+/* When the experiment is on, drop the dot-grid background-image so
+   the Spline scene fills the breaker uncontested. */
+.wsb-breaker[data-bg="threshold-dark"],
+.ob-breaker[data-bg="threshold-dark"] {
+  background-image: none;
+}
+
 .wsb-inner {
   display: flex;
   flex-direction: column;
@@ -2883,6 +3139,14 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+/* Decorative-only when sitting over a Spline background — let cursor
+   events pass through so the scene's hover interactions fire. Scoped
+   to the home-page breakers so case-study solar-breakers (which may
+   want different behavior) aren't affected. */
+.wsb-breaker .solar-breaker,
+.ob-breaker .solar-breaker {
+  pointer-events: none;
 }
 
 /* SVG canvas — orbit paths, connection lines, data pulses, outer orbits */
@@ -4158,6 +4422,40 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 
 .cz-glow {
   display: none;
+}
+
+/* ─── DOT-GRID EXPERIMENT ───────────────────────────────────
+   Mount point for the GSAP-driven dot-grid background.
+   Only painted when the parent has data-bg="dot-grid";
+   otherwise stays empty/invisible.
+   To revert: remove the data-bg attribute on .contact-zone
+   (and optionally the GSAP <script> in <head>).
+   ─────────────────────────────────────────────────────────── */
+.cz-dot-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.cz-dot-grid__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* When any background experiment is on, hide the existing background
+   layers so the new visual isn't fighting them. The selector matches
+   any data-bg value, so multiple experiments share this hider. */
+.contact-zone[data-bg] .cz-canvas,
+.contact-zone[data-bg] .cz-dots-static,
+.contact-zone[data-bg] .cz-glow {
+  display: none !important;
+}
+.contact-zone[data-bg] {
+  background-image: none;
 }
 
 .cz-inner {
@@ -6104,9 +6402,7 @@ nav.nav--light .nav-burger span {
   width: 100%;
   height: 100%;
   min-height: 600px;
-  background-color: var(--page);
-  background-image: var(--dot-grid-mid);
-  background-size: var(--dot-size-md);
+  background-color: transparent;
   overflow: hidden;
   z-index: 1;
 }
@@ -6189,7 +6485,7 @@ nav.nav--light .nav-burger span {
   left: 50%;
   width: 1100px;
   height: 1100px;
-  transform: translate(-50%, calc(-50% - 60px));
+  transform: translate(-50%, calc(-50% - 20px));
   perspective: 1800px;
   transform-style: preserve-3d;
   opacity: 0;
@@ -6406,7 +6702,10 @@ nav.nav--light .nav-burger span {
    at the bottom-center, always visible during phase 3. */
 .hi-info {
   position: absolute;
-  left: clamp(1.25rem, 5vw, 4rem);   /* matches nav padding */
+  /* Aligned with the eyebrow + hint's left edge — that's where .phi-inner
+     starts after its max-width centering. Falls back to nav padding on
+     viewports narrower than --content-default. */
+  left: max(clamp(1.25rem, 5vw, 4rem), calc((100% - var(--content-default)) / 2));
   bottom: clamp(2rem, 5vh, 4rem);    /* lower — closer to the viewport bottom */
   width: clamp(960px, 124vw, 1840px);  /* wider — extra room for paragraph copy */
   opacity: 0;
@@ -6437,10 +6736,19 @@ nav.nav--light .nav-burger span {
   color: rgba(255, 255, 255, 0.42);
   white-space: nowrap;
   opacity: 0;
-  transition: opacity 0.6s ease;
+  transform: translateY(6px);
+  transition: opacity 1.0s ease, transform 1.0s ease;
   pointer-events: none;
 }
 .hero-intro[data-phase="3"] .hi-hint { opacity: 1; }
+/* Delay the first reveal so the hint lands AFTER the planets, drawing
+   the eye specifically to the call-to-action. */
+.philosophy-sec.is-phase-2 .hi-hint {
+  transform: translateY(0);
+}
+.philosophy-sec.is-phase-2:not(.is-revealed) .hi-hint {
+  transition-delay: 2.8s;
+}
 
 .hi-info-eyebrow {
   font-family: var(--font-sans);
@@ -6477,30 +6785,142 @@ nav.nav--light .nav-burger span {
 .hi-info.is-shown .hi-info-title,
 .hi-info.is-shown .hi-info-body { opacity: 1; }
 
-/* ─── PHASE 4 — original hero reveal triggers ─────────────── */
-/* Disable the original hero's auto-play animations until scroll triggers Phase 4 */
-.hero-original .hero-name-marquee,
-.hero-original .orbit-shell,
+/* ─── HOME HERO REVEAL SEQUENCE ─────────────────────────────
+   1.  photo + orbit:                    0.0s   (hero "background image")
+   2.  1s pause
+   3.  nav drops from top + role + location rise from bottom: 2.2s
+   4.  Spline scene iframe:              3.3s
+   ─────────────────────────────────────────────────────────── */
+/* Disable every auto-play animation on hero elements — reveal is fully
+   driven by .hero-original.is-shown so we control the order. */
 .hero-original .hero-photo-wrap,
+.hero-original .hero-photo,
 .hero-original .hero-role,
 .hero-original .hero-location {
   animation: none !important;
   opacity: 0;
-  transition: opacity 1.2s ease, clip-path 1.2s ease;
+  transition: opacity 1.0s var(--ease-base), transform 1.0s var(--ease-base);
 }
-.hero-original .hero-name-marquee {
-  clip-path: inset(0 0 0 100%);
+/* role + location come up from outside the bottom of the frame */
+.hero-original .hero-role,
+.hero-original .hero-location {
+  transform: translateY(56px);
 }
 
-.hero-original.is-shown .orbit-shell      { opacity: 1; transition-delay: 0.1s; }
-.hero-original.is-shown .hero-name-marquee {
-  opacity: 1;
-  clip-path: inset(0 0 0 0%);
-  transition-delay: 0.7s;
+/* Photo wrapper and img both reveal at 0s — the "hero image" comes first */
+.hero-original.is-shown .hero-photo-wrap  { opacity: 1; transition-delay: 0s; }
+.hero-original.is-shown .hero-photo       { opacity: 1; transition-delay: 0s; }
+.hero-original.is-shown .hero-role        { opacity: 1; transform: translateY(0); transition-delay: 2.2s; }
+.hero-original.is-shown .hero-location    { opacity: 1; transform: translateY(0); transition-delay: 2.2s; }
+
+/* Nav drops from outside the top of the frame, in sync with role + location.
+   Only applied on the home page (gated by presence of #welcome).
+   animation: none is critical — otherwise the base nav 'fu' animation
+   overrides this hidden state. */
+body:has(#welcome) #nav {
+  animation: none !important;
+  transform: translateY(-110%);
+  opacity: 0;
+  transition: transform 1.0s var(--ease-base), opacity 1.0s var(--ease-base);
+  transition-delay: 2.2s;
 }
-.hero-original.is-shown .hero-role        { opacity: 1; transition-delay: 1.1s; }
-.hero-original.is-shown .hero-location    { opacity: 1; transition-delay: 1.4s; }
-.hero-original.is-shown .hero-photo-wrap  { opacity: 1; transition-delay: 1.8s; }
+body:has(#welcome) #nav.is-dropped {
+  transform: translateY(0);
+  opacity: 1;
+}
+/* Nav text color adapts to section background via .nav--light toggle
+   in updateNavColor() — no hard lock here so dropdown items stay
+   readable against the white dropdown panel. */
+
+
+/* ─── Hero glass strip wall — right half, vertical 10px panes ─── */
+.hero-glass-stack {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  z-index: 4;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hero-glass-tile {
+  flex: 0 0 40px;       /* fixed 40px strip width */
+  height: 100%;
+  background:
+    /* surface noise — subtle grain on each pane */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.4 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+    rgba(255, 255, 255, 0.06);
+  background-blend-mode: overlay, normal;
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(22px) saturate(160%);
+  border-right: 1px solid rgba(255, 255, 255, 0.10);  /* thin pane divider */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.10);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.85s var(--ease-base), transform 0.85s var(--ease-base);
+  /* Cascading reveal — base 3.2s + 8ms per strip (set via --i on each strip) */
+  transition-delay: calc(3.2s + var(--i, 0) * 8ms);
+}
+.hero-glass-tile:last-child { border-right: 0; }
+
+.hero-original.is-shown .hero-glass-tile {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Hero Spline iframe — large centered scene, fades in after photo.
+   pointer-events: auto on reveal so the scene is interactive.
+   Tradeoff: the page's custom cursor pauses while the mouse is over
+   the iframe (cross-origin iframes don't forward mousemove). ─── */
+.hero-spline-iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.96);
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  border: 0;
+  background: transparent !important;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  /* Drops the black share-page wrapper out by blending against
+     the hero behind. Tradeoff: scene colors shift, any dark
+     objects inside the scene also become semi-transparent. */
+  mix-blend-mode: screen;
+  transition: opacity 0.9s var(--ease-base), transform 0.9s var(--ease-base);
+  transition-delay: 3.3s;
+}
+/* Force transparency on the viewer's shadow-DOM parts. Hana viewer
+   exposes canvas / container via CSS Parts in recent versions. */
+.hero-spline-iframe::part(canvas),
+.hero-spline-iframe::part(container),
+.hero-spline-iframe::part(scene) {
+  background: transparent !important;
+}
+.hero-original.is-shown .hero-spline-iframe {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.05);
+  pointer-events: auto;
+}
+
+/* When the cursor is over the iframe, JS adds body.cursor-in-iframe.
+   The custom dot+ring disappear so the browser's native cursor takes
+   over inside the iframe (where pointer events flow to Spline). */
+body.cursor-in-iframe #cur-dot,
+body.cursor-in-iframe #cur-ring {
+  opacity: 0 !important;
+  transition: opacity 0.18s ease;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .hi-wobbler,
@@ -6508,4 +6928,133 @@ nav.nav--light .nav-burger span {
   .hi-nucleus-glow,
   .hi-nucleus-core,
   .hi-caret { animation: none !important; }
+}
+
+/* ─── WELCOME OVERLAY — once-per-session intro splash ───────── */
+.welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.7s var(--ease-base), visibility 0.7s;
+}
+.welcome[hidden] { display: none; }
+.welcome.is-dismissed {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Full-bleed Spline scenes — fill the entire overlay.
+   pointer-events: none locks the camera (no orbit / pan / zoom). */
+.welcome-spline {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: transparent;
+  pointer-events: none;
+}
+
+#welcome-spline { z-index: 0; }
+
+/* Hide the "Built with Spline" badge via CSS Parts (newer viewer
+   versions). JS shadow-DOM fallback handles older versions. */
+.welcome-spline::part(logo) {
+  display: none !important;
+}
+
+/* ── Typewriter intro — bottom-center, fades in/out via JS ── */
+.welcome-intro {
+  position: absolute;
+  bottom: clamp(2.5rem, 6vh, 4rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  max-width: min(640px, 88vw);
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: clamp(9pt, 1.05vw, 11.5pt);
+  font-weight: var(--weight-light);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.7;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.7s ease;
+}
+.welcome-intro.is-visible { opacity: 1; }
+.welcome-intro.is-fade    { opacity: 0; }
+.welcome-intro-line {
+  margin: 0;
+  min-height: 1.7em;  /* reserve space so layout doesn't jump while typing */
+}
+
+/* ── ENTER CTA — bottom-center, fades in after intro dissolves ── */
+.welcome-enter {
+  position: absolute;
+  bottom: clamp(2.5rem, 6vh, 4rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.8rem;
+  background: transparent;
+  color: #fff;
+  border: 0;
+  font-family: var(--font-sans);
+  font-size: 10pt;
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  cursor: none;
+  pointer-events: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.7s ease, visibility 0.7s, color 0.25s ease;
+}
+.welcome-enter.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+.welcome-enter:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+.welcome-enter-label {
+  display: block;
+}
+.welcome-enter-arrow {
+  display: block;
+  animation: welcome-arrow-nudge 1.8s ease-in-out infinite;
+}
+@keyframes welcome-arrow-nudge {
+  0%, 100% { transform: translateY(-2px); opacity: 0.55; }
+  50%      { transform: translateY(3px);  opacity: 1; }
+}
+
+/* Lock page scroll while overlay is visible */
+body.welcome-active {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome,
+  .welcome.is-dismissed,
+  .welcome-intro,
+  .welcome-enter,
+  .welcome-enter-arrow {
+    transition: none !important;
+    animation: none !important;
+  }
 }

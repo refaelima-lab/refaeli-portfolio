@@ -6,8 +6,65 @@
   <title>Refaeli Ma · Experience Architect</title>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="styles.css">
+  <!-- Spline viewer for the welcome overlay 3D background -->
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="preconnect" href="https://prod.spline.design" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.97/build/spline-viewer.js"></script>
+  <!-- GSAP for the contact dot-grid experiment. Loaded with defer;
+       harmless if no .contact-zone[data-bg="dot-grid"] exists in the DOM
+       (the init IIFE bails). Remove this line + the data-bg attribute
+       to fully roll back the experiment. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 </head>
 <body>
+
+<!-- ══════════════════════════════════════
+     WELCOME OVERLAY — shown once per session
+     Renders above everything; dismissed via Enter button.
+     Asset slot is left empty for custom content.
+══════════════════════════════════════ -->
+<div class="welcome" id="welcome" role="dialog" aria-label="Welcome" aria-modal="true">
+
+  <!-- Full-bleed 3D scene — lost_orb_in_the_mountains (transparent bg
+       sits on the overlay's pure-black backdrop) -->
+  <spline-viewer
+    class="welcome-spline"
+    id="welcome-spline"
+    url="https://prod.spline.design/1lHmGauSkJkWtEbM/scene.splinecode"
+  ></spline-viewer>
+
+  <!-- Typewriter intro — types 3 beats, holds, then dissolves -->
+  <div class="welcome-intro" id="welcome-intro" aria-live="polite">
+    <p class="welcome-intro-line" data-line="1"></p>
+    <p class="welcome-intro-line" data-line="2"></p>
+    <p class="welcome-intro-line" data-line="3"></p>
+  </div>
+
+  <!-- ENTER CTA — bottom-center, appears after intro dissolves -->
+  <button class="welcome-enter" id="welcome-enter" type="button" aria-label="Enter site">
+    <span class="welcome-enter-label">Enter</span>
+    <span class="welcome-enter-arrow" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 3v8M3 7.5L7 11l4-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </button>
+</div>
+<script>
+  /* Synchronous — runs before first paint so returning-this-session
+     viewers don't see a flash of the welcome overlay. */
+  (function () {
+    try {
+      if (sessionStorage.getItem('welcomeShown')) {
+        var w = document.getElementById('welcome');
+        if (w) w.setAttribute('hidden', '');
+      } else {
+        document.body.classList.add('welcome-active');
+      }
+    } catch (e) { /* storage unavailable — show overlay anyway */ }
+  })();
+</script>
 
 <!-- PROGRESS BAR -->
 <div id="prog"></div>
@@ -32,12 +89,58 @@
   <ul class="nav-links">
     <li><a href="#philosophy">Philosophy</a></li>
     <li class="nav-link-dropdown">
-      <a href="#work">Work</a>
+      <a href="#work">Work<svg class="nav-link-caret" width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M2 3.5l2.5 2.5L7 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       <ul class="nav-dropdown" aria-label="Case studies">
-        <li><a href="cs-vz-id-arch.html"><span class="nav-dropdown-num">01</span> VZ Identity Architecture</a></li>
-        <li><a href="cs-vz-home.html"><span class="nav-dropdown-num">02</span> Verizon Home App</a></li>
-        <li><a href="cs-bluejeans.html"><span class="nav-dropdown-num">03</span> BlueJeans by Verizon</a></li>
-        <li><a href="cs-iconmobile.html"><span class="nav-dropdown-num">04</span> Iconmobile</a></li>
+        <li>
+          <a href="cs-vz-id-arch.html" class="nav-dropdown-card">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <circle cx="11" cy="11" r="8.5" stroke="currentColor" stroke-width="1.4"/>
+                <circle cx="11" cy="11" r="4.5" stroke="currentColor" stroke-width="1.4"/>
+                <circle cx="11" cy="11" r="1.5" fill="currentColor"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">Verizon Identity Architecture</span>
+            <span class="nav-dropdown-desc">Invisible structure connecting households, devices, and services</span>
+          </a>
+        </li>
+        <li>
+          <a href="cs-vz-home.html" class="nav-dropdown-card">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M3.5 11l7.5-7 7.5 7v7a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+                <circle cx="11" cy="13" r="1.6" fill="currentColor"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">Verizon Home App</span>
+            <span class="nav-dropdown-desc">Connected home experience for the whole household</span>
+          </a>
+        </li>
+        <li>
+          <a href="cs-bluejeans.html" class="nav-dropdown-card">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <rect x="2.5" y="6" width="12.5" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+                <path d="M15.5 9.2l4-2v8l-4-2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">BlueJeans by Verizon</span>
+            <span class="nav-dropdown-desc">Enterprise video communication redesigned at scale</span>
+          </a>
+        </li>
+        <li>
+          <a href="cs-iconmobile.html" class="nav-dropdown-card">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M2.8 14a8.2 8.2 0 0 1 16.4 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M11 6.5v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M11 14l3.4-2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">Iconmobile</span>
+            <span class="nav-dropdown-desc">In-car experience design for automotive brands</span>
+          </a>
+        </li>
       </ul>
     </li>
     <li><a href="#object">Object</a></li>
@@ -78,56 +181,11 @@
 <section class="hero" id="hero">
 
   <!-- ══════════════════════════════════════════════════════════════
-       INTRO SEQUENCE — phases 1-3, sticky-pinned for the first 100vh.
-       Phase 1 = typewriter copy; Phase 2 = "Refaeli" word morphs to center;
-       Phase 3 = solar system blooms, planets respond to hover.
-       After the user scrolls past, the original hero takes over (Phase 4).
-       ══════════════════════════════════════════════════════════════ -->
-  <div class="hero-intro" id="hero-intro" data-phase="1" aria-label="Welcome">
-
-    <!-- Background — light dot-grid in phase 1, slowly transitions to dark in phase 2 -->
-    <div class="hi-bg" aria-hidden="true"></div>
-
-    <!-- Old hero's center orbit ring — visible during Phase 1 as a quiet
-         centerpiece behind the typewriter. Fades out as Phase 3 blooms. -->
-    <div class="hi-orbit-shell" aria-hidden="true">
-      <div class="hi-orbit"><div class="hi-orbit-dot"></div></div>
-    </div>
-
-    <!-- PHASE 1: typewriter copy. Each beat is a paragraph that JS types into. -->
-    <div class="hi-copy" id="hi-copy">
-      <p class="hi-beat" data-beat="1"></p>
-      <p class="hi-beat" data-beat="2"></p>
-      <p class="hi-beat" data-beat="3"></p>
-      <span class="hi-caret" id="hi-caret" aria-hidden="true"></span>
-    </div>
-
-  </div>
-
-  <!-- ══════════════════════════════════════════════════════════════
-       PHASE 4 — the original hero, revealed once the user scrolls past
-       the intro pin. Animations trigger on .is-active being added by JS.
+       Hero renders directly with the marquee, photo, role, and
+       location. The typewriter intro has been replaced by the
+       welcome overlay at the top of <body>.
        ══════════════════════════════════════════════════════════════ -->
   <div class="hero-original" id="hero-original">
-
-    <!-- z-1: scrolling name, background typographic layer -->
-    <div class="hero-name-marquee" aria-hidden="true">
-      <div class="hero-name-track">
-        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-        <span class="hnm-r">Refaeli</span><span class="hnm-m">Ma</span><span class="hnm-s">●</span>
-      </div>
-    </div>
-
-    <!-- z-2: orbit ring — shell handles scale+fade; inner div handles JS rotation -->
-    <div class="orbit-shell"><div class="orbit"><div class="orbit-dot"></div></div></div>
 
     <!-- z-3: profile photo, centered, anchored to bottom -->
     <div class="hero-photo-wrap">
@@ -139,6 +197,15 @@
         decoding="async"
       >
     </div>
+
+    <!-- z-4: Spline iframe — sits on top of the hero, fades in after reveal -->
+    <iframe
+      class="hero-spline-iframe"
+      id="hero-spline-iframe"
+      src="https://my.spline.design/seoulcopycopy-2gDASuladJnUL5xhaXiPw0y3-u7k/"
+      frameborder="0"
+      title="Hero scene"
+    ></iframe>
 
     <!-- z-5: corner text elements -->
     <div class="hero-role">
@@ -208,6 +275,7 @@
   opacity swaps — no re-animation.
 -->
 <section class="sec philosophy-sec" id="philosophy">
+  <div class="stars-bg" aria-hidden="true"></div>
   <div class="philosophy-runway">
     <div class="phi-pin">
 
@@ -309,24 +377,6 @@
      HOW I WORK
 ══════════════════════════════════════ -->
 <section class="sec bg-warm" id="how-i-work">
-  <div class="hiw-orbs" aria-hidden="true">
-    <div class="hiw-orb hiw-orb-tr">
-      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
-    </div>
-    <div class="hiw-orb hiw-orb-bl">
-      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
-    </div>
-  </div>
   <div class="sec-inner">
     <div class="r"><div class="ch">How I Work</div></div>
     <h2 class="st r d1">Design is not how it looks.<br>It's how <em>decisions are made</em>.</h2>
@@ -436,25 +486,7 @@
   <div class="impact-runway" id="impact-runway">
     <div class="impact-pin">
 
-      <!-- Background orb decoration — top-right + bottom-left, anchored to the pin -->
-      <div class="hiw-orbs" aria-hidden="true">
-        <div class="hiw-orb hiw-orb-tr">
-          <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
-          <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
-          <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
-          <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
-          <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
-          <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
-        </div>
-        <div class="hiw-orb hiw-orb-bl">
-          <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
-          <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
-          <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
-          <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
-          <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
-          <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
-        </div>
-      </div>
+      <!-- Background orb decoration removed -->
 
       <div class="sec-inner impact-inner">
 
@@ -579,7 +611,17 @@
   <div class="work-sticky" id="work-sticky">
 
     <!-- Breaker overlay — orbital visual + Made Real text reveal -->
-    <div class="wsb-breaker" id="wsb-breaker">
+    <div class="wsb-breaker" id="wsb-breaker" data-bg="threshold-dark">
+      <!-- threshold_dark_ambient_ui Spline scene — sits behind solar
+           system + text. Activated by data-bg="threshold-dark"; remove
+           that attribute to revert to the dot-grid background.
+           url is staged in data-url and applied by an IntersectionObserver
+           below — defers WebGL init until the breaker is near the viewport. -->
+      <spline-viewer
+        class="wsb-spline-bg"
+        id="wsb-spline-bg"
+        data-url="https://prod.spline.design/DAlV1K-AyAmlMg4C/scene.splinecode"
+      ></spline-viewer>
       <div class="hero-glow" style="top:50%;left:50%;"></div>
 
       <!-- Solar-system breaker — ported pattern from cs-vz-id-arch HERO -->
@@ -1188,8 +1230,16 @@
   <div class="gal-sticky">
 
     <!-- Breaker overlay — fades out as gallery enters. Solar-system pattern, light mode. -->
-    <div class="ob-breaker" id="ob-breaker">
-      <div class="solar-breaker is-light" id="ob-solar-breaker" data-phase="1">
+    <div class="ob-breaker" id="ob-breaker" data-bg="threshold-dark">
+      <!-- threshold_dark_ambient_ui Spline scene (lazy-loaded). Same
+           treatment as the MADE REAL breaker. Remove the data-bg
+           attribute to revert to the dot-grid background. -->
+      <spline-viewer
+        class="ob-spline-bg"
+        id="ob-spline-bg"
+        data-url="https://prod.spline.design/DAlV1K-AyAmlMg4C/scene.splinecode"
+      ></spline-viewer>
+      <div class="solar-breaker" id="ob-solar-breaker" data-phase="1">
 
         <!-- SVG canvas: orbit paths + connection spokes + data pulses + outer orbits -->
         <svg class="solar-svg" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -1357,10 +1407,15 @@
 <!-- ══════════════════════════════════════
      CONTACT + ASK AI
 ══════════════════════════════════════ -->
-<section class="contact-zone" id="contact">
+<section class="contact-zone" id="contact" data-bg="dot-grid">
   <canvas class="cz-canvas" aria-hidden="true"></canvas>
   <div class="cz-dots-static" aria-hidden="true"></div>
   <div class="cz-glow" aria-hidden="true"></div>
+  <!-- Dot-grid experiment mount point. Canvas painted by JS only when
+       data-bg="dot-grid". Has its own wrap so ResizeObserver tracks size. -->
+  <div class="cz-dot-grid" aria-hidden="true">
+    <canvas class="cz-dot-grid__canvas"></canvas>
+  </div>
 
   <div class="cz-body">
   <div class="cz-inner">
@@ -1453,9 +1508,508 @@
      SCRIPTS
 ══════════════════════════════════════ -->
 <script>
+/* ── HERO IFRAME CURSOR SWAP ──
+   Cross-origin iframes don't forward mousemove to the parent, so the
+   custom cursor would freeze when over the Spline scene. Instead, we
+   hide the custom cursor while the mouse is over the iframe (CSS),
+   letting the browser's native cursor take over inside it. Cursor
+   reappears the moment the mouse exits the iframe area. */
+(function heroIframeCursorSwap() {
+  var iframe = document.getElementById('hero-spline-iframe');
+  if (!iframe) return;
+  iframe.addEventListener('mouseenter', function () {
+    document.body.classList.add('cursor-in-iframe');
+  });
+  iframe.addEventListener('mouseleave', function () {
+    document.body.classList.remove('cursor-in-iframe');
+  });
+}());
+
+
+/* ── SPOTLIGHT GLOW — cursor-tracked accent halo on Impact tiles ── */
+(function spotlightGlow() {
+  /* Auto-apply to the 4 recognition cards, 3 stat tiles, 4 case-study
+     cards in the WORK dropdown, and the 4 HOW I WORK principle tiles. */
+  document.querySelectorAll(
+    '.impact-sec .phi-recog-card, .impact-sec .phi-stat-card, .nav-dropdown a.nav-dropdown-card, #how-i-work .hiw-tile'
+  ).forEach(function (el) { el.classList.add('spotlight-glow'); });
+
+  var cards = document.querySelectorAll('.spotlight-glow');
+  if (!cards.length) return;
+
+  var pending = false;
+  var lastX = 0, lastY = 0;
+  function tick() {
+    pending = false;
+    cards.forEach(function (card) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--x', (lastX - r.left).toFixed(2));
+      card.style.setProperty('--y', (lastY - r.top).toFixed(2));
+    });
+  }
+  document.addEventListener('pointermove', function (e) {
+    lastX = e.clientX;
+    lastY = e.clientY;
+    if (!pending) {
+      pending = true;
+      requestAnimationFrame(tick);
+    }
+  }, { passive: true });
+}());
+
+
+/* ── BREAKER SPLINE BACKGROUNDS — lazy load via IntersectionObserver ──
+   Any <spline-viewer data-url="..."> gets its URL applied only when
+   it's about to scroll into view. Defers WebGL init so the page load
+   stays fast and idle scrolling above the breakers doesn't pay the
+   GPU cost. Used by both .wsb-spline-bg (MADE REAL) and .ob-spline-bg
+   (OTHER THINGS I MAKE). */
+(function lazyLoadSplineBackgrounds() {
+  var viewers = Array.prototype.slice.call(
+    document.querySelectorAll('spline-viewer[data-url]')
+  );
+  if (!viewers.length) return;
+
+  function hideBadge(viewer) {
+    var attempts = 0;
+    var iv = setInterval(function () {
+      attempts++;
+      var logo = viewer.shadowRoot && viewer.shadowRoot.querySelector('#logo');
+      if (logo) {
+        logo.style.display = 'none';
+        clearInterval(iv);
+      } else if (attempts > 60) {
+        clearInterval(iv);
+      }
+    }, 100);
+  }
+
+  function load(viewer) {
+    var url = viewer.getAttribute('data-url');
+    if (!url) return;
+    viewer.setAttribute('url', url);
+    viewer.removeAttribute('data-url');
+    hideBadge(viewer);
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    /* No IO support — load all immediately as a fallback. */
+    viewers.forEach(load);
+    return;
+  }
+
+  /* rootMargin: 800px — scene begins loading ~one viewport-height
+     before the breaker scrolls into view, so the scene is ready by
+     the time it's actually visible. */
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        load(entry.target);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '800px 0px 800px 0px' });
+
+  viewers.forEach(function (v) { io.observe(v); });
+}());
+
+
+/* ── CONTACT DOT-GRID EXPERIMENT ──
+   Vanilla port of the React + GSAP DotGrid component. Activated by
+   .contact-zone[data-bg="dot-grid"]. GSAP is loaded via defer in
+   <head>; we wait for window.load. InertiaPlugin is the original's
+   only paid dependency — replaced here with a standard tween that
+   approximates the knock-back motion, then returns with elastic ease.
+   Reverting the experiment is a single attribute removal. */
+window.addEventListener('load', function () {
+  var section = document.querySelector('.contact-zone[data-bg="dot-grid"]');
+  var wrap    = section && section.querySelector('.cz-dot-grid');
+  var canvas  = wrap && wrap.querySelector('.cz-dot-grid__canvas');
+  if (!section || !wrap || !canvas || typeof gsap === 'undefined') return;
+
+  /* Tunable knobs — using the values you posted */
+  var DOT_SIZE          = 2;
+  var GAP               = 15;
+  var BASE_COLOR        = '#2F293A';
+  var ACTIVE_COLOR      = '#886FEE';
+  var PROXIMITY         = 120;
+  var SPEED_TRIGGER     = 100;
+  var SHOCK_RADIUS      = 250;
+  var SHOCK_STRENGTH    = 5;
+  var MAX_SPEED         = 5000;
+  var RETURN_DURATION   = 1.5;
+  var KNOCK_DURATION    = 0.45;        /* approximates inertia decay */
+
+  function hexToRgb(hex) {
+    var m = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+    if (!m) return { r: 0, g: 0, b: 0 };
+    return {
+      r: parseInt(m[1], 16),
+      g: parseInt(m[2], 16),
+      b: parseInt(m[3], 16)
+    };
+  }
+  var baseRgb   = hexToRgb(BASE_COLOR);
+  var activeRgb = hexToRgb(ACTIVE_COLOR);
+  var proxSq    = PROXIMITY * PROXIMITY;
+
+  var ctx = canvas.getContext('2d');
+  var dots = [];
+  var circlePath = window.Path2D ? new Path2D() : null;
+  if (circlePath) circlePath.arc(0, 0, DOT_SIZE / 2, 0, Math.PI * 2);
+
+  var pointer = { x: -9999, y: -9999, vx: 0, vy: 0, speed: 0, lastTime: 0, lastX: 0, lastY: 0 };
+
+  function buildGrid() {
+    var rect = wrap.getBoundingClientRect();
+    var width = rect.width;
+    var height = rect.height;
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    var cols = Math.floor((width + GAP) / (DOT_SIZE + GAP));
+    var rows = Math.floor((height + GAP) / (DOT_SIZE + GAP));
+    var cell = DOT_SIZE + GAP;
+    var gridW = cell * cols - GAP;
+    var gridH = cell * rows - GAP;
+    var startX = (width  - gridW) / 2 + DOT_SIZE / 2;
+    var startY = (height - gridH) / 2 + DOT_SIZE / 2;
+
+    dots = [];
+    for (var y = 0; y < rows; y++) {
+      for (var x = 0; x < cols; x++) {
+        dots.push({
+          cx: startX + x * cell,
+          cy: startY + y * cell,
+          xOffset: 0, yOffset: 0,
+          _knocked: false
+        });
+      }
+    }
+  }
+  buildGrid();
+
+  /* Resize tracking */
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(buildGrid).observe(wrap);
+  } else {
+    window.addEventListener('resize', buildGrid);
+  }
+
+  /* Draw loop */
+  function draw() {
+    requestAnimationFrame(draw);
+    var w = canvas.width;
+    var h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var ox = dot.cx + dot.xOffset;
+      var oy = dot.cy + dot.yOffset;
+      var dx = dot.cx - pointer.x;
+      var dy = dot.cy - pointer.y;
+      var dsq = dx * dx + dy * dy;
+
+      var fill = BASE_COLOR;
+      if (dsq <= proxSq) {
+        var dist = Math.sqrt(dsq);
+        var t = 1 - dist / PROXIMITY;
+        fill = 'rgb(' +
+          Math.round(baseRgb.r + (activeRgb.r - baseRgb.r) * t) + ',' +
+          Math.round(baseRgb.g + (activeRgb.g - baseRgb.g) * t) + ',' +
+          Math.round(baseRgb.b + (activeRgb.b - baseRgb.b) * t) +
+        ')';
+      }
+
+      ctx.save();
+      ctx.translate(ox, oy);
+      ctx.fillStyle = fill;
+      if (circlePath) {
+        ctx.fill(circlePath);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, DOT_SIZE / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+  draw();
+
+  /* Throttled mousemove — speed-based knock */
+  var moveLast = 0;
+  function onMove(e) {
+    var now = performance.now();
+    if (now - moveLast < 50) return;
+    moveLast = now;
+
+    var dt = pointer.lastTime ? now - pointer.lastTime : 16;
+    var dx = e.clientX - pointer.lastX;
+    var dy = e.clientY - pointer.lastY;
+    var vx = (dx / dt) * 1000;
+    var vy = (dy / dt) * 1000;
+    var speed = Math.sqrt(vx * vx + vy * vy);
+    if (speed > MAX_SPEED) {
+      var s = MAX_SPEED / speed;
+      vx *= s; vy *= s; speed = MAX_SPEED;
+    }
+    pointer.lastTime = now;
+    pointer.lastX = e.clientX;
+    pointer.lastY = e.clientY;
+    pointer.vx = vx; pointer.vy = vy; pointer.speed = speed;
+
+    var rect = canvas.getBoundingClientRect();
+    pointer.x = e.clientX - rect.left;
+    pointer.y = e.clientY - rect.top;
+
+    if (speed <= SPEED_TRIGGER) return;
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var dxx = dot.cx - pointer.x;
+      var dyy = dot.cy - pointer.y;
+      var dist = Math.sqrt(dxx * dxx + dyy * dyy);
+      if (dist < PROXIMITY && !dot._knocked) {
+        knock(dot, dxx + vx * 0.005, dyy + vy * 0.005);
+      }
+    }
+  }
+
+  /* Click shockwave */
+  function onClick(e) {
+    var rect = canvas.getBoundingClientRect();
+    var cx = e.clientX - rect.left;
+    var cy = e.clientY - rect.top;
+    /* Only register clicks actually over the canvas area */
+    if (cx < 0 || cy < 0 || cx > rect.width || cy > rect.height) return;
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var dxx = dot.cx - cx;
+      var dyy = dot.cy - cy;
+      var dist = Math.sqrt(dxx * dxx + dyy * dyy);
+      if (dist < SHOCK_RADIUS && !dot._knocked) {
+        var falloff = Math.max(0, 1 - dist / SHOCK_RADIUS);
+        knock(dot, dxx * SHOCK_STRENGTH * falloff, dyy * SHOCK_STRENGTH * falloff);
+      }
+    }
+  }
+
+  /* Knock-back tween (inertia approximation) + elastic return */
+  function knock(dot, pushX, pushY) {
+    dot._knocked = true;
+    gsap.killTweensOf(dot);
+    gsap.to(dot, {
+      xOffset: pushX,
+      yOffset: pushY,
+      duration: KNOCK_DURATION,
+      ease: 'power3.out',
+      onComplete: function () {
+        gsap.to(dot, {
+          xOffset: 0,
+          yOffset: 0,
+          duration: RETURN_DURATION,
+          ease: 'elastic.out(1,0.75)',
+          onComplete: function () { dot._knocked = false; }
+        });
+      }
+    });
+  }
+
+  window.addEventListener('mousemove', onMove, { passive: true });
+  window.addEventListener('click', onClick);
+});
+
+
+/* ── STARS BACKGROUND — reusable starfield with mouse parallax ── */
+(function starsBackground() {
+  function randomShadows(count, color) {
+    var parts = new Array(count);
+    for (var i = 0; i < count; i++) {
+      var x = Math.floor(Math.random() * 4000) - 2000;
+      var y = Math.floor(Math.random() * 4000) - 2000;
+      parts[i] = x + 'px ' + y + 'px ' + color;
+    }
+    return parts.join(', ');
+  }
+  function buildHost(host) {
+    if (host.dataset.starsReady) return;
+    host.dataset.starsReady = '1';
+
+    var color    = host.dataset.starColor    || '#fff';
+    var speed    = parseFloat(host.dataset.starSpeed)    || 50;
+    var factor   = parseFloat(host.dataset.starParallax) || 0.05;
+
+    var parallax = document.createElement('div');
+    parallax.className = 'stars-bg-parallax';
+
+    var defs = [
+      { count: 1000, size: 1, dur: speed },
+      { count: 400,  size: 2, dur: speed * 2 },
+      { count: 200,  size: 3, dur: speed * 3 }
+    ];
+    defs.forEach(function (d) {
+      var layer = document.createElement('div');
+      layer.className = 'stars-bg-layer';
+      layer.style.animationDuration = d.dur + 's';
+      var shadows = randomShadows(d.count, color);
+      ['', '--lower'].forEach(function (suf) {
+        var dot = document.createElement('div');
+        dot.className = 'stars-bg-dot' + (suf ? ' stars-bg-dot' + suf : '');
+        dot.style.cssText =
+          'width:'  + d.size + 'px;' +
+          'height:' + d.size + 'px;' +
+          'box-shadow:' + shadows + ';';
+        layer.appendChild(dot);
+      });
+      parallax.appendChild(layer);
+    });
+
+    host.appendChild(parallax);
+
+    window.addEventListener('mousemove', function (e) {
+      var cx = window.innerWidth  / 2;
+      var cy = window.innerHeight / 2;
+      var dx = -(e.clientX - cx) * factor;
+      var dy = -(e.clientY - cy) * factor;
+      parallax.style.transform = 'translate3d(' + dx + 'px, ' + dy + 'px, 0)';
+    }, { passive: true });
+  }
+  Array.prototype.slice.call(document.querySelectorAll('.stars-bg')).forEach(buildHost);
+}());
+
+
+/* ── WELCOME OVERLAY — intro typewriter → Enter CTA + dismiss handlers ── */
+(function welcomeOverlay() {
+  var overlay = document.getElementById('welcome');
+
+  /* Returning visitor: welcome is hidden — reveal the hero + drop nav.
+     Defer to next frame so the browser paints the initial hidden state
+     before the class change triggers the transition. */
+  if (!overlay || overlay.hasAttribute('hidden')) {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        var heroNow = document.getElementById('hero-original');
+        if (heroNow) heroNow.classList.add('is-shown');
+        var navNow = document.getElementById('nav');
+        if (navNow) navNow.classList.add('is-dropped');
+      });
+    });
+    return;
+  }
+
+  var intro    = document.getElementById('welcome-intro');
+  var enterBtn = document.getElementById('welcome-enter');
+  var spline   = document.getElementById('welcome-spline');
+  var lines    = intro ? Array.prototype.slice.call(intro.querySelectorAll('.welcome-intro-line')) : [];
+
+  var BEATS = [
+    "HI, I'M REFAELI. THANKS FOR STOPPING BY.",
+    "WHAT YOU'LL FIND HERE IS A SNIPPET OF ME.",
+    "AS A DESIGNER, AS A BUILDER."
+  ];
+
+  /* Hero reveal trigger — called when welcome dismisses (first-time)
+     or immediately on load (returning visitor). Plays the staggered
+     reveal of photo → nav drop + role/location rise → spline iframe. */
+  function revealHero() {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        var hero = document.getElementById('hero-original');
+        if (hero) hero.classList.add('is-shown');
+        var nav = document.getElementById('nav');
+        if (nav) nav.classList.add('is-dropped');
+      });
+    });
+  }
+
+  function dismiss() {
+    if (overlay.classList.contains('is-dismissed')) return;
+    overlay.classList.add('is-dismissed');
+    document.body.classList.remove('welcome-active');
+    revealHero();
+    try { sessionStorage.setItem('welcomeShown', '1'); } catch (e) {}
+    setTimeout(function () { overlay.setAttribute('hidden', ''); }, 800);
+  }
+
+  if (enterBtn) enterBtn.addEventListener('click', dismiss);
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'Escape' || e.key === 'Enter') && !overlay.hasAttribute('hidden')) dismiss();
+  });
+
+  /* Sequence: type beats one at a time → hold 1s → fade intro → reveal Enter */
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  function typeBeat(el, text) {
+    return new Promise(function (resolve) {
+      var i = 0;
+      (function tick() {
+        if (i > text.length) { resolve(); return; }
+        el.textContent = text.substring(0, i);
+        i++;
+        setTimeout(tick, 50 + Math.random() * 30);
+      })();
+    });
+  }
+
+  async function runIntro() {
+    if (!intro || lines.length < BEATS.length) return;
+    await wait(1000);                         // pause after scene first renders
+    intro.classList.add('is-visible');
+    for (var i = 0; i < BEATS.length; i++) {
+      await typeBeat(lines[i], BEATS[i]);
+      if (i < BEATS.length - 1) await wait(550);
+    }
+    await wait(1000);                         // hold
+    intro.classList.add('is-fade');
+    await wait(700);                          // fade
+    intro.style.display = 'none';
+    if (enterBtn) enterBtn.classList.add('is-visible');
+  }
+
+  /* Start the typewriter once the Spline scene begins rendering.
+     Fallback to a 2.5s timer if no load event fires. */
+  var introStarted = false;
+  function startIntro() {
+    if (introStarted) return;
+    introStarted = true;
+    runIntro();
+  }
+  if (spline) {
+    spline.addEventListener('load', startIntro, { once: true });
+    spline.addEventListener('load-complete', startIntro, { once: true });
+  }
+  setTimeout(startIntro, 2500);  // fallback
+
+  /* Hide the "Built with Spline" badge inside each viewer's shadow DOM. */
+  var splineViewers = Array.prototype.slice.call(
+    document.querySelectorAll('.welcome-spline')
+  );
+  splineViewers.forEach(function (sv) {
+    var attempts = 0;
+    var iv = setInterval(function () {
+      attempts++;
+      var logo = sv.shadowRoot && sv.shadowRoot.querySelector('#logo');
+      if (logo) {
+        logo.style.display = 'none';
+        clearInterval(iv);
+      } else if (attempts > 60) {
+        clearInterval(iv);
+      }
+    }, 100);
+  });
+}());
+
+
 /* ════════════════════════════════════════════════════════════════
    HERO INTRO SEQUENCE — phases 1-3 (typewriter → morph → solar bloom)
    then phase 4 (original hero) reveals when the user scrolls past.
+   NOTE: The typewriter markup has been removed; this IIFE bails
+   early via the null check below. Kept for safe iteration.
    ════════════════════════════════════════════════════════════════ */
 (function heroIntro() {
   const intro = document.getElementById('hero-intro');
@@ -2203,6 +2757,10 @@ const APPROACH_R = 380;               /* px, cursor influence radius */
 let oA = 0, o2A = Math.PI;            /* start angles */
 
 function animOrbits() {
+  /* Orbit markup was removed from the hero — bail safely so nothing
+     downstream is blocked by a null.style access. */
+  if (!orbit || !hero) return;
+
   const r = hero.getBoundingClientRect();
   const cx = r.left + r.width  * 0.5;
   const cy = r.top  + r.height * 0.5;
@@ -2261,39 +2819,29 @@ document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
   function updateNavColor() {
     var navH = nav.offsetHeight + 2;
     var isDark = false;
+    var onHeroPhoto = false;
 
-    /* Dark sections by id */
-    ['philosophy', 'work', 'contact'].forEach(function (id) {
+    /* Sections with dark backgrounds — nav reads white here */
+    ['hero', 'philosophy', 'work', 'object', 'contact'].forEach(function (id) {
       var el = document.getElementById(id);
       if (!el) return;
       var r = el.getBoundingClientRect();
       if (r.top < navH && r.bottom > 0) isDark = true;
     });
 
-    /* Gallery full-bleed: overlay visible means dark image fills frame */
-    var overlay = document.getElementById('gal-overlay');
-    if (overlay && overlay.classList.contains('visible')) isDark = true;
+    /* Gallery full-bleed overlay = dark image fills frame */
+    var galOverlay = document.getElementById('gal-overlay');
+    if (galOverlay && galOverlay.classList.contains('visible')) isDark = true;
 
-    /* Hero intro: only apply phase-based dark state when the intro is
-       actually intersecting the nav band. Phase advances 1→2→3→4 on
-       a fixed timer and never reverts, so without the rect gate the
-       nav would stay "light text" mode forever once phase 4 was
-       reached — making it invisible on every light section below. */
-    var onHeroPhoto = false;
-    var intro = document.getElementById('hero-intro');
-    if (intro) {
-      var rIntro = intro.getBoundingClientRect();
-      var introInNav = rIntro.top < navH && rIntro.bottom > 0;
-      if (introInNav) {
-        var p = intro.getAttribute('data-phase');
-        if (p === '2' || p === '3' || p === '4') isDark = true;
-        if (p === '4') onHeroPhoto = true;
-      }
+    /* Hero specifically — for the text-shadow boost on top of the photo */
+    var heroEl = document.getElementById('hero');
+    if (heroEl) {
+      var rHero = heroEl.getBoundingClientRect();
+      if (rHero.top < navH && rHero.bottom > 0) onHeroPhoto = true;
     }
 
     nav.classList.toggle('nav--light', isDark);
     nav.classList.toggle('nav--on-photo', onHeroPhoto);
-    /* back-top color flip is handled by the luminance sniffer below */
   }
 
   window.addEventListener('scroll', updateNavColor, { passive: true });
@@ -2825,9 +3373,41 @@ document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
 }());
 
 
+/* ── WORK DROPDOWN — align right edge to CONTACT's right edge ── */
+(function alignDropdownToContact() {
+  var contact     = document.querySelector('.nav-links a[href="#contact"]');
+  var dropdown    = document.querySelector('.nav-dropdown');
+  var dropdownLi  = dropdown ? dropdown.parentElement : null;
+  if (!contact || !dropdown || !dropdownLi) return;
+
+  function reposition() {
+    var contactRect = contact.getBoundingClientRect();
+    var parentRect  = dropdownLi.getBoundingClientRect();
+    /* CSS `right` is the distance from the containing block's right edge
+       to the element's right edge (positive = element shifted left).
+       We want the dropdown's right edge at contactRect.right, so:
+         dropdownRight - rightOffset = contactRect.right
+         rightOffset = parentRect.right - contactRect.right
+       Since CONTACT is to the right of WORK, this comes out negative,
+       which shifts the dropdown's right edge to the right of its parent. */
+    var rightOffset = parentRect.right - contactRect.right;
+    dropdownLi.style.setProperty('--nav-dropdown-right', rightOffset + 'px');
+  }
+
+  reposition();
+  window.addEventListener('resize', reposition);
+  /* Also recompute when fonts settle / nav reflows. */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(reposition).catch(function () {});
+  }
+}());
+
+
 /* ── MAGNETIC BUTTONS ── */
+/* Only top-level nav links (direct children of .nav-links > li) get the
+   magnetic pull. Excludes the dropdown card anchors so they stay static. */
 const magnetEls = [
-  ...document.querySelectorAll('.nav-links a'),
+  ...document.querySelectorAll('.nav-links > li > a'),
   ...document.querySelectorAll('.cz-book-btn, .cz-li-btn, .cz-resume-btn')
 ];
 
