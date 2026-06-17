@@ -2322,6 +2322,11 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   background-size: var(--dot-size-md);
   padding-bottom: clamp(9rem, 14vh, 13rem);
 }
+/* Visual offset only — push content 20px lower without affecting layout
+   (transform doesn't grow the section's height). */
+#how-i-work > .sec-inner {
+  transform: translateY(20px);
+}
 
 /* Orb decorations */
 .hiw-orbs {

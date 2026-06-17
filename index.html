@@ -656,18 +656,6 @@
           <circle class="outer-orbit outer-orbit-3" cx="0" cy="0" r="850"/>
         </svg>
 
-        <!-- PHASE 1: scattered concept words drifting before they organize -->
-        <div class="chaos-layer" aria-hidden="true">
-          <div class="chaos-node" style="--cx:14%;--cy:22%;--cd:9s;">Pixels</div>
-          <div class="chaos-node" style="--cx:78%;--cy:18%;--cd:11s;">Systems</div>
-          <div class="chaos-node" style="--cx:10%;--cy:62%;--cd:8s;">Patterns</div>
-          <div class="chaos-node" style="--cx:88%;--cy:68%;--cd:13s;">Craft</div>
-          <div class="chaos-node" style="--cx:48%;--cy:12%;--cd:10s;">Detail</div>
-          <div class="chaos-node" style="--cx:28%;--cy:82%;--cd:12s;">Strategy</div>
-          <div class="chaos-node" style="--cx:72%;--cy:86%;--cd:9.5s;">Intent</div>
-          <div class="chaos-node" style="--cx:62%;--cy:42%;--cd:10.5s;">Logic</div>
-        </div>
-
         <!-- Orbital stage: 4 rings × 4 nodes = 16 orbiting concepts -->
         <div class="orbit-stage">
 
@@ -1265,18 +1253,6 @@
           <circle class="outer-orbit outer-orbit-2" cx="0" cy="0" r="680"/>
           <circle class="outer-orbit outer-orbit-3" cx="0" cy="0" r="850"/>
         </svg>
-
-        <!-- PHASE 1: physical-making concepts drifting before they organize -->
-        <div class="chaos-layer" aria-hidden="true">
-          <div class="chaos-node" style="--cx:14%;--cy:22%;--cd:9s;">Material</div>
-          <div class="chaos-node" style="--cx:78%;--cy:18%;--cd:11s;">Form</div>
-          <div class="chaos-node" style="--cx:10%;--cy:62%;--cd:8s;">Texture</div>
-          <div class="chaos-node" style="--cx:88%;--cy:68%;--cd:13s;">Light</div>
-          <div class="chaos-node" style="--cx:48%;--cy:12%;--cd:10s;">Volume</div>
-          <div class="chaos-node" style="--cx:28%;--cy:82%;--cd:12s;">Surface</div>
-          <div class="chaos-node" style="--cx:72%;--cy:86%;--cd:9.5s;">Mass</div>
-          <div class="chaos-node" style="--cx:62%;--cy:42%;--cd:10.5s;">Weight</div>
-        </div>
 
         <!-- Orbital stage: 4 rings × 4 nodes -->
         <div class="orbit-stage">
@@ -2488,7 +2464,7 @@ function bootSolarBreaker(el) {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
       io.disconnect();
-      setPhase(2, 1600);  // chaos fades, center orb scales in
+      setPhase(2, 1600);  // center orb scales in (chaos-layer removed)
       setPhase(3, 3500);  // orbit paths fade in (staggered), rings start spinning
       setPhase(4, 8000);  // text overlay + spokes + outer orbits + data pulses
     });
