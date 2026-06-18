@@ -1920,95 +1920,108 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
 
 /* Metric stat cards — mirrors the value/reflect tile pattern:
    left-aligned, kicker label on top-left, big number on bottom-left, icon top-right. */
+/* ─── PHI STAT CARD — matches .hiw-tile from cs-vz-home CHALLENGE ───
+   Tile background, border, badge, and typography copied verbatim from
+   .hiw-tile / .hiw-icon-badge / .hiw-title / .hiw-short. The number is
+   the only override — for metrics it's the prominent content, not a
+   ghost ordinal like .hiw-num. */
 .phi-stat-card {
-  position: relative;       /* for absolute-positioned .phi-stat-icon */
-  overflow: hidden;         /* clip icon to rounded corners */
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between; /* eyebrow at top, number at bottom */
-  text-align: left;
-  padding: 2.2rem 1.8rem 2.2rem;
-  min-height: 260px;        /* taller — gives the eyebrow + number room to breathe at top/bottom */
-  background: var(--white-a04);
-  border: 1px solid var(--accent-mid-a18);
-  border-radius: var(--radius-card-md);
-  transition:
-    border-color var(--dur-base) var(--ease-base),
-    box-shadow var(--dur-base) var(--ease-base),
-    background var(--dur-base) var(--ease-base),
-    transform var(--dur-base) var(--ease-spring);
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  position: relative;
   cursor: default;
+  overflow: hidden;
+  flex: 1;
+  height: 260px;
+  transition:
+    transform 0.35s var(--ease-spring),
+    background 0.3s var(--ease-base),
+    box-shadow 0.3s var(--ease-base);
 }
 
 .phi-stat-card:hover {
-  border-color: var(--accent-mid-a50);
-  box-shadow: 0 0 0 1px var(--accent-mid-a18), 0 12px 32px rgba(141, 148, 255, 0.12);
-  background: var(--white-a07);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  background: rgba(244, 244, 255, 0.90);
+  box-shadow: var(--shadow-card-hover);
 }
 
-/* Oversized line icon in the top-right corner — matches value/reflect tile sizing */
-.phi-stat-icon {
-  position: absolute;
-  top: -22px;
-  right: -22px;
-  width: 180px;
-  height: 180px;
-  color: var(--accent);
-  opacity: 0.10;
-  pointer-events: none;
-  z-index: 1;
-  transition:
-    transform 0.65s cubic-bezier(0.34, 1.4, 0.64, 1),
-    opacity 0.4s ease,
-    color 0.4s ease;
-}
-.phi-stat-card:hover .phi-stat-icon {
-  transform: rotate(-12deg) scale(1.12);
-  opacity: 0.22;
-  color: var(--accent-mid);
-}
-/* Per-icon vertical nudges so each icon sits proportionally in its corner */
-.phi-stat-icon--years { top: -34px; }    /* mountain — pull up 12px */
-.phi-stat-icon--users { top: -34px; }    /* silhouettes — pull up 12px */
-
-/* Label sits ABOVE the number now — kicker style (matches value-eyebrow) */
-.phi-stat-label {
-  position: relative;
-  z-index: 2;
-  font-size: var(--text-caption);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--tracking-kicker);
-  text-transform: uppercase;
-  color: var(--accent);
-  margin: 0;  /* space-between on the card handles vertical separation */
-}
-
-/* Matches .value-title pattern in cs-vz-id-arch: sans, light tagline with
-   a semibold "strong" emphasis — here the number plays the role of strong. */
+/* Metric number — copied verbatim from .hiw-num: oversized ghost
+   serif that bleeds off the top-right corner. On hover it lights up
+   in the same accent purple as the spotlight glow. */
 .phi-stat-num {
-  position: relative;
-  z-index: 2;
-  font-family: var(--font-sans);
-  font-size: clamp(17pt, 2vw, 22pt);
-  font-weight: var(--weight-semibold);
-  color: var(--ink);
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  margin: auto 0 0;  /* push number + tagline group to the bottom */
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  font-family: var(--font-serif);
+  font-size: clamp(72pt, 9vw, 100pt);
+  color: rgba(0, 0, 0, 0.045);
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+  user-select: none;
+  pointer-events: none;
+  transition: color 0.35s var(--ease-base), opacity 0.25s var(--ease-base);
+}
+.phi-stat-card:hover .phi-stat-num {
+  color: hsla(236, 100%, 70%, 0.28);
 }
 
-.phi-stat-tagline {
-  position: relative;
-  z-index: 2;
-  font-family: var(--font-sans);
-  font-size: clamp(8.5pt, 1vw, 11pt);
+/* Face holds the rest of card content — icon badge top, spacer,
+   label + tagline at bottom. Mirrors .hiw-face structure. */
+.phi-stat-face {
+  position: absolute;
+  inset: 0;
+  padding: 1.4rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.phi-stat-spacer { flex: 1; }
+
+/* Icon badge — copied from .hiw-icon-badge */
+.phi-stat-icon-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-icon);
+  background: var(--accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.65rem;
+  flex-shrink: 0;
+}
+
+.phi-stat-icon-badge svg {
+  width: 21px;
+  height: 21px;
+  color: var(--accent);
+}
+
+/* Headline above tagline — copied verbatim from .hiw-title:
+   light sans baseline with bold-emphasis <strong>. */
+.phi-stat-label {
+  font-size: clamp(17pt, 2vw, 21pt);
   font-weight: var(--weight-light);
   color: var(--ink-mid);
-  line-height: 1.25;
-  margin: 0.6rem 0 0;
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
+  flex-shrink: 0;
+}
+.phi-stat-label strong {
+  font-weight: var(--weight-semibold);
+  color: var(--ink);
+}
+
+/* Tagline — copied from .hiw-short */
+.phi-stat-tagline {
+  font-size: var(--text-body);
+  font-weight: var(--weight-light);
+  color: var(--ink-light);
+  line-height: var(--leading-body);
+  margin: 0;
+  flex-shrink: 0;
 }
 
 /* Kicker */
@@ -2162,24 +2175,9 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   max-width: 700px;
 }
 
-/* Stat cards — transparent so the dot grid reads through; border + hover still define the card */
-.impact-sec .phi-stat-card {
-  background: #fff;
-  border-color: rgba(0,0,0,0.08);
-  transition:
-    border-color var(--dur-base) var(--ease-base),
-    box-shadow var(--dur-base) var(--ease-base),
-    transform var(--dur-base) var(--ease-spring);
-}
-.impact-sec .phi-stat-card:hover {
-  border-color: var(--accent-a25);
-  box-shadow: 0 0 0 1px var(--accent-a10), 0 12px 32px var(--accent-a08);
-  transform: translateY(-2px);
-}
-.impact-sec .phi-stat-num     { color: #000; transition: color var(--dur-base) var(--ease-base); }
-.impact-sec .phi-stat-tagline { color: #000; }
-.impact-sec .phi-stat-card:hover .phi-stat-num { color: var(--accent); }
-.impact-sec .phi-stat-label { color: var(--accent); }
+/* Stat cards — base .phi-stat-card styling (the CHALLENGE-tile match)
+   carries everything. No impact-sec overrides; the label colors are
+   inherited from the base rule (ink-mid + ink for strong). */
 
 /* Recognition logo blocks */
 .phi-recog-grid {
@@ -6963,7 +6961,9 @@ body.cursor-in-iframe #cur-ring {
 }
 
 /* Full-bleed Spline scenes — fill the entire overlay.
-   pointer-events: none locks the camera (no orbit / pan / zoom). */
+   pointer-events: auto so the scene's built-in interactions fire
+   (e.g. orb hover triggers). Spline-viewer is a same-document web
+   component, so the page's custom cursor stays alive when over it. */
 .welcome-spline {
   position: absolute;
   inset: 0;
@@ -6971,7 +6971,7 @@ body.cursor-in-iframe #cur-ring {
   height: 100%;
   display: block;
   background: transparent;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 #welcome-spline { z-index: 0; }
