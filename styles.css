@@ -1782,6 +1782,7 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   border-top: 1px solid var(--accent-mid-a08);
   /* No overflow: hidden here — it would break .phi-pin's position: sticky.
      Stars stay clipped via .stars-bg's own overflow: hidden. */
+
 }
 
 /* ─── Reusable star-field background ──────────────────────────
@@ -6888,7 +6889,8 @@ body:has(#welcome) #nav.is-dropped {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.96);
+  /* Start much closer to the final scale — small, gentle drift in. */
+  transform: translate(-50%, -50%) scale(1.02);
   width: 100vw;
   height: 100vh;
   max-width: none;
@@ -6902,8 +6904,12 @@ body:has(#welcome) #nav.is-dropped {
      the hero behind. Tradeoff: scene colors shift, any dark
      objects inside the scene also become semi-transparent. */
   mix-blend-mode: screen;
-  transition: opacity 0.9s var(--ease-base), transform 0.9s var(--ease-base);
-  transition-delay: 3.3s;
+  /* Smoother / longer / softer ease — masks Spline content
+     loading time and gives the iframe a cinematic settle. */
+  transition:
+    opacity   1.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 2.8s;
 }
 /* Force transparency on the viewer's shadow-DOM parts. Hana viewer
    exposes canvas / container via CSS Parts in recent versions. */

@@ -31,7 +31,7 @@
   <spline-viewer
     class="welcome-spline"
     id="welcome-spline"
-    url="https://prod.spline.design/1lHmGauSkJkWtEbM/scene.splinecode"
+    url="https://prod.spline.design/0ZwBbbXqf4umMzMi/scene.splinecode"
   ></spline-viewer>
 
   <!-- Typewriter intro — types 3 beats, holds, then dissolves -->
@@ -1574,6 +1574,21 @@
     return;
   }
 
+  /* Pause/resume observer — once a scene has loaded, this keeps it
+     from running rAF + WebGL paint cost while it's off-screen.
+     A small rootMargin keeps the scene running briefly during the
+     scroll-in transition so the resume is invisible. */
+  var pauseObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var v = entry.target;
+      if (entry.isIntersecting) {
+        if (typeof v.play === 'function') { try { v.play(); } catch (e) {} }
+      } else {
+        if (typeof v.pause === 'function') { try { v.pause(); } catch (e) {} }
+      }
+    });
+  }, { rootMargin: '200px 0px 200px 0px' });
+
   /* rootMargin: 800px — scene begins loading ~one viewport-height
      before the breaker scrolls into view, so the scene is ready by
      the time it's actually visible. */
@@ -1581,6 +1596,9 @@
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
         load(entry.target);
+        /* Hand off to the pause/resume observer so we save GPU when
+           the breaker scrolls out of view. */
+        pauseObserver.observe(entry.target);
         io.unobserve(entry.target);
       }
     });
