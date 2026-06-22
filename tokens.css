@@ -10,7 +10,12 @@
   /* ── TYPOGRAPHY ────────────────────────────────── */
 
   --font-sans: 'Outfit', system-ui, sans-serif;
-  --font-serif: 'DM Serif Display', Georgia, serif;
+  /* `--font-serif` now ALIASES to the sans stack — the v2 design
+     system dropped the serif. Every `var(--font-serif)` consumer
+     across all pages silently picks up Outfit. To restore the
+     serif on a specific page, set --font-serif locally on that
+     scope. */
+  --font-serif: 'Outfit', system-ui, sans-serif;
 
   --weight-thin:       200;
   --weight-light:      300;
@@ -73,16 +78,26 @@
   --accent-mid:        #8D94FF;
   --accent-soft:       #f4f4ff;
 
-  /* Surfaces — light mode */
-  --page:              #fafafa;
-  --warm:              #f7f6f2;
+  /* Surfaces — light mode.
+       All light surfaces are pure white per the v2 design language —
+       no off-white, no cream, no grey-tinted secondary. --warm is kept
+       as a token only because dozens of older rules reference it; it
+       now resolves to the same #ffffff as --page so .bg-warm sections
+       render identically to .bg-page. (Originally cream #f7f6f2, then
+       a neutral grey #f3f3f3 as an interim alternating surface.) */
+  --page:              #ffffff;
+  --warm:              #ffffff;
   --surface-white:     #ffffff;
   --surface-tint:      #f5f6ff;   /* used in phone screens, input backgrounds */
   --surface-muted:     #eef;
   --surface-timeline:  #eef0f8;
 
-  /* Surfaces — dark mode */
-  --dark:              #181821;
+  /* Surfaces — dark mode.
+     `--dark` is now pure black per the v2 design system (was the
+     slightly off-black #181821 / dark blueish purple). Every
+     `var(--dark)` consumer (~20 places: HIW v1 bg, marquee strip,
+     contact, philosophy, etc.) becomes #000 instantly. */
+  --dark:              #000000;
   --dark-mid:          #181828;
   --dark-footer:       #080810;
 

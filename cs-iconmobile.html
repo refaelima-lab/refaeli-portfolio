@@ -6,6 +6,8 @@
   <title>Iconmobile · Refaeli Ma</title>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="styles.css">
+  <!-- GSAP — used by the .cta-sec interactive dot-grid background. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <style>
 
     /* ── KIA Full-Bleed Hero (sticky stage + rising glass) ── */
@@ -54,9 +56,9 @@
       clip-path: inset(100% 0 0 0);
     }
     .kia-glass-line {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: clamp(17pt, 2.9vw, 34pt);
-      font-weight: var(--weight-regular);
+      font-weight: var(--weight-thin);
       color: rgba(255,255,255,0.90);
       line-height: 1.35;
       max-width: 1020px;
@@ -64,39 +66,57 @@
       opacity: 0;
       transform: translateY(18px);
       will-change: transform, opacity;
+      letter-spacing: -0.012em;
     }
     .kia-glass-line em {
       font-style: italic;
-      color: var(--accent-mid);
+      font-weight: var(--weight-light);
+      color: inherit;
     }
-    /* content pinned to bottom */
+    .kia-glass-line strong {
+      font-weight: 700;
+      color: inherit;
+    }
+    /* content pinned to bottom — horizontal padding matches the global
+       nav so .kia-kicker + .kia-title align under the REFAELI MA logo.
+       (Same change applied to cs-vz-id-arch's .hero-overlay.) */
     .kia-content {
       position: relative;
       z-index: 4;
       width: 100%;
-      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+      padding: 0 clamp(1.25rem, 5vw, 4rem) clamp(3rem, 6vh, 5.5rem);
     }
+    /* Kicker — matches body.v2-home .proj-card-type / cs-vz-id-arch's
+       .hero-eyebrow: 9pt, medium, tracking-wider, uppercase, 78% white. */
     .kia-kicker {
-      font-size: var(--text-micro);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: rgba(255,255,255,0.48);
-      margin-bottom: 0;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1;
+      margin-bottom: 1.4rem;
       opacity: 0;
       animation: fu 0.6s var(--ease-reveal) 0.3s both;
     }
+    /* Title — mirrors body.v2-home .proj-card-title / cs-vz-id-arch's
+       .hero-title: sans, thin base, semibold <strong>, uppercase,
+       clamped size, -0.012em tracking, 1.1 leading. */
     .kia-title {
-      font-family: var(--font-serif);
-      font-size: clamp(32pt, 6.5vw, 68pt);
-      font-weight: var(--weight-regular);
+      font-family: var(--font-sans);
+      font-size: clamp(28pt, 4.4vw, 56pt);
+      font-weight: var(--weight-thin);
       color: #fff;
-      line-height: 1.0;
-      margin: 0 0 1rem;
+      line-height: 1.1;
+      letter-spacing: -0.012em;
+      text-transform: uppercase;
+      margin: 0;
       opacity: 0;
       animation: fu 0.7s var(--ease-reveal) 0.5s both;
     }
-    .kia-title em { font-style: italic; color: var(--accent-mid); }
+    .kia-title strong {
+      font-weight: 700;
+    }
 
     /* ── KIA Showcase (bg + glass + 2-image scroll reveal) ── */
     .kia-show-stage {
@@ -189,9 +209,9 @@
       clip-path: inset(100% 0 0 0);
     }
     .ford-glass-line {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: clamp(17pt, 2.9vw, 34pt);
-      font-weight: var(--weight-regular);
+      font-weight: var(--weight-thin);
       color: rgba(255,255,255,0.90);
       line-height: 1.35;
       max-width: 1020px;
@@ -199,38 +219,49 @@
       opacity: 0;
       transform: translateY(18px);
       will-change: transform, opacity;
+      letter-spacing: -0.012em;
     }
     .ford-glass-line em {
       font-style: italic;
-      color: var(--accent-mid);
+      font-weight: var(--weight-light);
+      color: inherit;
+    }
+    .ford-glass-line strong {
+      font-weight: 700;
+      color: inherit;
     }
     .ford-content {
       position: relative;
       z-index: 4;
       width: 100%;
-      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+      padding: 0 clamp(1.25rem, 5vw, 4rem) clamp(3rem, 6vh, 5.5rem);
     }
     .ford-kicker {
-      font-size: var(--text-micro);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: rgba(255,255,255,0.48);
-      margin-bottom: 0;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1;
+      margin-bottom: 1.4rem;
       opacity: 0;
       animation: fu 0.6s var(--ease-reveal) 0.3s both;
     }
     .ford-title {
-      font-family: var(--font-serif);
-      font-size: clamp(32pt, 6.5vw, 68pt);
-      font-weight: var(--weight-regular);
+      font-family: var(--font-sans);
+      font-size: clamp(28pt, 4.4vw, 56pt);
+      font-weight: var(--weight-thin);
       color: #fff;
-      line-height: 1.0;
-      margin: 0 0 1rem;
+      line-height: 1.1;
+      letter-spacing: -0.012em;
+      text-transform: uppercase;
+      margin: 0;
       opacity: 0;
       animation: fu 0.7s var(--ease-reveal) 0.5s both;
     }
-    .ford-title em { font-style: italic; color: var(--accent-mid); }
+    .ford-title strong {
+      font-weight: 700;
+    }
 
     /* ── FORD Asset Showcase ── */
     .ford-video-strip {
@@ -301,9 +332,9 @@
       clip-path: inset(100% 0 0 0);
     }
     .bmw-glass-line {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: clamp(17pt, 2.9vw, 34pt);
-      font-weight: var(--weight-regular);
+      font-weight: var(--weight-thin);
       color: rgba(255,255,255,0.90);
       line-height: 1.35;
       max-width: 1020px;
@@ -311,35 +342,49 @@
       opacity: 0;
       transform: translateY(18px);
       will-change: transform, opacity;
+      letter-spacing: -0.012em;
     }
-    .bmw-glass-line em { font-style: italic; color: var(--accent-mid); }
+    .bmw-glass-line em {
+      font-style: italic;
+      font-weight: var(--weight-light);
+      color: inherit;
+    }
+    .bmw-glass-line strong {
+      font-weight: 700;
+      color: inherit;
+    }
     .bmw-content {
       position: relative;
       z-index: 4;
       width: 100%;
-      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+      padding: 0 clamp(1.25rem, 5vw, 4rem) clamp(3rem, 6vh, 5.5rem);
     }
     .bmw-kicker {
-      font-size: var(--text-micro);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: rgba(255,255,255,0.48);
-      margin-bottom: 0;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1;
+      margin-bottom: 1.4rem;
       opacity: 0;
       animation: fu 0.6s var(--ease-reveal) 0.3s both;
     }
     .bmw-title {
-      font-family: var(--font-serif);
-      font-size: clamp(32pt, 6.5vw, 68pt);
-      font-weight: var(--weight-regular);
+      font-family: var(--font-sans);
+      font-size: clamp(28pt, 4.4vw, 56pt);
+      font-weight: var(--weight-thin);
       color: #fff;
-      line-height: 1.0;
-      margin: 0 0 1rem;
+      line-height: 1.1;
+      letter-spacing: -0.012em;
+      text-transform: uppercase;
+      margin: 0;
       opacity: 0;
       animation: fu 0.7s var(--ease-reveal) 0.5s both;
     }
-    .bmw-title em { font-style: italic; color: var(--accent-mid); }
+    .bmw-title strong {
+      font-weight: 700;
+    }
 
     /* ── BMW Showcase (in-car bg + glass + 2-screen reveal) ── */
     .bmw-show-stage {
@@ -387,6 +432,13 @@
       will-change: clip-path;
     }
 
+    /* Marquee text — solid white to match cs-vz-id-arch (the global
+       .marquee-item color is var(--white-a60) which reads muted on the
+       pure-black band). Bg is already #000 via the global rule. */
+    .marquee-wrap .marquee-item {
+      color: #fff;
+    }
+
   </style>
 </head>
 <body>
@@ -425,6 +477,13 @@
   </button>
 </nav>
 
+<!-- ── IN-PAGE SIDENAV — 3 brand anchors -->
+<nav class="cs-sidenav" id="cs-sidenav" aria-label="Page sections">
+  <button class="cs-sidenav-dot active" data-label="KIA"  data-target="overview"></button>
+  <button class="cs-sidenav-dot"        data-label="FORD" data-target="ford"></button>
+  <button class="cs-sidenav-dot"        data-label="BMW"  data-target="bmw"></button>
+</nav>
+
 <div class="mob-nav" id="mob-nav" aria-hidden="true">
   <div class="mob-nav-bg"></div>
   <ul class="mob-nav-links">
@@ -452,13 +511,14 @@
 
   <!-- Frosted glass overlay (scroll-driven) -->
   <div class="kia-glass" id="kia-glass" aria-hidden="true">
-    <p class="kia-glass-line">KIA New Era explored how a brand identity extends beyond form into a <em>unified digital ecosystem,</em> where mobile, web, and in-car experiences shape one coherent expression.</p>
+    <p class="kia-glass-line">KIA New Era explored how a <em>brand identity</em> extends beyond form into a <strong>unified digital ecosystem</strong>, where mobile, web, and in-car experiences shape one coherent expression.</p>
   </div>
 
-  <!-- Content: kicker + title -->
+  <!-- Content: kicker + title (kicker reads first now, matching home
+       project cards + cs-vz-id-arch hero) -->
   <div class="kia-content" id="kia-content">
-    <h1 class="kia-title">KIA <em>New Era</em></h1>
     <div class="kia-kicker">Iconmobile · Automotive · HMI Design · 2019–2022</div>
+    <h1 class="kia-title"><strong>KIA</strong><br>New Era</h1>
   </div>
 
 </section>
@@ -525,19 +585,19 @@
 <!-- ══════════════════════════════════════
      HERO — FORD Mustang Mach-E (sticky stage)
 ══════════════════════════════════════ -->
-<div class="ford-stage">
+<div class="ford-stage" id="ford">
 <section class="ford-hero">
 
   <div class="ford-bg" aria-hidden="true"></div>
   <div class="ford-vignette" aria-hidden="true"></div>
 
   <div class="ford-glass" id="ford-glass" aria-hidden="true">
-    <p class="ford-glass-line">The Mustang Mach-E demonstrates how digital interfaces and physical controls can work together, using a <em>hybrid touchscreen and rotary dial</em> to create intuitive, tactile interaction within a minimalist system.</p>
+    <p class="ford-glass-line">The Mustang Mach-E demonstrates how <em>digital interfaces</em> and <em>physical controls</em> can work together, using a <strong>hybrid touchscreen</strong> and <strong>rotary dial</strong> to create intuitive, tactile interaction within a minimalist system.</p>
   </div>
 
   <div class="ford-content" id="ford-content">
-    <h2 class="ford-title">FORD <em>Mustang Mach-E</em></h2>
     <div class="ford-kicker">Iconmobile · Automotive · HMI Design · 2019–2022</div>
+    <h2 class="ford-title"><strong>FORD</strong><br>Mustang Mach-E</h2>
   </div>
 
 </section>
@@ -593,19 +653,19 @@
 <!-- ══════════════════════════════════════
      HERO — BMW ID 7.0 (sticky stage)
 ══════════════════════════════════════ -->
-<div class="bmw-stage">
+<div class="bmw-stage" id="bmw">
 <section class="bmw-hero">
 
   <div class="bmw-bg" aria-hidden="true"></div>
   <div class="bmw-vignette" aria-hidden="true"></div>
 
   <div class="bmw-glass" id="bmw-glass" aria-hidden="true">
-    <p class="bmw-glass-line">The BMW i7 elevates this further, positioning digital experience as a core part of luxury, where <em>technology, space, and interaction</em> redefine what a flagship vehicle feels like.</p>
+    <p class="bmw-glass-line">The BMW i7 elevates this further, positioning <em>digital experience</em> as a core part of luxury, where <strong>technology</strong>, <strong>space</strong>, and <strong>interaction</strong> redefine what a flagship vehicle feels like.</p>
   </div>
 
   <div class="bmw-content" id="bmw-content">
-    <h2 class="bmw-title">BMW <em>ID 7.0</em></h2>
     <div class="bmw-kicker">Iconmobile · Automotive · HMI Design · 2019–2022</div>
+    <h2 class="bmw-title"><strong>BMW</strong><br>ID 7.0</h2>
   </div>
 
 </section>
@@ -666,15 +726,18 @@
 <!-- ══════════════════════════════════════
      CTA — BACK TO TOP / NEXT
 ══════════════════════════════════════ -->
-<section class="cta-sec">
+<section class="cta-sec" data-bg="dot-grid">
   <div class="cta-d"></div>
   <div class="cta-g"></div>
-  <div style="font-size:var(--text-micro); font-weight:var(--weight-semibold); letter-spacing:var(--tracking-widest); text-transform:uppercase; color:var(--accent-mid); margin-bottom:1.2rem; position:relative; z-index:2;">Back to the beginning</div>
-  <h2 class="cta-title"><em>01 /</em> VZ Identity Architecture</h2>
+  <div class="cz-dot-grid" aria-hidden="true">
+    <canvas class="cz-dot-grid__canvas"></canvas>
+  </div>
+  <div class="cta-eyebrow" style="font-size:9pt; font-weight:var(--weight-medium); letter-spacing:var(--tracking-wider); text-transform:uppercase; color:rgba(255,255,255,0.78); line-height:1; margin-bottom:1.2rem; position:relative; z-index:2;">Back to the beginning · 01 / 04</div>
+  <h2 class="cta-title"><strong>Verizon</strong><br>Identity Architecture</h2>
   <p class="cta-sub">The invisible structure behind connected lives at scale.</p>
   <div style="display:flex; gap:0.75rem; justify-content:center; align-items:center; flex-wrap:wrap; position:relative; z-index:2;">
-    <a href="cs-vz-id-arch.html" class="cz-book-btn">See the case study</a>
-    <a href="index.html#work" class="cz-ghost-btn">Back to portfolio</a>
+    <a href="cs-vz-id-arch.html" class="glass-cta">See the case study</a>
+    <a href="index.html#work" class="glass-cta glass-cta--ghost">Back to portfolio</a>
   </div>
 </section>
 
@@ -843,13 +906,28 @@ function tickKiaShow() {
 
 tickKiaShow();
 
+/* Cache dark-bg sections once. The whole iconmobile page is dark —
+   kia/ford/bmw heroes + cta-sec — so the nav-light toggle below tests
+   these on every scroll: if any is currently behind the nav, force
+   nav--light. Same approach as cs-vz-id-arch (replaces the bogus
+   `t < 80` threshold that left REFAELI MA invisible past the hero). */
+const DARK_SECTIONS = document.querySelectorAll('.kia-hero, .ford-hero, .bmw-hero, .cta-sec');
+
 // ── Scroll handler ──
 window.addEventListener('scroll', () => {
   const t = window.scrollY;
   const h = document.documentElement.scrollHeight - window.innerHeight;
   prog.style.width = (t / h * 100) + '%';
   nav.classList.toggle('scrolled', t > 60);
-  nav.classList.toggle('nav--light', t < 80);
+
+  const navH = nav.offsetHeight + 2;
+  let isDark = false;
+  DARK_SECTIONS.forEach(sec => {
+    const r = sec.getBoundingClientRect();
+    if (r.top < navH && r.bottom > 0) isDark = true;
+  });
+  nav.classList.toggle('nav--light', isDark);
+
   document.getElementById('back-top').classList.toggle('visible', t > 400);
   tickKiaHero(t);
   tickKiaShow();
@@ -944,6 +1022,233 @@ const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
 }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.r').forEach(el => obs.observe(el));
+
+
+/* ── IN-PAGE SIDENAV — smooth scroll + active tracking + light/dark
+   detection. Ported from cs-vz-id-arch. 3 anchors: KIA, FORD, BMW. */
+const snav = document.getElementById('cs-sidenav');
+if (snav) {
+  const snavTargets = ['overview', 'ford', 'bmw'];
+
+  snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.target;
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  function updateSidenav() {
+    let active = snavTargets[0];
+    const offset = window.innerHeight * 0.45;
+    snavTargets.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top < offset) active = id;
+    });
+    snav.querySelectorAll('.cs-sidenav-dot').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.target === active);
+    });
+
+    /* Light/dark — every section on this page is dark (hero images +
+       cta-sec black bg), so the sidenav keeps its default dark-bg
+       coloring throughout. Setting `on-light = false` defensively. */
+    snav.classList.toggle('on-light', false);
+  }
+
+  window.addEventListener('scroll', updateSidenav, { passive: true });
+  window.addEventListener('resize', updateSidenav, { passive: true });
+  updateSidenav();
+}
+
+
+/* ── CTA DOT-GRID — GSAP-driven interactive dot-grid behind the
+   bottom "Next Case Study" CTA. Vanilla port of the IIFE on home /
+   cs-vz-id-arch; same recipe, scoped to .cta-sec[data-bg="dot-grid"].
+   Bails out cleanly if GSAP didn't load. */
+window.addEventListener('load', function () {
+  var section = document.querySelector('.cta-sec[data-bg="dot-grid"]');
+  var wrap    = section && section.querySelector('.cz-dot-grid');
+  var canvas  = wrap && wrap.querySelector('.cz-dot-grid__canvas');
+  if (!section || !wrap || !canvas || typeof gsap === 'undefined') return;
+
+  var DOT_SIZE         = 2;
+  var GAP              = 12;
+  var BASE_COLOR       = '#2F293A';
+  var ACTIVE_COLOR     = '#dfdfdf';
+  var PROXIMITY        = 120;
+  var SPEED_TRIGGER    = 100;
+  var SHOCK_RADIUS     = 250;
+  var SHOCK_STRENGTH   = 5;
+  var MAX_SPEED        = 5000;
+  var RETURN_DURATION  = 1.5;
+  var KNOCK_DURATION   = 0.45;
+
+  function hexToRgb(hex) {
+    var m = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+    if (!m) return { r: 0, g: 0, b: 0 };
+    return { r: parseInt(m[1], 16), g: parseInt(m[2], 16), b: parseInt(m[3], 16) };
+  }
+  var baseRgb   = hexToRgb(BASE_COLOR);
+  var activeRgb = hexToRgb(ACTIVE_COLOR);
+  var proxSq    = PROXIMITY * PROXIMITY;
+
+  var ctx = canvas.getContext('2d');
+  var dots = [];
+  var circlePath = window.Path2D ? new Path2D() : null;
+  if (circlePath) circlePath.arc(0, 0, DOT_SIZE / 2, 0, Math.PI * 2);
+  var pointer = { x: -9999, y: -9999, vx: 0, vy: 0, speed: 0, lastTime: 0, lastX: 0, lastY: 0 };
+
+  function buildGrid() {
+    var rect = wrap.getBoundingClientRect();
+    var width  = rect.width;
+    var height = rect.height;
+    var dpr    = window.devicePixelRatio || 1;
+    canvas.width        = width  * dpr;
+    canvas.height       = height * dpr;
+    canvas.style.width  = width  + 'px';
+    canvas.style.height = height + 'px';
+    ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    var cols   = Math.floor((width  + GAP) / (DOT_SIZE + GAP));
+    var rows   = Math.floor((height + GAP) / (DOT_SIZE + GAP));
+    var cell   = DOT_SIZE + GAP;
+    var gridW  = cell * cols - GAP;
+    var gridH  = cell * rows - GAP;
+    var startX = (width  - gridW) / 2 + DOT_SIZE / 2;
+    var startY = (height - gridH) / 2 + DOT_SIZE / 2;
+
+    dots = [];
+    for (var y = 0; y < rows; y++) {
+      for (var x = 0; x < cols; x++) {
+        dots.push({ cx: startX + x * cell, cy: startY + y * cell, xOffset: 0, yOffset: 0, _knocked: false });
+      }
+    }
+  }
+  buildGrid();
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(buildGrid).observe(wrap);
+  } else {
+    window.addEventListener('resize', buildGrid);
+  }
+
+  function draw() {
+    requestAnimationFrame(draw);
+    var w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var ox  = dot.cx + dot.xOffset;
+      var oy  = dot.cy + dot.yOffset;
+      var dx  = dot.cx - pointer.x;
+      var dy  = dot.cy - pointer.y;
+      var dsq = dx * dx + dy * dy;
+      var fill = BASE_COLOR;
+      if (dsq <= proxSq) {
+        var dist = Math.sqrt(dsq);
+        var t = 1 - dist / PROXIMITY;
+        fill = 'rgb(' +
+          Math.round(baseRgb.r + (activeRgb.r - baseRgb.r) * t) + ',' +
+          Math.round(baseRgb.g + (activeRgb.g - baseRgb.g) * t) + ',' +
+          Math.round(baseRgb.b + (activeRgb.b - baseRgb.b) * t) +
+        ')';
+      }
+      ctx.save();
+      ctx.translate(ox, oy);
+      ctx.fillStyle = fill;
+      if (circlePath) { ctx.fill(circlePath); }
+      else { ctx.beginPath(); ctx.arc(0, 0, DOT_SIZE / 2, 0, Math.PI * 2); ctx.fill(); }
+      ctx.restore();
+    }
+  }
+  draw();
+
+  var moveLast = 0;
+  function onMove(e) {
+    var now = performance.now();
+    if (now - moveLast < 50) return;
+    moveLast = now;
+    var dt = pointer.lastTime ? now - pointer.lastTime : 16;
+    var dx = e.clientX - pointer.lastX;
+    var dy = e.clientY - pointer.lastY;
+    var vx = (dx / dt) * 1000;
+    var vy = (dy / dt) * 1000;
+    var speed = Math.sqrt(vx * vx + vy * vy);
+    if (speed > MAX_SPEED) { var s = MAX_SPEED / speed; vx *= s; vy *= s; speed = MAX_SPEED; }
+    pointer.lastTime = now;
+    pointer.lastX = e.clientX;
+    pointer.lastY = e.clientY;
+    pointer.vx = vx; pointer.vy = vy; pointer.speed = speed;
+    var rect = canvas.getBoundingClientRect();
+    pointer.x = e.clientX - rect.left;
+    pointer.y = e.clientY - rect.top;
+    if (speed <= SPEED_TRIGGER) return;
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var dxx = dot.cx - pointer.x;
+      var dyy = dot.cy - pointer.y;
+      var dist = Math.sqrt(dxx * dxx + dyy * dyy);
+      if (dist < PROXIMITY && !dot._knocked) {
+        knock(dot, dxx + vx * 0.005, dyy + vy * 0.005);
+      }
+    }
+  }
+  function onClick(e) {
+    var rect = canvas.getBoundingClientRect();
+    var cx = e.clientX - rect.left;
+    var cy = e.clientY - rect.top;
+    if (cx < 0 || cy < 0 || cx > rect.width || cy > rect.height) return;
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var dxx = dot.cx - cx;
+      var dyy = dot.cy - cy;
+      var dist = Math.sqrt(dxx * dxx + dyy * dyy);
+      if (dist < SHOCK_RADIUS && !dot._knocked) {
+        var falloff = Math.max(0, 1 - dist / SHOCK_RADIUS);
+        knock(dot, dxx * SHOCK_STRENGTH * falloff, dyy * SHOCK_STRENGTH * falloff);
+      }
+    }
+  }
+  function knock(dot, pushX, pushY) {
+    dot._knocked = true;
+    gsap.killTweensOf(dot);
+    gsap.to(dot, {
+      xOffset: pushX, yOffset: pushY, duration: KNOCK_DURATION, ease: 'power3.out',
+      onComplete: function () {
+        gsap.to(dot, {
+          xOffset: 0, yOffset: 0, duration: RETURN_DURATION, ease: 'elastic.out(1,0.75)',
+          onComplete: function () { dot._knocked = false; }
+        });
+      }
+    });
+  }
+  window.addEventListener('mousemove', onMove, { passive: true });
+  window.addEventListener('click', onClick);
+});
+
+/* ── SPOTLIGHT GLOW — cursor-tracked accent halo + border highlight
+   on the two .glass-cta CTAs at the bottom. */
+(function spotlightGlow() {
+  document.querySelectorAll('.glass-cta')
+    .forEach(function (el) { el.classList.add('spotlight-glow'); });
+  var cards = document.querySelectorAll('.spotlight-glow');
+  if (!cards.length) return;
+  var pending = false;
+  var lastX = 0, lastY = 0;
+  function tick() {
+    pending = false;
+    cards.forEach(function (card) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--x', (lastX - r.left).toFixed(2));
+      card.style.setProperty('--y', (lastY - r.top).toFixed(2));
+    });
+  }
+  document.addEventListener('pointermove', function (e) {
+    lastX = e.clientX;
+    lastY = e.clientY;
+    if (!pending) { pending = true; requestAnimationFrame(tick); }
+  }, { passive: true });
+}());
 </script>
 
 </body>

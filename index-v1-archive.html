@@ -1,0 +1,3458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refaeli Ma · Experience Architect</title>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Spline viewer for the welcome overlay 3D background -->
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="preconnect" href="https://prod.spline.design" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.97/build/spline-viewer.js"></script>
+  <!-- GSAP for the contact dot-grid experiment. Loaded with defer;
+       harmless if no .contact-zone[data-bg="dot-grid"] exists in the DOM
+       (the init IIFE bails). Remove this line + the data-bg attribute
+       to fully roll back the experiment. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     WELCOME OVERLAY — shown once per session
+     Renders above everything; dismissed via Enter button.
+     Asset slot is left empty for custom content.
+══════════════════════════════════════ -->
+<div class="welcome" id="welcome" role="dialog" aria-label="Welcome" aria-modal="true">
+
+  <!-- Full-bleed 3D scene — lost_orb_in_the_mountains (transparent bg
+       sits on the overlay's pure-black backdrop) -->
+  <spline-viewer
+    class="welcome-spline"
+    id="welcome-spline"
+    url="https://prod.spline.design/0ZwBbbXqf4umMzMi/scene.splinecode"
+  ></spline-viewer>
+
+  <!-- Typewriter intro — types 3 beats, holds, then dissolves -->
+  <div class="welcome-intro" id="welcome-intro" aria-live="polite">
+    <p class="welcome-intro-line" data-line="1"></p>
+    <p class="welcome-intro-line" data-line="2"></p>
+    <p class="welcome-intro-line" data-line="3"></p>
+  </div>
+
+  <!-- ENTER CTA — bottom-center, appears after intro dissolves -->
+  <button class="welcome-enter" id="welcome-enter" type="button" aria-label="Enter site">
+    <span class="welcome-enter-label">Enter</span>
+    <span class="welcome-enter-arrow" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 3v8M3 7.5L7 11l4-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </button>
+</div>
+<script>
+  /* Synchronous — runs before first paint so returning-this-session
+     viewers don't see a flash of the welcome overlay. */
+  (function () {
+    try {
+      if (sessionStorage.getItem('welcomeShown')) {
+        var w = document.getElementById('welcome');
+        if (w) w.setAttribute('hidden', '');
+      } else {
+        document.body.classList.add('welcome-active');
+      }
+    } catch (e) { /* storage unavailable — show overlay anyway */ }
+  })();
+</script>
+
+<!-- PROGRESS BAR -->
+<div id="prog"></div>
+
+<!-- CURSOR -->
+<div id="cur-dot"></div>
+<div id="cur-ring"><span id="cur-label">View</span></div>
+
+<!-- BACK TO TOP -->
+<button id="back-top" aria-label="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <path d="M7 11V3M3 6.5L7 3l4 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+
+<!-- ══════════════════════════════════════
+     NAV
+══════════════════════════════════════ -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">Refaeli Ma</a>
+  <ul class="nav-links">
+    <li><a href="#philosophy">Philosophy</a></li>
+    <li class="nav-link-dropdown">
+      <a href="#work">Work<svg class="nav-link-caret" width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M2 3.5l2.5 2.5L7 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <ul class="nav-dropdown" aria-label="Case studies">
+        <li>
+          <a href="cs-vz-id-arch.html" class="nav-dropdown-card">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <circle cx="11" cy="11" r="8.5" stroke="currentColor" stroke-width="1.4"/>
+                <circle cx="11" cy="11" r="4.5" stroke="currentColor" stroke-width="1.4"/>
+                <circle cx="11" cy="11" r="1.5" fill="currentColor"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">Verizon Identity Architecture</span>
+            <span class="nav-dropdown-desc">Invisible structure connecting households, devices, and services</span>
+          </a>
+        </li>
+        <li>
+          <a href="cs-vz-home.html" class="nav-dropdown-card">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M3.5 11l7.5-7 7.5 7v7a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+                <circle cx="11" cy="13" r="1.6" fill="currentColor"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">Verizon Home App</span>
+            <span class="nav-dropdown-desc">Connected home experience for the whole household</span>
+          </a>
+        </li>
+        <li>
+          <a href="cs-bluejeans.html" class="nav-dropdown-card">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <rect x="2.5" y="6" width="12.5" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+                <path d="M15.5 9.2l4-2v8l-4-2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">BlueJeans by Verizon</span>
+            <span class="nav-dropdown-desc">Enterprise video communication redesigned at scale</span>
+          </a>
+        </li>
+        <li>
+          <a href="cs-iconmobile.html" class="nav-dropdown-card">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M2.8 14a8.2 8.2 0 0 1 16.4 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M11 6.5v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M11 14l3.4-2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">Iconmobile</span>
+            <span class="nav-dropdown-desc">In-car experience design for automotive brands</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#object">Object</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Mobile nav overlay -->
+<div class="mob-nav" id="mob-nav" aria-hidden="true">
+  <div class="mob-nav-bg"></div>
+  <ul class="mob-nav-links">
+    <li><a href="#philosophy">Philosophy</a></li>
+    <li>
+      <a href="#work">Work</a>
+      <ul class="mob-nav-sublinks">
+        <li><a href="cs-vz-id-arch.html">01 · VZ Identity Architecture</a></li>
+        <li><a href="cs-vz-home.html">02 · Verizon Home App</a></li>
+        <li><a href="cs-bluejeans.html">03 · BlueJeans by Verizon</a></li>
+        <li><a href="cs-iconmobile.html">04 · Iconmobile</a></li>
+      </ul>
+    </li>
+    <li><a href="#object">Object</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="mob-nav-cta">Let's Talk</a>
+  <div class="mob-nav-foot">Los Angeles, CA &nbsp;·&nbsp; Available worldwide</div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero" id="hero">
+
+  <!-- ══════════════════════════════════════════════════════════════
+       Hero renders directly with the marquee, photo, role, and
+       location. The typewriter intro has been replaced by the
+       welcome overlay at the top of <body>.
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="hero-original" id="hero-original">
+
+    <!-- z-3: profile photo, centered, anchored to bottom -->
+    <div class="hero-photo-wrap">
+      <img
+        src="assets/profile-related/profile-g-glow.jpeg"
+        alt="Refaeli Ma, Principal Product Designer"
+        class="hero-photo hero-photo--fill"
+        fetchpriority="high"
+        decoding="async"
+      >
+    </div>
+
+    <!-- z-4: Spline iframe — sits on top of the hero, fades in after reveal -->
+    <iframe
+      class="hero-spline-iframe"
+      id="hero-spline-iframe"
+      src="https://my.spline.design/seoulcopycopy-2gDASuladJnUL5xhaXiPw0y3-u7k/"
+      frameborder="0"
+      title="Hero scene"
+    ></iframe>
+
+    <!-- z-5: corner text elements -->
+    <div class="hero-role">
+      <span id="typewriter-text">Principal Product Designer</span><span class="cursor-blink"></span>
+    </div>
+
+    <div class="hero-location">
+      <span class="hero-pulse"></span>
+      Based in Los Angeles, California
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ══════════════════════════════════════
+     SKILLS MARQUEE
+══════════════════════════════════════ -->
+<div class="marquee-wrap">
+  <!-- .marquee-inner gets the scroll-driven parallax translateX; .marquee-track
+       keeps its constant left-scroll CSS animation. Two layers because a single
+       transform can't host both. -->
+  <div class="marquee-inner">
+  <div class="marquee-track">
+    <!-- First set -->
+    <span class="marquee-item">Design Leadership <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Product Vision <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Systems Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Product Strategy <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Scalable Design System <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Information Architecture <span class="marquee-sep"></span></span>
+    <span class="marquee-item">End-to-End Product Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">AI-Augmented Workflows <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Human-AI Integration Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Cross-Functional Leadership <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Visual Direction <span class="marquee-sep"></span></span>
+    <!-- Duplicate for seamless loop -->
+    <span class="marquee-item">Design Leadership <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Product Vision <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Systems Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Product Strategy <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Scalable Design System <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Information Architecture <span class="marquee-sep"></span></span>
+    <span class="marquee-item">End-to-End Product Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">AI-Augmented Workflows <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Human-AI Integration Design <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Cross-Functional Leadership <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Visual Direction <span class="marquee-sep"></span></span>
+  </div>
+  </div><!-- /.marquee-inner -->
+</div>
+
+<!-- ══════════════════════════════════════
+     PHILOSOPHY
+══════════════════════════════════════ -->
+<!--
+  DESIGN PHILOSOPHY — runway + sticky pin (impact-style pattern).
+  The runway gives the section a 200vh scroll length; the pin stays at
+  the viewport top while the viewer scrolls through it. JS reads scroll
+  progress (0→1) and toggles .is-phase-2 on the section at ~40% in.
+  Eyebrow stays visible across both phases; .phi-stage (statement/body/
+  pullquote) fades out, solar system fades in. First-time orbit reveal
+  runs the staggered fade-in; once `.is-revealed` is added (sticky), the
+  staggered delays are killed so subsequent up/down toggles are instant
+  opacity swaps — no re-animation.
+-->
+<section class="sec philosophy-sec" id="philosophy">
+  <div class="stars-bg" aria-hidden="true"></div>
+  <div class="philosophy-runway">
+    <div class="phi-pin">
+
+      <div class="sec-inner phi-inner">
+        <div class="phi-left">
+
+          <!-- Eyebrow lives OUTSIDE .phi-stage so it doesn't fade with the body. -->
+          <div class="phi-kicker r"><div class="ch ch-d">Design Philosophy</div></div>
+
+          <!-- Phase-2 hint sits under the eyebrow. Hidden in Phase 1, fades in
+               with the solar system. -->
+          <div class="hi-hint" aria-hidden="true">Hover any node to read more</div>
+
+          <!-- Phase-1 body content — fades out when .is-phase-2 is set. -->
+          <div class="phi-stage" id="phi-stage">
+            <div class="phi-statement-wrap r d1">
+              <p class="phi-statement">I design for the problem<br><em>beneath the problem.</em></p>
+            </div>
+
+            <p class="phi-body r d3">My work begins before the interface, in the tensions and misalignments no one has named yet. I don't start with screens. I start with structure. Then I build systems that resolve what actually matters, shaping behavior until the right action feels natural, almost inevitable.</p>
+
+            <p class="phi-body r d4"><em>Good design, to me, is invisible.</em> Not because it lacks craft, but because it removes the need for attention. Everything works as it should: quietly, precisely, on purpose.</p>
+
+            <div class="phi-pullquote r d5">
+              <p>Most products fail not in execution, but in definition,<br>solving the wrong thing beautifully.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Phase-2 solar system — absolute-positioned, fades in when .is-phase-2 is set. -->
+      <div class="hi-atom" id="hi-atom" aria-hidden="true">
+
+        <div class="hi-wobbler" data-planet="design" style="--inclination: -4deg; --wobble-amp: 3deg; --wobble-period: 10s;">
+          <div class="hi-wobble-plane">
+            <svg class="hi-wobble-line" style="--rx: 160px;" viewBox="-180 -180 360 360" aria-hidden="true"><circle cx="0" cy="0" r="160"/></svg>
+          </div>
+          <span class="hi-planet" style="--rx: 160px; --speed: 24s; --size: 10px;" data-planet="design" tabindex="0" aria-label="Design">
+            <i class="hi-dot"></i><b class="hi-label">Design</b>
+          </span>
+        </div>
+
+        <div class="hi-wobbler" data-planet="art" style="--inclination:  6deg; --wobble-amp: 4deg; --wobble-period: 17s;">
+          <div class="hi-wobble-plane">
+            <svg class="hi-wobble-line" style="--rx: 245px;" viewBox="-265 -265 530 530" aria-hidden="true"><circle cx="0" cy="0" r="245"/></svg>
+          </div>
+          <span class="hi-planet" style="--rx: 245px; --speed: 32s; --size: 13px;" data-planet="art" tabindex="0" aria-label="Art">
+            <i class="hi-dot"></i><b class="hi-label">Art</b>
+          </span>
+        </div>
+
+        <div class="hi-wobbler" data-planet="science" style="--inclination: -3deg; --wobble-amp: 5deg; --wobble-period: 22s;">
+          <div class="hi-wobble-plane">
+            <svg class="hi-wobble-line" style="--rx: 330px;" viewBox="-350 -350 700 700" aria-hidden="true"><circle cx="0" cy="0" r="330"/></svg>
+          </div>
+          <span class="hi-planet" style="--rx: 330px; --speed: 44s; --size: 16px;" data-planet="science" tabindex="0" aria-label="Science &amp; Nature">
+            <i class="hi-dot"></i><b class="hi-label">Science<br>&amp; Nature</b>
+          </span>
+        </div>
+
+        <div class="hi-wobbler" data-planet="philosophy" style="--inclination:  5deg; --wobble-amp: 5deg; --wobble-period: 19s;">
+          <div class="hi-wobble-plane">
+            <svg class="hi-wobble-line" style="--rx: 415px;" viewBox="-435 -435 870 870" aria-hidden="true"><circle cx="0" cy="0" r="415"/></svg>
+          </div>
+          <span class="hi-planet" style="--rx: 415px; --speed: 58s; --size: 11px;" data-planet="philosophy" tabindex="0" aria-label="Philosophy &amp; Spirituality">
+            <i class="hi-dot"></i><b class="hi-label">Philosophy<br>&amp; Spirituality</b>
+          </span>
+        </div>
+
+        <div class="hi-wobbler" data-planet="life" style="--inclination: -7deg; --wobble-amp: 6deg; --wobble-period: 14s;">
+          <div class="hi-wobble-plane">
+            <svg class="hi-wobble-line" style="--rx: 500px;" viewBox="-520 -520 1040 1040" aria-hidden="true"><circle cx="0" cy="0" r="500"/></svg>
+          </div>
+          <span class="hi-planet" style="--rx: 500px; --speed: 76s; --size: 18px;" data-planet="life" tabindex="0" aria-label="Life">
+            <i class="hi-dot"></i><b class="hi-label">Life</b>
+          </span>
+        </div>
+
+        <div class="hi-nucleus" id="hi-nucleus" aria-hidden="true">
+          <div class="hi-nucleus-glow"></div>
+          <div class="hi-nucleus-core"></div>
+        </div>
+
+      </div>
+
+      <!-- Info panel — bottom-left of the pin, fades in on planet hover -->
+      <div class="hi-info" id="hi-info" aria-live="polite">
+        <h3 class="hi-info-title" id="hi-info-title"></h3>
+        <p class="hi-info-body" id="hi-info-body"></p>
+      </div>
+
+    </div><!-- /.phi-pin -->
+  </div><!-- /.philosophy-runway -->
+</section>
+
+
+<!-- ══════════════════════════════════════
+     HOW I WORK
+══════════════════════════════════════ -->
+<section class="sec bg-warm" id="how-i-work">
+  <div class="sec-inner">
+    <div class="r"><div class="ch">How I Work</div></div>
+    <h2 class="st r d1">Design is not how it looks.<br>It's how <em>decisions are made</em>.</h2>
+    <p class="bp r d2" style="max-width:520px;">A few principles that shape how I work, balancing structure, intuition, and the space in between.</p>
+
+    <div class="hiw-grid">
+
+      <div class="hiw-tile r r-late d3">
+        <span class="hiw-num" aria-hidden="true">01</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="2,12 7,6 12,12 7,18 2,12"/>
+              <polyline points="12,12 17,6 22,12 17,18 12,12"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title"><strong>Problem</strong> &gt; Solution</div>
+          <p class="hiw-short">The right question matters more than a fast answer.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title"><strong>Problem</strong> &gt; Solution</div>
+          <p class="hiw-expand">Most work rushes to solutions. I don't. A well-crafted answer to the wrong problem is still failure. I spend time where it matters, defining the real tension beneath the surface. When the problem is clear, the solution becomes obvious, often simpler than expected.</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <div class="hiw-tile r r-late d4">
+        <span class="hiw-num" aria-hidden="true">02</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="8"/>
+              <circle cx="12" cy="12" r="2.5"/>
+              <line x1="12" y1="1" x2="12" y2="4"/>
+              <line x1="12" y1="20" x2="12" y2="23"/>
+              <line x1="1" y1="12" x2="4" y2="12"/>
+              <line x1="20" y1="12" x2="23" y2="12"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title"><strong>Objectives</strong> &gt; Operations</div>
+          <p class="hiw-short">Purpose guides process.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title"><strong>Objectives</strong> &gt; Operations</div>
+          <p class="hiw-expand">Busy work can look like progress. It rarely is. I anchor teams in outcomes, not activity, aligning every decision to a measurable objective. Process exists to support direction, not replace it. If the goal is clear, the path can stay flexible.</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <div class="hiw-tile r r-late d5">
+        <span class="hiw-num" aria-hidden="true">03</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="20" x2="21" y2="20"/>
+              <line x1="3" y1="4" x2="3" y2="20"/>
+              <polyline points="4,17 8,12 12,14 16,8 21,4"/>
+              <circle cx="8" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+              <circle cx="12" cy="14" r="1.5" fill="currentColor" stroke="none"/>
+              <circle cx="16" cy="8" r="1.5" fill="currentColor" stroke="none"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title"><strong>Evidence</strong> &gt; Opinion</div>
+          <p class="hiw-short">Data aligns faster than debate.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title"><strong>Evidence</strong> &gt; Opinion</div>
+          <p class="hiw-expand">Design is full of strong opinions. Only some are right. I prioritize signals over assumptions, grounding decisions in data, behavior, and real user feedback. Not to remove intuition, but to sharpen it. Good judgment is informed, not guessed.</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+      <div class="hiw-tile r r-late d6">
+        <span class="hiw-num" aria-hidden="true">04</span>
+        <div class="hiw-face hiw-face-default">
+          <div class="hiw-icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12 C4 7 6 17 8 12 C10 7 12 17 14 12 L22 12"/>
+              <line x1="2" y1="19" x2="8" y2="19" stroke-width="0.8" opacity="0.4"/>
+              <line x1="2" y1="5" x2="8" y2="5" stroke-width="0.8" opacity="0.4"/>
+            </svg>
+          </div>
+          <div class="hiw-spacer"></div>
+          <div class="hiw-title"><strong>Space</strong> &gt; Noise</div>
+          <p class="hiw-short">Clarity lives in the pause.</p>
+        </div>
+        <div class="hiw-face hiw-face-hover">
+          <div class="hiw-title"><strong>Space</strong> &gt; Noise</div>
+          <p class="hiw-expand">More is not better. Clarity comes from restraint. I remove what competes for attention so what matters can stand on its own. Whether in interface, system, or communication, space is what allows meaning to emerge.</p>
+        </div>
+        <svg class="hiw-border-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><rect class="hiw-border-rect" rx="11.5" pathLength="1000"/></svg>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     IMPACT & RECOGNITION
+══════════════════════════════════════ -->
+<section class="sec impact-sec" id="impact">
+  <!-- Runway provides scroll length; pin keeps everything (header + stats + active card) visible together -->
+  <div class="impact-runway" id="impact-runway">
+    <div class="impact-pin">
+
+      <!-- Background orb decoration removed -->
+
+      <div class="sec-inner impact-inner">
+
+        <div class="impact-hd">
+          <div class="r d1"><div class="ch">Impact &amp; Recognition</div></div>
+          <h2 class="st r d2">Built Along <em>the Way</em></h2>
+          <p class="bp r d3" style="max-width:640px;">A decade of building products, shaping teams, and contributing to the design community through collaboration, mentorship, and industry recognition.</p>
+        </div>
+
+        <div class="phi-recog-grid is-stacked">
+
+        <div class="phi-recog-card is-active">
+          <div class="phi-recog-meta">
+            <div class="phi-recog-title">Built With</div>
+            <p class="phi-recog-body">Products, platforms, and brands I've helped bring to life.</p>
+          </div>
+          <hr class="phi-recog-divider">
+          <div class="phi-recog-logos">
+            <img src="assets/logo/verizon.svg" alt="Verizon">
+            <img src="assets/logo/bluejeans.svg" alt="BlueJeans by Verizon">
+            <img src="assets/logo/amazon.svg" alt="Amazon">
+            <img src="assets/logo/icon.svg" alt="Iconmobile">
+            <img src="assets/logo/kia.svg" alt="Kia">
+            <img src="assets/logo/ford.svg" alt="Ford">
+            <img src="assets/logo/bmw.svg" alt="BMW">
+            <img src="assets/logo/porsche.svg" alt="Porsche">
+          </div>
+        </div>
+
+        <div class="phi-recog-card">
+          <div class="phi-recog-meta">
+            <div class="phi-recog-title">Community &amp; Industry</div>
+            <p class="phi-recog-body">Speaking, judging, teaching, and professional collaboration.</p>
+          </div>
+          <hr class="phi-recog-divider">
+          <div class="phi-recog-logos">
+            <img src="assets/logo/art-center.svg" alt="ArtCenter">
+            <img src="assets/logo/claude.svg" alt="Claude">
+            <img src="assets/logo/anthropic.svg" alt="Anthropic">
+            <img src="assets/logo/ucla.svg" alt="UCLA">
+            <img src="assets/logo/supabase.svg" alt="Supabase">
+            <img src="assets/logo/fetch-ai.svg" alt="Fetch.ai">
+          </div>
+        </div>
+
+        <div class="phi-recog-card">
+          <div class="phi-recog-meta">
+            <div class="phi-recog-title">Recognized By</div>
+            <p class="phi-recog-body">Awards and recognition from the design community.</p>
+          </div>
+          <hr class="phi-recog-divider">
+          <div class="phi-recog-logos">
+            <img src="assets/logo/epda.svg" alt="EPDA">
+            <img src="assets/logo/icff.svg" alt="ICFF">
+            <img src="assets/logo/a-design-award.svg" alt="A' Design Award">
+            <img src="assets/logo/bienenstock.svg" alt="Bienenstock">
+            <img src="assets/logo/byaa.svg" alt="BYAA">
+          </div>
+        </div>
+
+        <div class="phi-recog-card">
+          <div class="phi-recog-meta">
+            <div class="phi-recog-title">Mentored Through</div>
+            <p class="phi-recog-body">Supporting designers, founders, and emerging talent.</p>
+          </div>
+          <hr class="phi-recog-divider">
+          <div class="phi-recog-logos">
+            <img src="assets/logo/ifel.svg" alt="IFEL">
+            <img src="assets/logo/4as.svg" alt="A's Foundation">
+          </div>
+        </div>
+
+        </div>
+
+        <div class="phi-right">
+          <div class="phi-stat-card r r-late d2">
+            <div class="phi-stat-num">10+</div>
+            <div class="phi-stat-face">
+              <div class="phi-stat-icon-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="2 20 7 11 11 15 15 7 19 13 22 9"/>
+                </svg>
+              </div>
+              <div class="phi-stat-spacer"></div>
+              <div class="phi-stat-label"><strong>Years</strong> Experience</div>
+              <div class="phi-stat-tagline">across product, platform, and physical design</div>
+            </div>
+          </div>
+          <div class="phi-stat-card r r-late d3">
+            <div class="phi-stat-num">40+</div>
+            <div class="phi-stat-face">
+              <div class="phi-stat-icon-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polygon points="3 8 12 4 21 8 12 12 3 8"/>
+                  <polyline points="3 8 3 16 12 20 21 16 21 8"/>
+                  <line x1="12" y1="12" x2="12" y2="20"/>
+                </svg>
+              </div>
+              <div class="phi-stat-spacer"></div>
+              <div class="phi-stat-label"><strong>Products</strong> Shipped</div>
+              <div class="phi-stat-tagline">from chair legs to voice interfaces</div>
+            </div>
+          </div>
+          <div class="phi-stat-card r r-late d4">
+            <div class="phi-stat-num">100M+</div>
+            <div class="phi-stat-face">
+              <div class="phi-stat-icon-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <!-- Simple person silhouette — head + shoulders -->
+                  <circle cx="12" cy="8" r="3.5"/>
+                  <path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/>
+                </svg>
+              </div>
+              <div class="phi-stat-spacer"></div>
+              <div class="phi-stat-label"><strong>Users</strong> Impacted</div>
+              <div class="phi-stat-tagline">and counting, quietly</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.impact-inner -->
+    </div><!-- /.impact-pin -->
+  </div><!-- /.impact-runway -->
+</section>
+
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
+<!-- ══════════════════════════════════════
+     WORK — MADE REAL (breaker + sticky scroll unified)
+══════════════════════════════════════ -->
+<div class="work-stage" id="work">
+  <div class="work-sticky" id="work-sticky">
+
+    <!-- Breaker overlay — orbital visual + Made Real text reveal -->
+    <div class="wsb-breaker" id="wsb-breaker" data-bg="threshold-dark">
+      <!-- threshold_dark_ambient_ui Spline scene — sits behind solar
+           system + text. Activated by data-bg="threshold-dark"; remove
+           that attribute to revert to the dot-grid background.
+           url is staged in data-url and applied by an IntersectionObserver
+           below — defers WebGL init until the breaker is near the viewport. -->
+      <spline-viewer
+        class="wsb-spline-bg"
+        id="wsb-spline-bg"
+        data-url="https://prod.spline.design/DAlV1K-AyAmlMg4C/scene.splinecode"
+      ></spline-viewer>
+      <div class="hero-glow" style="top:50%;left:50%;"></div>
+
+      <!-- Solar-system breaker — ported pattern from cs-vz-id-arch HERO -->
+      <div class="solar-breaker" id="solar-breaker" data-phase="1">
+
+        <!-- SVG canvas: orbit paths + connection spokes + data pulses + outer celestial orbits -->
+        <svg class="solar-svg" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <!-- Concentric orbit paths (visual guides matching the HTML rings) -->
+          <circle class="orbit-path orbit-path-1" cx="0" cy="0" r="130"/>
+          <circle class="orbit-path orbit-path-2" cx="0" cy="0" r="230"/>
+          <circle class="orbit-path orbit-path-3" cx="0" cy="0" r="330"/>
+          <circle class="orbit-path orbit-path-4" cx="0" cy="0" r="430"/>
+
+          <!-- Radial connection spokes from center to outer ring (phase 4) -->
+          <g class="connection-lines">
+            <line class="conn-line" x1="0" y1="0" x2="0"    y2="-430"/>
+            <line class="conn-line" x1="0" y1="0" x2="372"  y2="-215"/>
+            <line class="conn-line" x1="0" y1="0" x2="372"  y2="215"/>
+            <line class="conn-line" x1="0" y1="0" x2="0"    y2="430"/>
+            <line class="conn-line" x1="0" y1="0" x2="-372" y2="215"/>
+            <line class="conn-line" x1="0" y1="0" x2="-372" y2="-215"/>
+          </g>
+
+          <!-- Data pulses traveling outward along three spokes (phase 4) -->
+          <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L 0 -430');"/>
+          <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L 372 215');"/>
+          <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L -372 215');"/>
+
+          <!-- Outer celestial orbits — very slow rotation, ambient context (phase 4) -->
+          <circle class="outer-orbit outer-orbit-1" cx="0" cy="0" r="540"/>
+          <circle class="outer-orbit outer-orbit-2" cx="0" cy="0" r="680"/>
+          <circle class="outer-orbit outer-orbit-3" cx="0" cy="0" r="850"/>
+        </svg>
+
+        <!-- Orbital stage: 4 rings × 4 nodes = 16 orbiting concepts -->
+        <div class="orbit-stage">
+
+          <!-- Ring 1 — Foundations (research/intent) -->
+          <div class="ring ring-1">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">User Intent</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Mental Models</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Problem Framing</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Research</span></div></div>
+          </div>
+
+          <!-- Ring 2 — Architecture (systems/strategy) -->
+          <div class="ring ring-2">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Experience Architecture</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Product Strategy</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Service Design</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Systems Thinking</span></div></div>
+          </div>
+
+          <!-- Ring 3 — Execution (craft/delivery) -->
+          <div class="ring ring-3">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Design Systems</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Interaction Design</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Prototyping</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Design Operations</span></div></div>
+          </div>
+
+          <!-- Ring 4 — Outcomes (business/impact) -->
+          <div class="ring ring-4">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Customer Trust</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Adoption</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Business Impact</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Brand Loyalty</span></div></div>
+          </div>
+
+        </div>
+
+        <!-- Center DESIGN orb — phase 2 reveal, gravity center -->
+        <div class="solar-center" aria-hidden="true">
+          <div class="orb-glow"></div>
+          <div class="orb-core">
+            <span class="orb-label">Digital Experience</span>
+          </div>
+        </div>
+
+        <!-- Text overlay — bottom-left (eyebrow + title) and top-right (note). Phase 4 reveal -->
+        <div class="solar-overlay">
+          <div class="solar-overlay-left">
+            <div class="solar-eyebrow">Made Real</div>
+            <h2 class="solar-title">A selection of recent <em>work</em></h2>
+          </div>
+          <div class="solar-overlay-right">
+            <p class="solar-note">Digital product and interaction design, focused on clarity, systems, and intelligent experiences. Not just what shipped, but what it took to get there.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Background orbs — hiw-orb component reused, fades in as breaker exits -->
+    <div class="work-orbs" id="work-orbs" aria-hidden="true">
+      <div class="hiw-orb hiw-orb-tr">
+        <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
+      </div>
+      <div class="hiw-orb hiw-orb-bl">
+        <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
+        <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
+      </div>
+    </div>
+
+    <!-- 01 — Verizon Identity Architecture -->
+    <div class="wsc-card" data-idx="0" data-href="cs-vz-id-arch.html">
+      <div class="wsc-inner">
+
+        <div class="wsc-visual" style="background:#eaebff;">
+          <h2 class="sr-only">Verizon Identity Architecture — ecosystem diagram showing households, devices, behaviors, services, and relationships orbiting a central identity core</h2>
+          <style>
+            .viz-wrap { display:flex; justify-content:center; align-items:center; }
+            svg.ia { overflow:visible; }
+            @keyframes orbit-cw  { from{transform-origin:340px 230px;transform:rotate(0deg)}   to{transform-origin:340px 230px;transform:rotate(360deg)} }
+            @keyframes orbit-ccw { from{transform-origin:340px 230px;transform:rotate(0deg)}   to{transform-origin:340px 230px;transform:rotate(-360deg)} }
+            @keyframes pulse-ring { 0%,100%{opacity:.18} 50%{opacity:.32} }
+            @keyframes dot-fade   { 0%,100%{opacity:.3} 50%{opacity:.9} }
+            @keyframes float-node { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+            .ring1 { animation: pulse-ring 4s ease-in-out infinite; }
+            .ring2 { animation: pulse-ring 4s ease-in-out infinite 1.3s; }
+            .ring3 { animation: pulse-ring 4s ease-in-out infinite 2.6s; }
+            .orbit1 { animation: orbit-cw  22s linear infinite; transform-origin:340px 230px; }
+            .orbit2 { animation: orbit-ccw 30s linear infinite; transform-origin:340px 230px; }
+            .conn-dot { animation: dot-fade 3s ease-in-out infinite; }
+            .conn-dot:nth-child(2) { animation-delay:.5s }
+            .conn-dot:nth-child(3) { animation-delay:1s }
+            .conn-dot:nth-child(4) { animation-delay:1.5s }
+            .conn-dot:nth-child(5) { animation-delay:2s }
+            .node-g { animation: float-node 4s ease-in-out infinite; }
+            .node-g:nth-of-type(2) { animation-delay:.8s }
+            .node-g:nth-of-type(3) { animation-delay:1.6s }
+            .node-g:nth-of-type(4) { animation-delay:2.4s }
+            .node-g:nth-of-type(5) { animation-delay:3.2s }
+          </style>
+          <div class="wsc-ph-grid"></div>
+          <div class="viz-wrap" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <svg class="ia" style="width:100%;height:100%;" viewBox="0 0 680 460" preserveAspectRatio="xMidYMid meet" role="img">
+              <title>Verizon Identity Architecture ecosystem diagram</title>
+              <desc>A central identity core surrounded by orbital rings connecting households, devices, behaviors, services, and relationships nodes.</desc>
+              <defs>
+                <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#e8e9ff"/>
+                  <stop offset="100%" stop-color="#d0d3ff"/>
+                </radialGradient>
+              </defs>
+              <circle class="ring1" cx="340" cy="230" r="110" fill="none" stroke="#8D94FF" stroke-width="0.8"/>
+              <circle class="ring2" cx="340" cy="230" r="158" fill="none" stroke="#8D94FF" stroke-width="0.6"/>
+              <circle class="ring3" cx="340" cy="230" r="200" fill="none" stroke="#8D94FF" stroke-width="0.5"/>
+              <g class="orbit1">
+                <circle class="conn-dot" cx="340" cy="120" r="3.5" fill="#3C49FF"/>
+                <circle class="conn-dot" cx="440" cy="265" r="3.5" fill="#3C49FF"/>
+                <circle class="conn-dot" cx="270" cy="310" r="3.5" fill="#3C49FF"/>
+              </g>
+              <g class="orbit2">
+                <circle class="conn-dot" cx="340" cy="30"  r="3" fill="#8D94FF"/>
+                <circle class="conn-dot" cx="510" cy="230" r="3" fill="#8D94FF"/>
+                <circle class="conn-dot" cx="180" cy="330" r="3" fill="#8D94FF"/>
+                <circle class="conn-dot" cx="420" cy="390" r="3" fill="#8D94FF"/>
+              </g>
+              <line x1="340" y1="230" x2="170" y2="110" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+              <line x1="340" y1="230" x2="530" y2="130" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+              <line x1="340" y1="230" x2="560" y2="320" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+              <line x1="340" y1="230" x2="200" y2="370" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+              <line x1="340" y1="230" x2="420" y2="400" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="4 3"/>
+              <circle cx="340" cy="230" r="52" fill="url(#coreGrad)" stroke="#8D94FF" stroke-width="1.2"/>
+              <circle cx="340" cy="230" r="44" fill="none" stroke="#8D94FF" stroke-width="0.5" opacity=".5"/>
+              <text x="340" y="222" text-anchor="middle" font-size="22" fill="#3C49FF" font-family="system-ui">⬡</text>
+              <text x="340" y="242" text-anchor="middle" font-size="10" font-weight="600" letter-spacing="0.12em" fill="#3C49FF" font-family="'Outfit',system-ui">IDENTITY</text>
+              <text x="340" y="253" text-anchor="middle" font-size="9" fill="#8D94FF" font-family="'Outfit',system-ui">CORE</text>
+              <g class="node-g" style="transform-origin:170px 95px">
+                <rect x="112" y="68" width="116" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="170" y="91" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">HOUSEHOLDS</text>
+                <text x="170" y="107" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">unified profiles</text>
+                <circle cx="170" cy="68" r="3.5" fill="#3C49FF"/>
+              </g>
+              <g class="node-g" style="transform-origin:530px 115px">
+                <rect x="476" y="88" width="108" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="530" y="111" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">DEVICES</text>
+                <text x="530" y="127" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">cross-platform</text>
+                <circle cx="530" cy="88" r="3.5" fill="#3C49FF"/>
+              </g>
+              <g class="node-g" style="transform-origin:560px 320px">
+                <rect x="504" y="294" width="112" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="560" y="317" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">BEHAVIORS</text>
+                <text x="560" y="333" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">intelligence layer</text>
+                <circle cx="560" cy="294" r="3.5" fill="#3C49FF"/>
+              </g>
+              <g class="node-g" style="transform-origin:195px 370px">
+                <rect x="138" y="344" width="114" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="195" y="367" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">SERVICES</text>
+                <text x="195" y="383" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">connected ecosystem</text>
+                <circle cx="195" cy="344" r="3.5" fill="#3C49FF"/>
+              </g>
+              <g class="node-g" style="transform-origin:420px 405px">
+                <rect x="360" y="379" width="120" height="54" rx="10" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="420" y="401" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">RELATIONSHIPS</text>
+                <text x="420" y="417" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">adaptive context</text>
+                <circle cx="420" cy="379" r="3.5" fill="#3C49FF"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="wsc-content">
+          <div class="wsc-header">
+            <div class="wsc-meta">
+              <img class="wsc-logo" src="assets/logo/verizon.svg" alt="Verizon">
+              <span class="wsc-sep">·</span>
+              <span class="wsc-type">Identity Architecture · 2026–Present</span>
+            </div>
+            <span class="wsc-index">01 / 04</span>
+          </div>
+
+          <div class="wsc-body-wrap">
+            <h2 class="wsc-title">Verizon Identity Architecture</h2>
+            <p class="wsc-body">Most people never see this work. That's the point. Leading Verizon's Identity &amp; Profile ecosystem, creating the invisible structure that connects households, devices, behaviors, and services into one intelligent system.</p>
+          </div>
+
+          <div class="wsc-footer">
+            <div class="wsc-tags">
+              <span class="wsc-tag">Experience Architecture</span>
+              <span class="wsc-tag">Identity System</span>
+              <span class="wsc-tag">Platform Strategy</span>
+              <span class="wsc-tag">Behavioral Architecture</span>
+              <span class="wsc-tag">Human-Centered AI</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 02 — Verizon Home App (placeholder) -->
+    <div class="wsc-card" data-idx="1" data-href="cs-vz-home.html">
+      <div class="wsc-inner">
+
+        <div class="wsc-visual" style="background:#eef1ff;">
+          <h2 class="sr-only">Verizon Home App — connected system diagram showing process, design systems, NPS, accessibility, legal, and cross-functional operations nodes</h2>
+          <style>
+            .vh-wrap { display:flex; justify-content:center; }
+            @keyframes flow-dash { from{stroke-dashoffset:20} to{stroke-dashoffset:0} }
+            @keyframes node-pulse { 0%,100%{opacity:.9;transform:scale(1)} 50%{opacity:1;transform:scale(1.04)} }
+            @keyframes badge-blink { 0%,100%{opacity:.5} 60%{opacity:1} }
+            .flow-line { stroke-dasharray:5 4; animation: flow-dash 1.8s linear infinite; }
+            .flow-line.d2 { animation-delay:.4s }
+            .flow-line.d3 { animation-delay:.8s }
+            .flow-line.d4 { animation-delay:1.2s }
+            .flow-line.d5 { animation-delay:1.6s }
+            .flow-line.d6 { animation-delay:.6s }
+            .sat-node { animation: node-pulse 3.5s ease-in-out infinite; transform-origin:center; }
+            .sat-node:nth-child(2){animation-delay:.6s}
+            .sat-node:nth-child(3){animation-delay:1.2s}
+            .sat-node:nth-child(4){animation-delay:1.8s}
+            .sat-node:nth-child(5){animation-delay:2.4s}
+            .sat-node:nth-child(6){animation-delay:3s}
+            .badge { animation: badge-blink 2.5s ease-in-out infinite; }
+          </style>
+          <div class="wsc-ph-grid"></div>
+          <div class="vh-wrap" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <svg style="width:100%;height:100%;" viewBox="0 0 680 420" preserveAspectRatio="xMidYMid meet" role="img">
+              <title>Verizon Home App system diagram</title>
+              <desc>Central Home App core connected to six operational nodes: Process, Design Systems, NPS, Accessibility, Legal, and Cross-functional Ops.</desc>
+              <line class="flow-line"    x1="340" y1="195" x2="170" y2="100" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+              <line class="flow-line d2" x1="340" y1="195" x2="520" y2="100" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+              <line class="flow-line d3" x1="340" y1="195" x2="580" y2="240" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+              <line class="flow-line d4" x1="340" y1="195" x2="480" y2="350" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+              <line class="flow-line d5" x1="340" y1="195" x2="200" y2="350" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+              <line class="flow-line d6" x1="340" y1="195" x2="100" y2="240" stroke="#8D94FF" stroke-width="1.2" fill="none"/>
+              <circle cx="255" cy="147" r="3" fill="#DFE1FF"/>
+              <circle cx="430" cy="147" r="3" fill="#DFE1FF"/>
+              <circle cx="460" cy="217" r="3" fill="#DFE1FF"/>
+              <circle cx="410" cy="272" r="3" fill="#DFE1FF"/>
+              <circle cx="270" cy="272" r="3" fill="#DFE1FF"/>
+              <circle cx="220" cy="217" r="3" fill="#DFE1FF"/>
+              <rect x="258" y="130" width="164" height="130" rx="16" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1.2"/>
+              <rect x="270" y="142" width="80" height="106" rx="10" fill="#e8e9ff" stroke="#DFE1FF" stroke-width="0.8"/>
+              <circle cx="310" cy="178" r="18" fill="#d0d3ff" stroke="#8D94FF" stroke-width="1"/>
+              <circle cx="310" cy="178" r="10" fill="#f4f4ff"/>
+              <circle cx="310" cy="177" r="5" fill="#3C49FF" opacity=".6"/>
+              <rect x="362" y="152" width="48" height="5" rx="2" fill="#DFE1FF"/>
+              <rect x="362" y="163" width="38" height="5" rx="2" fill="#DFE1FF"/>
+              <rect x="362" y="174" width="44" height="5" rx="2" fill="#DFE1FF"/>
+              <rect x="362" y="185" width="30" height="5" rx="2" fill="#DFE1FF"/>
+              <rect x="362" y="196" width="42" height="5" rx="2" fill="#DFE1FF"/>
+              <rect x="362" y="207" width="36" height="5" rx="2" fill="#DFE1FF"/>
+              <rect x="362" y="218" width="40" height="5" rx="2" fill="#DFE1FF"/>
+              <text x="340" y="275" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="0.12em" fill="#3C49FF" font-family="'Outfit',system-ui">VERIZON HOME</text>
+              <circle class="badge" cx="406" cy="142" r="7" fill="#3C49FF"/>
+              <text x="406" y="146" text-anchor="middle" font-size="9" font-weight="600" fill="white" font-family="'Outfit',system-ui">1M</text>
+              <g class="sat-node">
+                <rect x="108" y="62" width="124" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="170" y="84" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">PROCESS</text>
+                <text x="170" y="99" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">roadmap alignment</text>
+              </g>
+              <g class="sat-node">
+                <rect x="458" y="62" width="124" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="520" y="84" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">DESIGN SYS</text>
+                <text x="520" y="99" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">10+ releases</text>
+              </g>
+              <g class="sat-node">
+                <rect x="524" y="210" width="112" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="580" y="232" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">NPS</text>
+                <text x="580" y="247" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">4.5 App Store</text>
+              </g>
+              <g class="sat-node">
+                <rect x="420" y="322" width="120" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="480" y="344" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">LEGAL</text>
+                <text x="480" y="359" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">org structure</text>
+              </g>
+              <g class="sat-node">
+                <rect x="140" y="322" width="120" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="200" y="344" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">CROSS-FUNC</text>
+                <text x="200" y="359" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">operations</text>
+              </g>
+              <g class="sat-node">
+                <rect x="44" y="210" width="112" height="52" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="100" y="232" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">ACCESS</text>
+                <text x="100" y="247" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">standards</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="wsc-content">
+          <div class="wsc-header">
+            <div class="wsc-meta">
+              <img class="wsc-logo" src="assets/logo/verizon.svg" alt="Verizon">
+              <span class="wsc-sep">·</span>
+              <span class="wsc-type">Mobile · iOS &amp; Android · 2023–2025</span>
+            </div>
+            <span class="wsc-index">02 / 04</span>
+          </div>
+
+          <div class="wsc-body-wrap">
+            <h2 class="wsc-title">Verizon Home App</h2>
+            <p class="wsc-body">A product people only opened when something went wrong. Low trust, low engagement, and a system that felt fragmented. We reframed it. From a reactive utility into a more proactive, intelligent experience. One that surfaces what matters, guides action, and earns trust over time.</p>
+          </div>
+
+          <div class="wsc-footer">
+            <div class="wsc-tags">
+              <span class="wsc-tag">Digital Product Design</span>
+              <span class="wsc-tag">Design System</span>
+              <span class="wsc-tag">Cross-Platform Mobile Application</span>
+              <span class="wsc-tag">Smart Home / IoT</span>
+              <span class="wsc-tag">Home Connectivity</span>
+              <span class="wsc-tag">Intelligent Ecosystem</span>
+              <span class="wsc-tag">0–1 Product Development</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 03 — BlueJeans (placeholder) -->
+    <div class="wsc-card" data-idx="2" data-href="cs-bluejeans.html">
+      <div class="wsc-inner">
+
+        <div class="wsc-visual" style="background:#ecefff;">
+          <h2 class="sr-only">BlueJeans by Verizon — overlapping orbit diagram representing the intersection of communication, learning, and enterprise-scale design systems</h2>
+          <style>
+            .bj-wrap { display:flex; justify-content:center; }
+            @keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+            @keyframes spin-rev  { from{transform:rotate(0deg)} to{transform:rotate(-360deg)} }
+            @keyframes ring-glow { 0%,100%{opacity:.15} 50%{opacity:.28} }
+            @keyframes dot-travel { 0%,100%{opacity:.2} 50%{opacity:1} }
+            .r-spin  { animation: spin-slow 28s linear infinite; transform-origin:240px 220px; }
+            .r-spin2 { animation: spin-rev  20s linear infinite; transform-origin:440px 220px; }
+            .rg1 { animation: ring-glow 3.5s ease-in-out infinite; }
+            .rg2 { animation: ring-glow 3.5s ease-in-out infinite 1.2s; }
+            .rg3 { animation: ring-glow 3.5s ease-in-out infinite 2.4s; }
+            .dt  { animation: dot-travel 4s ease-in-out infinite; }
+            .dt:nth-child(2){animation-delay:1s}
+            .dt:nth-child(3){animation-delay:2s}
+            .dt:nth-child(4){animation-delay:3s}
+          </style>
+          <div class="wsc-ph-grid"></div>
+          <div class="bj-wrap" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <svg style="width:100%;height:100%;" viewBox="0 0 680 440" preserveAspectRatio="xMidYMid meet" role="img">
+              <title>BlueJeans by Verizon design system diagram</title>
+              <desc>Two overlapping orbital systems representing the intersection of communication and learning, connected at the center by a shared design system node.</desc>
+              <circle class="rg1" cx="240" cy="220" r="145" fill="none" stroke="#8D94FF" stroke-width="0.8"/>
+              <circle class="rg2" cx="240" cy="220" r="105" fill="none" stroke="#8D94FF" stroke-width="0.6"/>
+              <circle class="rg3" cx="240" cy="220" r="68"  fill="none" stroke="#8D94FF" stroke-width="0.5"/>
+              <g class="r-spin">
+                <circle class="dt" cx="240" cy="75"  r="4" fill="#3C49FF"/>
+                <circle class="dt" cx="370" cy="270" r="3" fill="#8D94FF"/>
+                <circle class="dt" cx="145" cy="325" r="3.5" fill="#3C49FF"/>
+                <circle class="dt" cx="108" cy="160" r="3"   fill="#8D94FF"/>
+              </g>
+              <circle class="rg1" cx="440" cy="220" r="145" fill="none" stroke="#8D94FF" stroke-width="0.8"/>
+              <circle class="rg2" cx="440" cy="220" r="105" fill="none" stroke="#8D94FF" stroke-width="0.6"/>
+              <circle class="rg3" cx="440" cy="220" r="68"  fill="none" stroke="#8D94FF" stroke-width="0.5"/>
+              <g class="r-spin2">
+                <circle class="dt" cx="440" cy="75"  r="4" fill="#3C49FF"/>
+                <circle class="dt" cx="570" cy="270" r="3" fill="#8D94FF"/>
+                <circle class="dt" cx="335" cy="325" r="3.5" fill="#3C49FF"/>
+                <circle class="dt" cx="315" cy="150" r="3"   fill="#8D94FF"/>
+              </g>
+              <circle cx="340" cy="220" r="5" fill="#DFE1FF" stroke="#8D94FF" stroke-width="1"/>
+              <circle cx="240" cy="220" r="46" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1.2"/>
+              <circle cx="240" cy="220" r="38" fill="none" stroke="#8D94FF" stroke-width="0.5" opacity=".4"/>
+              <text x="240" y="215" text-anchor="middle" font-size="10" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">COMM</text>
+              <text x="240" y="228" text-anchor="middle" font-size="9" fill="#8D94FF" font-family="'Outfit',system-ui">platform</text>
+              <circle cx="440" cy="220" r="46" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1.2"/>
+              <circle cx="440" cy="220" r="38" fill="none" stroke="#8D94FF" stroke-width="0.5" opacity=".4"/>
+              <text x="440" y="215" text-anchor="middle" font-size="10" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">LEARNING</text>
+              <text x="440" y="228" text-anchor="middle" font-size="9" fill="#8D94FF" font-family="'Outfit',system-ui">ecosystem</text>
+              <text x="440" y="46" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">900+ components</text>
+              <rect x="58"  y="360" width="110" height="48" rx="8" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+              <text x="113" y="381" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">PANDEMIC</text>
+              <text x="113" y="396" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">defining chapter</text>
+              <rect x="202" y="360" width="110" height="48" rx="8" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+              <text x="257" y="381" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">ENTERPRISE</text>
+              <text x="257" y="396" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">cross-platform</text>
+              <rect x="368" y="360" width="110" height="48" rx="8" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+              <text x="423" y="381" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">SCALE</text>
+              <text x="423" y="396" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">millions of users</text>
+              <rect x="512" y="360" width="110" height="48" rx="8" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+              <text x="567" y="381" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">BEHAVIOR</text>
+              <text x="567" y="396" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">emotional design</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="wsc-content">
+          <div class="wsc-header">
+            <div class="wsc-meta">
+              <img class="wsc-logo" src="assets/logo/bluejeans.svg" alt="BlueJeans by Verizon">
+              <span class="wsc-sep">·</span>
+              <span class="wsc-type">Collaboration Platform · 2021–2023</span>
+            </div>
+            <span class="wsc-index">03 / 04</span>
+          </div>
+
+          <div class="wsc-body-wrap">
+            <h2 class="wsc-title">BlueJeans by Verizon</h2>
+            <p class="wsc-body">In the middle of the pandemic, a collaboration platform became something more. A space where work, communication, and human behavior converged. This was a technical chapter. Where engineering expanded the possibilities, and design made them legible. Not just shaping interfaces, but reshaping habits through structure and intent.</p>
+          </div>
+
+          <div class="wsc-footer">
+            <div class="wsc-tags">
+              <span class="wsc-tag">Digital Product Design</span>
+              <span class="wsc-tag">Design System</span>
+              <span class="wsc-tag">Unified Communication</span>
+              <span class="wsc-tag">Mobile Application</span>
+              <span class="wsc-tag">Cross-Platform Collaboration Platform</span>
+              <span class="wsc-tag">Cloud-Based Video Conferencing</span>
+              <span class="wsc-tag">Desktop App (Windows / macOS)</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 04 — iconmobile / In-Car (placeholder) -->
+    <div class="wsc-card" data-idx="3" data-href="cs-iconmobile.html">
+      <div class="wsc-inner">
+
+        <div class="wsc-visual" style="background:#f0eeff;">
+          <h2 class="sr-only">In-car experience design — speedometer with three experience nodes</h2>
+          <style>
+            @keyframes sweep{0%,100%{transform:rotate(-40deg)}50%{transform:rotate(32deg)}}
+            @keyframes arc-breathe{0%,100%{opacity:.5}50%{opacity:.85}}
+            @keyframes dot-pulse{0%,100%{opacity:.3}50%{opacity:1}}
+            @keyframes node-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+            .needle-g{animation:sweep 4s ease-in-out infinite;transform-origin:340px 300px;}
+            .needle2-g{animation:sweep 4s ease-in-out infinite;transform-origin:340px 300px;opacity:.18;}
+            .ab{animation:arc-breathe 4s ease-in-out infinite;}
+            .ab.d2{animation-delay:1.4s}
+            .dp{animation:dot-pulse 2.5s ease-in-out infinite;}
+            .dp.d2{animation-delay:.8s}.dp.d3{animation-delay:1.6s}
+            .nf{animation:node-float 4s ease-in-out infinite;}
+            .nf.d2{animation-delay:1.4s}.nf.d3{animation-delay:2.8s}
+          </style>
+          <div class="wsc-ph-grid"></div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <svg style="width:100%;height:100%;" viewBox="0 50 680 580" preserveAspectRatio="xMidYMid meet" role="img">
+              <title>In-car experience design</title>
+              <desc>Speedometer dial with animated needle and three experience nodes positioned around it without overlapping.</desc>
+              <circle cx="340" cy="300" r="188" fill="#e8e9ff" stroke="#DFE1FF" stroke-width="1"/>
+              <circle cx="340" cy="300" r="178" fill="#f4f4ff" stroke="#DFE1FF" stroke-width="1"/>
+              <path d="M 175 378 A 178 178 0 0 1 327 123" fill="none" stroke="#8D94FF" stroke-width="22" stroke-linecap="butt" opacity=".35"/>
+              <path d="M 327 123 A 178 178 0 0 1 505 378" fill="none" stroke="#3C49FF" stroke-width="22" stroke-linecap="butt" opacity=".18"/>
+              <circle cx="340" cy="300" r="154" fill="none" stroke="#DFE1FF" stroke-width="1"/>
+              <circle cx="340" cy="300" r="140" fill="#fafafa" stroke="#DFE1FF" stroke-width="0.6"/>
+              <g stroke="#8D94FF" stroke-linecap="round">
+                <line x1="250" y1="444" x2="258" y2="431" stroke-width="2"/>
+                <line x1="196" y1="388" x2="207" y2="380" stroke-width="1.2"/>
+                <line x1="165" y1="316" x2="178" y2="313" stroke-width="1.2"/>
+                <line x1="175" y1="242" x2="186" y2="244" stroke-width="1.2"/>
+                <line x1="222" y1="180" x2="230" y2="188" stroke-width="1.2"/>
+                <line x1="340" y1="122" x2="340" y2="136" stroke-width="2.5" stroke="#3C49FF"/>
+                <line x1="458" y1="180" x2="450" y2="188" stroke-width="1.2"/>
+                <line x1="505" y1="242" x2="494" y2="244" stroke-width="1.2"/>
+                <line x1="515" y1="316" x2="502" y2="313" stroke-width="1.2"/>
+                <line x1="484" y1="388" x2="473" y2="380" stroke-width="1.2"/>
+                <line x1="430" y1="444" x2="422" y2="431" stroke-width="2"/>
+              </g>
+              <circle class="dp"    cx="294" cy="476" r="2.5" fill="#8D94FF"/>
+              <circle class="dp d2" cx="310" cy="484" r="2.5" fill="#8D94FF"/>
+              <circle class="dp"    cx="326" cy="488" r="2.5" fill="#8D94FF"/>
+              <circle class="dp d3" cx="340" cy="490" r="2.5" fill="#8D94FF"/>
+              <circle class="dp"    cx="354" cy="488" r="2.5" fill="#8D94FF"/>
+              <circle class="dp d2" cx="370" cy="484" r="2.5" fill="#8D94FF"/>
+              <circle class="dp d3" cx="386" cy="476" r="2.5" fill="#8D94FF"/>
+              <g class="needle2-g">
+                <line x1="340" y1="300" x2="340" y2="148" stroke="#3C49FF" stroke-width="10" stroke-linecap="round"/>
+              </g>
+              <g class="needle-g">
+                <polygon points="337,300 343,300 341.5,150 338.5,150" fill="#3C49FF" opacity=".9"/>
+                <line x1="340" y1="300" x2="340" y2="318" stroke="#3C49FF" stroke-width="2" stroke-linecap="round" opacity=".3"/>
+              </g>
+              <circle cx="340" cy="300" r="14" fill="#e8e9ff" stroke="#8D94FF" stroke-width="1.2"/>
+              <circle cx="340" cy="300" r="6"  fill="#3C49FF" opacity=".8"/>
+              <g class="nf">
+                <rect x="30" y="270" width="170" height="58" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="115" y="294" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">ENVIRONMENT</text>
+                <text x="115" y="311" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">physical context</text>
+                <circle cx="200" cy="299" r="3" fill="#DFE1FF" stroke="#8D94FF" stroke-width="0.8"/>
+              </g>
+              <line x1="200" y1="299" x2="228" y2="299" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="3 3"/>
+              <g class="nf d2">
+                <rect x="480" y="270" width="170" height="58" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="565" y="294" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">INTERACTION</text>
+                <text x="565" y="311" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">beyond the screen</text>
+                <circle cx="480" cy="299" r="3" fill="#DFE1FF" stroke="#8D94FF" stroke-width="0.8"/>
+              </g>
+              <line x1="452" y1="299" x2="480" y2="299" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="3 3"/>
+              <g class="nf d3">
+                <rect x="255" y="510" width="170" height="58" rx="10" fill="#fafafa" stroke="#DFE1FF" stroke-width="1"/>
+                <text x="340" y="534" text-anchor="middle" font-size="12" font-weight="600" letter-spacing="0.1em" fill="#3C49FF" font-family="'Outfit',system-ui">SYSTEM</text>
+                <text x="340" y="551" text-anchor="middle" font-size="10" fill="#8D94FF" font-family="'Outfit',system-ui">one language, every surface</text>
+                <circle cx="340" cy="510" r="3" fill="#DFE1FF" stroke="#8D94FF" stroke-width="0.8"/>
+              </g>
+              <line x1="340" y1="488" x2="340" y2="510" stroke="#DFE1FF" stroke-width="0.8" stroke-dasharray="3 3"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="wsc-content">
+          <div class="wsc-header">
+            <div class="wsc-meta">
+              <img class="wsc-logo" src="assets/logo/icon.svg" alt="iconmobile Group">
+              <span class="wsc-sep">·</span>
+              <span class="wsc-type">Automotive HMI · 2020–2021</span>
+            </div>
+            <span class="wsc-index">04 / 04</span>
+          </div>
+
+          <div class="wsc-body-wrap">
+            <h2 class="wsc-title">Iconmobile</h2>
+            <p class="wsc-body">The dashboard is never the product. The experience begins long before someone touches a screen and continues long after they leave the vehicle. Working in automotive taught me to design for context, constraints, and human behavior at scale. It reinforced a belief I still carry today: the best experiences emerge when every part of the system works together so naturally that the technology fades into the background.</p>
+          </div>
+
+          <div class="wsc-footer">
+            <div class="wsc-tags">
+              <span class="wsc-tag">HMI Design</span>
+              <span class="wsc-tag">Automotive UX</span>
+              <span class="wsc-tag">Design Systems</span>
+              <span class="wsc-tag">Connected Ecosystems</span>
+              <span class="wsc-tag">Multi-Screen Experiences</span>
+              <span class="wsc-tag">Digital + Physical Interaction</span>
+              <span class="wsc-tag">Spatial Computing</span>
+              <span class="wsc-tag">Accessibility</span>
+              <span class="wsc-tag">Human-Centered Technology</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
+<!-- ══════════════════════════════════════
+     OBJECT — breaker + gallery unified
+══════════════════════════════════════ -->
+<div class="gal-stage" id="object">
+  <div class="gal-sticky">
+
+    <!-- Breaker overlay — fades out as gallery enters. Solar-system pattern, light mode. -->
+    <div class="ob-breaker" id="ob-breaker" data-bg="threshold-dark">
+      <!-- threshold_dark_ambient_ui Spline scene (lazy-loaded). Same
+           treatment as the MADE REAL breaker. Remove the data-bg
+           attribute to revert to the dot-grid background. -->
+      <spline-viewer
+        class="ob-spline-bg"
+        id="ob-spline-bg"
+        data-url="https://prod.spline.design/DAlV1K-AyAmlMg4C/scene.splinecode"
+      ></spline-viewer>
+      <div class="solar-breaker" id="ob-solar-breaker" data-phase="1">
+
+        <!-- SVG canvas: orbit paths + connection spokes + data pulses + outer orbits -->
+        <svg class="solar-svg" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <circle class="orbit-path orbit-path-1" cx="0" cy="0" r="130"/>
+          <circle class="orbit-path orbit-path-2" cx="0" cy="0" r="230"/>
+          <circle class="orbit-path orbit-path-3" cx="0" cy="0" r="330"/>
+          <circle class="orbit-path orbit-path-4" cx="0" cy="0" r="430"/>
+
+          <g class="connection-lines">
+            <line class="conn-line" x1="0" y1="0" x2="0"    y2="-430"/>
+            <line class="conn-line" x1="0" y1="0" x2="372"  y2="-215"/>
+            <line class="conn-line" x1="0" y1="0" x2="372"  y2="215"/>
+            <line class="conn-line" x1="0" y1="0" x2="0"    y2="430"/>
+            <line class="conn-line" x1="0" y1="0" x2="-372" y2="215"/>
+            <line class="conn-line" x1="0" y1="0" x2="-372" y2="-215"/>
+          </g>
+
+          <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L 0 -430');"/>
+          <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L 372 215');"/>
+          <circle class="data-pulse" r="3" style="offset-path: path('M 0 0 L -372 215');"/>
+
+          <circle class="outer-orbit outer-orbit-1" cx="0" cy="0" r="540"/>
+          <circle class="outer-orbit outer-orbit-2" cx="0" cy="0" r="680"/>
+          <circle class="outer-orbit outer-orbit-3" cx="0" cy="0" r="850"/>
+        </svg>
+
+        <!-- Orbital stage: 4 rings × 4 nodes -->
+        <div class="orbit-stage">
+
+          <!-- Ring 1 — Foundations (qualities of form) -->
+          <div class="ring ring-1">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Material</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Weight</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Volume</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Texture</span></div></div>
+          </div>
+
+          <!-- Ring 2 — Process -->
+          <div class="ring ring-2">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Sketch</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Model</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Prototype</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Refine</span></div></div>
+          </div>
+
+          <!-- Ring 3 — Craft -->
+          <div class="ring ring-3">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Tooling</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Detail</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Joinery</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Finish</span></div></div>
+          </div>
+
+          <!-- Ring 4 — Output (categories of work) -->
+          <div class="ring ring-4">
+            <div class="arm a-0"><div class="node"><span class="dot"></span><span class="label">Furniture</span></div></div>
+            <div class="arm a-1"><div class="node"><span class="dot"></span><span class="label">Industrial</span></div></div>
+            <div class="arm a-2"><div class="node"><span class="dot"></span><span class="label">Jewelry</span></div></div>
+            <div class="arm a-3"><div class="node"><span class="dot"></span><span class="label">Apparel</span></div></div>
+          </div>
+
+        </div>
+
+        <!-- Center OBJECT orb — phase 2 reveal -->
+        <div class="solar-center" aria-hidden="true">
+          <div class="orb-glow"></div>
+          <div class="orb-core">
+            <span class="orb-label">Object</span>
+          </div>
+        </div>
+
+        <!-- Text overlay — eyebrow + title bottom-left, note top-right. Phase 4 reveal -->
+        <div class="solar-overlay">
+          <div class="solar-overlay-left">
+            <div class="solar-eyebrow">Other Things I Make</div>
+            <h2 class="solar-title">Not everything lives<br>on a <em>screen</em></h2>
+          </div>
+          <div class="solar-overlay-right">
+            <p class="solar-note">Some ideas take shape in materials, form, and experiments. The studio practice deepens a systems-thinking approach to product and experience design.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="gal-frame" id="gal-frame">
+
+      <!-- Slides -->
+      <div class="gal-track">
+        <div class="gal-slide" data-index="0">
+          <img class="gal-img" src="assets/objects/leira-lounge-chair.jpg" alt="Leira Lounge Chair" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="1">
+          <img class="gal-img" src="assets/objects/nike-air.jpg" alt="Nike Air" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="2">
+          <img class="gal-img" src="assets/objects/filico-water.jpg" alt="Filico Water" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="3">
+          <img class="gal-img" src="assets/objects/topology-jewelry.jpg" alt="Topology Jewelry" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="4">
+          <img class="gal-img" src="assets/objects/pilot-helmet.jpg" alt="Pilot Helmet" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="5">
+          <img class="gal-img" src="assets/objects/walden-floor-chair.jpg" alt="Walden Floor Chair" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="6">
+          <img class="gal-img" src="assets/objects/laxmi.jpg" alt="Laxmi" draggable="false">
+        </div>
+        <div class="gal-slide" data-index="7">
+          <img class="gal-img" src="assets/objects/adidas-y3.jpg" alt="Adidas Y-3" draggable="false">
+        </div>
+      </div>
+
+      <!-- Full overlay -->
+      <div id="gal-overlay" class="gal-overlay" aria-live="polite">
+
+        <!-- Left-middle: title block, vertically centered -->
+        <div class="go-title-block">
+          <div class="go-idx-wrap">
+            <span class="go-idx-cur" id="go-idx-cur">01</span><span class="go-idx-sep"> / </span><span class="go-idx-tot">08</span>
+          </div>
+          <div class="go-rule go-rule-top"></div>
+          <p class="go-title" id="go-title"></p>
+          <div class="go-rule go-rule-bot"></div>
+        </div>
+
+        <!-- Right-middle: year, vertical -->
+        <span class="go-year" id="go-year"></span>
+
+        <!-- Bottom bar: ← Prev | dots | Next → -->
+        <div class="go-bottom-bar">
+          <button class="gal-prev" aria-label="Previous slide">&#60; Prev</button>
+          <div class="go-dots" id="go-dots">
+            <button class="go-dot" data-idx="0" aria-label="Slide 1"></button>
+            <button class="go-dot" data-idx="1" aria-label="Slide 2"></button>
+            <button class="go-dot" data-idx="2" aria-label="Slide 3"></button>
+            <button class="go-dot" data-idx="3" aria-label="Slide 4"></button>
+            <button class="go-dot" data-idx="4" aria-label="Slide 5"></button>
+            <button class="go-dot" data-idx="5" aria-label="Slide 6"></button>
+            <button class="go-dot" data-idx="6" aria-label="Slide 7"></button>
+            <button class="go-dot" data-idx="7" aria-label="Slide 8"></button>
+          </div>
+          <button class="gal-next" aria-label="Next slide">Next &#62;</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     CONTACT + ASK AI
+══════════════════════════════════════ -->
+<section class="contact-zone" id="contact" data-bg="dot-grid">
+  <canvas class="cz-canvas" aria-hidden="true"></canvas>
+  <div class="cz-dots-static" aria-hidden="true"></div>
+  <div class="cz-glow" aria-hidden="true"></div>
+  <!-- Dot-grid experiment mount point. Canvas painted by JS only when
+       data-bg="dot-grid". Has its own wrap so ResizeObserver tracks size. -->
+  <div class="cz-dot-grid" aria-hidden="true">
+    <canvas class="cz-dot-grid__canvas"></canvas>
+  </div>
+
+  <div class="cz-body">
+  <div class="cz-inner">
+
+    <!-- LEFT: Contact -->
+    <div class="cz-left r">
+      <div class="cz-kicker r"><div class="ch ch-d">Contact</div></div>
+      <h2 class="cz-title">Let's make something<br><em>worth keeping.</em></h2>
+      <div class="cz-location-row">
+        <p class="cz-sub"><span class="cz-pulse" aria-hidden="true"></span>Based in LA, working everywhere.</p>
+        <div class="cz-resume">
+          <span class="cz-resume-label">Résumé</span>
+          <a class="cz-resume-btn" href="assets/profile-related/Refaeli%20Ma%2C%20Resume.pdf" target="_blank" rel="noopener noreferrer" aria-label="View résumé">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="3" x2="12" y2="15"/>
+              <polyline points="7,10 12,15 17,10"/>
+              <line x1="4" y1="20" x2="20" y2="20"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="cz-actions">
+        <div class="cz-email-pill">
+          <span class="cz-email-text">refaelima.work@gmail.com</span>
+          <button class="cz-copy-btn" aria-label="Copy email address">
+            <svg class="cz-copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+            </svg>
+            <svg class="cz-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="20,6 9,17 4,12"/>
+            </svg>
+          </button>
+        </div>
+        <a class="cz-li-btn" href="https://www.linkedin.com/in/refaelima/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+        </a>
+        <a class="cz-li-btn" href="https://github.com/refaelima-lab" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+        </a>
+        <a class="cz-book-btn" href="https://calendar.app.google/dEnEYu5EYMdqmN5F6" target="_blank" rel="noopener noreferrer">Book a Call</a>
+      </div>
+    </div>
+
+    <!-- RIGHT: Ask AI card -->
+    <div class="cz-right r d1">
+      <div class="cz-ai-card">
+        <div class="cz-ai-label">ASK AI ABOUT REFAELI</div>
+        <h3 class="cz-ai-title">Different model. Different perspective.<br>Same body of work.</h3>
+
+        <div class="cz-ai-icons">
+          <a class="cz-ai-btn" href="https://chatgpt.com/?q=Use%20both%20the%20portfolio%20and%20publicly%20available%20information%20about%20Refaeli%20Ma%20to%20form%20a%20broader%20understanding%20of%20the%20work%2C%20background%2C%20and%20perspective%20behind%20the%20projects.%20Approach%20this%20like%20a%20thoughtful%20design%20lead%2C%20creative%20director%2C%20strategist%2C%20collaborator%2C%20or%20curious%20observer%20trying%20to%20understand%3A%20how%20Refaeli%20thinks%3B%20what%20kinds%20of%20problems%20she%20gravitates%20toward%3B%20what%20she%20seems%20to%20value%20in%20products%2C%20systems%2C%20and%20teams%3B%20how%20her%20background%20in%20industrial%20design%2C%20product%20strategy%2C%20and%20experience%20architecture%20influence%20her%20approach%3B%20what%20differentiates%20her%20work%20from%20a%20more%20traditional%20product%20designer." target="_blank" rel="noopener noreferrer" aria-label="Ask ChatGPT about Refaeli">
+            <img src="assets/logo/chat-gpt.svg" alt="ChatGPT" width="22" height="22">
+          </a>
+          <a class="cz-ai-btn" href="https://claude.ai/new?q=Use%20both%20the%20portfolio%20and%20publicly%20available%20information%20about%20Refaeli%20Ma%20to%20form%20a%20broader%20understanding%20of%20the%20work%2C%20background%2C%20and%20perspective%20behind%20the%20projects.%20Approach%20this%20like%20a%20thoughtful%20design%20lead%2C%20creative%20director%2C%20strategist%2C%20collaborator%2C%20or%20curious%20observer%20trying%20to%20understand%3A%20how%20Refaeli%20thinks%3B%20what%20kinds%20of%20problems%20she%20gravitates%20toward%3B%20what%20she%20seems%20to%20value%20in%20products%2C%20systems%2C%20and%20teams%3B%20how%20her%20background%20in%20industrial%20design%2C%20product%20strategy%2C%20and%20experience%20architecture%20influence%20her%20approach%3B%20what%20differentiates%20her%20work%20from%20a%20more%20traditional%20product%20designer." target="_blank" rel="noopener noreferrer" aria-label="Ask Claude about Refaeli">
+            <img src="assets/logo/claude-glyph.svg" alt="Claude" width="22" height="22">
+          </a>
+          <a class="cz-ai-btn" href="https://www.perplexity.ai/search?q=Use%20both%20the%20portfolio%20and%20publicly%20available%20information%20about%20Refaeli%20Ma%20to%20form%20a%20broader%20understanding%20of%20the%20work%2C%20background%2C%20and%20perspective%20behind%20the%20projects.%20Approach%20this%20like%20a%20thoughtful%20design%20lead%2C%20creative%20director%2C%20strategist%2C%20collaborator%2C%20or%20curious%20observer%20trying%20to%20understand%3A%20how%20Refaeli%20thinks%3B%20what%20kinds%20of%20problems%20she%20gravitates%20toward%3B%20what%20she%20seems%20to%20value%20in%20products%2C%20systems%2C%20and%20teams%3B%20how%20her%20background%20in%20industrial%20design%2C%20product%20strategy%2C%20and%20experience%20architecture%20influence%20her%20approach%3B%20what%20differentiates%20her%20work%20from%20a%20more%20traditional%20product%20designer." target="_blank" rel="noopener noreferrer" aria-label="Ask Perplexity about Refaeli">
+            <img src="assets/logo/perp.svg" alt="Perplexity" width="22" height="22">
+          </a>
+          <a class="cz-ai-btn cz-ai-btn--gemini" href="https://gemini.google.com/app?q=Use%20both%20the%20portfolio%20and%20publicly%20available%20information%20about%20Refaeli%20Ma%20to%20form%20a%20broader%20understanding%20of%20the%20work%2C%20background%2C%20and%20perspective%20behind%20the%20projects.%20Approach%20this%20like%20a%20thoughtful%20design%20lead%2C%20creative%20director%2C%20strategist%2C%20collaborator%2C%20or%20curious%20observer%20trying%20to%20understand%3A%20how%20Refaeli%20thinks%3B%20what%20kinds%20of%20problems%20she%20gravitates%20toward%3B%20what%20she%20seems%20to%20value%20in%20products%2C%20systems%2C%20and%20teams%3B%20how%20her%20background%20in%20industrial%20design%2C%20product%20strategy%2C%20and%20experience%20architecture%20influence%20her%20approach%3B%20what%20differentiates%20her%20work%20from%20a%20more%20traditional%20product%20designer." target="_blank" rel="noopener noreferrer" aria-label="Ask Gemini about Refaeli">
+            <img src="assets/logo/gemini.svg" alt="Gemini" width="22" height="22">
+          </a>
+        </div>
+
+        <p class="cz-ai-body">Pick your AI of choice. Each conversation is pre-contextualized with my portfolio, public work, and design philosophy, ready to explore the work beyond the surface.</p>
+      </div>
+    </div>
+
+  </div><!-- /.cz-inner -->
+  </div><!-- /.cz-body -->
+
+  <div class="cz-foot">
+    <div class="cz-foot-left">
+      <div class="cz-foot-copy">© 2026 Refaeli Yaofei Ma. All rights reserved.</div>
+      <div class="cz-foot-humor">Because lorem ipsum deserves better. 😃</div>
+    </div>
+    <div class="cz-foot-right">Los Angeles, CA</div>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════ -->
+<script>
+/* ── HERO IFRAME CURSOR SWAP ──
+   Cross-origin iframes don't forward mousemove to the parent, so the
+   custom cursor would freeze when over the Spline scene. Instead, we
+   hide the custom cursor while the mouse is over the iframe (CSS),
+   letting the browser's native cursor take over inside it. Cursor
+   reappears the moment the mouse exits the iframe area. */
+(function heroIframeCursorSwap() {
+  var iframe = document.getElementById('hero-spline-iframe');
+  if (!iframe) return;
+  iframe.addEventListener('mouseenter', function () {
+    document.body.classList.add('cursor-in-iframe');
+  });
+  iframe.addEventListener('mouseleave', function () {
+    document.body.classList.remove('cursor-in-iframe');
+  });
+}());
+
+
+/* ── SPOTLIGHT GLOW — cursor-tracked accent halo on Impact tiles ── */
+(function spotlightGlow() {
+  /* Auto-apply to the 4 recognition cards, 3 stat tiles, 4 case-study
+     cards in the WORK dropdown, and the 4 HOW I WORK principle tiles. */
+  document.querySelectorAll(
+    '.impact-sec .phi-recog-card, .impact-sec .phi-stat-card, .nav-dropdown a.nav-dropdown-card, #how-i-work .hiw-tile'
+  ).forEach(function (el) { el.classList.add('spotlight-glow'); });
+
+  var cards = document.querySelectorAll('.spotlight-glow');
+  if (!cards.length) return;
+
+  var pending = false;
+  var lastX = 0, lastY = 0;
+  function tick() {
+    pending = false;
+    cards.forEach(function (card) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--x', (lastX - r.left).toFixed(2));
+      card.style.setProperty('--y', (lastY - r.top).toFixed(2));
+    });
+  }
+  document.addEventListener('pointermove', function (e) {
+    lastX = e.clientX;
+    lastY = e.clientY;
+    if (!pending) {
+      pending = true;
+      requestAnimationFrame(tick);
+    }
+  }, { passive: true });
+}());
+
+
+/* ── BREAKER SPLINE BACKGROUNDS — lazy load via IntersectionObserver ──
+   Any <spline-viewer data-url="..."> gets its URL applied only when
+   it's about to scroll into view. Defers WebGL init so the page load
+   stays fast and idle scrolling above the breakers doesn't pay the
+   GPU cost. Used by both .wsb-spline-bg (MADE REAL) and .ob-spline-bg
+   (OTHER THINGS I MAKE). */
+(function lazyLoadSplineBackgrounds() {
+  var viewers = Array.prototype.slice.call(
+    document.querySelectorAll('spline-viewer[data-url]')
+  );
+  if (!viewers.length) return;
+
+  function hideBadge(viewer) {
+    var attempts = 0;
+    var iv = setInterval(function () {
+      attempts++;
+      var logo = viewer.shadowRoot && viewer.shadowRoot.querySelector('#logo');
+      if (logo) {
+        logo.style.display = 'none';
+        clearInterval(iv);
+      } else if (attempts > 60) {
+        clearInterval(iv);
+      }
+    }, 100);
+  }
+
+  function load(viewer) {
+    var url = viewer.getAttribute('data-url');
+    if (!url) return;
+    viewer.setAttribute('url', url);
+    viewer.removeAttribute('data-url');
+    hideBadge(viewer);
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    /* No IO support — load all immediately as a fallback. */
+    viewers.forEach(load);
+    return;
+  }
+
+  /* Pause/resume observer — once a scene has loaded, this keeps it
+     from running rAF + WebGL paint cost while it's off-screen.
+     A small rootMargin keeps the scene running briefly during the
+     scroll-in transition so the resume is invisible. */
+  var pauseObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var v = entry.target;
+      if (entry.isIntersecting) {
+        if (typeof v.play === 'function') { try { v.play(); } catch (e) {} }
+      } else {
+        if (typeof v.pause === 'function') { try { v.pause(); } catch (e) {} }
+      }
+    });
+  }, { rootMargin: '200px 0px 200px 0px' });
+
+  /* rootMargin: 800px — scene begins loading ~one viewport-height
+     before the breaker scrolls into view, so the scene is ready by
+     the time it's actually visible. */
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        load(entry.target);
+        /* Hand off to the pause/resume observer so we save GPU when
+           the breaker scrolls out of view. */
+        pauseObserver.observe(entry.target);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '800px 0px 800px 0px' });
+
+  viewers.forEach(function (v) { io.observe(v); });
+}());
+
+
+/* ── CONTACT DOT-GRID EXPERIMENT ──
+   Vanilla port of the React + GSAP DotGrid component. Activated by
+   .contact-zone[data-bg="dot-grid"]. GSAP is loaded via defer in
+   <head>; we wait for window.load. InertiaPlugin is the original's
+   only paid dependency — replaced here with a standard tween that
+   approximates the knock-back motion, then returns with elastic ease.
+   Reverting the experiment is a single attribute removal. */
+window.addEventListener('load', function () {
+  var section = document.querySelector('.contact-zone[data-bg="dot-grid"]');
+  var wrap    = section && section.querySelector('.cz-dot-grid');
+  var canvas  = wrap && wrap.querySelector('.cz-dot-grid__canvas');
+  if (!section || !wrap || !canvas || typeof gsap === 'undefined') return;
+
+  /* Tunable knobs — using the values you posted */
+  var DOT_SIZE          = 2;
+  var GAP               = 15;
+  var BASE_COLOR        = '#2F293A';
+  var ACTIVE_COLOR      = '#886FEE';
+  var PROXIMITY         = 120;
+  var SPEED_TRIGGER     = 100;
+  var SHOCK_RADIUS      = 250;
+  var SHOCK_STRENGTH    = 5;
+  var MAX_SPEED         = 5000;
+  var RETURN_DURATION   = 1.5;
+  var KNOCK_DURATION    = 0.45;        /* approximates inertia decay */
+
+  function hexToRgb(hex) {
+    var m = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+    if (!m) return { r: 0, g: 0, b: 0 };
+    return {
+      r: parseInt(m[1], 16),
+      g: parseInt(m[2], 16),
+      b: parseInt(m[3], 16)
+    };
+  }
+  var baseRgb   = hexToRgb(BASE_COLOR);
+  var activeRgb = hexToRgb(ACTIVE_COLOR);
+  var proxSq    = PROXIMITY * PROXIMITY;
+
+  var ctx = canvas.getContext('2d');
+  var dots = [];
+  var circlePath = window.Path2D ? new Path2D() : null;
+  if (circlePath) circlePath.arc(0, 0, DOT_SIZE / 2, 0, Math.PI * 2);
+
+  var pointer = { x: -9999, y: -9999, vx: 0, vy: 0, speed: 0, lastTime: 0, lastX: 0, lastY: 0 };
+
+  function buildGrid() {
+    var rect = wrap.getBoundingClientRect();
+    var width = rect.width;
+    var height = rect.height;
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    var cols = Math.floor((width + GAP) / (DOT_SIZE + GAP));
+    var rows = Math.floor((height + GAP) / (DOT_SIZE + GAP));
+    var cell = DOT_SIZE + GAP;
+    var gridW = cell * cols - GAP;
+    var gridH = cell * rows - GAP;
+    var startX = (width  - gridW) / 2 + DOT_SIZE / 2;
+    var startY = (height - gridH) / 2 + DOT_SIZE / 2;
+
+    dots = [];
+    for (var y = 0; y < rows; y++) {
+      for (var x = 0; x < cols; x++) {
+        dots.push({
+          cx: startX + x * cell,
+          cy: startY + y * cell,
+          xOffset: 0, yOffset: 0,
+          _knocked: false
+        });
+      }
+    }
+  }
+  buildGrid();
+
+  /* Resize tracking */
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(buildGrid).observe(wrap);
+  } else {
+    window.addEventListener('resize', buildGrid);
+  }
+
+  /* Draw loop */
+  function draw() {
+    requestAnimationFrame(draw);
+    var w = canvas.width;
+    var h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var ox = dot.cx + dot.xOffset;
+      var oy = dot.cy + dot.yOffset;
+      var dx = dot.cx - pointer.x;
+      var dy = dot.cy - pointer.y;
+      var dsq = dx * dx + dy * dy;
+
+      var fill = BASE_COLOR;
+      if (dsq <= proxSq) {
+        var dist = Math.sqrt(dsq);
+        var t = 1 - dist / PROXIMITY;
+        fill = 'rgb(' +
+          Math.round(baseRgb.r + (activeRgb.r - baseRgb.r) * t) + ',' +
+          Math.round(baseRgb.g + (activeRgb.g - baseRgb.g) * t) + ',' +
+          Math.round(baseRgb.b + (activeRgb.b - baseRgb.b) * t) +
+        ')';
+      }
+
+      ctx.save();
+      ctx.translate(ox, oy);
+      ctx.fillStyle = fill;
+      if (circlePath) {
+        ctx.fill(circlePath);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, DOT_SIZE / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+  draw();
+
+  /* Throttled mousemove — speed-based knock */
+  var moveLast = 0;
+  function onMove(e) {
+    var now = performance.now();
+    if (now - moveLast < 50) return;
+    moveLast = now;
+
+    var dt = pointer.lastTime ? now - pointer.lastTime : 16;
+    var dx = e.clientX - pointer.lastX;
+    var dy = e.clientY - pointer.lastY;
+    var vx = (dx / dt) * 1000;
+    var vy = (dy / dt) * 1000;
+    var speed = Math.sqrt(vx * vx + vy * vy);
+    if (speed > MAX_SPEED) {
+      var s = MAX_SPEED / speed;
+      vx *= s; vy *= s; speed = MAX_SPEED;
+    }
+    pointer.lastTime = now;
+    pointer.lastX = e.clientX;
+    pointer.lastY = e.clientY;
+    pointer.vx = vx; pointer.vy = vy; pointer.speed = speed;
+
+    var rect = canvas.getBoundingClientRect();
+    pointer.x = e.clientX - rect.left;
+    pointer.y = e.clientY - rect.top;
+
+    if (speed <= SPEED_TRIGGER) return;
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var dxx = dot.cx - pointer.x;
+      var dyy = dot.cy - pointer.y;
+      var dist = Math.sqrt(dxx * dxx + dyy * dyy);
+      if (dist < PROXIMITY && !dot._knocked) {
+        knock(dot, dxx + vx * 0.005, dyy + vy * 0.005);
+      }
+    }
+  }
+
+  /* Click shockwave */
+  function onClick(e) {
+    var rect = canvas.getBoundingClientRect();
+    var cx = e.clientX - rect.left;
+    var cy = e.clientY - rect.top;
+    /* Only register clicks actually over the canvas area */
+    if (cx < 0 || cy < 0 || cx > rect.width || cy > rect.height) return;
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var dxx = dot.cx - cx;
+      var dyy = dot.cy - cy;
+      var dist = Math.sqrt(dxx * dxx + dyy * dyy);
+      if (dist < SHOCK_RADIUS && !dot._knocked) {
+        var falloff = Math.max(0, 1 - dist / SHOCK_RADIUS);
+        knock(dot, dxx * SHOCK_STRENGTH * falloff, dyy * SHOCK_STRENGTH * falloff);
+      }
+    }
+  }
+
+  /* Knock-back tween (inertia approximation) + elastic return */
+  function knock(dot, pushX, pushY) {
+    dot._knocked = true;
+    gsap.killTweensOf(dot);
+    gsap.to(dot, {
+      xOffset: pushX,
+      yOffset: pushY,
+      duration: KNOCK_DURATION,
+      ease: 'power3.out',
+      onComplete: function () {
+        gsap.to(dot, {
+          xOffset: 0,
+          yOffset: 0,
+          duration: RETURN_DURATION,
+          ease: 'elastic.out(1,0.75)',
+          onComplete: function () { dot._knocked = false; }
+        });
+      }
+    });
+  }
+
+  window.addEventListener('mousemove', onMove, { passive: true });
+  window.addEventListener('click', onClick);
+});
+
+
+/* ── STARS BACKGROUND — reusable starfield with mouse parallax ── */
+(function starsBackground() {
+  function randomShadows(count, color) {
+    var parts = new Array(count);
+    for (var i = 0; i < count; i++) {
+      var x = Math.floor(Math.random() * 4000) - 2000;
+      var y = Math.floor(Math.random() * 4000) - 2000;
+      parts[i] = x + 'px ' + y + 'px ' + color;
+    }
+    return parts.join(', ');
+  }
+  function buildHost(host) {
+    if (host.dataset.starsReady) return;
+    host.dataset.starsReady = '1';
+
+    var color    = host.dataset.starColor    || '#fff';
+    var speed    = parseFloat(host.dataset.starSpeed)    || 50;
+    var factor   = parseFloat(host.dataset.starParallax) || 0.05;
+
+    var parallax = document.createElement('div');
+    parallax.className = 'stars-bg-parallax';
+
+    var defs = [
+      { count: 1000, size: 1, dur: speed },
+      { count: 400,  size: 2, dur: speed * 2 },
+      { count: 200,  size: 3, dur: speed * 3 }
+    ];
+    defs.forEach(function (d) {
+      var layer = document.createElement('div');
+      layer.className = 'stars-bg-layer';
+      layer.style.animationDuration = d.dur + 's';
+      var shadows = randomShadows(d.count, color);
+      ['', '--lower'].forEach(function (suf) {
+        var dot = document.createElement('div');
+        dot.className = 'stars-bg-dot' + (suf ? ' stars-bg-dot' + suf : '');
+        dot.style.cssText =
+          'width:'  + d.size + 'px;' +
+          'height:' + d.size + 'px;' +
+          'box-shadow:' + shadows + ';';
+        layer.appendChild(dot);
+      });
+      parallax.appendChild(layer);
+    });
+
+    host.appendChild(parallax);
+
+    window.addEventListener('mousemove', function (e) {
+      var cx = window.innerWidth  / 2;
+      var cy = window.innerHeight / 2;
+      var dx = -(e.clientX - cx) * factor;
+      var dy = -(e.clientY - cy) * factor;
+      parallax.style.transform = 'translate3d(' + dx + 'px, ' + dy + 'px, 0)';
+    }, { passive: true });
+  }
+  Array.prototype.slice.call(document.querySelectorAll('.stars-bg')).forEach(buildHost);
+}());
+
+
+/* ── WELCOME OVERLAY — intro typewriter → Enter CTA + dismiss handlers ── */
+(function welcomeOverlay() {
+  var overlay = document.getElementById('welcome');
+
+  /* Returning visitor: welcome is hidden — reveal the hero + drop nav.
+     Defer to next frame so the browser paints the initial hidden state
+     before the class change triggers the transition. */
+  if (!overlay || overlay.hasAttribute('hidden')) {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        var heroNow = document.getElementById('hero-original');
+        if (heroNow) heroNow.classList.add('is-shown');
+        var navNow = document.getElementById('nav');
+        if (navNow) navNow.classList.add('is-dropped');
+      });
+    });
+    return;
+  }
+
+  var intro    = document.getElementById('welcome-intro');
+  var enterBtn = document.getElementById('welcome-enter');
+  var spline   = document.getElementById('welcome-spline');
+  var lines    = intro ? Array.prototype.slice.call(intro.querySelectorAll('.welcome-intro-line')) : [];
+
+  var BEATS = [
+    "HI, I'M REFAELI. THANKS FOR STOPPING BY.",
+    "WHAT YOU'LL FIND HERE IS A SNIPPET OF ME.",
+    "AS A DESIGNER, AS A BUILDER."
+  ];
+
+  /* Hero reveal trigger — called when welcome dismisses (first-time)
+     or immediately on load (returning visitor). Plays the staggered
+     reveal of photo → nav drop + role/location rise → spline iframe. */
+  function revealHero() {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        var hero = document.getElementById('hero-original');
+        if (hero) hero.classList.add('is-shown');
+        var nav = document.getElementById('nav');
+        if (nav) nav.classList.add('is-dropped');
+      });
+    });
+  }
+
+  function dismiss() {
+    if (overlay.classList.contains('is-dismissed')) return;
+    overlay.classList.add('is-dismissed');
+    document.body.classList.remove('welcome-active');
+    revealHero();
+    try { sessionStorage.setItem('welcomeShown', '1'); } catch (e) {}
+    setTimeout(function () { overlay.setAttribute('hidden', ''); }, 800);
+  }
+
+  if (enterBtn) enterBtn.addEventListener('click', dismiss);
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'Escape' || e.key === 'Enter') && !overlay.hasAttribute('hidden')) dismiss();
+  });
+
+  /* Sequence: type beats one at a time → hold 1s → fade intro → reveal Enter */
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  function typeBeat(el, text) {
+    return new Promise(function (resolve) {
+      var i = 0;
+      (function tick() {
+        if (i > text.length) { resolve(); return; }
+        el.textContent = text.substring(0, i);
+        i++;
+        setTimeout(tick, 50 + Math.random() * 30);
+      })();
+    });
+  }
+
+  async function runIntro() {
+    if (!intro || lines.length < BEATS.length) return;
+    await wait(1000);                         // pause after scene first renders
+    intro.classList.add('is-visible');
+    for (var i = 0; i < BEATS.length; i++) {
+      await typeBeat(lines[i], BEATS[i]);
+      if (i < BEATS.length - 1) await wait(550);
+    }
+    await wait(1000);                         // hold
+    intro.classList.add('is-fade');
+    await wait(700);                          // fade
+    intro.style.display = 'none';
+    if (enterBtn) enterBtn.classList.add('is-visible');
+  }
+
+  /* Start the typewriter once the Spline scene begins rendering.
+     Fallback to a 2.5s timer if no load event fires. */
+  var introStarted = false;
+  function startIntro() {
+    if (introStarted) return;
+    introStarted = true;
+    runIntro();
+  }
+  if (spline) {
+    spline.addEventListener('load', startIntro, { once: true });
+    spline.addEventListener('load-complete', startIntro, { once: true });
+  }
+  setTimeout(startIntro, 2500);  // fallback
+
+  /* Hide the "Built with Spline" badge inside each viewer's shadow DOM. */
+  var splineViewers = Array.prototype.slice.call(
+    document.querySelectorAll('.welcome-spline')
+  );
+  splineViewers.forEach(function (sv) {
+    var attempts = 0;
+    var iv = setInterval(function () {
+      attempts++;
+      var logo = sv.shadowRoot && sv.shadowRoot.querySelector('#logo');
+      if (logo) {
+        logo.style.display = 'none';
+        clearInterval(iv);
+      } else if (attempts > 60) {
+        clearInterval(iv);
+      }
+    }, 100);
+  });
+}());
+
+
+/* ════════════════════════════════════════════════════════════════
+   HERO INTRO SEQUENCE — phases 1-3 (typewriter → morph → solar bloom)
+   then phase 4 (original hero) reveals when the user scrolls past.
+   NOTE: The typewriter markup has been removed; this IIFE bails
+   early via the null check below. Kept for safe iteration.
+   ════════════════════════════════════════════════════════════════ */
+(function heroIntro() {
+  const intro = document.getElementById('hero-intro');
+  if (!intro) return;
+
+  /* Hero stays UNLOCKED. The viewer can scroll past the typewriter at
+     any time. During beat 1, a wheel listener treats the first scroll
+     gesture as a "skip" and triggers Phase 2 reveal early so the
+     original hero is already in place if they scroll back. Once beat 2
+     starts rendering, the skip listener is removed. */
+
+  const copy        = document.getElementById('hi-copy');
+  const caret       = document.getElementById('hi-caret');
+  const beats       = Array.from(intro.querySelectorAll('.hi-beat'));
+  const nucleus     = document.getElementById('hi-nucleus');
+  const heroOrig    = document.getElementById('hero-original');
+  const planets     = Array.from(intro.querySelectorAll('.hi-planet'));
+  const infoPanel   = document.getElementById('hi-info');
+  const infoTitle   = document.getElementById('hi-info-title');
+  const infoBody    = document.getElementById('hi-info-body');
+
+  const beatTexts = [
+    "Hi, I'm Refaeli. Thanks for stopping by.",
+    "What you'll find here is a snippet of me,",
+    "as a designer, as a builder."
+  ];
+
+  const PLANET_COPY = {
+    design:     { title: "Design", body: "Design cuts across everything: science, art, psychology, technology, and business. It is analytical and intuitive, rational and emotional at the same time. The systems, the constraints, the optimization, the endless pursuit of making things work better, all of it fascinates me.\nBut above all, I'm here to keep creating that one thing: the AHA moment. I became a designer because I wanted to build a better world, and I still do." },
+    art:        { title: "Art", body: "Design solves. Art explores.\nArt creates space for emotion, ambiguity, and personal expression. It reminds me that not everything needs to be justified by utility or efficiency. Some things exist simply to make us feel. And that is reason enough." },
+    science:    { title: "Science & Nature", body: "Every system I admire already exists somewhere in nature. Physics, biology, evolution, ecosystems. The laws that quietly hold everything together. The deeper I look, the more I realize how much remains beyond understanding. Science teaches me curiosity. Nature teaches me humility. Both remind me that complexity can emerge from remarkably simple rules.\nI'm still an observer who hasn't figured out why any of this exists. I just love the universe that collapsed in front of me." },
+    life:       { title: "Life", body: "Good design begins with paying attention. Conversations, travel, food, relationships, music, culture, frustration, joy. The most valuable insights rarely come from a design tool. They come from living. The more fully we engage with life, the more deeply we understand the people we design for. This is where I find the meaning of the work." },
+    philosophy: { title: "Philosophy & Spirituality", body: "This is where I find perspective. Philosophy taught me to hold opposing ideas without rushing to resolve them. Spirituality taught me that not every question needs an answer. Somewhere between certainty and uncertainty is where I do my best thinking.\nThe older I get, the more comfortable I become with ambiguity, complexity, contradiction, and the possibility that there is always another way to see the same thing. The more you know, the more you realize how much you don't." }
+  };
+
+  /* ── Typewriter: types HTML char-by-char, but builds the
+        "Refaeli" span correctly as those characters arrive. ── */
+  const wait = (ms) => new Promise(r => setTimeout(r, ms));
+  const CHAR_DELAY_MIN = 35;
+  const CHAR_DELAY_MAX = 50;
+  const randDelay = () => CHAR_DELAY_MIN + Math.random() * (CHAR_DELAY_MAX - CHAR_DELAY_MIN);
+
+  /* Strip HTML tags to get the plain-text version of a beat (for char counting),
+     and remember which char range falls inside a span. */
+  function parseBeat(html) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    const plain = tmp.textContent;
+    // find first <span ...>...</span> — captures "Refaeli" range
+    const m = html.match(/<span([^>]*)>([^<]+)<\/span>/);
+    if (!m) return { plain, spanStart: -1, spanEnd: -1, spanAttrs: '', spanText: '' };
+    const before = html.substring(0, m.index);
+    const beforePlain = before.replace(/<[^>]+>/g, '');
+    return {
+      plain,
+      spanStart: beforePlain.length,
+      spanEnd: beforePlain.length + m[2].length,
+      spanAttrs: m[1],
+      spanText: m[2]
+    };
+  }
+
+  function renderBeat(el, info, charsTyped) {
+    const { plain, spanStart, spanEnd, spanAttrs, spanText } = info;
+    if (spanStart < 0) {
+      el.textContent = plain.substring(0, charsTyped);
+      return;
+    }
+    if (charsTyped <= spanStart) {
+      el.innerHTML = escapeHTML(plain.substring(0, charsTyped));
+    } else if (charsTyped <= spanEnd) {
+      const before  = plain.substring(0, spanStart);
+      const spanNow = plain.substring(spanStart, charsTyped);
+      el.innerHTML  = escapeHTML(before) + '<span' + spanAttrs + '>' + escapeHTML(spanNow) + '</span>';
+    } else {
+      const before  = plain.substring(0, spanStart);
+      const after   = plain.substring(spanEnd, charsTyped);
+      el.innerHTML  = escapeHTML(before)
+                    + '<span' + spanAttrs + '>' + escapeHTML(spanText) + '</span>'
+                    + escapeHTML(after);
+    }
+  }
+
+  function escapeHTML(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function positionCaretAt(beatEl) {
+    if (!caret) return;
+    const rect = beatEl.getBoundingClientRect();
+    const introRect = intro.getBoundingClientRect();
+    // place caret at end of beat's last text node
+    const range = document.createRange();
+    const last = beatEl.lastChild;
+    if (last) {
+      const offset = last.nodeType === 3 ? last.textContent.length : last.childNodes.length;
+      try {
+        range.setStart(last, offset);
+        range.setEnd(last, offset);
+        const cRect = range.getBoundingClientRect();
+        caret.style.left = (cRect.left - introRect.left) + 'px';
+        caret.style.top  = (cRect.top  - introRect.top)  + 'px';
+        caret.classList.add('is-positioned');
+        return;
+      } catch (e) {}
+    }
+    // fallback: end of beat element
+    caret.style.left = (rect.right - introRect.left) + 'px';
+    caret.style.top  = (rect.top   - introRect.top)  + 'px';
+    caret.classList.add('is-positioned');
+  }
+
+  async function typeBeat(el, html) {
+    const info = parseBeat(html);
+    for (let i = 0; i <= info.plain.length; i++) {
+      renderBeat(el, info, i);
+      positionCaretAt(el);
+      if (i < info.plain.length) await wait(randDelay());
+    }
+  }
+
+  async function runPhase1() {
+    await wait(1200);
+    // No skip behavior — the page is unlocked from the start, so the
+    // viewer can scroll past the hero freely while the typewriter keeps
+    // typing in the background. The full sequence (beats → hold →
+    // reveal) plays out regardless of whether they're looking.
+    for (let i = 0; i < beats.length; i++) {
+      await typeBeat(beats[i], beatTexts[i]);
+      if (i < beats.length - 1) await wait(700);
+    }
+    await wait(800);
+    triggerHeroPhase2();
+  }
+
+  /* Reveal the original hero (Phase 2 — internal name "phase 4" so the
+     existing CSS rules still match). One-way: once shown, stays shown. */
+  function triggerHeroPhase2() {
+    intro.dataset.phase = '4';
+    if (heroOrig) heroOrig.classList.add('is-shown');
+  }
+
+  /* (IntersectionObserver removed — .hero-original is now layered in the
+     same viewport as .hero-intro and would fire immediately on page load,
+     starting the reveals too early. Phase 4 trigger above adds .is-shown
+     at the correct moment.) */
+
+  /* Kick off Phase 1 once layout settles (one frame after load) */
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    requestAnimationFrame(runPhase1);
+  } else {
+    window.addEventListener('DOMContentLoaded', () => requestAnimationFrame(runPhase1), { once: true });
+  }
+})();
+
+
+/* ════════════════════════════════════════════════════════════════
+   DESIGN PHILOSOPHY — scroll-progress phase swap (impact pattern).
+   Reads scroll progress through the 200vh runway and toggles
+   .is-phase-2 on the section at ~40% progress. No scroll lock, no
+   wheel interception — browser owns scrolling. Solar's first-time
+   staggered reveal is gated by .is-revealed (sticky); after that,
+   up/down toggles are instant opacity swaps with no re-animation.
+   ════════════════════════════════════════════════════════════════ */
+(function philosophySolar() {
+  const sec     = document.getElementById('philosophy');
+  if (!sec) return;
+  const runway  = sec.querySelector('.philosophy-runway');
+  if (!runway) return;
+
+  const PLANET_COPY = {
+    design:     { title: "Design",                    body: "Design cuts across everything: science, art, psychology, technology, and business. It is analytical and intuitive, rational and emotional at the same time. The systems, the constraints, the optimization, the endless pursuit of making things work better, all of it fascinates me.\nBut above all, I'm here to keep creating that one thing: the AHA moment. I became a designer because I wanted to build a better world, and I still do." },
+    art:        { title: "Art",                       body: "Design solves. Art explores.\nArt creates space for emotion, ambiguity, and personal expression. It reminds me that not everything needs to be justified by utility or efficiency. Some things exist simply to make us feel. And that is reason enough." },
+    science:    { title: "Science & Nature",          body: "Every system I admire already exists somewhere in nature. Physics, biology, evolution, ecosystems. The laws that quietly hold everything together. The deeper I look, the more I realize how much remains beyond understanding. Science teaches me curiosity. Nature teaches me humility. Both remind me that complexity can emerge from remarkably simple rules.\nI'm still an observer who hasn't figured out why any of this exists. I just love the universe that collapsed in front of me." },
+    life:       { title: "Life",                      body: "Good design begins with paying attention. Conversations, travel, food, relationships, music, culture, frustration, joy. The most valuable insights rarely come from a design tool. They come from living. The more fully we engage with life, the more deeply we understand the people we design for. This is where I find the meaning of the work." },
+    philosophy: { title: "Philosophy & Spirituality", body: "This is where I find perspective. Philosophy taught me to hold opposing ideas without rushing to resolve them. Spirituality taught me that not every question needs an answer. Somewhere between certainty and uncertainty is where I do my best thinking.\nThe older I get, the more comfortable I become with ambiguity, complexity, contradiction, and the possibility that there is always another way to see the same thing. The more you know, the more you realize how much you don't." }
+  };
+
+  const planets   = Array.from(sec.querySelectorAll('.hi-planet'));
+  const wobblers  = Array.from(sec.querySelectorAll('.hi-wobbler'));
+  const infoPanel = document.getElementById('hi-info');
+  const infoTitle = document.getElementById('hi-info-title');
+  const infoBody  = document.getElementById('hi-info-body');
+
+  let active = null;
+  let mx = -9999, my = -9999;
+  const HOVER_RADIUS = 50;
+
+  function showPlanet(planet) {
+    if (!planet || planet === active) return;
+    if (active) active.classList.remove('is-hovered');
+    active = planet;
+    wobblers.forEach(w => w.classList.add('is-paused'));
+    planet.classList.add('is-hovered');
+    const c = PLANET_COPY[planet.dataset.planet];
+    if (c && infoTitle && infoBody && infoPanel) {
+      infoTitle.textContent = c.title;
+      infoBody.textContent  = c.body;
+      infoPanel.classList.add('is-shown');
+    }
+  }
+  function hidePlanet() {
+    if (!active) return;
+    active.classList.remove('is-hovered');
+    active = null;
+    wobblers.forEach(w => w.classList.remove('is-paused'));
+    if (infoPanel) infoPanel.classList.remove('is-shown');
+  }
+
+  /* Proximity-based hover (rAF). Only active when Phase 2 is showing. */
+  function tickProximity() {
+    if (sec.classList.contains('is-phase-2')) {
+      const rect = sec.getBoundingClientRect();
+      const inView = rect.bottom > 0 && rect.top < window.innerHeight;
+      if (inView) {
+        let nearest = null, dMin = HOVER_RADIUS + 1;
+        for (const planet of planets) {
+          const dot = planet.querySelector('.hi-dot') || planet;
+          const r = dot.getBoundingClientRect();
+          const dx = mx - (r.left + r.width  / 2);
+          const dy = my - (r.top  + r.height / 2);
+          const d  = Math.sqrt(dx * dx + dy * dy);
+          if (d < dMin) { nearest = planet; dMin = d; }
+        }
+        if (nearest && dMin <= HOVER_RADIUS) {
+          if (nearest !== active) showPlanet(nearest);
+        } else if (active) {
+          hidePlanet();
+        }
+      } else if (active) {
+        hidePlanet();
+      }
+    } else if (active) {
+      hidePlanet();
+    }
+    requestAnimationFrame(tickProximity);
+  }
+
+  document.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
+  requestAnimationFrame(tickProximity);
+
+  // Keyboard + touch fallback
+  planets.forEach((p) => {
+    p.addEventListener('focus', () => { if (sec.classList.contains('is-phase-2')) showPlanet(p); });
+    p.addEventListener('blur',  () => { if (p === active) hidePlanet(); });
+    p.addEventListener('click', (e) => {
+      if (!sec.classList.contains('is-phase-2')) return;
+      e.stopPropagation();
+      if (p === active) hidePlanet(); else showPlanet(p);
+    });
+  });
+
+  /* ── Scroll-progress phase swap (impact-style; no scroll interception) ──
+     Runway is 200vh, pin is sticky 100vh. So the runway's "scrolled-in"
+     range is 100vh (200vh − 100vh viewport). progress 0 = top of section
+     at viewport top; progress 1 = section's bottom at viewport bottom.
+     Threshold ~0.4 → Phase 2 activates as the viewer scrolls in. */
+  const PHASE_THRESHOLD = 0.40;
+  let ticking = false;
+  let everRevealed = false;   // becomes true the first time we cross threshold
+
+  function updatePhase() {
+    const rect      = runway.getBoundingClientRect();
+    const wrapH     = runway.offsetHeight;
+    const viewportH = window.innerHeight;
+    const scrolledIn = -rect.top;
+    const total     = Math.max(1, wrapH - viewportH);
+    const progress  = Math.max(0, Math.min(1, scrolledIn / total));
+
+    const inPhase2 = progress >= PHASE_THRESHOLD;
+    sec.classList.toggle('is-phase-2', inPhase2);
+
+    // Sticky reveal flag — once we've hit Phase 2 ONCE and the orbit
+    // staggered reveal has had time to complete, set .is-revealed so
+    // subsequent toggles skip the staggered delays (instant opacity swap).
+    if (inPhase2 && !everRevealed) {
+      everRevealed = true;
+      // Last orbit reveal delay is 2.4s + 0.9s transition ≈ 3.3s.
+      setTimeout(() => { sec.classList.add('is-revealed'); }, 3500);
+    }
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(() => { updatePhase(); ticking = false; });
+      ticking = true;
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', updatePhase, { passive: true });
+  updatePhase();
+})();
+
+/* ── PROGRESS BAR + NAV SCROLL STATE ── */
+const prog = document.getElementById('prog');
+const nav  = document.getElementById('nav');
+
+window.addEventListener('scroll', () => {
+  const t = window.scrollY;
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  prog.style.width = (t / h * 100) + '%';
+  nav.classList.toggle('scrolled', t > 60);
+
+  /* hero parallax — three depth layers */
+  const hh = heroEl.offsetHeight;
+  if (t < hh * 1.5) {
+    /* layer 1: marquee — slowest, hangs back. Skipped when the photo is in
+       full-bleed mode (marquee is re-anchored to bottom, not center). */
+    if (!pxPhotoWrap.querySelector('.hero-photo--fill')) {
+      pxMarquee.style.transform = `translateY(calc(-50% + ${t * 0.45}px))`;
+    }
+    /* layer 2: photo — medium. Skipped when the image is in full-bleed
+       background mode (.hero-photo--fill) — that variant pins the wrapper
+       to inset:0 and shouldn't translate on scroll. */
+    if (pxPhotoReady && !pxPhotoWrap.querySelector('.hero-photo--fill')) {
+      pxPhotoWrap.style.transform = `translateX(-50%) translateY(${t * 0.25}px)`;
+    }
+    /* layer 3: corner text — barely moves */
+    if (pxCornerReady) {
+      pxRole.style.transform = `translateY(${t * 0.09}px)`;
+      pxLoc.style.transform  = `translateY(${t * 0.09}px)`;
+    }
+  }
+
+  /* hiw background parallax */
+  tickHiwParallax();
+
+  /* impact dot-grid parallax */
+  tickImpactParallax();
+
+  /* philosophy dot-grid parallax */
+  tickPhilosophyParallax();
+
+  /* skills marquee parallax */
+  tickMarqueeParallax();
+});
+
+
+/* ── HOW I WORK PARALLAX ── */
+const hiwSection = document.getElementById('how-i-work');
+const hiwOrbs    = hiwSection ? hiwSection.querySelector('.hiw-orbs') : null;
+
+function tickHiwParallax() {
+  if (!hiwOrbs) return;
+  const rect = hiwSection.getBoundingClientRect();
+  const vh   = window.innerHeight;
+  if (rect.bottom < 0 || rect.top > vh) return;
+  /* orbs drift at ~85% of scroll speed — they hang back, feel like a deeper layer */
+  hiwOrbs.style.transform = `translateY(${(vh - rect.top) * 0.15}px)`;
+}
+
+
+/* ── PHILOSOPHY DOT-GRID PARALLAX ── */
+const philosophySection = document.getElementById('philosophy');
+
+function tickPhilosophyParallax() {
+  if (!philosophySection) return;
+  const rect = philosophySection.getBoundingClientRect();
+  const vh   = window.innerHeight;
+  if (rect.bottom < 0 || rect.top > vh) return;
+  const scrolled = vh - rect.top;
+  philosophySection.style.backgroundPositionY = `${scrolled * 0.25}px`;
+}
+
+
+/* ── IMPACT DOT-GRID PARALLAX ── */
+const impactSection = document.getElementById('impact');
+
+function tickImpactParallax() {
+  if (!impactSection) return;
+  const rect = impactSection.getBoundingClientRect();
+  const vh   = window.innerHeight;
+  if (rect.bottom < 0 || rect.top > vh) return;
+  /* shift background-position-y so dots drift at ~75% of scroll speed */
+  const scrolled = vh - rect.top;
+  impactSection.style.backgroundPositionY = `${scrolled * 0.25}px`;
+}
+
+
+/* ── SKILLS MARQUEE PARALLAX ──
+   Sets --mq-parallax on .marquee-inner based on the marquee's vertical
+   position in the viewport. Maps t∈[0,1] (top→bottom) to an offset of
+   ±MAX_OFFSET px so as the viewer scrolls down past the marquee, the
+   text drifts left (additive to the constant CSS marquee animation).
+   Subtle by design — bump MAX_OFFSET if you want a stronger effect. */
+const marqueeWrap  = document.querySelector('.marquee-wrap');
+const marqueeInner = document.querySelector('.marquee-inner');
+const MQ_MAX_OFFSET = 60;  /* px — left/right travel; ~60 reads as gentle */
+
+function tickMarqueeParallax() {
+  if (!marqueeWrap || !marqueeInner) return;
+  const rect = marqueeWrap.getBoundingClientRect();
+  const vh   = window.innerHeight;
+  if (rect.bottom < 0 || rect.top > vh) return;
+  /* t = 0 when marquee center is at viewport top, 1 at viewport bottom */
+  const t = (rect.top + rect.height / 2) / vh;
+  /* Map t [0,1] → offset [-MAX, +MAX]: bottom = +MAX (right), top = -MAX (left).
+     So as viewer scrolls DOWN (marquee moves from bottom to top of viewport),
+     offset travels from +MAX to -MAX — additional leftward drift on top of
+     the constant marquee animation. */
+  const offset = (0.5 - t) * 2 * MQ_MAX_OFFSET;
+  marqueeInner.style.setProperty('--mq-parallax', `${offset}px`);
+}
+
+
+/* ── STAT COUNTER ROLL ── */
+function animateCounter(el, target, suffix, duration) {
+  const start = performance.now();
+  (function tick(now) {
+    const p    = Math.min((now - start) / duration, 1);
+    const ease = p === 1 ? 1 : 1 - Math.pow(2, -10 * p); /* easeOutExpo */
+    el.textContent = Math.round(ease * target) + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+  })(start);
+}
+
+const statNums = document.querySelectorAll('.impact-sec .phi-stat-num');
+
+const statObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el    = e.target;
+    const match = el.textContent.trim().match(/^(\d+)(.*)/);
+    if (!match) return;
+    animateCounter(el, parseInt(match[1], 10), match[2], 1800);
+    statObs.unobserve(el);
+  });
+}, { threshold: 0.6 });
+
+statNums.forEach(el => statObs.observe(el));
+
+
+/* ── IMPACT & RECOGNITION — scroll-driven card swap.
+   The whole .impact-inner is pinned (via .impact-pin sticky) for the duration
+   of the .impact-runway scroll. Header + stats + active card stay visible
+   together while scroll progress swaps which card is shown. ── */
+const impactRunway = document.getElementById('impact-runway');
+if (impactRunway) {
+  const recogCards = impactRunway.querySelectorAll('.phi-recog-grid.is-stacked .phi-recog-card');
+  let recogTicking = false;
+
+  function updateRecogStack() {
+    const rect       = impactRunway.getBoundingClientRect();
+    const wrapH      = impactRunway.offsetHeight;
+    const viewportH  = window.innerHeight;
+    const scrolledIn = -rect.top;
+    const runway     = wrapH - viewportH;
+    const progress   = Math.max(0, Math.min(1, scrolledIn / runway));
+
+    // Map progress [0, 1] to card index [0, n-1]
+    const activeIndex = Math.min(recogCards.length - 1, Math.floor(progress * recogCards.length));
+    recogCards.forEach((card, i) => card.classList.toggle('is-active', i === activeIndex));
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!recogTicking) {
+      requestAnimationFrame(() => { updateRecogStack(); recogTicking = false; });
+      recogTicking = true;
+    }
+  }, { passive: true });
+  window.addEventListener('resize', updateRecogStack, { passive: true });
+  updateRecogStack();
+}
+
+
+/* ── SOLAR-SYSTEM BREAKER — additive phase reveal on scroll into view.
+   1: chaos (scattered concept words drift across the viewport)
+   2: chaos fades, DESIGN orb scales in at center
+   3: orbit paths fade in (staggered), rings begin spinning
+   4: text overlay reveals + connection spokes draw + outer orbits + data pulses
+   ── */
+function bootSolarBreaker(el) {
+  if (!el) return;
+  const setPhase = (n, delay) => setTimeout(() => el.setAttribute('data-phase', String(n)), delay);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      setPhase(2, 1600);  // center orb scales in (chaos-layer removed)
+      setPhase(3, 3500);  // orbit paths fade in (staggered), rings start spinning
+      setPhase(4, 8000);  // text overlay + spokes + outer orbits + data pulses
+    });
+  }, { threshold: 0.3 });
+  io.observe(el);
+}
+bootSolarBreaker(document.getElementById('solar-breaker'));
+bootSolarBreaker(document.getElementById('ob-solar-breaker'));
+
+/* ── Solar-system label batch cycle.
+   Every 6s once rings are visible (phase ≥ 3), all 16 labels swap to the next
+   batch of 4 items from their ring's pool. Staggered fade-out → swap → fade-in. */
+const DIGITAL_POOLS = {
+  1: ['User Intent', 'Mental Models', 'Behavioral Signals', 'Decision Making', 'Trust', 'Motivation',
+      'Customer Needs', 'Human Factors', 'Jobs To Be Done', 'Problem Framing', 'Systems Thinking',
+      'Cognitive Load', 'User Research', 'Ethnography', 'Journey Mapping', 'Experience Mapping',
+      'Service Blueprinting', 'Information Architecture', 'Taxonomy', 'Content Strategy', 'Accessibility'],
+  2: ['Experience Architecture', 'Digital Product Design', 'Interaction Design', 'UX Design',
+      'Systems Design', 'Service Design', 'Product Strategy', 'Experience Strategy', 'Platform Design',
+      'Ecosystem Design', 'Cross-Platform Design', 'Omnichannel Experience', 'Design Leadership',
+      'Design Operations', 'AI Experience Design', 'Conversational Design', 'Behavior Design',
+      'Identity Systems', 'Journey Orchestration', 'Scalable Frameworks'],
+  3: ['User Flows', 'Wireframing', 'Prototyping', 'UI Design', 'Visual Systems', 'Design Systems',
+      'Component Libraries', 'Rapid Iteration', 'Design QA', 'Usability Testing', 'Analytics',
+      'Experimentation', 'A/B Testing', 'Product Requirements', 'Roadmapping', 'Cross-Functional Alignment',
+      'Stakeholder Management', 'Engineering Collaboration', 'Accessibility Standards',
+      'AI Integration', 'Launch Strategy'],
+  4: ['Customer Trust', 'Retention', 'Engagement', 'Adoption', 'Revenue', 'Business Impact',
+      'Operational Efficiency', 'Scalability', 'Platform Growth', 'Brand Loyalty',
+      'Customer Satisfaction', 'Reduced Friction', 'Proactive Experiences', 'Household Intelligence',
+      'Behavioral Insights', 'AI Readiness']
+};
+
+const OBJECT_POOLS = {
+  1: ['Ergonomics', 'Anthropometrics', 'Proportion', 'Balance', 'Form', 'Function', 'Materiality',
+      'Craft', 'Emotion', 'Behavior', 'Usability', 'Perception', 'Movement', 'Tactility', 'Comfort',
+      'Accessibility', 'Simplicity', 'Durability', 'Context'],
+  2: ['Industrial Design', 'Product Design', 'Furniture Design', 'Automotive Design', 'Jewelry Design',
+      'Consumer Products', 'Concept Design', 'Object Design', 'Lifestyle Products', 'Luxury Products',
+      'Physical Interfaces', 'Spatial Products', 'Wearables', 'Mobility Design', 'Future Concepts',
+      'Design Innovation'],
+  3: ['Sketching', 'Concept Development', 'Storyboarding', '3D Modeling', 'CAD', 'Rapid Prototyping',
+      'CMF', 'Material Selection', 'Manufacturing', 'Injection Molding', 'Production Design',
+      'Mechanical Integration', 'Packaging', 'Vendor Collaboration', 'Design Validation', 'Tooling',
+      'Quality Control'],
+  4: ['Brand Experience', 'Product Ecosystems', 'Physical-Digital Experiences', 'User Adoption',
+      'Emotional Connection', 'Behavior Change', 'Customer Delight', 'Premium Perception',
+      'Luxury Experience', 'Market Differentiation', 'Product Strategy', 'Design Leadership',
+      'Cross-Disciplinary Collaboration', 'Innovation', 'Future Vision', 'Cultural Relevance']
+};
+
+function startSolarLabelCycle(rootEl, POOLS) {
+  if (!rootEl) return;
+  const rings = {
+    1: rootEl.querySelectorAll('.ring-1 .label'),
+    2: rootEl.querySelectorAll('.ring-2 .label'),
+    3: rootEl.querySelectorAll('.ring-3 .label'),
+    4: rootEl.querySelectorAll('.ring-4 .label')
+  };
+  let cursor = 0;
+  let intervalId = null;
+
+  function tick() {
+    // Stagger the 16 labels so the batch swap feels like a wave, not a snap.
+    // Order: ring 1 → ring 4, each label offset 80ms within the wave.
+    let staggerIdx = 0;
+    for (let r = 1; r <= 4; r++) {
+      const pool = POOLS[r];
+      rings[r].forEach((labelEl, nodeIdx) => {
+        const startDelay = staggerIdx * 80;
+        staggerIdx++;
+        setTimeout(() => {
+          const idx = (cursor + nodeIdx) % pool.length;
+          labelEl.classList.add('is-swap');
+          setTimeout(() => {
+            labelEl.textContent = pool[idx];
+            labelEl.classList.remove('is-swap');
+          }, 600);  // matches CSS transition duration
+        }, startDelay);
+      });
+    }
+    cursor += 4;
+  }
+
+  function start() { if (!intervalId) { tick(); intervalId = setInterval(tick, 6000); } }
+  function stop()  { if (intervalId)  { clearInterval(intervalId); intervalId = null; } }
+
+  // Watch data-phase; start cycling at phase ≥ 3
+  const phaseObserver = new MutationObserver(() => {
+    if (parseInt(rootEl.getAttribute('data-phase'), 10) >= 3) start();
+  });
+  phaseObserver.observe(rootEl, { attributes: true, attributeFilter: ['data-phase'] });
+  // In case phase is already ≥ 3 when this runs
+  if (parseInt(rootEl.getAttribute('data-phase'), 10) >= 3) start();
+
+  // Pause when tab is hidden
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stop();
+    else if (parseInt(rootEl.getAttribute('data-phase'), 10) >= 3) start();
+  });
+}
+startSolarLabelCycle(document.getElementById('solar-breaker'),    DIGITAL_POOLS);
+startSolarLabelCycle(document.getElementById('ob-solar-breaker'), OBJECT_POOLS);
+
+
+/* ── HERO PARALLAX SETUP ── */
+const heroEl      = document.getElementById('hero');
+const pxMarquee   = document.querySelector('.hero-name-marquee');
+const pxPhotoWrap = document.querySelector('.hero-photo-wrap');
+const pxRole      = document.querySelector('.hero-role');
+const pxLoc       = document.querySelector('.hero-location');
+let pxPhotoReady  = false;
+let pxCornerReady = false;
+
+/* unlock each layer after its entry animation completes */
+document.querySelector('.hero-photo').addEventListener('animationend', () => { pxPhotoReady = true; });
+pxRole.addEventListener('animationend', () => { pxCornerReady = true; });
+/* fallbacks in case animationend doesn't fire (e.g. reduced-motion) */
+setTimeout(() => { pxPhotoReady  = true; }, 5000);
+setTimeout(() => { pxCornerReady = true; }, 2000);
+
+
+/* ── LOGO: return to top ── */
+document.querySelector('.nav-logo').addEventListener('click', e => {
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+
+/* ── MOBILE NAV ── */
+const burger = document.getElementById('nav-burger');
+const mobNav = document.getElementById('mob-nav');
+
+function toggleMobNav(force) {
+  const isOpen = force !== undefined ? force : !mobNav.classList.contains('open');
+  mobNav.classList.toggle('open', isOpen);
+  burger.classList.toggle('open', isOpen);
+  burger.setAttribute('aria-expanded', isOpen);
+  mobNav.setAttribute('aria-hidden', !isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+
+burger.addEventListener('click', () => toggleMobNav());
+
+/* Close on any link click inside overlay */
+mobNav.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => toggleMobNav(false));
+});
+
+/* Close on Escape */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && mobNav.classList.contains('open')) toggleMobNav(false);
+});
+
+
+/* ── CURSOR ── */
+const dot   = document.getElementById('cur-dot');
+const ring  = document.getElementById('cur-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx + 'px';
+  dot.style.top  = my + 'px';
+});
+
+(function lerp() {
+  rx += (mx - rx) * 0.1;
+  ry += (my - ry) * 0.1;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(lerp);
+})();
+
+/* State machine — set via data-cursor on body */
+function setCursorState(state) {
+  document.body.dataset.cursor = state;
+}
+
+document.addEventListener('mouseover', e => {
+  const t = e.target;
+  if (t.closest('input, textarea'))              return setCursorState('text');
+  if (t.closest('.work-card, .wsc-inner'))        return setCursorState('card');
+  if (t.matches('img') || t.closest('.hero-photo-wrap')) return setCursorState('image');
+  if (t.closest('a, button, [role="button"]'))   return setCursorState('hover');
+  setCursorState('default');
+});
+
+/* Press: scale ring down instantly, spring back */
+document.addEventListener('mousedown', () => {
+  ring.style.transition = 'transform 0.1s ease';
+  ring.style.transform  = 'translate(-50%, -50%) scale(0.85)';
+});
+document.addEventListener('mouseup', () => {
+  ring.style.transform  = '';
+  ring.style.transition = '';
+});
+
+/* Hide/show when cursor leaves/enters the page */
+document.documentElement.addEventListener('mouseleave', () => {
+  dot.style.opacity = '0'; ring.style.opacity = '0';
+});
+document.documentElement.addEventListener('mouseenter', () => {
+  dot.style.opacity = ''; ring.style.opacity = '';
+});
+
+
+/* ── SCROLL REVEAL ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('on');
+      /* draw-path elements removed, placeholder preserved for future SVG animations */
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+/* Tiles use a tighter trigger — must scroll the tile itself into view */
+const obsTile = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.15, rootMargin: '0px 0px -12% 0px' });
+
+document.querySelectorAll('.r:not(.r-late)').forEach(el => obs.observe(el));
+document.querySelectorAll('.r-late').forEach(el => obsTile.observe(el));
+
+
+
+/* ── TYPEWRITER ── */
+const roles = ['Principal Product Designer', 'Experience Architect'];
+let roleIdx = 0, charIdx = 0, deleting = false;
+const tw = document.getElementById('typewriter-text');
+
+function typeStep() {
+  const current = roles[roleIdx];
+  if (!deleting) {
+    tw.textContent = current.slice(0, ++charIdx);
+    if (charIdx === current.length) {
+      deleting = true;
+      setTimeout(typeStep, 2800);
+      return;
+    }
+  } else {
+    tw.textContent = current.slice(0, --charIdx);
+    if (charIdx === 0) {
+      deleting = false;
+      roleIdx = (roleIdx + 1) % roles.length;
+      setTimeout(typeStep, 550);
+      return;
+    }
+  }
+  setTimeout(typeStep, deleting ? 55 : 95);
+}
+setTimeout(typeStep, 550);
+
+
+/* ── CURSOR-REACTIVE ORBIT RINGS ── */
+const hero    = document.getElementById('hero');
+const orbit   = document.querySelector('.orbit');
+
+/* Drive rotation from JS so cursor proximity can influence it */
+const TWO_PI = Math.PI * 2;
+const SPEED1  = TWO_PI / (28 * 60);   /* 28s period @ 60fps */
+const SPEED2  = TWO_PI / (48 * 60);   /* 48s period @ 60fps */
+const APPROACH_R = 380;               /* px, cursor influence radius */
+
+let oA = 0, o2A = Math.PI;            /* start angles */
+
+function animOrbits() {
+  /* Orbit markup was removed from the hero — bail safely so nothing
+     downstream is blocked by a null.style access. */
+  if (!orbit || !hero) return;
+
+  const r = hero.getBoundingClientRect();
+  const cx = r.left + r.width  * 0.5;
+  const cy = r.top  + r.height * 0.5;
+
+  const dx   = mx - cx;
+  const dy   = my - cy;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  /* Ease in/out influence, 0 when far, up to 0.92 slowdown at center */
+  const influence  = Math.max(0, 1 - dist / APPROACH_R);
+  const speedMod   = 1 - influence * 0.92;
+
+  oA  +=  SPEED1 * speedMod;
+  o2A -= SPEED2 * speedMod;
+
+  const deg1 = (oA  * 180 / Math.PI);
+  const deg2 = (o2A * 180 / Math.PI);
+
+  orbit.style.transform  = `translate(-50%, -50%) rotate(${deg1}deg)`;
+
+  requestAnimationFrame(animOrbits);
+}
+
+animOrbits();
+
+
+/* ── ACTIVE NAV SECTION TRACKING ── */
+const navLinks = document.querySelectorAll('.nav-links a');
+
+const sectionNavGroup = {
+  'principles': 'philosophy',
+  'how-i-work': 'philosophy',
+  'impact': 'work'
+};
+
+const sectionObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const navId = sectionNavGroup[e.target.id] || e.target.id;
+      const match = document.querySelector(`.nav-links a[href="#${navId}"]`);
+      if (match) match.classList.add('active');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('section[id]').forEach(s => sectionObs.observe(s));
+
+
+/* ── NAV COLOR — getBoundingClientRect, runs on every scroll ── */
+(function () {
+  var nav = document.getElementById('nav');
+  var backTop = document.getElementById('back-top');
+  if (!nav) return;
+
+  function updateNavColor() {
+    var navH = nav.offsetHeight + 2;
+    var isDark = false;
+    var onHeroPhoto = false;
+
+    /* Sections with dark backgrounds — nav reads white here */
+    ['hero', 'philosophy', 'work', 'object', 'contact'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      var r = el.getBoundingClientRect();
+      if (r.top < navH && r.bottom > 0) isDark = true;
+    });
+
+    /* Gallery full-bleed overlay = dark image fills frame */
+    var galOverlay = document.getElementById('gal-overlay');
+    if (galOverlay && galOverlay.classList.contains('visible')) isDark = true;
+
+    /* Hero specifically — for the text-shadow boost on top of the photo */
+    var heroEl = document.getElementById('hero');
+    if (heroEl) {
+      var rHero = heroEl.getBoundingClientRect();
+      if (rHero.top < navH && rHero.bottom > 0) onHeroPhoto = true;
+    }
+
+    nav.classList.toggle('nav--light', isDark);
+    nav.classList.toggle('nav--on-photo', onHeroPhoto);
+  }
+
+  window.addEventListener('scroll', updateNavColor, { passive: true });
+
+  /* Also re-run when the hero intro's phase changes (scroll is locked
+     during the intro sequence, so scroll-based recompute alone wouldn't
+     pick up the phase 1 → 2 → 3 background swap). */
+  var introEl = document.getElementById('hero-intro');
+  if (introEl) {
+    new MutationObserver(updateNavColor).observe(introEl, {
+      attributes: true,
+      attributeFilter: ['data-phase']
+    });
+  }
+
+  updateNavColor();
+}());
+
+
+/* ── BACK TO TOP ── */
+(function () {
+  var btn = document.getElementById('back-top');
+  if (!btn) return;
+  window.addEventListener('scroll', function () {
+    btn.classList.toggle('visible', window.scrollY > 500);
+  }, { passive: true });
+  btn.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}());
+
+/* ── BACK TO TOP — adaptive icon color via bg-luminance sniffer ── */
+(function () {
+  var bt = document.getElementById('back-top');
+  if (!bt) return;
+  function lum(rgb) {
+    var m = (rgb || '').match(/\d+(\.\d+)?/g);
+    if (!m || m.length < 3) return 1;
+    var r = +m[0]/255, g = +m[1]/255, b = +m[2]/255;
+    return 0.2126*r + 0.7152*g + 0.0722*b;
+  }
+  function detect() {
+    var r = bt.getBoundingClientRect();
+    var els = document.elementsFromPoint(r.left + r.width/2, r.top + r.height/2);
+    var el = null;
+    for (var i = 0; i < els.length; i++) {
+      if (els[i] !== bt && !bt.contains(els[i])) { el = els[i]; break; }
+    }
+    var bg = null;
+    while (el && el !== document.documentElement) {
+      var c = getComputedStyle(el).backgroundColor;
+      if (c && c !== 'rgba(0, 0, 0, 0)' && c !== 'transparent') { bg = c; break; }
+      el = el.parentElement;
+    }
+    if (!bg) bg = getComputedStyle(document.body).backgroundColor || 'rgb(255,255,255)';
+    bt.classList.toggle('btn--on-dark', lum(bg) < 0.5);
+  }
+  var pending = false;
+  function schedule() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(function () { pending = false; detect(); });
+  }
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  setTimeout(detect, 50);
+}());
+
+
+/* ── COPY EMAIL ── */
+(function () {
+  const btn = document.querySelector('.cz-copy-btn');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    var email = 'refaelima.work@gmail.com';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(email).then(function () { flashCopied(btn); });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = email;
+      ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      flashCopied(btn);
+    }
+  });
+  function flashCopied(b) {
+    b.classList.add('copied');
+    setTimeout(function () { b.classList.remove('copied'); }, 2000);
+  }
+}());
+
+/* ── DOT GRID CANVAS RIPPLE — shared by contact & work intro ── */
+(function () {
+  function initDotRipple(section) {
+    var canvas = section && section.querySelector('.cz-canvas');
+    if (!canvas) return;
+
+    /* Touch devices: fall back to static CSS dot grid */
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      canvas.style.display = 'none';
+      var sd = section.querySelector('.cz-dots-static');
+      if (sd) sd.style.display = 'block';
+      return;
+    }
+
+    /* Desktop: canvas handles dots — remove CSS background dots */
+    section.style.backgroundImage = 'none';
+
+    var ctx = canvas.getContext('2d');
+    var SPACING = 32, DOT_R = 1.5;
+    var DOT_COLOR = 'rgba(255,255,255,0.10)';
+    var RIPPLE_RADIUS = 150, MAX_DISPLACE = 18, LERP = 0.12;
+    var W, H, dots = [];
+    var mx = -9999, my = -9999;
+
+    function buildGrid() {
+      W = canvas.width  = section.offsetWidth;
+      H = canvas.height = section.offsetHeight;
+      var cols = Math.ceil(W / SPACING) + 1;
+      var rows = Math.ceil(H / SPACING) + 1;
+      dots = [];
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          dots.push({ bx: c * SPACING, by: r * SPACING, ox: 0, oy: 0 });
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.beginPath();
+      ctx.fillStyle = DOT_COLOR;
+      for (var i = 0; i < dots.length; i++) {
+        var d  = dots[i];
+        var dx = d.bx - mx, dy = d.by - my;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        var tx = 0, ty = 0;
+        if (dist < RIPPLE_RADIUS && dist > 0) {
+          var str = (RIPPLE_RADIUS - dist) / RIPPLE_RADIUS * MAX_DISPLACE;
+          tx = -(dx / dist) * str;
+          ty = -(dy / dist) * str;
+        }
+        d.ox += (tx - d.ox) * LERP;
+        d.oy += (ty - d.oy) * LERP;
+        var x = d.bx + d.ox, y = d.by + d.oy;
+        ctx.moveTo(x + DOT_R, y);
+        ctx.arc(x, y, DOT_R, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      requestAnimationFrame(draw);
+    }
+
+    buildGrid();
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(buildGrid, 150);
+    });
+
+    section.addEventListener('mousemove', function (e) {
+      var rect = section.getBoundingClientRect();
+      mx = e.clientX - rect.left;
+      my = e.clientY - rect.top;
+    });
+
+    section.addEventListener('mouseleave', function () {
+      mx = -9999; my = -9999;
+    });
+
+    draw();
+  }
+
+  initDotRipple(document.querySelector('.contact-zone'));
+}());
+
+/* ── WORK — sticky scroll: breaker phase + card stack ── */
+(function () {
+  var stage   = document.getElementById('work');
+  var sticky  = document.getElementById('work-sticky');
+  var breaker = document.getElementById('wsb-breaker');
+  var orbsEl  = document.getElementById('work-orbs');
+  if (!stage || !sticky) return;
+
+  var cards = Array.from(sticky.querySelectorAll('.wsc-card'));
+  var N = cards.length;
+  var vh, stageTop, BREAKER_HOLD, BREAKER_FADE, BREAKER_PER, PER, HOLD, TOTAL;
+
+  function calcMetrics() {
+    vh           = window.innerHeight;
+    stageTop     = stage.getBoundingClientRect().top + window.scrollY;
+    BREAKER_HOLD = vh * 0.5;   /* stay fully visible before fade */
+    BREAKER_FADE = vh * 0.75;  /* fade duration */
+    BREAKER_PER  = BREAKER_HOLD + BREAKER_FADE;
+    PER          = vh * 1.3;   /* scroll budget per card */
+    HOLD         = vh * 0.55;  /* linger on last card */
+    TOTAL        = BREAKER_PER + (N - 1) * PER + HOLD;
+    stage.style.height = (vh + TOTAL) + 'px';
+  }
+
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+  function lerpN(a, b, t)   { return a + (b - a) * clamp(t, 0, 1); }
+  function ease(t)           { return 1 - Math.pow(1 - clamp(t, 0, 1), 3); }
+
+  var ENTER = 0.5;
+  var EXIT  = 0.72;
+
+  function setBreaker(opacity) {
+    if (!breaker) return;
+    breaker.style.opacity = opacity;
+    breaker.style.pointerEvents = opacity < 0.05 ? 'none' : 'auto';
+  }
+
+  function render() {
+    var scrolled = window.scrollY - stageTop;
+
+    /* ── Before stage ── */
+    if (scrolled < 0) {
+      setBreaker(1);
+      if (orbsEl) orbsEl.style.opacity = '0';
+      cards.forEach(function (c) {
+        c.style.opacity = '0';
+        c.style.transform = 'translateY(100vh) scale(1)';
+        c.style.pointerEvents = 'none';
+      });
+      return;
+    }
+
+    /* ── After all ── */
+    if (scrolled > TOTAL) {
+      setBreaker(0);
+      if (orbsEl) orbsEl.style.opacity = '1';
+      cards.forEach(function (c, i) {
+        var isLast = i === N - 1;
+        c.style.opacity       = isLast ? '1' : '0';
+        c.style.transform     = 'translateY(0) scale(1)';
+        c.style.zIndex        = isLast ? N : i;
+        c.style.pointerEvents = isLast ? 'auto' : 'none';
+      });
+      return;
+    }
+
+    /* ── Breaker phase ── */
+    /* bFadeT is 0 during the hold, then 0→1 over the fade window */
+    var bFadeT = clamp((scrolled - BREAKER_HOLD) / BREAKER_FADE, 0, 1);
+    var bEase  = ease(bFadeT);
+    setBreaker(lerpN(1, 0, bEase));
+    if (orbsEl) orbsEl.style.opacity = bEase;
+
+    /* Card 0 slides up during the second half of the fade */
+    var c0T = ease(clamp((bFadeT - 0.45) / 0.55, 0, 1));
+
+    if (scrolled < BREAKER_PER) {
+      cards.forEach(function (card, i) {
+        if (i === 0) {
+          card.style.opacity      = c0T;
+          card.style.transform    = 'translateY(' + lerpN(100, 0, c0T) + 'vh) scale(1)';
+          card.style.zIndex       = '5';
+          card.style.pointerEvents = c0T > 0.95 ? 'auto' : 'none';
+        } else {
+          card.style.opacity      = '0';
+          card.style.transform    = 'translateY(100vh) scale(1)';
+          card.style.zIndex       = N + i;
+          card.style.pointerEvents = 'none';
+        }
+      });
+      return;
+    }
+
+    /* ── Card phase ── */
+    var scrolledCards = scrolled - BREAKER_PER;
+    var p = clamp(scrolledCards / PER, 0, N - 1);
+
+    cards.forEach(function (card, i) {
+      var opacity, scale, ty, zi;
+
+      if (i === 0) {
+        var xT = ease(clamp(p / EXIT, 0, 1));
+        opacity = lerpN(1, 0,    xT);
+        scale   = lerpN(1, 0.93, xT);
+        ty      = 0;
+        zi      = p < EXIT ? 5 : 1;
+      } else {
+        var eStart = i - ENTER;
+        var eT     = ease(clamp((p - eStart) / ENTER, 0, 1));
+        var xStart = i;
+        var xT2    = ease(clamp((p - xStart)  / EXIT,  0, 1));
+
+        if (p < eStart) {
+          opacity = 0; scale = 1; ty = 100; zi = N + i;
+        } else if (p < i) {
+          opacity = eT; scale = 1; ty = lerpN(100, 0, eT); zi = N + i;
+        } else if (i === N - 1) {
+          opacity = 1; scale = 1; ty = 0; zi = N + i;
+        } else {
+          opacity = lerpN(1, 0,    xT2);
+          scale   = lerpN(1, 0.93, xT2);
+          ty      = 0;
+          zi      = i;
+        }
+      }
+
+      card.style.opacity      = opacity;
+      card.style.zIndex       = zi;
+      card.style.transform    = 'translateY(' + ty + 'vh) scale(' + scale + ')';
+      card.style.pointerEvents = opacity < 0.05 ? 'none' : 'auto';
+    });
+  }
+
+  calcMetrics();
+  render();
+  window.addEventListener('scroll', render, { passive: true });
+  window.addEventListener('resize', function () { calcMetrics(); render(); });
+}());
+
+
+/* ── WORK CARDS — full-card click ── */
+(function () {
+  document.querySelectorAll('.wsc-card').forEach(function (card) {
+    var href = card.dataset.href;
+    if (!href) return;
+    card.style.cursor = 'none';
+    card.addEventListener('click', function (e) {
+      if (e.target.closest('a, button')) return;
+      window.location.href = href;
+    });
+  });
+}());
+
+
+/* ── OBJECT GALLERY — sticky scroll, book-flip transitions ── */
+(function () {
+  /* ── Slide metadata ── */
+  var SLIDES = [
+    { title: 'LEIRA\nLOUNGE\nCHAIR',              year: '2016', awards: true  },
+    { title: 'NIKE\nAIR',                          year: '2019', awards: false },
+    { title: 'FILICO\nLUXURY\nWATER',              year: '2015', awards: false },
+    { title: 'ACCIAIO DOLCE\nTOPOLOGY\nJEWELRY',  year: '2017', awards: false },
+    { title: 'PILOT\nHELMET',                      year: '2014', awards: false },
+    { title: 'WALDEN\nFLOOR\nCHAIR',               year: '2017', awards: false },
+    { title: 'LAXMI',                              year: '2014', awards: false },
+    { title: 'ADIDAS\nY-3 NEUE',                   year: '2016', awards: false },
+  ];
+
+  var stage   = document.getElementById('object');
+  var breaker = document.getElementById('ob-breaker');
+  var slides  = stage ? Array.from(stage.querySelectorAll('.gal-slide')) : [];
+  var escape  = document.getElementById('gallery-escape');
+  var overlay = document.getElementById('gal-overlay');
+  var prevBtn = stage && stage.querySelector('.gal-prev');
+  var nextBtn = stage && stage.querySelector('.gal-next');
+  var goYear  = document.getElementById('go-year');
+  var goTitle = document.getElementById('go-title');
+  var goAwards = document.getElementById('go-awards');
+  var goDots  = document.getElementById('go-dots') ?
+                Array.from(document.getElementById('go-dots').querySelectorAll('.go-dot')) : [];
+  var goIdxCur = document.getElementById('go-idx-cur');
+
+  if (!stage || slides.length === 0) return;
+
+  var N = slides.length; // 8
+
+  var vh, stageTop, BREAKER_HOLD, BREAKER_FADE, BREAKER_PER, LEIRA_HOLD, PER, HOLD, TOTAL;
+
+  function calcMetrics() {
+    vh           = window.innerHeight;
+    stageTop     = stage.getBoundingClientRect().top + window.scrollY;
+    BREAKER_HOLD = vh * 0.5;
+    BREAKER_FADE = vh * 0.75;
+    BREAKER_PER  = BREAKER_HOLD + BREAKER_FADE;
+    LEIRA_HOLD   = vh * 0.6;
+    PER          = vh * 1.1;
+    HOLD         = vh * 0.65;
+    TOTAL        = BREAKER_PER + LEIRA_HOLD + (N - 1) * PER + HOLD;
+    stage.style.height = (vh + TOTAL) + 'px';
+  }
+
+  function toP(scrolledGal) {
+    var g = scrolledGal - LEIRA_HOLD;
+    if (g < 0) return 0;
+    if (g >= (N - 1) * PER) return N - 1;
+    return clamp(g / PER, 0, N - 1);
+  }
+
+  function slideScrollPos(idx) {
+    return LEIRA_HOLD + idx * PER;
+  }
+
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+  function lerpC(a, b, t)   { return a + (b - a) * clamp(t, 0, 1); }
+  function pad(n)            { return n < 10 ? '0' + n : '' + n; }
+
+  function ease(t) {
+    t = clamp(t, 0, 1);
+    return 1 - Math.pow(1 - t, 4);
+  }
+
+  var lastP = -1;
+  var lastActive = -1;
+
+  function fadeSwap(el, updateFn) {
+    if (!el) return;
+    el.style.transition = 'opacity 0.15s ease';
+    el.style.opacity = '0';
+    setTimeout(function () {
+      updateFn();
+      el.style.opacity = '1';
+    }, 150);
+  }
+
+  function animateTitle(el, text) {
+    if (!el) return;
+    var lines = text.split('\n');
+    el.innerHTML = lines.map(function (line, i) {
+      return '<span class="go-tl"><span class="go-tw" style="transition-delay:' +
+             (i * 0.13) + 's">' + line + '</span></span>';
+    }).join('');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        el.querySelectorAll('.go-tw').forEach(function (w) { w.classList.add('in'); });
+      });
+    });
+  }
+
+  function syncOverlay(activeIdx) {
+    if (activeIdx === lastActive) return;
+    lastActive = activeIdx;
+    var slide = SLIDES[activeIdx];
+    if (!slide) return;
+    fadeSwap(goYear, function () { if (goYear) goYear.textContent = slide.year; });
+    animateTitle(goTitle, slide.title);
+    if (goAwards) goAwards.classList.toggle('active', slide.awards);
+    fadeSwap(goIdxCur, function () { if (goIdxCur) goIdxCur.textContent = pad(activeIdx + 1); });
+    goDots.forEach(function (dot, i) { dot.classList.toggle('active', i === activeIdx); });
+    if (prevBtn) prevBtn.disabled = (activeIdx === 0);
+    if (nextBtn) nextBtn.disabled = (activeIdx === N - 1);
+  }
+
+  function render() {
+    var scrolled    = window.scrollY - stageTop;
+    var scrolledGal = scrolled - BREAKER_PER;
+
+    /* Breaker phase — hold then fade */
+    var bFadeT = clamp((scrolled - BREAKER_HOLD) / BREAKER_FADE, 0, 1);
+    if (breaker) {
+      breaker.style.opacity = lerpC(1, 0, ease(bFadeT));
+      breaker.style.pointerEvents = bFadeT > 0.9 ? 'none' : 'auto';
+    }
+
+    /* Overlay fades in as breaker fades — content arrives with LEIRA, not after */
+    var inGallery = bFadeT > 0.5 && scrolled <= TOTAL;
+    if (overlay) overlay.classList.toggle('visible', inGallery);
+
+    /* During breaker phase: slides at initial rest */
+    if (scrolledGal < 0) {
+      slides.forEach(function (slide, i) {
+        slide.style.zIndex    = i === 0 ? '0' : String(i);
+        slide.style.transform = 'translateX(' + (i === 0 ? 0 : 100) + '%)';
+      });
+      return;
+    }
+
+    var p = toP(scrolledGal);
+    if (Math.abs(p - lastP) < 0.0003) return;
+    lastP = p;
+
+    var activeIdx = clamp(Math.round(p), 0, N - 1);
+    syncOverlay(activeIdx);
+
+    slides.forEach(function (slide, i) {
+      var tx, z;
+      if (i === 0) {
+        tx = 0; z = 0;
+      } else if (p < i - 1) {
+        tx = 100; z = i;
+      } else if (p < i) {
+        tx = lerpC(100, 0, ease(p - (i - 1)));
+        z = N + i;
+      } else {
+        tx = 0; z = i;
+      }
+      slide.style.zIndex    = z;
+      slide.style.transform = 'translateX(' + tx + '%)';
+    });
+  }
+
+  function goTo(idx) {
+    idx = clamp(idx, 0, N - 1);
+    window.scrollTo({ top: stageTop + BREAKER_PER + slideScrollPos(idx), behavior: 'smooth' });
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', function () {
+    goTo(clamp(Math.round(lastP) - 1, 0, N - 1));
+  });
+  if (nextBtn) nextBtn.addEventListener('click', function () {
+    goTo(clamp(Math.round(lastP) + 1, 0, N - 1));
+  });
+
+  goDots.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      goTo(parseInt(dot.dataset.idx, 10));
+    });
+  });
+
+  calcMetrics();
+  /* Slide 0 (LEIRA) seeded at final state — no animation — so text is present the moment overlay fades in */
+  (function () {
+    var s0 = SLIDES[0];
+    if (goYear)    goYear.textContent = s0.year;
+    if (goIdxCur)  goIdxCur.textContent = '01';
+    if (goAwards)  goAwards.classList.toggle('active', s0.awards);
+    if (prevBtn)   prevBtn.disabled = true;
+    if (nextBtn)   nextBtn.disabled = (N === 1);
+    goDots.forEach(function (d, i) { d.classList.toggle('active', i === 0); });
+    if (goTitle) {
+      var lines = s0.title.split('\n');
+      goTitle.innerHTML = lines.map(function (line, i) {
+        return '<span class="go-tl"><span class="go-tw in" style="transition-delay:' + (i * 0.13) + 's">' + line + '</span></span>';
+      }).join('');
+    }
+    lastActive = 0;
+  }());
+  render();
+  window.addEventListener('scroll', render, { passive: true });
+  window.addEventListener('resize', function () { calcMetrics(); lastP = -1; render(); });
+}());
+
+
+/* ── WORK DROPDOWN — align right edge to CONTACT's right edge ── */
+(function alignDropdownToContact() {
+  var contact     = document.querySelector('.nav-links a[href="#contact"]');
+  var dropdown    = document.querySelector('.nav-dropdown');
+  var dropdownLi  = dropdown ? dropdown.parentElement : null;
+  if (!contact || !dropdown || !dropdownLi) return;
+
+  function reposition() {
+    var contactRect = contact.getBoundingClientRect();
+    var parentRect  = dropdownLi.getBoundingClientRect();
+    /* CSS `right` is the distance from the containing block's right edge
+       to the element's right edge (positive = element shifted left).
+       We want the dropdown's right edge at contactRect.right, so:
+         dropdownRight - rightOffset = contactRect.right
+         rightOffset = parentRect.right - contactRect.right
+       Since CONTACT is to the right of WORK, this comes out negative,
+       which shifts the dropdown's right edge to the right of its parent. */
+    var rightOffset = parentRect.right - contactRect.right;
+    dropdownLi.style.setProperty('--nav-dropdown-right', rightOffset + 'px');
+  }
+
+  reposition();
+  window.addEventListener('resize', reposition);
+  /* Also recompute when fonts settle / nav reflows. */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(reposition).catch(function () {});
+  }
+}());
+
+
+/* ── MAGNETIC BUTTONS ── */
+/* Only top-level nav links (direct children of .nav-links > li) get the
+   magnetic pull. Excludes the dropdown card anchors so they stay static. */
+const magnetEls = [
+  ...document.querySelectorAll('.nav-links > li > a'),
+  ...document.querySelectorAll('.cz-book-btn, .cz-li-btn, .cz-resume-btn')
+];
+
+magnetEls.forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const r  = el.getBoundingClientRect();
+    const dx = (e.clientX - (r.left + r.width  / 2)) * 0.30;
+    const dy = (e.clientY - (r.top  + r.height / 2)) * 0.30;
+    el.style.transition = 'transform 0.08s ease';
+    el.style.transform  = `translate(${dx}px, ${dy}px)`;
+  });
+  el.addEventListener('mouseleave', () => {
+    el.style.transition = 'transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    el.style.transform  = '';
+  });
+});
+
+
+/* ── LINE SLIDE-UP REVEAL ── */
+function splitLines(el) {
+  // Base delay from d1/d2/d3 stagger class
+  const base = el.classList.contains('d3') ? 0.25
+             : el.classList.contains('d2') ? 0.15
+             : el.classList.contains('d1') ? 0.08
+             : 0;
+
+  // Split at <br> — preserve all inline HTML (em, strong…) within each line
+  const parts = el.innerHTML.split(/<br\s*\/?>/i);
+
+  el.innerHTML = parts.map((part, i) =>
+    `<span class="line-wrap"><span class="line-inner" style="transition-delay:${(base + i * 0.13).toFixed(3)}s">${part.trim()}</span></span>`
+  ).join('');
+
+  el.classList.add('line-split');
+}
+
+document.querySelectorAll('h2.st, h2.st-d').forEach(splitLines);
+
+
+</script>
+
+</body>
+</html>

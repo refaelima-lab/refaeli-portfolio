@@ -217,13 +217,17 @@ ol {
   background: rgba(255, 255, 255, 0.38);
 }
 
-/* CS page section label — same scale as .ch, no clip-path animation */
+/* CS page section label — matches body.v2-home .proj-card-type so
+   eyebrows read as the same component class as the home project cards.
+   Color flips by bg via .bg-dark .sec-ch (below) so the same markup
+   works on both light and dark sections — no inline overrides needed. */
 .sec-ch {
-  font-size: var(--text-caption);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--tracking-kicker);
+  font-size: 9pt;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
-  color: var(--accent-mid);
+  color: rgba(0, 0, 0, 0.78);
+  line-height: 1;
   margin-bottom: var(--gap-eyebrow);
   display: flex;
   align-items: center;
@@ -235,60 +239,85 @@ ol {
   display: block;
   height: 1.5px;
   width: var(--kicker-rule-width);
-  background: var(--accent-mid-a25);
+  background: rgba(0, 0, 0, 0.16);
   flex-shrink: 0;
 }
 
-/* Section headings — light surface */
+/* Eyebrow on dark sections — inverts to white at the same opacity. */
+.bg-dark .sec-ch {
+  color: rgba(255, 255, 255, 0.78);
+}
+.bg-dark .sec-ch::after {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Section headings — sentence-case, matches body.v2-home .hiw-v2-title /
+   .impact-v2-title / .breaker-v2-title exactly:
+     thin (200) base, italic em at light (300) weight (so the em reads
+     "slightly bolder" than the surrounding thin text), 1.1 leading,
+     -0.012em tracking, and the same clamped size. Color inherits
+     through em so no purple accent leaks in. */
 h2.st {
-  font-family: var(--font-serif);
-  font-size: var(--text-heading);
-  font-weight: var(--weight-regular);
+  font-family: var(--font-sans);
+  font-size: clamp(28pt, 4.4vw, 56pt);
+  font-weight: var(--weight-thin);
   color: var(--ink);
-  line-height: var(--leading-heading);
-  margin-bottom: var(--gap-heading);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  margin: 0 0 clamp(1rem, 2vh, 1.4rem);
 }
 
 h2.st em {
   font-style: italic;
-  color: var(--accent);
+  font-weight: var(--weight-light);
+  color: inherit;
 }
 
-/* Section headings — dark surface */
+/* Section headings — dark surface. Same recipe, white color. */
 h2.st-d {
-  font-family: var(--font-serif);
-  font-size: var(--text-heading);
-  font-weight: var(--weight-regular);
+  font-family: var(--font-sans);
+  font-size: clamp(28pt, 4.4vw, 56pt);
+  font-weight: var(--weight-thin);
   color: #fff;
-  line-height: var(--leading-heading);
-  margin-bottom: var(--gap-heading);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  margin: 0 0 clamp(1rem, 2vh, 1.4rem);
 }
 
 h2.st-d em {
   font-style: italic;
-  color: var(--accent-mid);
+  font-weight: var(--weight-light);
+  color: inherit;
 }
 
-/* Body paragraph — light surface */
+/* Body paragraph — light surface.
+   Matches body.v2-home .proj-card-body: same clamp size, regular weight,
+   1.6 line-height, -0.012em tracking, and the same 82%-opacity ink so
+   the case-study blurbs read as the same component class as the home
+   project cards. .bp-d below mirrors with white at the same opacity. */
 .bp {
-  font-size: var(--text-body);
-  font-weight: var(--weight-light);
-  color: var(--ink-mid);
-  line-height: var(--leading-spacious);
+  font-family: var(--font-sans);
+  font-size: clamp(11pt, 1vw, 13.5pt);
+  font-weight: var(--weight-regular);
+  color: rgba(0, 0, 0, 0.82);
+  line-height: 1.6;
+  letter-spacing: -0.012em;
   margin-bottom: var(--gap-body);
 }
 
 .bp strong {
   font-weight: var(--weight-medium);
-  color: var(--ink);
+  color: #000;
 }
 
 /* Body paragraph — dark surface */
 .bp-d {
-  font-size: var(--text-body);
-  font-weight: var(--weight-light);
-  color: var(--white-a60);
-  line-height: var(--leading-spacious);
+  font-family: var(--font-sans);
+  font-size: clamp(11pt, 1vw, 13.5pt);
+  font-weight: var(--weight-regular);
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.6;
+  letter-spacing: -0.012em;
   margin-bottom: var(--gap-body);
 }
 
@@ -456,12 +485,14 @@ nav.scrolled {
    (.nav-dropdown a, deeper in the tree) don't inherit the white color
    and stay readable against the dropdown's white panel. */
 nav.nav--light .nav-logo,
-nav.nav--light .nav-links > li > a {
+nav.nav--light .nav-links > li > a,
+nav.nav--light .nav-back {
   color: #fff;
 }
 
 nav.nav--light .nav-logo:hover,
-nav.nav--light .nav-links > li > a:hover {
+nav.nav--light .nav-links > li > a:hover,
+nav.nav--light .nav-back:hover {
   color: #fff;
 }
 
@@ -500,17 +531,20 @@ nav.nav--on-photo .nav-links > li > a {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  /* Typography + color default both match .nav-links a so PORTFOLIO
+     behaves like Work/Object/Contact on the home: solid dark on light
+     bg, then flipped to #fff by `nav.nav--light .nav-back` on dark
+     sections. No separate `nav.scrolled` override needed — once the
+     scroll handler drops .nav--light past the hero, this default takes
+     over and the link reads dark on the light content below. */
   font-size: var(--text-caption);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--tracking-widest);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
-  color: var(--white-a45);
+  /* Pure #000 — --ink (#181820) reads as dark grey at small sizes. */
+  color: #000;
   text-decoration: none;
   transition: var(--transition-color);
-}
-
-nav.scrolled .nav-back {
-  color: var(--ink-light);
 }
 
 .nav-back:hover {
@@ -4953,6 +4987,16 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   overflow: hidden;
 }
 
+/* When the .cta-sec opts into the interactive dot-grid background
+   (data-bg="dot-grid"), hide the static `.cta-d` (dotted backdrop) and
+   `.cta-g` (radial glow) so they don't fight the new GSAP canvas.
+   Mirrors the `.contact-zone[data-bg] .cz-canvas, .cz-dots-static,
+   .cz-glow { display: none }` pattern on the home. */
+.cta-sec[data-bg] .cta-d,
+.cta-sec[data-bg] .cta-g {
+  display: none !important;
+}
+
 .cta-d {
   position: absolute;
   inset: 0;
@@ -4972,24 +5016,37 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
   pointer-events: none;
 }
 
+/* Matches body.v2-home .proj-card-title — same clamp size, thin base
+   weight, semibold strong, -0.012em tracking, 1.1 leading. */
 .cta-title {
-  font-family: var(--font-serif);
-  font-size: clamp(20pt, 3vw, 30pt);
+  font-family: var(--font-sans);
+  font-size: clamp(28pt, 4.4vw, 56pt);
+  font-weight: var(--weight-thin);
   color: #fff;
-  margin-bottom: 0.9rem;
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  margin-bottom: clamp(1rem, 2vh, 1.4rem);
   position: relative;
   z-index: 2;
+  text-transform: uppercase;
+}
+
+.cta-title strong {
+  font-weight: var(--weight-semibold);
 }
 
 .cta-title em {
   font-style: italic;
-  color: var(--accent-mid);
+  color: inherit;
 }
 
 .cta-sub {
-  font-size: 9.5pt;
-  font-weight: var(--weight-light);
-  color: var(--white-a38);
+  font-family: var(--font-sans);
+  font-size: clamp(11pt, 1vw, 13.5pt);
+  font-weight: var(--weight-regular);
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.6;
+  letter-spacing: -0.012em;
   margin-bottom: 2.5rem;
   position: relative;
   z-index: 2;
@@ -5630,59 +5687,77 @@ p.bp.r.on, p.bp-d.r.on, .phi-body.r.on, .phi-pullquote.r.on {
    Use in case studies and long-form sections.
    ──────────────────────────────────────────────────────── */
 
+/* Pullquote — purple border + accent-soft background were swapped for
+   a neutral semitransparent black so the quote reads as a quiet inset
+   block instead of a colored pop. Typography follows the v2 thin-base
+   pattern; em wears bold (700) to highlight the key phrase. */
 .pullquote {
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid rgba(0, 0, 0, 0.18);
   padding: 1.25rem 2rem;
-  background: var(--accent-soft);
+  background: rgba(0, 0, 0, 0.03);
   margin: 3rem 0;
   border-radius: 0 var(--radius-card) var(--radius-card) 0;
 }
 
 .pullquote p {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: clamp(13pt, 1.8vw, 18pt);
   font-style: italic;
-  color: var(--ink-mid);
+  color: rgba(0, 0, 0, 0.82);
   line-height: var(--leading-quote);
-  font-weight: var(--weight-regular);
+  font-weight: var(--weight-thin);
+  letter-spacing: -0.012em;
+}
+.pullquote em,
+.pullquote strong {
+  font-weight: 700;
+  font-style: italic;
+  color: inherit;
 }
 
 .pullquote cite {
   display: block;
   font-size: var(--text-nano);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--tracking-label);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
-  color: var(--accent-mid);
+  color: rgba(0, 0, 0, 0.55);
   margin-top: 0.75rem;
   font-style: normal;
 }
 
 /* Dark variant — for use inside dark sections */
 .pullquote-d {
-  border-left: 3px solid var(--accent-mid);
+  border-left: 3px solid rgba(255, 255, 255, 0.22);
   padding: 1.25rem 2rem;
-  background: var(--accent-a08);
+  background: rgba(255, 255, 255, 0.04);
   margin: 3rem 0;
   border-radius: 0 var(--radius-card) var(--radius-card) 0;
 }
 
 .pullquote-d p {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: clamp(13pt, 1.8vw, 18pt);
   font-style: italic;
-  color: var(--white-a60);
+  color: rgba(255, 255, 255, 0.82);
   line-height: var(--leading-quote);
-  font-weight: var(--weight-regular);
+  font-weight: var(--weight-thin);
+  letter-spacing: -0.012em;
+}
+.pullquote-d em,
+.pullquote-d strong {
+  font-weight: 700;
+  font-style: italic;
+  color: inherit;
 }
 
 .pullquote-d cite {
   display: block;
   font-size: var(--text-nano);
-  font-weight: var(--weight-semibold);
-  letter-spacing: var(--tracking-label);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
-  color: var(--accent-mid);
+  color: rgba(255, 255, 255, 0.55);
   margin-top: 0.75rem;
   font-style: normal;
 }
@@ -6931,6 +7006,86 @@ body.cursor-in-iframe #cur-ring {
   transition: opacity 0.18s ease;
 }
 
+/* Hide the custom cursor until JS has captured a real mouse position
+   via the first mousemove. Prevents a "frozen at 0,0" artifact when
+   the page loads with the cursor already over a cross-origin iframe
+   (no mousemove ever fires on the parent in that case).
+
+   Scoped to .v2-home because that's the only page with the hero-position
+   Spline iframe the gate exists for. Sub case-study pages don't set
+   `cursor-ready` from their mousemove handlers; leaving this global
+   pinned their custom cursors at opacity 0 forever. */
+body.v2-home:not(.cursor-ready) #cur-dot,
+body.v2-home:not(.cursor-ready) #cur-ring {
+  opacity: 0 !important;
+}
+
+/* v2 cursor — white base + mix-blend-mode: difference.
+   The blend inverts the cursor against whatever it sits over, so it
+   reads dark on light backgrounds and light on dark, with no JS-driven
+   section detection required. State overrides below force the hover /
+   card / image variants to the same white treatment so the brand-blue
+   from the base cursor states never leaks through on v2. */
+body.v2-home #cur-dot {
+  background: #fff;
+  mix-blend-mode: difference;
+}
+body.v2-home #cur-ring {
+  border-color: #fff;
+  mix-blend-mode: difference;
+}
+/* Hover state — keep the scale-up + bigger ring, but kill the
+   #3C49FF border tint. */
+body.v2-home[data-cursor="hover"] #cur-ring {
+  border-color: #fff;
+}
+/* Card state (.proj-card[data-href] hover) — full liquid-glass
+   treatment. mix-blend-mode is turned OFF here so backdrop-filter
+   can actually paint (the two interact poorly). Glass picks up a
+   DARK translucent tint so the white "VIEW" label reads cleanly on
+   top regardless of what's behind the cursor. */
+body.v2-home[data-cursor="card"] #cur-ring {
+  mix-blend-mode: normal;
+  border: 0;
+  /* 10% black tint — seats the label without darkening the glass too
+     much; backdrop blur + saturate still does most of the work for
+     the surface. */
+  background: rgba(0, 0, 0, 0.10);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.10),
+    0 12px 32px rgba(0, 0, 0, 0.22);
+}
+/* Dot also needs blend-mode off so it doesn't punch a weird hole
+   inside the glass ring (the base card state already hides it via
+   opacity: 0, but the blend-mode-off keeps things clean). */
+body.v2-home[data-cursor="card"] #cur-dot {
+  mix-blend-mode: normal;
+}
+/* "VIEW" label — uppercase, 7pt medium. Default color is solid
+   black; per-card themes below override it so the label color
+   matches the body text of the card being hovered. */
+body.v2-home[data-cursor="card"] #cur-label {
+  color: #000;
+  font-weight: var(--weight-medium);
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+}
+/* Per-card label color — keyed off `data-card-theme` set by the
+   cursor mouseover handler. Matches each card's primary text color
+   exactly so VIEW reads as part of the same palette. */
+body.v2-home[data-cursor="card"][data-card-theme="vz-id-arch"] #cur-label  { color: #fff;    }
+body.v2-home[data-cursor="card"][data-card-theme="vz-home"]    #cur-label  { color: #3D2817; }
+body.v2-home[data-cursor="card"][data-card-theme="bluejeans"]  #cur-label  { color: #0F2244; }
+body.v2-home[data-cursor="card"][data-card-theme="iconmobile"] #cur-label  { color: #fff;    }
+/* Image state — already white; restate for consistency. */
+body.v2-home[data-cursor="image"] #cur-ring {
+  border-color: #fff;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hi-wobbler,
   .hi-planet,
@@ -7052,6 +7207,2190 @@ body.cursor-in-iframe #cur-ring {
 @keyframes welcome-arrow-nudge {
   0%, 100% { transform: translateY(-2px); opacity: 0.55; }
   50%      { transform: translateY(3px);  opacity: 1; }
+}
+
+/* ─── v2 home welcome overrides (scoped to body.v2-home) ─────
+   The drag_and_drop_landing_page scene is light, so flip text to
+   black and move the typewriter to bottom-left. ENTER stays
+   centered at the bottom. */
+body.v2-home .welcome-intro {
+  /* Centered to the viewport (vertically + horizontally). */
+  top: 50%;
+  bottom: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #000;
+  /* Sentence case + bigger type + slightly heavier weight. */
+  text-transform: none;
+  font-size: clamp(20pt, 2.2vw, 24pt);
+  font-weight: var(--weight-regular);
+  letter-spacing: 0.01em;
+}
+/* Highlighted word inside the typewriter (currently "Refaeli"). */
+body.v2-home .welcome-intro em {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: var(--weight-regular);
+}
+/* ── v2 HERO — simple, flat layering. ──
+   Direct children of <section.hero id="hero">:
+     z-1: #hero-particles    (WebGL particles via ogl, full-bleed)
+     z-2: #hero-spline-iframe (seoul iframe, full-bleed, screen blend)
+     z-3: .hero-role / .hero-location  (corner text — already styled)
+
+   Solid black backdrop — the WebGL canvas is transparent except
+   where particles are drawn, so we need a base color behind it.
+   (Late .hero rule in this file sets `background: none`, so a
+   v2-scoped override is required to win the cascade.) */
+body.v2-home .hero {
+  background-color: #000;
+}
+body.v2-home #hero-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Hero corner text reads white over the dark hero / particle background.
+   Base .hero-role sets color: var(--ink) (dark) — override here.
+
+   Reveal: start translated down + invisible, rise + fade in at the
+   same moment the nav drops (duration 1.0s, delay 2.2s, ease-base —
+   matched to `body:has(#welcome) #nav` so the top and bottom edges
+   meet the frame in perfect sync). JS adds .is-revealed to both. */
+body.v2-home .hero-role,
+body.v2-home .hero-location {
+  color: #fff;
+  animation: none !important;
+  opacity: 0;
+  transform: translateY(48px);
+  transition:
+    opacity   1.0s var(--ease-base),
+    transform 1.0s var(--ease-base);
+  transition-delay: 2.2s;
+}
+body.v2-home .hero-role.is-revealed,
+body.v2-home .hero-location.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.v2-home #hero-spline-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  border: 0;
+  background: transparent !important;
+  mix-blend-mode: screen;
+  /* Slow-settle reveal: opacity 0 + slightly zoomed (1.08), fades in
+     while scaling back to 1.0. Parallax `translate` is driven by JS
+     via --parallax-y and is intentionally NOT transitioned — it should
+     follow scroll smoothly, not lag behind. */
+  opacity: 0;
+  scale: 1.2;
+  translate: 0 var(--parallax-y, 0px);
+  transform-origin: center center;
+  transition:
+    opacity 3.8s cubic-bezier(0.16, 1, 0.3, 1),
+    scale   3.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0.9s;
+  will-change: translate, opacity, scale;
+}
+body.v2-home #hero-spline-iframe.is-revealed {
+  opacity: 1;
+  scale: 1.1;
+}
+
+/* Logo fully matched to the nav links — size, weight, and tracking.
+   Base logo:  10pt / semibold (600) / tracking-label  (0.22em)
+   Links:       9pt / medium  (500) / tracking-wider  (0.16em) */
+body.v2-home .nav-logo {
+  font-size: 9pt;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+}
+
+/* Nav letter-spread on hover — same mechanic as the welcome ENTER
+   button. JS wraps each letter in `.nav-letter` with inline --i and
+   --n. On link hover, each letter translates outward from the word's
+   center, staggered left-to-right via transition-delay. */
+body.v2-home .nav-letter {
+  display: inline-block;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--i, 0) * 25ms);
+}
+body.v2-home .nav-links > li > a:hover .nav-letter,
+body.v2-home .nav-logo:hover .nav-letter {
+  transform: translateX(
+    calc((var(--i, 0) - (var(--n, 1) - 1) / 2) * 4px)
+  );
+}
+
+/* A bit more breathing room above the nav row.
+   Base padding-top: clamp(1.1rem, 2vh, 1.5rem). */
+body.v2-home nav {
+  padding-top: clamp(1.8rem, 3.2vh, 2.4rem);
+}
+
+
+/* Marquee bg: pure black instead of base var(--dark) (#181821). */
+body.v2-home .marquee-wrap {
+  background-color: #000;
+  /* Background grid lines suppressed in v2 — marquee reads as a
+     solid black band between the IMPACT section and the MADE REAL
+     breaker. */
+  background-image: none;
+}
+/* Contact section on v2 — pure black background (base uses
+   var(--dark) which is the slightly-off-black #181821). */
+body.v2-home .contact-zone {
+  background-color: #000;
+}
+/* Footer strip — solid black on top of the dot-grid canvas, so the
+   bottom of the section reads as a clean black bar with just the
+   © line + city. .cz-foot already has position: relative + z-index: 2
+   (above the canvas at z: 0); adding the opaque fill is what hides
+   the grid underneath. */
+body.v2-home .contact-zone .cz-foot {
+  background-color: #000;
+}
+/* ── Object gallery overlay — v2 alignment.
+   Base uses --gal-pad (clamp(0.75rem, 2vw, 1.5rem)) which sits the
+   left title block + right year much closer to the edges than every
+   other v2 div. Bumped to match the global nav's horizontal padding
+   (clamp(1.25rem, 5vw, 4rem)), so the page-number / title column
+   lines up vertically with the "Refaeli Ma" logo above it. Bottom
+   bar (Prev | dots | Next) bumped the same amount for consistency. */
+body.v2-home .go-title-block {
+  left: clamp(1.25rem, 5vw, 4rem);
+}
+body.v2-home .go-year {
+  right: clamp(1.25rem, 5vw, 4rem);
+}
+body.v2-home .go-bottom-bar {
+  left:   clamp(1.25rem, 5vw, 4rem);
+  right:  clamp(1.25rem, 5vw, 4rem);
+}
+
+
+/* ── Contact section typography — v2 alignment.
+   Dumps the serif font (used by the base `.cz-title` / `.cz-ai-title`
+   in favour of the same sans/thin scale as the breaker + section
+   titles elsewhere on the v2 home (clamp(28pt, 4.4vw, 56pt) thin
+   with italic-light em accents). Eyebrows + body sizes/colors aligned
+   to the v2 kicker + lede pattern. Padding on the body container
+   bumped to match the v2 section padding rhythm. */
+
+/* Body container — v2 section padding. */
+body.v2-home .contact-zone .cz-body {
+  padding: clamp(6rem, 12vh, 10rem) clamp(1.5rem, 4vw, 3.5rem);
+}
+
+/* "Contact" kicker — same recipe as .breaker-v2-kicker (9pt medium
+   uppercase with --tracking-wider, muted white). */
+body.v2-home .cz-kicker .ch {
+  font-family: var(--font-sans);
+  font-size: 9pt;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Main title — sans thin large with italic-light em, matches every
+   other v2 title (hiw, impact, breaker, project cards). */
+body.v2-home .cz-title {
+  font-family: var(--font-sans);
+  font-size: clamp(28pt, 4.4vw, 56pt);
+  font-weight: var(--weight-thin);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  color: #fff;
+  margin-bottom: clamp(1.5rem, 3vh, 2.5rem);
+}
+body.v2-home .cz-title em {
+  font-style: italic;
+  font-weight: var(--weight-light);
+  color: #fff;
+}
+
+/* Sublabel "Based in LA..." — lede scale. */
+body.v2-home .cz-sub {
+  font-family: var(--font-sans);
+  font-size: clamp(11pt, 1vw, 13.5pt);
+  font-weight: var(--weight-regular);
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0;
+}
+
+/* "ASK AI ABOUT REFAELI" label — kicker recipe. */
+body.v2-home .cz-ai-label {
+  font-family: var(--font-sans);
+  font-size: 9pt;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Card title "Different model..." — sans thin, scaled down for the
+   in-card context. */
+body.v2-home .cz-ai-title {
+  font-family: var(--font-sans);
+  font-size: clamp(16pt, 2.2vw, 26pt);
+  font-weight: var(--weight-thin);
+  line-height: 1.2;
+  letter-spacing: -0.008em;
+  color: #fff;
+}
+
+/* Card body paragraph — lede scale. */
+body.v2-home .cz-ai-body {
+  font-family: var(--font-sans);
+  font-size: clamp(11pt, 1vw, 13.5pt);
+  font-weight: var(--weight-regular);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Email pill text + LinkedIn / GitHub / Résumé labels — sans, small. */
+body.v2-home .cz-email-text,
+body.v2-home .cz-resume-label,
+body.v2-home .cz-book-btn {
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+}
+
+/* Footer strip text — already sans in base, just align colors to the
+   v2 muted scale. */
+body.v2-home .cz-foot-copy,
+body.v2-home .cz-foot-humor,
+body.v2-home .cz-foot-right {
+  font-family: var(--font-sans);
+  font-size: 9pt;
+  font-weight: var(--weight-regular);
+}
+body.v2-home .cz-foot-copy  { color: rgba(255, 255, 255, 0.55); }
+body.v2-home .cz-foot-humor { color: rgba(255, 255, 255, 0.35); }
+body.v2-home .cz-foot-right { color: rgba(255, 255, 255, 0.35); }
+
+
+/* ══════════════════════════════════════════════════════════════
+   REUSABLE v2 COMPONENTS — `.glass-cta` and `.glass-tile`
+   ══════════════════════════════════════════════════════════════
+   Use ANY element with these classes to opt into the v2 liquid-
+   glass look. JS auto-adds `.spotlight-glow` to both, so the
+   cursor-tracked accent halo + animated 1.5px border highlight
+   come for free.
+
+   • .glass-cta   — pill-shape button / anchor. Use for primary
+                    CTAs ("Book a Call", "Get Started", etc.).
+                    Translucent white on dark bg by default.
+                    Add .glass-cta--dark for dark-text-on-light bg.
+   • .glass-tile  — card-shape surface (e.g. info card, AI prompt
+                    card). Translucent white on dark bg by default.
+
+   The class names are intentionally pattern-only (`.glass-*`) so
+   you can apply them to any HTML element and they pick up styling
+   automatically. */
+
+/* ── .glass-cta — pill CTA. De-scoped from body.v2-home so the same
+   recipe works on case-study pages (the "Next Case Study" CTA at the
+   bottom uses it). */
+.glass-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: clamp(11pt, 1vw, 13.5pt);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0.72rem 2rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 12px 28px -10px rgba(0, 0, 0, 0.45);
+  transition:
+    background    0.25s ease,
+    border-color  0.25s ease,
+    transform     0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow    0.25s ease;
+  --spot-inner: 160px;
+  --spot-outer: 220px;
+  cursor: pointer;
+}
+.glass-cta:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.32);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 18px 36px -10px rgba(0, 0, 0, 0.55);
+}
+/* Dark-text variant for use on LIGHT backgrounds. */
+.glass-cta--dark {
+  color: var(--ink, #000);
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 12px 28px -10px rgba(0, 0, 0, 0.18);
+}
+.glass-cta--dark:hover {
+  background: rgba(0, 0, 0, 0.10);
+  border-color: rgba(0, 0, 0, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 18px 36px -10px rgba(0, 0, 0, 0.25);
+}
+/* Ghost variant — pairs with .glass-cta as the SECONDARY action. Same
+   pill geometry and hover lift, but no fill / no shadow / no backdrop
+   blur, so the primary glass-cta reads as the focal CTA. Border stays
+   so it still feels like a button. Use both classes:
+     <a class="glass-cta glass-cta--ghost">Back to portfolio</a> */
+.glass-cta--ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.78);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+.glass-cta--ghost:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.42);
+  color: #fff;
+  box-shadow: none;
+}
+/* Ghost on LIGHT backgrounds. */
+.glass-cta--ghost.glass-cta--dark {
+  background: transparent;
+  border-color: rgba(0, 0, 0, 0.18);
+  color: rgba(0, 0, 0, 0.78);
+  box-shadow: none;
+}
+.glass-cta--ghost.glass-cta--dark:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.32);
+  color: #000;
+  box-shadow: none;
+}
+
+/* ── .glass-tile — card-shape surface. */
+body.v2-home .glass-tile {
+  display: block;
+  padding: clamp(1.8rem, 3vw, 2.8rem);
+  border-radius: var(--radius-card-lg, 14px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 24px 60px -16px rgba(0, 0, 0, 0.55);
+  --spot-inner: 460px;
+  --spot-outer: 600px;
+}
+/* Dark-text variant for use on LIGHT backgrounds. */
+body.v2-home .glass-tile--dark {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 24px 60px -16px rgba(0, 0, 0, 0.15);
+}
+
+
+/* "Book a Call" CTA on v2 — uses the same recipe as `.glass-cta`
+   above (kept as a specific selector for backwards compat with the
+   existing contact-section markup, but functionally identical). */
+body.v2-home .cz-book-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 12px 28px -10px rgba(0, 0, 0, 0.45);
+  transition:
+    background    0.25s ease,
+    border-color  0.25s ease,
+    transform     0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow    0.25s ease;
+  /* Smaller spotlight tuned to the pill size. */
+  --spot-inner: 160px;
+  --spot-outer: 220px;
+}
+body.v2-home .cz-book-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.32);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 18px 36px -10px rgba(0, 0, 0, 0.55);
+}
+
+
+/* "ASK AI ABOUT REFAELI" card on v2 — liquid glass treatment so the
+   dot-grid behind it stops competing with the card's content. The
+   backdrop-filter blurs the dots underneath the card to a soft wash,
+   the translucent white fill seats the surface, and a subtle inset
+   top-rim highlight + drop shadow give it depth. Combined with the
+   `.spotlight-glow` class (added by JS so the same cursor-tracked
+   accent halo as the WORK dropdown cards / HIW rows kicks in on
+   hover). */
+body.v2-home .cz-ai-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 24px 60px -16px rgba(0, 0, 0, 0.55);
+  /* Larger spotlight tuned to the card's wider footprint than the
+     dropdown / hiw defaults. */
+  --spot-inner: 460px;
+  --spot-outer: 600px;
+}
+/* Marquee text matches the global nav item style (.nav-links a):
+   9pt uppercase medium-weight with --tracking-wider, in solid white
+   to read crisply on the black band. */
+body.v2-home .marquee-wrap .marquee-item {
+  font-size: 9pt;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* ── 6-LINE VERTICAL GRID — shared across all v2 sections. ──
+   Applied as additional `background-image` layers on each section,
+   so the lines sit BETWEEN the section's bg color (painted first) and
+   the section's content (painted last). Lines never overlay text.
+
+   Layout: two outer lines 60px from the viewport edges; four inner
+   lines divide the remaining width into 5 equal segments.
+   Color: mid-gray at 9% — barely-there guide marks that read on both
+   dark and light section backgrounds.
+   Adjust knobs by editing --bg-lines-image / --bg-lines-position. */
+body.v2-home {
+  --bg-line-edge: 60px;
+  /* Fallback (mid-gray) — section-specific overrides below give better
+     contrast on dark vs light backgrounds. */
+  --bg-line-color: rgba(127, 127, 127, 0.18);
+  --bg-lines-image:
+    linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+    linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+    linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+    linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+    linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+    linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px);
+  --bg-lines-position:
+    var(--bg-line-edge) 0,
+    calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 1) 0,
+    calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 2) 0,
+    calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 3) 0,
+    calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 4) 0,
+    calc(100vw - var(--bg-line-edge)) 0;
+}
+/* Per-section line colors — white lines for the dark sections so they
+   read against #000; black lines for the white quote section. The
+   --bg-lines-image gradient picks these up automatically.
+   (Bumped dark sections to 0.40 for diagnostics — if you see strong
+   gray lines on HIW now, dial back to ~0.18.) */
+body.v2-home .hero,
+body.v2-home .hiw-v2-sec,
+body.v2-home .marquee-wrap,
+body.v2-home .breaker-v2-sec {
+  --bg-line-color: rgba(255, 255, 255, 0.40);
+}
+
+/* ── HOW I WORK — v2 (dark mode, vertical stack). ────────────── */
+body.v2-home .hiw-v2-sec {
+  position: relative;
+  background-color: #000;
+  color: #fff;
+  /* Symmetric vertical padding for the section. */
+  padding: calc(clamp(9.5rem, 15.5vh, 14.5rem) + 200px) 0;
+  font-family: var(--font-sans);
+}
+/* Lines via a dedicated ::before so we can give them an explicit
+   z-index. Sits above the section's bg color, below all content. */
+body.v2-home .hiw-v2-sec::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--bg-lines-image);
+  background-position: var(--bg-lines-position);
+  background-repeat: no-repeat;
+  background-size: 1px 100%;
+}
+/* Push the inner content above the ::before lines. */
+body.v2-home .hiw-v2-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 88rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 5vw, 4rem);
+  /* Visually shift the inner content UP 100px so the bottom of the
+     section reads as more black space without growing the section. */
+  transform: translateY(-100px);
+}
+/* Vertical-Cut Reveal entry animation — used on the HIW kicker, title,
+   and lede. JS wraps each word in:
+     <span class="vcr-word"><span class="vcr-inner">word</span></span>
+   The wrapper clips overflow; the inner starts translated 100% below
+   its line and slides up to translateY(0) when the section enters
+   viewport (JS adds .is-vcr-active to .hiw-v2-sec). Per-word stagger
+   via inline --word-i (cumulative across all 3 elements so they
+   cascade eyebrow → title → blurb). */
+body.v2-home .vcr-word {
+  display: inline-block;
+  vertical-align: bottom;
+  /* clip-path replaces overflow:hidden so italic letters that overhang
+     to the right (e.g. the "y" in "Way") and descenders that drop
+     below the baseline (e.g. the "y" / parts of "e") stay visible.
+     The inset is generous enough on right + bottom to NOT clip the
+     character glyph, but tight enough at the top to hide the inner
+     when it's translated 125% below. */
+  clip-path: inset(-0.05em -0.15em -0.18em 0);
+}
+body.v2-home .vcr-inner {
+  display: inline-block;
+  transform: translateY(125%);
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Header trigger — only matches kicker/title/lede so the section
+   activating its class doesn't also reveal the rows' content (which
+   has its own per-row trigger below). */
+body.v2-home .hiw-v2-sec.is-vcr-active .hiw-v2-kicker .vcr-inner,
+body.v2-home .hiw-v2-sec.is-vcr-active .hiw-v2-title .vcr-inner,
+body.v2-home .hiw-v2-sec.is-vcr-active .hiw-v2-lede .vcr-inner {
+  transform: translateY(0);
+  transition-delay: calc(var(--word-i, 0) * 70ms);
+}
+/* Per-row trigger — fires when each row enters viewport independently. */
+body.v2-home .hiw-v2-row.is-vcr-active .vcr-inner {
+  transform: translateY(0);
+  transition-delay: calc(var(--word-i, 0) * 70ms);
+}
+
+/* Eyebrow / kicker — small uppercase label above the title. */
+body.v2-home .hiw-v2-kicker {
+  font-family: var(--font-sans);
+  font-size: 9pt;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: clamp(1rem, 2vh, 1.5rem);
+}
+/* Section title — sans-serif, thin, tight tracking. Two lines via <br>. */
+body.v2-home .hiw-v2-title {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-thin);
+  font-size: clamp(28pt, 4.4vw, 56pt);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  color: #fff;
+  margin: 0 0 clamp(1rem, 2vh, 1.4rem);
+}
+body.v2-home .hiw-v2-title em {
+  font-style: italic;
+  font-weight: var(--weight-light);
+}
+/* Lede / blurb — single line in v2. */
+body.v2-home .hiw-v2-lede {
+  font-family: var(--font-sans);
+  font-size: clamp(11pt, 1vw, 13.5pt);
+  font-weight: var(--weight-regular);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: none;
+  margin: 0 0 clamp(3rem, 6vh, 5rem);
+}
+
+/* The vertical list of 4 principles. Sits flush to the viewport
+   edges (escapes the .hiw-v2-inner max-width) so each row's divider
+   line can extend full-bleed while the row's content stays centered. */
+body.v2-home .hiw-v2-list {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(3rem, 6vh, 5rem);
+  /* margin-bottom: 0; -- header already provided spacing above */
+}
+/* Each row IS the full-bleed element — its top border spans the viewport.
+   Content alignment happens on .hiw-v2-row-inner inside. Solid black bg
+   on each row covers the section's background lines behind it, so the
+   lines only appear in the gaps above the first row and below the last. */
+body.v2-home .hiw-v2-row {
+  position: relative;
+  background-color: #000;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  /* Spotlight glow tuning — wider/taller halo for these wide rows. */
+  --spot-inner: 360px;
+  --spot-outer: 460px;
+  /* Soft transition for the row border-color hover (added below). */
+  transition: border-color 0.3s ease;
+}
+body.v2-home .hiw-v2-row:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+}
+/* Hover: brighten the row's edges in the SAME PURPLE accent hue as
+   the cursor-tracked spotlight (HSL 236, 100%, 72%). The whole
+   border picks up a soft baseline purple (so the row is clearly
+   "active"), while the existing .spotlight-glow::after layer paints
+   a brighter purple right where the cursor sits — reading as a
+   single light source emanating from the cursor.
+   Scoped to .hiw-v2-list so the stat-rows (same .hiw-v2-row class,
+   different parent) keep their own treatment. */
+body.v2-home .hiw-v2-list .hiw-v2-row:hover {
+  border-top-color: hsla(236, 100%, 72%, 0.35);
+}
+body.v2-home .hiw-v2-list .hiw-v2-row:hover + .hiw-v2-row {
+  border-top-color: hsla(236, 100%, 72%, 0.35);
+}
+body.v2-home .hiw-v2-list .hiw-v2-row:hover:last-child {
+  border-bottom-color: hsla(236, 100%, 72%, 0.35);
+}
+/* Inner wrapper — re-centers the row content within the page's max-width.
+   3 grid columns:  [number]  [icon + title head]  [blurb text] */
+body.v2-home .hiw-v2-row-inner {
+  max-width: 88rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 4vh, 3rem) clamp(1.25rem, 5vw, 4rem);
+  display: grid;
+  grid-template-columns:
+    clamp(110px, 13vw, 200px)
+    clamp(220px, 26vw, 360px)
+    1fr;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  align-items: center;
+}
+
+/* Big numeric on the left — light weight + faded by default; light
+   purple on row hover (weight stays light, only color changes). */
+body.v2-home .hiw-v2-num {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-thin);
+  font-size: clamp(42pt, 6vw, 80pt);
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: -0.02em;
+  transition: color 0.35s ease;
+}
+body.v2-home .hiw-v2-row:hover .hiw-v2-num {
+  color: #fff;
+}
+
+/* Head column — icon + title, side-by-side. */
+body.v2-home .hiw-v2-head {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.65rem, 1.2vw, 1rem);
+  min-width: 0;
+}
+body.v2-home .hiw-v2-icon {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 9px;
+  color: #fff;
+  flex-shrink: 0;
+}
+body.v2-home .hiw-v2-icon svg {
+  width: 18px;
+  height: 18px;
+}
+body.v2-home .hiw-v2-name {
+  font-family: var(--font-sans);
+  font-size: clamp(13pt, 1.5vw, 18pt);
+  font-weight: var(--weight-light);
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+  color: #fff;
+  margin: 0;
+}
+body.v2-home .hiw-v2-name strong {
+  font-weight: var(--weight-semibold);
+}
+
+/* Blurb area — short shown by default; long absolutely-positioned on
+   top of it, opacity 0. On row hover, they cross-fade.
+   The container is short-height (no min-height) so .hiw-v2-text sits
+   at the same vertical center as the number + head. .hiw-v2-long is
+   pinned to that center via top:50% + translateY(-50%), so when the
+   long copy appears it expands equally above and below the centerline
+   — both states stay middle-aligned with the rest of the row. */
+body.v2-home .hiw-v2-text {
+  position: relative;
+}
+body.v2-home .hiw-v2-short,
+body.v2-home .hiw-v2-long {
+  font-family: var(--font-sans);
+  font-size: clamp(11pt, 1.05vw, 14pt);
+  font-weight: var(--weight-regular);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+  max-width: 56rem;
+  transition: opacity 0.35s ease;
+}
+body.v2-home .hiw-v2-long {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  opacity: 0;
+}
+body.v2-home .hiw-v2-row:hover .hiw-v2-short {
+  opacity: 0;
+}
+body.v2-home .hiw-v2-row:hover .hiw-v2-long {
+  opacity: 1;
+}
+
+/* Mobile — collapse the 3-column row to a single column stack:
+   number → head → blurb. */
+@media (max-width: 720px) {
+  body.v2-home .hiw-v2-row-inner {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    padding: clamp(2rem, 4vh, 3rem) 1.25rem;
+  }
+  body.v2-home .hiw-v2-num {
+    font-size: clamp(36pt, 12vw, 56pt);
+  }
+}
+
+
+/* ── IMPACT & RECOGNITION — v2 (light mode, vertical stack). ──── */
+body.v2-home .impact-v2-sec {
+  position: relative;
+  background-color: #fff;
+  color: var(--ink);
+  /* Stats moved out (now between HIW and QUOTE), so IMPACT opens
+     with the kicker again — top padding restored to match the bottom
+     for symmetrical breathing room. +200px on each side bumped per
+     designer ask for extra breathing room around the section. */
+  padding: calc(clamp(5rem, 9vh, 8rem) + 200px) 0;
+  font-family: var(--font-sans);
+  --bg-line-color: rgba(0, 0, 0, 0.10);
+}
+/* Grid reveal pattern lives on each .impact-block now — see the
+   `Per-block grid reveal` section. The section-level ::before is
+   reused below to paint the 6-line vertical background pattern (the
+   shared v2 chrome that runs through HIW / MADE REAL / etc.). The
+   shared `impact-grid-scroll` keyframes remain because the block-
+   level pseudos still use them. */
+@keyframes impact-grid-scroll {
+  from { background-position: 0 0; }
+  to   { background-position: 40px 40px; }
+}
+/* 6-line vertical background — same pattern as the other v2 sections.
+   `--bg-line-color` on .impact-v2-sec is already overridden to
+   rgba(0, 0, 0, 0.10) so the lines read faintly against the white
+   section bg. Sits at z-index 0 so the section padding area shows
+   them; .impact-v2-inner (z-index 1) renders above. */
+body.v2-home .impact-v2-sec::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--bg-lines-image);
+  background-position: var(--bg-lines-position);
+  background-repeat: no-repeat;
+  background-size: 1px 100%;
+}
+body.v2-home .impact-v2-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 88rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 5vw, 4rem);
+}
+/* Eyebrow / kicker — small uppercase label, matching HIW. */
+body.v2-home .impact-v2-kicker {
+  font-family: var(--font-sans);
+  font-size: 9pt;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.55);
+  margin-bottom: clamp(1rem, 2vh, 1.5rem);
+}
+/* Title — same scale as HIW. */
+body.v2-home .impact-v2-title {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-thin);
+  font-size: clamp(28pt, 4.4vw, 56pt);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  margin: 0 0 clamp(1rem, 2vh, 1.4rem);
+}
+body.v2-home .impact-v2-title em {
+  font-style: italic;
+  font-weight: var(--weight-light);
+}
+/* Lede / blurb. */
+body.v2-home .impact-v2-lede {
+  font-family: var(--font-sans);
+  font-size: clamp(11pt, 1vw, 13.5pt);
+  font-weight: var(--weight-regular);
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.65);
+  max-width: none;
+  margin: 0 0 clamp(3rem, 6vh, 5rem);
+}
+
+/* Block list — same full-bleed pattern as HIW so dividers run
+   edge-to-edge while content stays centered. */
+body.v2-home .impact-v2-list {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  margin-top: clamp(3rem, 6vh, 5rem);
+}
+/* Stats variant — sits ABOVE the kicker as the section's entry
+   element. No top margin (the section's own top padding handles
+   spacing), and an explicit bottom margin to separate from the
+   header that follows. */
+body.v2-home .impact-v2-list--stats {
+  margin-top: 0;
+  /* margin-bottom removed — the block is no longer inside IMPACT's
+     white section, so a bottom margin here would leak the body's
+     default white background between the metrics stack and QUOTE
+     (which is black with its own 600px top padding). */
+  margin-bottom: 0;
+  /* Dark-mode mirror of the IMPACT section's grid reveal: black
+     surface + faint white 40px grid base + cursor-tracked radial
+     mask that brightens the grid where the pointer is. The stat
+     rows override their own bg to transparent (below) so the grid
+     shows through their surface, not just in any gaps. */
+  background-color: #000;
+  isolation: isolate;
+}
+body.v2-home .impact-v2-list--stats::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right,  rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: impact-grid-scroll 1.5s linear infinite;
+}
+body.v2-home .impact-v2-list--stats::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right,  rgba(255, 255, 255, 0.30) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.30) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: impact-grid-scroll 1.5s linear infinite;
+  -webkit-mask-image: radial-gradient(
+    300px circle at var(--mx, -1000px) var(--my, -1000px),
+    #000, transparent);
+          mask-image: radial-gradient(
+    300px circle at var(--mx, -1000px) var(--my, -1000px),
+    #000, transparent);
+}
+/* Transparent stat-row surface inside the metrics block so the
+   wrapper's grid pattern (and the cursor reveal) reads through the
+   row. Top/bottom hairline borders still delineate each row. */
+body.v2-home .impact-v2-list--stats .stat-row {
+  background-color: transparent;
+  z-index: 1;
+}
+body.v2-home .impact-block {
+  position: relative;
+  /* Solid white fill so the section's 6 vertical lines (painted by
+     .impact-v2-sec::before behind the inner) don't bleed through.
+     Was `transparent`; switched to #fff so each logo block reads as
+     a clean canvas with only its own grid + cursor reveal layered on
+     top via the ::before / ::after pseudos below. */
+  background-color: #fff;
+  border-top: 1px solid rgba(0, 0, 0, 0.10);
+  /* Spotlight glow tuning — wider halo for these tall wide blocks. */
+  --spot-inner: 420px;
+  --spot-outer: 540px;
+}
+body.v2-home .impact-block:last-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+}
+/* Per-block grid reveal — same 2-layer technique as the IMPACT
+   section used to use, but applied to each individual .impact-block
+   so the grid + cursor reveal stay contained inside the logo blocks
+   rather than across the whole section.
+     ::before — faint base grid (always visible inside the block)
+     ::after  — bright grid masked to a 300px radial at the cursor
+                position (--mx / --my updated per-block via JS) */
+body.v2-home .impact-block {
+  isolation: isolate;
+}
+body.v2-home .impact-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right,  rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: impact-grid-scroll 1.5s linear infinite;
+}
+body.v2-home .impact-block::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right,  rgba(0, 0, 0, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: impact-grid-scroll 1.5s linear infinite;
+  -webkit-mask-image: radial-gradient(
+    300px circle at var(--mx, -1000px) var(--my, -1000px),
+    #000, transparent);
+          mask-image: radial-gradient(
+    300px circle at var(--mx, -1000px) var(--my, -1000px),
+    #000, transparent);
+}
+/* Inner — single column, content centered horizontally. Sits above
+   the block's grid pseudos via z-index: 1. */
+body.v2-home .impact-block-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 100rem;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vh, 4rem) clamp(1.25rem, 5vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.5rem, 3vh, 2.5rem);
+}
+/* Header block — centered title + description, capped width. */
+body.v2-home .impact-block-header {
+  text-align: center;
+  max-width: 56rem;
+}
+body.v2-home .impact-block-title {
+  font-family: var(--font-sans);
+  font-size: clamp(15pt, 1.7vw, 22pt);
+  font-weight: var(--weight-light);
+  letter-spacing: -0.005em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0 0 0.8rem;
+}
+body.v2-home .impact-block-title strong {
+  font-weight: var(--weight-semibold);
+}
+body.v2-home .impact-block-desc {
+  font-family: var(--font-sans);
+  font-size: clamp(11pt, 1.05vw, 14pt);
+  font-weight: var(--weight-regular);
+  line-height: 1.55;
+  color: rgba(0, 0, 0, 0.62);
+  margin: 0;
+}
+
+/* ── Logo cloud (4×2 grid) — vanilla port of the shadcn LogoCloud
+   component used inside the Community & Industry block. 4 columns
+   on desktop, 2 on mobile. Cells get hairline grid dividers + an
+   alternating warm fill (.logo-cloud-cell--alt) for the checker
+   pattern. Three `+` glyphs sit at the inner column intersections
+   on the horizontal mid-line. */
+body.v2-home .logo-cloud {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  max-width: 90rem;
+  margin: 0 auto;
+  /* Outer rim — left + right hairlines (top/bottom come from the
+     cells themselves via border-top / border-bottom). */
+  border-left:  1px solid rgba(0, 0, 0, 0.10);
+  border-right: 1px solid rgba(0, 0, 0, 0.10);
+  border-top:    1px solid rgba(0, 0, 0, 0.10);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+}
+body.v2-home .logo-cloud-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 1.5rem);
+  /* Inner dividers — bottom border on row 1, right border on cols
+     1–3. Last row + last column trimmed below. */
+  border-right:  1px solid rgba(0, 0, 0, 0.10);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+}
+/* Trim the right-most column's inner border (the grid's outer
+   border-right already handles that edge). */
+body.v2-home .logo-cloud-cell:nth-child(4n) {
+  border-right: 0;
+}
+/* Trim the last row's bottom border. */
+body.v2-home .logo-cloud-cell:nth-last-child(-n+4) {
+  border-bottom: 0;
+}
+/* Cap the +/plus markers from being counted in last-child math
+   above. They're position: absolute so they don't sit in grid
+   tracks, but the nth-last-child(-n+4) check would otherwise
+   include them. Guard by re-asserting border-bottom: 0 only on
+   .logo-cloud-cell (excluded by tag), so this just means: don't
+   set them via :nth-last-child including the plus spans. The class
+   filter in the rule above already does that since +/plus spans
+   aren't .logo-cloud-cell. */
+/* Checker — every other cell gets the warm fill. */
+body.v2-home .logo-cloud-cell--alt {
+  background-color: rgba(61, 40, 23, 0.04);
+}
+body.v2-home .logo-cloud-cell img {
+  /* `height: 60px` (not max-height) so every logo actually renders
+     at 60px tall regardless of the SVG's natural size — max-height
+     would let smaller logos stop at their own intrinsic size. */
+  height: 60px;
+  width: auto;
+  pointer-events: none;
+  user-select: none;
+}
+/* Plus glyphs at inner intersections — col 1/2 boundary, 2/3, 3/4
+   on the row 1/2 mid-line. Drawn as two 1px lines via pseudo-
+   elements forming a +. */
+body.v2-home .logo-cloud-plus {
+  position: absolute;
+  left: calc(var(--col, 1) * 25%);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  color: rgba(0, 0, 0, 0.30);
+  pointer-events: none;
+  z-index: 2;
+}
+body.v2-home .logo-cloud-plus::before,
+body.v2-home .logo-cloud-plus::after {
+  content: '';
+  position: absolute;
+  background-color: currentColor;
+}
+body.v2-home .logo-cloud-plus::before {
+  /* horizontal stroke */
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform: translateY(-50%);
+}
+body.v2-home .logo-cloud-plus::after {
+  /* vertical stroke */
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+/* 5×1 single-row variant — used by Recognized By (5 award logos).
+   Overrides the 4-column track + trims the inner borders that the
+   4-col rule would otherwise put on cells that aren't actually the
+   last in this layout. No bottom borders because there's only 1
+   row, and no row-divider mid-line so the `+` glyphs are omitted
+   in the markup (markup-only — nothing to do here CSS-side). */
+body.v2-home .logo-cloud--cols-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+body.v2-home .logo-cloud--cols-5 .logo-cloud-cell {
+  /* Single-row: no internal horizontal dividers. */
+  border-bottom: 0;
+}
+body.v2-home .logo-cloud--cols-5 .logo-cloud-cell:nth-child(4n) {
+  /* 4n was last-column in the 4-col grid — here col 4 isn't last,
+     so restore its right hairline. */
+  border-right: 1px solid rgba(0, 0, 0, 0.10);
+}
+body.v2-home .logo-cloud--cols-5 .logo-cloud-cell:nth-child(5n) {
+  /* Col 5 IS the last — trim its right hairline (the grid's outer
+     border-right paints that edge). */
+  border-right: 0;
+}
+/* Recognized By cells get slightly larger logos than the 4×2 grid
+   (60px → 80px). Each 5×1 cell is wider (~288px at the 90rem cap)
+   so the bump fills the cell more proportionally. */
+body.v2-home .logo-cloud--cols-5 .logo-cloud-cell img {
+  height: 80px;
+}
+
+/* 6 × 2 variant — used by Built With (12 logos in a balanced 6+6
+   grid). Symmetric layout, plus glyphs at the 5 inner column
+   intersections on the horizontal mid-line. */
+body.v2-home .logo-cloud--cols-6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+/* Restore the inner right border on cell 4 (was trimmed by the
+   default `nth-child(4n)` rule for the 4-col grid), then trim only
+   the actual last cell of each row (cells 6 and 12). */
+body.v2-home .logo-cloud--cols-6 .logo-cloud-cell:nth-child(4n) {
+  border-right: 1px solid rgba(0, 0, 0, 0.10);
+}
+body.v2-home .logo-cloud--cols-6 .logo-cloud-cell:nth-child(6n) {
+  border-right: 0;
+}
+/* Bottom border: top row (cells 1–6) gets it as the row-1/row-2
+   divider; bottom row (cells 7–12) gets it cleared. The default
+   `nth-last-child(-n+4)` rule (from the 4-col version) only clears
+   bottom-border on cells 9, 10, 11, 12 — re-clear cells 7 and 8 so
+   the entire bottom row has no bottom border. */
+body.v2-home .logo-cloud--cols-6 .logo-cloud-cell:nth-child(n+7) {
+  border-bottom: 0;
+}
+/* + glyph positions for 6 cols: 5 inner column boundaries at
+   1/6, 2/6, 3/6, 4/6, 5/6 of grid width. Adjust the --col scale
+   factor from 25% (the 4-col default) to ~16.67% for 6-col. */
+body.v2-home .logo-cloud--cols-6 .logo-cloud-plus {
+  left: calc(var(--col, 1) * (100% / 6));
+}
+
+/* Mobile for the 6×2 grid — collapse to 2 columns (12 cells = 6
+   even rows). The default mobile rules already handle right/bottom
+   border trimming for a 2-col stack; the plus glyphs hide via the
+   shared `.logo-cloud-plus` mobile rule. */
+@media (max-width: 720px) {
+  body.v2-home .logo-cloud--cols-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* Restore + re-trim borders for the 2-col mobile layout. */
+  body.v2-home .logo-cloud--cols-6 .logo-cloud-cell {
+    border-right: 1px solid rgba(0, 0, 0, 0.10);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+  }
+  body.v2-home .logo-cloud--cols-6 .logo-cloud-cell:nth-child(2n) {
+    border-right: 0;
+  }
+  body.v2-home .logo-cloud--cols-6 .logo-cloud-cell:nth-last-child(-n+2) {
+    border-bottom: 0;
+  }
+}
+
+/* Mobile — collapse to 2 columns. The 8 cells form a 2×4 grid. */
+@media (max-width: 720px) {
+  body.v2-home .logo-cloud {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* Reset the inner-border trimming rules from the 4-col version
+     since column count changed. */
+  body.v2-home .logo-cloud-cell:nth-child(4n)         { border-right: 1px solid rgba(0, 0, 0, 0.10); }
+  body.v2-home .logo-cloud-cell:nth-child(2n)         { border-right: 0; }
+  body.v2-home .logo-cloud-cell:nth-last-child(-n+4)  { border-bottom: 1px solid rgba(0, 0, 0, 0.10); }
+  body.v2-home .logo-cloud-cell:nth-last-child(-n+2)  { border-bottom: 0; }
+  /* + intersections don't translate cleanly to a 2×4 grid — hide
+     them on mobile (the reference does the same with md: gates). */
+  body.v2-home .logo-cloud-plus { display: none; }
+
+  /* 5-col grid on mobile: 5 cells / 2 cols = 2 full rows + a lonely
+     5th in row 3. Span it across both columns so the row reads as
+     intentional rather than half-empty. */
+  body.v2-home .logo-cloud--cols-5 .logo-cloud-cell:last-child {
+    grid-column: span 2;
+    border-right: 0;
+  }
+}
+
+
+/* VCR triggers scoped to the IMPACT section (mirrors the HIW pattern
+   so a single section trigger doesn't accidentally reveal block
+   content far below the fold). */
+body.v2-home .impact-v2-sec.is-vcr-active .impact-v2-kicker .vcr-inner,
+body.v2-home .impact-v2-sec.is-vcr-active .impact-v2-title .vcr-inner,
+body.v2-home .impact-v2-sec.is-vcr-active .impact-v2-lede .vcr-inner {
+  transform: translateY(0);
+  transition-delay: calc(var(--word-i, 0) * 70ms);
+}
+body.v2-home .impact-block.is-vcr-active .vcr-inner {
+  transform: translateY(0);
+  transition-delay: calc(var(--word-i, 0) * 70ms);
+}
+
+/* Mobile — block collapses to a single column. */
+@media (max-width: 720px) {
+  body.v2-home .impact-block-inner {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: clamp(2rem, 4vh, 3rem) 1.25rem;
+  }
+}
+
+/* Stat-row variant inside the IMPACT section — dark theme islands
+   on the light section. 2-column layout (number on the left spanning
+   both vertical cells; head on top right, text below it). Bold white
+   numbers. */
+body.v2-home .stat-row {
+  background-color: #000;
+  border-top-color: rgba(255, 255, 255, 0.16);
+}
+body.v2-home .stat-row:last-child {
+  border-bottom-color: rgba(255, 255, 255, 0.16);
+}
+/* Stat-row inner becomes a simple flexbox row — three flex items:
+     digit | icon | .stat-stack (title + blurb)
+   Margins (not grid gaps) own the spacing so each one is independent
+   and easy to reason about. Vertical padding mirrors the logo block's
+   .impact-block-inner padding exactly so the three stat blocks read
+   the same height as the three logo blocks above. */
+body.v2-home .stat-row .hiw-v2-row-inner {
+  display: flex;
+  align-items: center;
+  /* Override base grid props. */
+  grid-template-columns: none;
+  grid-template-areas: none;
+  gap: 0;
+  padding-top:    clamp(2.5rem, 5vh, 4rem);
+  padding-bottom: clamp(2.5rem, 5vh, 4rem);
+}
+/* Title+blurb stack: tight column, 4px between title and blurb. */
+body.v2-home .stat-row .stat-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+/* LTR rows (10+, 100M+): digit on LEFT, then big gap to icon, then
+   16px to the title+blurb stack. */
+body.v2-home .stat-row[data-scroll-direction="ltr"] .hiw-v2-num {
+  margin-right: clamp(4rem, 8vw, 9rem);
+}
+body.v2-home .stat-row[data-scroll-direction="ltr"] .hiw-v2-icon {
+  margin-right: 16px;
+}
+
+/* RTL row (40+): visual order = icon | stack | digit, packed to the
+   right edge. `order: 3` on the digit moves it past the icon/stack
+   even though it's still first in the DOM. */
+body.v2-home .stat-row[data-scroll-direction="rtl"] .hiw-v2-row-inner {
+  justify-content: flex-end;
+}
+body.v2-home .stat-row[data-scroll-direction="rtl"] .hiw-v2-num {
+  order: 3;
+}
+body.v2-home .stat-row[data-scroll-direction="rtl"] .hiw-v2-icon {
+  margin-right: 16px;
+}
+body.v2-home .stat-row[data-scroll-direction="rtl"] .stat-stack {
+  margin-right: clamp(4rem, 8vw, 9rem);
+}
+
+body.v2-home .stat-row .hiw-v2-num {
+  color: #fff;
+  font-weight: 700;
+  /* Digit bumped from base 80pt → 110pt so the metric reads heavier,
+     but tuned to keep the overall row height the same as the logo
+     blocks above (paired with logo-matching vertical padding below). */
+  font-size: clamp(52pt, 8vw, 110pt);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+body.v2-home .stat-row:hover .hiw-v2-num {
+  color: #fff;
+}
+/* Name (h3) — modest bump from 18pt to 22pt for balance. */
+body.v2-home .stat-row .hiw-v2-name {
+  color: #fff;
+  font-size: clamp(15pt, 1.7vw, 22pt);
+  line-height: 1.2;
+}
+/* Short blurb — small bump for proportion. Natural line-height
+   restored; vertical separation from the title is controlled by
+   the grid's 4px row-gap above. */
+body.v2-home .stat-row .hiw-v2-short,
+body.v2-home .stat-row .hiw-v2-long {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: clamp(12pt, 1.15vw, 15pt);
+  line-height: 1.4;
+}
+/* Icon — small bump for proportion with the larger digit. */
+body.v2-home .stat-row .hiw-v2-icon {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+}
+body.v2-home .stat-row .hiw-v2-icon svg {
+  width: 21px;
+  height: 21px;
+}
+body.v2-home .stat-row .hiw-v2-head {
+  gap: clamp(0.75rem, 1.3vw, 1.1rem);
+}
+
+/* Scroll-driven horizontal slide. JS sets `--scroll-x` on each
+   stat-row. The whole inner grid translates (number + icon + name +
+   blurb) so the entire row's content glides together. The initial
+   position is the natural layout edge (left for ltr rows, right for
+   rtl rows); progress 0 → 1 maps to 0 → RANGE in the row's chosen
+   direction, so content travels across the row toward the opposite
+   edge as the viewer scrolls past. */
+body.v2-home .stat-row .hiw-v2-row-inner {
+  transform: translateX(var(--scroll-x, 0px));
+  will-change: transform;
+}
+
+/* No content swap on stat-row hover — only the spotlight glow runs.
+   (Base .hiw-v2-row:hover fades short → long; override here so the
+   short blurb stays visible on these rows.) */
+body.v2-home .stat-row:hover .hiw-v2-short {
+  opacity: 1;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   MADE REAL breaker (.breaker-v2-sec)
+   Dark-mode introduction to the work selection. Full-viewport-tall
+   section with a centered text block (kicker / italic-accent title /
+   lede) layered over a WebGL wireframe-polyhedron canvas. Typography
+   mirrors .impact-v2-* (light-mode IMPACT section) but inverted for
+   the dark theme.
+   ══════════════════════════════════════════════════════════════ */
+body.v2-home .breaker-v2-sec {
+  position: relative;
+  background-color: #000;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* +100px on top and bottom for extra breathing room around the
+     wireframe scene. */
+  padding: calc(clamp(6rem, 12vh, 10rem) + 100px) clamp(1.25rem, 5vw, 4rem);
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+/* WebGL canvas — fills the section, sits behind text, no pointer
+   events so mouse listeners can be wired directly on .breaker-v2-sec
+   without the canvas swallowing them. Scroll-driven parallax via
+   `--parallax-y` (set by the breakerParallax IIFE) shifts the
+   canvas vertically against the section, so the wireframe appears
+   to drift at a slower rate than the foreground text. */
+body.v2-home .breaker-v2-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+  transform: translateY(var(--parallax-y, 0px));
+  will-change: transform;
+}
+/* Vertical line grid — same 6-line pattern as the other v2 sections.
+   Sits above the WebGL canvas, below the text. */
+body.v2-home .breaker-v2-sec::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: var(--bg-lines-image);
+  background-position: var(--bg-lines-position);
+  background-repeat: no-repeat;
+  background-size: 1px 100%;
+}
+body.v2-home .breaker-v2-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 64rem;
+  margin: 0 auto;
+  text-align: center;
+}
+/* Eyebrow / kicker — mirrors .impact-v2-kicker, inverted color. */
+body.v2-home .breaker-v2-kicker {
+  font-family: var(--font-sans);
+  font-size: 9pt;
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: clamp(1rem, 2vh, 1.5rem);
+}
+/* Title — same scale as .impact-v2-title; <em> stays italic light. */
+body.v2-home .breaker-v2-title {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-thin);
+  font-size: clamp(28pt, 4.4vw, 56pt);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  color: #fff;
+  margin: 0 0 clamp(1.25rem, 2.5vh, 1.75rem);
+}
+body.v2-home .breaker-v2-title em {
+  font-style: italic;
+  font-weight: var(--weight-light);
+}
+/* Lede / blurb — capped narrower than the title for a clean
+   centered paragraph block. */
+body.v2-home .breaker-v2-lede {
+  font-family: var(--font-sans);
+  font-size: clamp(11pt, 1vw, 13.5pt);
+  font-weight: var(--weight-regular);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0 auto;
+  max-width: 48rem;
+}
+/* VCR cascade — scoped to the breaker section. Each .vcr-word gets
+   --word-i set by JS; the inner span slides up from translateY(125%)
+   to 0 with a 70ms-per-word stagger once the section is in view. */
+body.v2-home .breaker-v2-sec.is-vcr-active .breaker-v2-kicker .vcr-inner,
+body.v2-home .breaker-v2-sec.is-vcr-active .breaker-v2-title  .vcr-inner,
+body.v2-home .breaker-v2-sec.is-vcr-active .breaker-v2-lede   .vcr-inner {
+  transform: translateY(0);
+  transition-delay: calc(var(--word-i, 0) * 70ms);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   PROJECTS — story scroll (.proj-flow-wrap)
+   Vanilla port of the FlowArt React/GSAP pattern. Each section is
+   one viewport tall and `position: sticky` to the top of the
+   viewport. As the user scrolls, each section's natural slot in
+   the wrap brings the next section up from below; higher z-index
+   on later sections means each new card paints over the previous.
+   `.proj-flow-inner` is rotated by JS — origin bottom-left, rotation
+   from 30deg → 0 as the section scrolls into view.
+   ══════════════════════════════════════════════════════════════ */
+body.v2-home .proj-flow-wrap {
+  position: relative;
+  background: #000;
+}
+body.v2-home .proj-flow-sec {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+/* Later sections paint over earlier ones during the swing-in. */
+body.v2-home .proj-flow-sec[data-flow-index="0"] { z-index: 1; }
+body.v2-home .proj-flow-sec[data-flow-index="1"] { z-index: 2; }
+body.v2-home .proj-flow-sec[data-flow-index="2"] { z-index: 3; }
+body.v2-home .proj-flow-sec[data-flow-index="3"] { z-index: 4; }
+/* Inner — receives the JS-driven rotation. */
+body.v2-home .proj-flow-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-origin: bottom left;
+  will-change: transform;
+}
+/* Placeholder card — fills the section. Content TBD. */
+body.v2-home .proj-card {
+  width: 100%;
+  height: 100%;
+  background: #0a0a0e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+/* Spline-backed variant — strips the card chrome so the embedded
+   scene reads as the full card visual. */
+body.v2-home .proj-card--spline {
+  background: transparent;
+  border: 0;
+}
+
+/* Pause Spline render on off-screen project cards. JS adds the
+   `.proj-flow-offscreen` class via IntersectionObserver whenever a
+   section has zero viewport intersection. content-visibility: hidden
+   tells the browser to skip layout + paint on the subtree (modern
+   Chromium / Safari 18+); visibility: hidden is the broader-support
+   fallback that at least skips compositing. The .splinecode itself
+   stays loaded — only render is paused, so cards swing back in
+   instantly without reloading. */
+body.v2-home .proj-flow-sec.proj-flow-offscreen .proj-card-spline {
+  visibility: hidden;
+  content-visibility: hidden;
+}
+/* Content overlay — sits on top of the Spline iframe (which is
+   pointer-events: none + z-index 0), with the project meta pinned
+   to the top, the title/blurb block aligned left so the centered
+   iPhone in the scene stays visible on the right, and the tags
+   pinned to the bottom. */
+body.v2-home .proj-card-content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  /* Top padding pushes header below the global nav (~70px tall) so
+     they don't visually overlap; bottom padding leaves room for the
+     tag pills. */
+  padding: clamp(5rem, 8vh, 7rem) clamp(1.5rem, 4vw, 3.5rem) clamp(1.5rem, 3.5vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  /* Dark coffee brown — visibly brown (not just tinted black), still
+     ~11:1 contrast on a cream #F2EDE3 bg (AAA for body). Previous
+     #1A1612 was technically warm but visually indistinguishable from
+     pure black at this saturation. */
+  color: #3D2817;
+  font-family: var(--font-sans);
+}
+body.v2-home .proj-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  pointer-events: auto;
+}
+body.v2-home .proj-card-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+body.v2-home .proj-card-logo {
+  height: 60px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+}
+body.v2-home .proj-card-sep {
+  font-size: 10pt;
+  color: rgba(61, 40, 23, 0.45);
+  line-height: 1;
+}
+/* Eyebrow — sits inline beside the logo in the header, in v2 kicker
+   style (uppercase, wider tracking, medium weight) so it matches the
+   kicker on HOW I WORK and IMPACT. */
+body.v2-home .proj-card-type {
+  font-size: 9pt;
+  font-weight: var(--weight-medium);
+  color: rgba(61, 40, 23, 0.78);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  line-height: 1;
+}
+/* Index — statement size. The current page number (<strong>02</strong>)
+   is bold + solid brown; the " / 04" stays light and muted so the
+   active index reads as the focal point. */
+body.v2-home .proj-card-index {
+  font-family: var(--font-sans);
+  font-size: clamp(28pt, 3.6vw, 44pt);
+  font-weight: var(--weight-light);
+  color: rgba(61, 40, 23, 0.42);
+  letter-spacing: -0.015em;
+  line-height: 1;
+  white-space: nowrap;
+}
+body.v2-home .proj-card-index strong {
+  font-weight: var(--weight-semibold);
+  color: #3D2817;
+}
+/* Title + blurb — capped at ~36rem, anchored to the LEFT edge of
+   the content area and vertically centered. `margin-top: auto` +
+   `margin-bottom: auto` together consume all remaining vertical
+   space between the header and the footer, centering the block in
+   the middle of the card. text-align defaults to left. */
+body.v2-home .proj-card-body-wrap {
+  max-width: 36rem;
+  margin-top: auto;
+  margin-bottom: auto;
+  text-align: left;
+  pointer-events: auto;
+}
+body.v2-home .proj-card-title {
+  font-family: var(--font-sans);
+  font-size: clamp(28pt, 4.4vw, 56pt);
+  font-weight: var(--weight-thin);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  color: #3D2817;
+  margin: 0 0 clamp(1rem, 2vh, 1.4rem);
+  /* Defensive left-edge reset — ensures the title's box starts
+     flush at x=0 of the body-wrap, so the blurb below lines up
+     pixel-perfect under the first glyph. */
+  padding-left: 0;
+  text-indent: 0;
+}
+/* Bold accent — the brand word in the title (Verizon) sits semibold
+   while the rest of the title stays thin. */
+body.v2-home .proj-card-title strong {
+  font-weight: var(--weight-semibold);
+}
+body.v2-home .proj-card-body {
+  font-family: var(--font-sans);
+  font-size: clamp(11pt, 1vw, 13.5pt);
+  font-weight: var(--weight-regular);
+  line-height: 1.6;
+  color: rgba(61, 40, 23, 0.82);
+  margin: 0;
+  padding-left: 0;
+  text-indent: 0;
+  /* Narrower blurb — keeps the line length tight for readability
+     and leaves more room for the Spline scene on the right. */
+  max-width: 22rem;
+  /* Same letter-spacing as the title compensates for font-metric
+     side-bearing differences between weights — keeps the blurb's
+     left visual edge aligned with the title's. */
+  letter-spacing: -0.012em;
+}
+body.v2-home .proj-card-footer {
+  /* No auto margin here — `.proj-card-body-wrap` owns the auto
+     margins that consume the remaining vertical space, so the
+     footer just falls naturally to the bottom of the flex column. */
+  pointer-events: auto;
+}
+body.v2-home .proj-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+/* Glass tag — slim, single-element. The pill is barely-there at rest
+   (very low fill, soft border) so it reads as light. Hover does the
+   visible work: white fill jumps from 5% → 28% (clearly visible),
+   the border brightens to a near-solid hairline, the pill lifts 2px
+   AND scales 1.04, and an outer glow halo appears. Quick 0.2s
+   transition keeps the response snappy. */
+/* Per-card VCR trigger — fires when each .proj-card scrolls into
+   view (threshold 0.4 in JS). The wrapped words inside the eyebrow,
+   index, title, and blurb slide up from translateY(125%) to 0 with a
+   per-word stagger via --word-i. */
+body.v2-home .proj-card.is-vcr-active .vcr-inner {
+  transform: translateY(0);
+  transition-delay: calc(var(--word-i, 0) * 70ms);
+}
+/* Base glass pill — 25% warm-cream fill + backdrop blur. Sits in the
+   hidden-by-default state (opacity 0 + translateY 12px) until the
+   card's `.is-vcr-active` triggers the slide-up reveal, staggered
+   per pill via --tag-i.
+   Tags aren't word-wrapped — that would chop "Cross-Platform Mobile
+   Application" into floating pills. They animate as whole units. */
+body.v2-home .proj-card-tag {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-sans);
+  font-size: 9.5pt;
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.005em;
+  text-transform: none;
+  color: rgba(61, 40, 23, 0.92);
+  background: rgba(255, 250, 240, 0.25);
+  border: 0;
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 0 rgba(255, 250, 240, 0.35);
+  /* Entry-animation initial state. */
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity   0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+body.v2-home .proj-card.is-vcr-active .proj-card-tag {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(var(--tag-i, 0) * 50ms);
+}
+
+
+/* ── Project card — shared layout tweaks (all 4 cards).
+   Logo bumped to 60px so the brand reads as the primary header
+   element. The eyebrow (type label) is lifted out of the inline
+   header flow and anchored to the right edge of the card as a
+   VERTICAL label, vertically centered against the card's mid-line.
+   The now-orphan `·` separator is hidden because there's nothing
+   to separate from inline anymore. */
+body.v2-home .proj-card .proj-card-logo {
+  height: 60px;
+}
+body.v2-home .proj-card .proj-card-sep {
+  display: none;
+}
+body.v2-home .proj-card .proj-card-type {
+  position: absolute;
+  /* Matches the .proj-card-content horizontal padding so the vertical
+     eyebrow's right edge lines up with the 02/04 index above. */
+  right: clamp(1.5rem, 4vw, 3.5rem);
+  top: 50%;
+  transform: translateY(-50%);
+  /* writing-mode (not transform: rotate) — the element becomes a
+     genuinely vertical strip whose box width = text height, so
+     `right: X` actually anchors the visible right edge. With rotate
+     the box width was still the full text length, which shifted the
+     visible strip ~140px inward of where it should have been. Text
+     reads top-down (first char at top); tilt head right to read. */
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+
+/* ── VZ Identity card — solid white theme.
+   Same recipe as the iconmobile card: pure-white type throughout,
+   dark glass on tags so the white pill text reads against its own
+   surface rather than depending on whatever's behind. */
+body.v2-home .proj-card[data-proj="vz-id-arch"] .proj-card-content {
+  color: #fff;
+}
+body.v2-home .proj-card[data-proj="vz-id-arch"] .proj-card-sep {
+  color: rgba(255, 255, 255, 0.45);
+}
+body.v2-home .proj-card[data-proj="vz-id-arch"] .proj-card-type {
+  color: rgba(255, 255, 255, 0.78);
+}
+body.v2-home .proj-card[data-proj="vz-id-arch"] .proj-card-index {
+  color: rgba(255, 255, 255, 0.45);
+}
+body.v2-home .proj-card[data-proj="vz-id-arch"] .proj-card-index strong {
+  color: #fff;
+}
+body.v2-home .proj-card[data-proj="vz-id-arch"] .proj-card-title {
+  color: #fff;
+}
+body.v2-home .proj-card[data-proj="vz-id-arch"] .proj-card-body {
+  color: rgba(255, 255, 255, 0.82);
+}
+body.v2-home .proj-card[data-proj="vz-id-arch"] .proj-card-tag {
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(0, 0, 0, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+
+/* ── BlueJeans card — navy-blue theme.
+   Text colors sampled from the blue Spline scene; primary tone
+   #0F2244 hits ~13:1 against a light-blue bg, well above WCAG AAA.
+   Tag glass switched to a light-blue-tinted translucent fill so the
+   pills also stay in-palette. */
+body.v2-home .proj-card[data-proj="bluejeans"] .proj-card-content {
+  color: #0F2244;
+}
+body.v2-home .proj-card[data-proj="bluejeans"] .proj-card-sep {
+  color: rgba(15, 34, 68, 0.45);
+}
+body.v2-home .proj-card[data-proj="bluejeans"] .proj-card-type {
+  color: rgba(15, 34, 68, 0.78);
+}
+body.v2-home .proj-card[data-proj="bluejeans"] .proj-card-index {
+  color: rgba(15, 34, 68, 0.42);
+}
+body.v2-home .proj-card[data-proj="bluejeans"] .proj-card-index strong {
+  color: #0F2244;
+}
+body.v2-home .proj-card[data-proj="bluejeans"] .proj-card-title {
+  color: #0F2244;
+}
+body.v2-home .proj-card[data-proj="bluejeans"] .proj-card-body {
+  color: rgba(15, 34, 68, 0.82);
+}
+body.v2-home .proj-card[data-proj="bluejeans"] .proj-card-tag {
+  color: rgba(15, 34, 68, 0.92);
+  background: rgba(220, 232, 255, 0.25);
+  box-shadow: inset 0 1px 0 rgba(220, 232, 255, 0.40);
+}
+
+
+/* ── Iconmobile card — solid white type throughout.
+   For dark scene backgrounds (the iconmobile 3D mockup reads as a
+   moodier scene). Tags switch to a dark glass fill so the white
+   text stays legible on the pill surface too. */
+body.v2-home .proj-card[data-proj="iconmobile"] .proj-card-content {
+  color: #fff;
+}
+body.v2-home .proj-card[data-proj="iconmobile"] .proj-card-sep {
+  color: rgba(255, 255, 255, 0.45);
+}
+body.v2-home .proj-card[data-proj="iconmobile"] .proj-card-type {
+  color: rgba(255, 255, 255, 0.78);
+}
+body.v2-home .proj-card[data-proj="iconmobile"] .proj-card-index {
+  color: rgba(255, 255, 255, 0.45);
+}
+body.v2-home .proj-card[data-proj="iconmobile"] .proj-card-index strong {
+  color: #fff;
+}
+body.v2-home .proj-card[data-proj="iconmobile"] .proj-card-title {
+  color: #fff;
+}
+body.v2-home .proj-card[data-proj="iconmobile"] .proj-card-body {
+  color: rgba(255, 255, 255, 0.95);
+  /* Per-line backdrop-blur, no tint — each line gets its own padded
+     blurred slab so the busy scene behind softens behind the text
+     without being covered by a colored fill.
+     The trick: switch the <p> to display: inline so it forms line
+     boxes, then `box-decoration-break: clone` makes the padding +
+     backdrop-filter repeat per line instead of stretching as one flat
+     rectangle behind the whole paragraph. */
+  display: inline;
+  background: transparent;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 0.15em 0.45em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+/* When the body is `display: inline`, max-width on the body element
+   itself stops applying (inline boxes don't honor width). Constrain
+   the parent body-wrap to the same 22rem cap so the highlighted text
+   still wraps at the same line length as the other cards' blurbs. */
+body.v2-home .proj-card[data-proj="iconmobile"] .proj-card-body-wrap {
+  max-width: 22rem;
+}
+body.v2-home .proj-card[data-proj="iconmobile"] .proj-card-tag {
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(0, 0, 0, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+
+body.v2-home .proj-card-spline {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+  background: transparent;
+  /* Spline-viewer renders WebGL directly into this page (no iframe)
+     so wheel events bubble normally — but the viewer still listens
+     to wheel for scene zoom/pan. Disabling pointer events lets the
+     cursor pass through to the underlying card so wheel + click go
+     to Lenis. The scene plays as a passive showcase here, so no
+     interactivity is lost. */
+  pointer-events: none;
+  /* Force its own GPU compositing layer so the parent's rotation
+     transform updates don't repeatedly re-rasterize the WebGL
+     contents — which is what destabilises scenes inside transformed
+     parents. */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+/* Hide the "Built with Spline" badge on the viewer's shadow DOM via
+   CSS Parts (the same trick used by the welcome scene). */
+body.v2-home .proj-card-spline::part(logo) {
+  display: none !important;
+}
+
+/* Video variant — uses the same positioning as .proj-card-spline (so
+   .proj-flow-offscreen pause kicks in too). Adds object-fit: cover so
+   the MP4 fills the card without aspect-ratio distortion regardless of
+   viewport size. */
+body.v2-home .proj-card-video {
+  object-fit: cover;
+  object-position: center center;
+}
+
+
+/* ── LENIS smooth scroll — recommended baseline rules.
+   Disables native CSS smooth-scroll (Lenis owns scroll motion),
+   contains overscroll on opt-in regions, and prevents cross-origin
+   iframes from eating wheel events mid-scroll. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ── QUOTE SECTION — scroll-driven word reveal ───────────────────
+   Warm bg + classic dot grid. 200vh runway with 100vh sticky pin
+   keeps the quote centered while the words reveal as the user
+   scrolls. JS handler updates each .qw-real opacity per index. */
+body.v2-home .quote-sec {
+  position: relative;
+  background-color: #000;
+  /* 600px buffer above the runway so the section opens with extra
+     breathing room before the sticky quote pins (was 200px; bumped
+     +400px for more space between the marquee and the quote). */
+  padding-top: 600px;
+}
+body.v2-home .quote-runway {
+  position: relative;
+  /* Sized to fit (8 + 3) animated words × 5vh per word + 30vh fade
+     = 85vh of content reveal + 100vh pin + small buffer ≈ 200vh. */
+  height: 200vh;
+}
+body.v2-home .quote-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  /* Container for the bg surface + two absolutely-positioned stages. */
+}
+/* Three.js animated dotted wave — sits behind everything in the pin.
+   Natural orientation: wave reads from the BOTTOM of the section. */
+body.v2-home #quote-bg-surface {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+/* Make sure text stages render above the bg surface. */
+body.v2-home .quote-stage {
+  z-index: 1;
+}
+/* Each stage covers the pin. Both are present in the DOM simultaneously;
+   JS controls opacity to crossfade them. Content centered vertically;
+   the dancing-dots scene sits at the natural bottom of the pin. */
+body.v2-home .quote-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.75rem, 4vh, 3rem);
+  padding: 0 clamp(1.25rem, 6vw, 5rem);
+}
+body.v2-home .quote-stage-1 { opacity: 1; }
+body.v2-home .quote-stage-2 { opacity: 0; }
+body.v2-home .quote-text {
+  /* Wider so the longest segment ("Most products fail not in Execution,")
+     fits on a single line at the larger font size. */
+  max-width: 88rem;
+  font-family: var(--font-sans);
+  font-weight: var(--weight-thin);
+  font-size: clamp(28pt, 4.4vw, 56pt);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  color: #fff;
+  text-align: center;
+}
+/* Per-word emphasis modifiers — applied to .qw so both the .qw-ghost
+   and .qw-real layers inherit the same treatment. */
+body.v2-home .quote-text .qw-bold      { font-weight: 700; }
+body.v2-home .quote-text .qw-italic    { font-style: italic; }
+body.v2-home .quote-text .qw-underline { text-decoration: underline; }
+body.v2-home .quote-text .qw-accent    { color: var(--accent); }
+
+/* Per-word wrapper — relative so the .qw-real overlay can sit on top
+   of the placeholder ghost. Inline-block so wrapping behaves like
+   normal text. Scoped to the whole section so both the headline
+   quote AND the body paragraphs share it. */
+body.v2-home .quote-sec .qw {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.18em;
+}
+/* Ghost: in-flow, defines the layout box. Very faint so each word's
+   shape is hinted at before its real reveal lights it up. */
+body.v2-home .quote-sec .qw-ghost {
+  opacity: 0.12;
+}
+/* Real: absolute overlay aligned to the ghost. Starts hidden;
+   JS pulls it up to 1 as the user scrolls past its index range. */
+body.v2-home .quote-sec .qw-real {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+}
+/* Static words — render at full opacity from the start, no scroll
+   reveal. JS skips them; this CSS just hard-locks the .qw-real layer
+   to fully visible so the word reads as solid black. */
+body.v2-home .quote-sec .qw-static .qw-real {
+  opacity: 1;
+}
+
+/* Body paragraphs — smaller, regular weight, subtle resolve. Read
+   below the stage-2 headline. Fixed 12pt as requested. */
+body.v2-home .quote-body {
+  max-width: 48rem;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.7rem, 1.5vh, 1.1rem);
+  font-family: var(--font-sans);
+  font-size: 12pt;
+  font-weight: var(--weight-regular);
+  line-height: 1.7;
+  color: var(--ink);
+  text-align: left;
+}
+body.v2-home .quote-body p {
+  margin: 0;
+}
+
+/* Nav dropdown cards: drop the static hover bg/border swap so the only
+   feedback is the cursor-tracked spotlight glow (added via JS, painted
+   by .spotlight-glow ::before / ::after). Keep base white fill +
+   var(--rule) border on hover. The icon also stays at rest styling. */
+/* ── v2 dropdown — DARK MODE 2×2 grid of NavGridCard-style cards.
+   Mirrors the Radix NavGridCard pattern: icon at the top-left of each
+   card, title + blurb stacked vertically below. Replaces the
+   light-mode panel + card + icon-chip styling defined above. Scoped
+   to body.v2-home so the original index.html dropdown stays untouched. */
+body.v2-home .nav-dropdown {
+  background: #0a0a0e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+  padding: 16px;
+  gap: 12px;
+}
+body.v2-home .nav-dropdown a.nav-dropdown-card {
+  /* Switch from icon-left-row to icon-top-stack: simple flex column.
+     The base rule's grid-template-* properties are inert under
+     display: flex, but the desc's grid-column / grid-row need an
+     explicit reset (see below).
+     min-height must exceed the natural content height of EVERY card
+     (incl. VZ Identity's 2-line title), so the grid can't size rows
+     by content alone — cards with shorter titles then stretch up to
+     min-height via align-self: stretch, and the extra vertical space
+     is absorbed by `margin-top: auto` on the title (see below). Net
+     effect: all 4 cards render the exact same height; the icon-to-
+     title gap is responsive across cards (16px floor on the tallest,
+     more on the others) so everything lines up. */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  gap: 0;
+  padding: 18px;
+  min-height: 160px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+body.v2-home .nav-dropdown a.nav-dropdown-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+/* Icon: ditch the rounded chip — show a clean SVG with no
+   background, smaller scale, muted white tint. */
+body.v2-home .nav-dropdown-icon {
+  width: 22px;
+  height: 22px;
+  background: transparent;
+  border: 0;
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: 0;
+}
+body.v2-home .nav-dropdown a.nav-dropdown-card:hover .nav-dropdown-icon {
+  background: transparent;
+  color: #fff;
+}
+body.v2-home .nav-dropdown-icon svg {
+  width: 22px;
+  height: 22px;
+}
+body.v2-home .nav-dropdown-title {
+  /* margin-top: auto pushes the title (and the desc below it) to the
+     bottom of the card, so the icon stays at the top while the
+     title/blurb sit anchored at the bottom. The extra vertical space
+     in the middle absorbs height differences between cards.
+     padding-top: 16px is the floor — guarantees a minimum 16px gap
+     from the icon even when the auto-margin collapses to 0. */
+  margin-top: auto;
+  padding-top: 16px;
+  color: rgba(255, 255, 255, 0.92);
+}
+body.v2-home .nav-dropdown-desc {
+  /* Reset the light-mode grid placement so the desc stacks naturally
+     below the title under flex layout. */
+  grid-column: auto;
+  grid-row: auto;
+  /* 4px between title and blurb. */
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+body.v2-home .welcome-enter {
+  /* Centered to the viewport (instead of bottom-center). */
+  top: 50%;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  color: #000;
+}
+/* Letter-spacing on uppercase text adds a trailing space after the last
+   letter, shifting the visual center of "ENTER" left of the box center
+   (which is where the arrow lands via align-items: center). Compensate
+   by padding the label left by the same amount as the letter-spacing,
+   so the inked "ENTER" sits dead-center over the arrow. */
+body.v2-home .welcome-enter-label {
+  padding-left: var(--tracking-wider);
+}
+
+/* Letter-spread + sweep. Each letter in .welcome-enter-label is
+   wrapped in <span class="we-letter" style="--i:N">. On hover,
+   letters fan out from the center, color sweeps from left to right
+   via staggered transition-delay, arrow rotates to point right. */
+body.v2-home .we-letter {
+  display: inline-block;
+  transition:
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.35s ease;
+  transition-delay: calc(var(--i, 0) * 55ms);
+}
+body.v2-home .welcome-enter:hover .we-letter {
+  /* Translate each letter outward from the center. The "center" of
+     a 5-letter word is index 2; (i - 2) sends letters left or right. */
+  transform: translateX(calc((var(--i, 0) - 2) * 7px));
+}
+
+/* Arrow rotates from down (default) to right (-90deg) on hover and
+   pauses the existing nudge animation so the rotation reads cleanly.
+   Color stays black at rest, flips to accent purple on hover. */
+body.v2-home .welcome-enter-arrow {
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.35s ease;
+}
+body.v2-home .welcome-enter:hover .welcome-enter-arrow {
+  animation: none;
+  opacity: 1;
+  transform: rotate(-90deg);
 }
 
 /* Lock page scroll while overlay is visible */

@@ -6,6 +6,8 @@
   <title>Verizon Home App · Refaeli Ma</title>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="styles.css">
+  <!-- GSAP — used by the .cta-sec interactive dot-grid background. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <style>
 
     /* ── Chapter 2 Hero (mirrors vzh-stage structure, light surface) ── */
@@ -110,12 +112,20 @@
     }
 
 
-    /* Dot grid overlay — visible on right, fades out toward the left */
+    /* Moving grid overlay — animated scrolling line grid, fades from
+       right to left (mask kept verbatim from the v1 dot-grid). Replaces
+       the dot grid with the same recipe other sections use (e.g.
+       .chap-break, IMPACT logo blocks): linear-gradient line stack +
+       impact-grid-scroll keyframes. Dark ink lines since the ch2
+       gradient bg is light. */
     .ch2-dots {
       position: absolute;
       inset: 0;
-      background-image: var(--dot-grid-mid);
-      background-size: var(--dot-size-md);
+      background-image:
+        linear-gradient(to right,  rgba(0, 0, 0, 0.10) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.10) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: impact-grid-scroll 1.5s linear infinite;
       -webkit-mask-image: linear-gradient(90deg,
         transparent     20%,
         rgba(0,0,0,0.3) 45%,
@@ -173,18 +183,22 @@
       clip-path: inset(100% 0 0 0);
     }
     .ch2-glass-line {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: clamp(17pt, 2.9vw, 34pt);
-      font-weight: var(--weight-regular);
+      font-weight: var(--weight-light);
       color: rgba(255,255,255,0.92);
       line-height: 1.3;
+      letter-spacing: -0.012em;
       max-width: 1020px;
       width: 90vw;
       opacity: 0;
       transform: translateY(18px);
       will-change: transform, opacity;
     }
-    .ch2-glass-line em { font-style: italic; color: var(--accent-mid); }
+    .ch2-glass-line em {
+      font-style: italic;
+      color: inherit;
+    }
 
     /* Bottom-left content — eyebrow on TOP of title (different from page hero) */
     .ch2-content {
@@ -205,16 +219,19 @@
       animation: fu 0.6s var(--ease-reveal) 0.3s both;
     }
     .ch2-title {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: clamp(26pt, 4.2vw, 48pt);
-      font-weight: var(--weight-regular);
+      font-weight: var(--weight-thin);
       color: var(--ink);
       line-height: 1.08;
+      letter-spacing: -0.012em;
       margin: 0;
       opacity: 0;
       animation: fu 0.7s var(--ease-reveal) 0.5s both;
     }
-    .ch2-title em { font-style: italic; color: var(--ink); }
+    .ch2-title strong {
+      font-weight: 700;
+    }
 
     /* Notification tile rotation — sits to the RIGHT of the phone, side-by-side */
     .ch2-tile-stack {
@@ -370,10 +387,13 @@
       pointer-events: none;
       clip-path: inset(100% 0 0 0); /* starts fully clipped (below view) */
     }
+    /* Matches the iconmobile glass-line recipe: sans + thin base
+       (200), light-italic em (300, slightly bolder than base, no
+       purple), bold (700) strong for key-word emphasis. */
     .vzh-glass-line {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: clamp(17pt, 2.9vw, 34pt);
-      font-weight: var(--weight-regular);
+      font-weight: var(--weight-thin);
       color: rgba(255,255,255,0.90);
       line-height: 1.3;
       max-width: 1020px;
@@ -381,17 +401,24 @@
       opacity: 0;
       transform: translateY(18px);
       will-change: transform, opacity;
+      letter-spacing: -0.012em;
     }
     .vzh-glass-line em {
       font-style: italic;
-      color: var(--accent-mid);
+      font-weight: var(--weight-light);
+      color: inherit;
     }
-    /* content pinned to bottom */
+    .vzh-glass-line strong {
+      font-weight: 700;
+      color: inherit;
+    }
+    /* content pinned to bottom — horizontal padding matches the global
+       nav so .vzh-kicker + .vzh-title align under the REFAELI MA logo. */
     .vzh-content {
       position: relative;
       z-index: 4;
       width: 100%;
-      padding: 0 clamp(2rem, 6vw, 6rem) clamp(3rem, 6vh, 5.5rem);
+      padding: 0 clamp(1.25rem, 5vw, 4rem) clamp(3rem, 6vh, 5.5rem);
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
@@ -402,27 +429,36 @@
       flex: 0 1 auto;
       min-width: 0;
     }
+    /* Kicker — matches body.v2-home .proj-card-type / cs-vz-id-arch's
+       .hero-eyebrow: 9pt, medium, tracking-wider, uppercase, 78% white. */
     .vzh-kicker {
-      font-size: var(--text-micro);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: rgba(255,255,255,0.48);
-      margin-bottom: 0;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1;
+      margin-bottom: 1.4rem;
       opacity: 0;
       animation: fu 0.6s var(--ease-reveal) 0.3s both;
     }
+    /* Title — mirrors the home .proj-card-title / cs-vz-id-arch's
+       .hero-title: sans, thin base, semibold <strong>, uppercase. */
     .vzh-title {
-      font-family: var(--font-serif);
-      font-size: clamp(32pt, 6.5vw, 68pt);
-      font-weight: var(--weight-regular);
+      font-family: var(--font-sans);
+      font-size: clamp(28pt, 4.4vw, 56pt);
+      font-weight: var(--weight-thin);
       color: #fff;
-      line-height: 1.0;
-      margin: 0 0 1rem;
+      line-height: 1.1;
+      letter-spacing: -0.012em;
+      text-transform: uppercase;
+      margin: 0;
       opacity: 0;
       animation: fu 0.7s var(--ease-reveal) 0.5s both;
     }
-    .vzh-title em { font-style: italic; color: var(--accent-mid); }
+    .vzh-title strong {
+      font-weight: 700;
+    }
     /* custom app store buttons */
     .vzh-app-btns {
       display: flex;
@@ -469,14 +505,50 @@
       color: #fff;
       line-height: 1.2;
     }
-    /* stat strip below marquee */
+    /* stat strip below marquee.
+       Now hosts the cursor-tracked moving grid effect (same recipe as
+       the IMPACT logo blocks on the home + .chl-quote-sec on
+       cs-vz-id-arch). Position + isolation establish the local
+       stacking context for the ::before/::after grid layers. */
     .vzh-stat-strip {
+      position: relative;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       background: var(--dark);
       border-bottom: 1px solid var(--accent-mid-a08);
+      isolation: isolate;
+      overflow: hidden;
+    }
+    /* Base grid (always visible) + bright grid masked to a 300px radial
+       at the cursor position. JS writes --mx / --my on .vzh-stat-strip
+       on pointermove. White lines since this strip is on pure-black bg. */
+    .vzh-stat-strip::before,
+    .vzh-stat-strip::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right,  rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: impact-grid-scroll 1.5s linear infinite;
+    }
+    .vzh-stat-strip::after {
+      background-image:
+        linear-gradient(to right,  rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
+      -webkit-mask-image: radial-gradient(
+        300px circle at var(--mx, -1000px) var(--my, -1000px),
+        #000, transparent);
+              mask-image: radial-gradient(
+        300px circle at var(--mx, -1000px) var(--my, -1000px),
+        #000, transparent);
     }
     .vzh-stat-cell {
+      position: relative;
+      z-index: 1;
       padding: 2rem 1.5rem;
       text-align: center;
       border-right: 1px solid var(--accent-mid-a08);
@@ -487,14 +559,17 @@
       font-size: clamp(18pt, 2.6vw, 26pt);
       color: #fff;
       line-height: 1;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.8rem;
     }
+    /* Label — bumped from 6.8pt + 38% white (too tiny + too dim) to
+       9pt + 65% white. Matches the v2 kicker / blurb grey on dark bg
+       used elsewhere in this case study. */
     .vzh-stat-label {
-      font-size: var(--text-nano);
+      font-size: 9pt;
       font-weight: var(--weight-medium);
       letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: var(--white-a38);
+      color: rgba(255, 255, 255, 0.65);
       line-height: var(--leading-tight);
     }
 
@@ -604,17 +679,47 @@
       background-size: var(--dot-size-md);
     }
 
-    /* ── Chapter break transition ── */
+    /* ── Chapter break transition ──
+       Dot-grid swapped for the cursor-tracked moving grid (same recipe
+       as the .vzh-stat-strip + cs-vz-id-arch's CONTEXT). White lines
+       since the surface is pure-black --dark. */
     .chap-break {
       background-color: var(--dark);
-      background-image: var(--dot-grid-white-sm);
-      background-size: var(--dot-size-md);
+      background-image: none;
       border-top: 1px solid var(--accent-mid-a08);
       border-bottom: 1px solid var(--accent-mid-a08);
       padding: 4rem clamp(1.25rem, 5vw, 4rem);
       position: relative;
+      isolation: isolate;
+      overflow: hidden;
+    }
+    .chap-break::before,
+    .chap-break::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right,  rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: impact-grid-scroll 1.5s linear infinite;
+    }
+    .chap-break::after {
+      background-image:
+        linear-gradient(to right,  rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
+      -webkit-mask-image: radial-gradient(
+        300px circle at var(--mx, -1000px) var(--my, -1000px),
+        #000, transparent);
+              mask-image: radial-gradient(
+        300px circle at var(--mx, -1000px) var(--my, -1000px),
+        #000, transparent);
     }
     .chap-break-inner {
+      position: relative;
+      z-index: 1;
       max-width: var(--content-default);
       margin: 0 auto;
       display: flex;
@@ -659,19 +764,24 @@
     .cb-side:hover .cb-hover   { opacity: 1; pointer-events: auto; }
 
     .cb-num {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
+      font-weight: var(--weight-thin);
       font-size: clamp(80pt, 13vw, 180pt);
-      color: var(--accent-mid-a08);
+      color: rgba(255, 255, 255, 0.08);
       line-height: 1;
       margin-bottom: 0;
+      letter-spacing: -0.012em;
     }
-    /* Shimmer on the active chapter's number (looping highlight sweep + indigo glow halo) */
+    /* Shimmer on the active chapter's number — brightened so the
+       active state reads clearly against the moving-grid bg. Peaks
+       were too dim (0.28 max white). Now base 0.18, peak 0.55, with
+       the purple-tinted glow swapped to neutral white for v2. */
     .cb-side.cb-active .cb-num {
       background-image: linear-gradient(
         100deg,
-        rgba(141,148,255,0.08) 35%,
-        rgba(255,255,255,0.28) 50%,
-        rgba(141,148,255,0.08) 65%
+        rgba(255, 255, 255, 0.18) 35%,
+        rgba(255, 255, 255, 0.55) 50%,
+        rgba(255, 255, 255, 0.18) 65%
       );
       background-size: 200% 100%;
       background-position: 200% 0;
@@ -679,26 +789,32 @@
               background-clip: text;
       color: transparent;
       filter:
-        drop-shadow(0 0 30px rgba(141, 148, 255, 0.35))
-        drop-shadow(0 0 60px rgba(141, 148, 255, 0.18));
+        drop-shadow(0 0 30px rgba(255, 255, 255, 0.18))
+        drop-shadow(0 0 60px rgba(255, 255, 255, 0.10));
       animation: cb-shimmer 5s ease-in-out infinite;
     }
     @keyframes cb-shimmer {
       0%   { background-position: 200% 0; }
       100% { background-position: -100% 0; }
     }
+    /* Chapter eyebrow — v2 kicker style (matches .sec-ch / .proj-card-type
+       on the home): 9pt, medium, --tracking-wider, 55% white. Was
+       --text-micro (7pt) + semibold + purple --accent-mid-a50. */
     .cb-chapter {
-      font-size: var(--text-micro);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: var(--accent-mid-a50);
-      margin-bottom: 0.4rem;
+      color: rgba(255, 255, 255, 0.55);
+      line-height: 1;
+      margin-bottom: 0.8rem;
     }
     .cb-title {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
+      font-weight: var(--weight-thin);
       font-size: clamp(16pt, 2.2vw, 24pt);
       line-height: 1.2;
+      letter-spacing: -0.012em;
       color: rgba(255,255,255,0.3);
     }
     .cb-side.cb-active .cb-title { color: #fff; }
@@ -713,10 +829,10 @@
     }
     .cb-jump {
       font-size: var(--text-caption);
-      font-weight: var(--weight-semibold);
+      font-weight: var(--weight-medium);
       letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: var(--accent-mid);
+      color: rgba(255, 255, 255, 0.78);
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -974,38 +1090,42 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 1.25rem;
     }
+    /* v2 dark card chrome — solid black so the 6-line section bg
+       doesn't show through. Neutral white border, no hover bg/border
+       color shift (the spotlight-glow halo carries the hover). The
+       lift + shadow on hover stay intact. */
     .ia-block {
       position: relative;
       overflow: hidden;
-      background: var(--white-a04);
-      border: 1px solid var(--rule-dark);
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.10);
       border-radius: var(--radius-card);
       padding: 2rem 1.8rem;
       display: flex;
       flex-direction: column;
-      transition: transform 0.35s ease, border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
     }
     .ia-block:hover {
       transform: translateY(-3px);
-      border-color: var(--accent-mid-a25);
-      background: rgba(141, 148, 255, 0.08);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
     }
     .ia-block-num {
       position: absolute;
       top: -1rem;
       right: 0.4rem;
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
+      font-weight: var(--weight-thin);
       font-size: clamp(70pt, 7vw, 100pt);
-      color: rgba(141, 148, 255, 0.10);
+      color: rgba(255, 255, 255, 0.10);
       line-height: 1;
+      letter-spacing: -0.012em;
       pointer-events: none;
       user-select: none;
       z-index: 0;
       transition: color 0.35s ease, transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1);
     }
     .ia-block:hover .ia-block-num {
-      color: rgba(141, 148, 255, 0.20);
+      color: rgba(255, 255, 255, 0.20);
       transform: translateY(-4px) rotate(-3deg);
     }
     .ia-block-emoji,
@@ -1017,28 +1137,35 @@
       line-height: 1;
       margin-bottom: 1rem;
     }
+    /* v2 kicker label — 9pt medium tracking-wider 55% white (was 9pt
+       semibold tracking-widest purple-at-50%). */
     .ia-block-label {
-      font-size: var(--text-caption);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-widest);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: var(--accent-mid-a50);
+      color: rgba(255, 255, 255, 0.55);
+      line-height: 1;
       margin-bottom: 0.55rem;
     }
+    /* Tagline — sans thin 14pt (was serif light) */
     .ia-block-tagline {
-      font-family: var(--font-serif);
-      font-weight: var(--weight-light);
+      font-family: var(--font-sans);
+      font-weight: var(--weight-thin);
       font-size: 14pt;
       color: rgba(255, 255, 255, 0.88);
       line-height: 1.3;
+      letter-spacing: -0.012em;
       margin: 0 0 0.8rem;
     }
+    /* Body — sans regular, 65% white (v2 body grey on dark) */
     .ia-block-desc {
       font-family: var(--font-sans);
       font-size: var(--text-body-sm);
-      font-weight: var(--weight-light);
-      color: rgba(255, 255, 255, 0.55);
-      line-height: var(--leading-normal);
+      font-weight: var(--weight-regular);
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.6;
+      letter-spacing: -0.012em;
       margin: 0;
     }
 
@@ -1094,35 +1221,49 @@
       will-change: opacity, transform;
       margin: 0;
     }
+    /* v2 kicker — 9pt medium tracking-wider (was 7pt semibold
+       tracking-kicker). */
     .l10-glass-eyebrow {
       font-family: var(--font-sans);
-      font-size: var(--text-micro);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1;
     }
+    /* Title — sans thin + bold strong (was serif regular + italic
+       purple em). */
     .l10-glass-title {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: clamp(28pt, 4.6vw, 52pt);
-      font-weight: var(--weight-regular);
+      font-weight: var(--weight-thin);
       color: #fff;
       line-height: 1.1;
+      letter-spacing: -0.012em;
       max-width: 18ch;
       text-align: center;
     }
-    .l10-glass-title em { font-style: italic; color: var(--accent-mid); }
+    .l10-glass-title strong {
+      font-weight: 700;
+    }
+    /* Body paragraph — sans light + tracking. em keeps italic but
+       drops purple (inherit). */
     .l10-glass-body {
       font-family: var(--font-sans);
       font-size: clamp(13pt, 1.4vw, 17pt);
       font-weight: var(--weight-light);
       color: rgba(255, 255, 255, 0.78);
       line-height: 1.5;
+      letter-spacing: -0.012em;
       max-width: 960px;
       text-align: center;
       margin-top: 0.5rem;
     }
-    .l10-glass-body em { font-style: italic; color: var(--accent-mid); }
+    .l10-glass-body em {
+      font-style: italic;
+      color: inherit;
+    }
     .l10-glass-note {
       position: absolute;
       bottom: clamp(2rem, 4vh, 3.5rem);
@@ -1158,69 +1299,92 @@
     .feat-item--reverse .feat-text  { order: 2; }
     .feat-item--reverse .feat-asset { order: 1; }
 
+    /* Giant ghost numeral — sans thin neutral (was serif + purple 6%) */
     .feat-num {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
+      font-weight: var(--weight-thin);
       font-size: clamp(52pt, 6.8vw, 88pt);
-      color: rgba(60, 73, 255, 0.06);
+      color: rgba(0, 0, 0, 0.08);
       line-height: 0.85;
+      letter-spacing: -0.012em;
       margin: 0 0 -0.3rem;
       pointer-events: none;
       user-select: none;
     }
+    /* v2 kicker — 9pt medium tracking-wider 55% black (was 6.8pt
+       semibold tracking-widest purple) */
     .feat-label {
-      font-size: var(--text-nano);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-widest);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: var(--accent-mid);
+      color: rgba(0, 0, 0, 0.55);
+      line-height: 1;
       margin: 0 0 0.6rem;
     }
+    /* Title — sans thin + -0.012em tracking (was serif regular) */
     .feat-title {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: clamp(22pt, 3.2vw, 34pt);
-      font-weight: var(--weight-regular);
+      font-weight: var(--weight-thin);
       color: var(--ink);
       line-height: 1.1;
+      letter-spacing: -0.012em;
       margin: 0 0 1.4rem;
-      letter-spacing: -0.005em;
     }
+    .feat-title strong {
+      font-weight: 700;
+    }
+    /* Tagline — sans italic at light weight, color inherits ink
+       (was serif italic purple). */
     .feat-tagline {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-style: italic;
+      font-weight: var(--weight-light);
       font-size: 17pt;
-      color: var(--accent-mid);
+      color: var(--ink);
       line-height: 1.35;
+      letter-spacing: -0.012em;
       margin: 0 0 1.5rem;
       max-width: 42ch;
     }
+    /* Body — sans regular at 65% black (v2 body), tighter leading
+       (1.6 instead of --leading-spacious 1.82). */
     .feat-body {
       font-family: var(--font-sans);
       font-size: var(--text-body-sm);
-      font-weight: var(--weight-light);
-      color: var(--ink-mid);
-      line-height: var(--leading-spacious);
+      font-weight: var(--weight-regular);
+      color: rgba(0, 0, 0, 0.65);
+      line-height: 1.6;
+      letter-spacing: -0.012em;
       margin: 0 0 1rem;
     }
+    /* Punch quote — sans italic, neutral border + transparent fill
+       (was serif italic + purple border + purple-tinted fill). */
     .feat-punch {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: 14pt;
+      font-style: italic;
+      font-weight: var(--weight-light);
       color: var(--ink);
       line-height: 1.4;
-      font-style: italic;
+      letter-spacing: -0.012em;
       margin: 1rem 0 1rem;
       padding: 0.9rem 1.1rem;
-      border-left: 2px solid var(--accent-mid-a25);
-      background: rgba(141, 148, 255, 0.04);
+      border-left: 2px solid rgba(0, 0, 0, 0.18);
+      background: rgba(0, 0, 0, 0.03);
     }
     .feat-principles {
       margin-top: 1.6rem;
     }
+    /* v2 kicker for the list label */
     .feat-principles-label {
-      font-size: var(--text-caption);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: var(--accent);
+      color: rgba(0, 0, 0, 0.55);
+      line-height: 1;
       margin: 0 0 0.7rem;
     }
     .feat-principles-list {
@@ -1231,9 +1395,10 @@
     .feat-principles-list li {
       font-family: var(--font-sans);
       font-size: var(--text-body-sm);
-      font-weight: var(--weight-light);
-      color: var(--ink-mid);
+      font-weight: var(--weight-regular);
+      color: rgba(0, 0, 0, 0.65);
       line-height: 1.5;
+      letter-spacing: -0.012em;
       padding: 0.35rem 0 0.35rem 1rem;
       position: relative;
     }
@@ -1245,7 +1410,7 @@
       width: 5px;
       height: 5px;
       border-radius: 50%;
-      background: var(--accent-mid);
+      background: rgba(0, 0, 0, 0.55);
     }
 
     /* Each stage is a sticky parallax cover (rises over the previous stage on scroll). */
@@ -1255,14 +1420,39 @@
       height: 200vh;            /* 100vh visible panel + 100vh runway for A→B swap + cover rise */
       overflow: hidden;          /* contain rounded corners + clip own orbs */
       background-color: var(--warm);
-      background-image: var(--dot-grid-light);
-      background-size: var(--dot-size-md);
+      background-image: none;    /* was var(--dot-grid-light) — swapped for 6-line guide bg below */
       border-radius: 1.5rem 1.5rem 0 0;
       box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.10);
       isolation: isolate;
     }
     /* Alternate stage 2 + 4 to page background so the cover stack reads as warm → page → warm → page */
     .feat-stage:nth-child(even) { background-color: var(--page); }
+    /* 6-line vertical guide background — light-bg variant (black 8%
+       lines, 60px gutter, viewport-anchored positions). Same recipe
+       as #context / #summary / etc., on every .feat-stage. */
+    .feat-stage::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+        linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+        linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+        linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+        linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+        linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+      background-position:
+        60px 0,
+        calc(60px + (100vw - 120px) / 5 * 1) 0,
+        calc(60px + (100vw - 120px) / 5 * 2) 0,
+        calc(60px + (100vw - 120px) / 5 * 3) 0,
+        calc(60px + (100vw - 120px) / 5 * 4) 0,
+        calc(100vw - 60px) 0;
+      background-repeat: no-repeat;
+      background-size: 1px 100%;
+    }
     /* Last stage: only needs the visible panel (100vh) — its sticky scroll runway comes from the
        .feat-grid::after spacer below so the swap can still play. */
     .feat-stage:last-child {
@@ -1350,8 +1540,27 @@
       overflow: hidden;
       background: transparent;
       margin-top: 2.5rem;
+      border-radius: var(--radius-card-lg);
     }
     .cs-video-wrap video { width: 100%; display: block; max-height: 72vh; object-fit: cover; }
+
+    /* ── DottedSurface canvas (THREE.js bouncing dots) ──
+       Mirrors the cs-vz-id-arch treatment: section opts out of the
+       global dot-grid backdrop + the .hiw-orbs decoration, replaced
+       by a full-bleed canvas that paints the animated dot field. */
+    #vz1-video-sec.cs-sec.bg-warm,
+    #vz2-video-sec.cs-sec.bg-page {
+      background-image: none;
+    }
+    .dotted-surface {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      z-index: 0;
+    }
 
     /* ── Phone screen images (real screenshots) ── */
     .pf-screen img {
@@ -1503,6 +1712,22 @@
     /* Ch2 Challenge tiles run taller — Tile 2's hover has paragraph + question list */
     .ch2-challenge .hiw-tile { height: 420px; }
 
+    /* v2 hiw-tile chrome — page-scoped override of the global rule
+       (.hiw-tile in styles.css uses rgba(255,255,255,0.72) + light
+       indigo --rule border + a purple-tinted hover bg shift).
+       Solid white + neutral border; no bg shift on hover (the
+       spotlight-glow halo carries it). The flip-face mechanism and
+       transform: translateY(-3px) lift on hover stay intact.
+       Scoped to .challenge-grid so BOTH Chapter 1 and Chapter 2
+       challenge tiles pick this up (Ch2 also has .ch2-challenge). */
+    .challenge-grid .hiw-tile {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.08);
+    }
+    .challenge-grid .hiw-tile:hover {
+      background: #ffffff;
+    }
+
     /* ── CHALLENGE → MY ROLE sticky-cover stack ── */
     .vzh-stack {
       position: relative;
@@ -1564,13 +1789,16 @@
     .role-orbit-l .role-orbit-ring { animation: hiw-spin-cw  80s linear infinite; }
     .role-orbit-r .role-orbit-ring { animation: hiw-spin-ccw 90s linear infinite; }
 
-    /* Labels — fade in only after the rings settle (dark surface variant) */
+    /* Labels — fade in only after the rings settle (dark surface variant).
+       Bumped from --text-caption (9pt) + semibold to 11pt + thin so the
+       two orbit labels read as quiet sans tags, complementing the bold
+       Bridge & Alignment overlap label at the venn center. */
     .role-label {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      font-size: var(--text-caption);
-      font-weight: var(--weight-semibold);
+      font-size: 10pt;
+      font-weight: var(--weight-thin);
       letter-spacing: var(--tracking-kicker);
       text-transform: uppercase;
       color: var(--accent-mid);
@@ -1590,12 +1818,13 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-family: var(--font-serif);
-      font-size: clamp(18pt, 2.2vw, 26pt);
-      font-style: italic;
-      font-weight: var(--weight-regular);
-      color: var(--accent-mid);
+      font-family: var(--font-sans);
+      font-size: clamp(16pt, 2vw, 24pt);
+      font-style: normal;
+      font-weight: 700;
+      color: #fff;
       line-height: 1.05;
+      letter-spacing: -0.012em;
       text-align: center;
       opacity: 0;
       transition: opacity 1.8s ease;
@@ -1685,6 +1914,9 @@
       font-family: var(--font-sans);
     }
 
+    /* v2 stepper — matches cs-vz-id-arch's CHALLENGE stepper:
+       sans + bold number, neutral border, kicker-style eyebrow,
+       sans title with bold key word. */
     .apr-step-node {
       display: flex;
       align-items: center;
@@ -1693,34 +1925,42 @@
       height: 60px;
       border-radius: 50%;
       background: var(--page);
-      border: 1px solid var(--accent-mid-a25);
-      font-family: var(--font-serif);
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      font-family: var(--font-sans);
       font-size: 18pt;
-      color: var(--accent);
+      font-weight: 700;
+      color: var(--ink);
       margin: 0 0 1.2rem;
       flex-shrink: 0;
     }
 
     .apr-step-eyebrow {
-      font-size: var(--text-micro);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.4rem;
+      color: rgba(0, 0, 0, 0.55);
+      line-height: 1;
+      margin-bottom: 0.6rem;
     }
     .apr-step-title {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: 14pt;
+      font-weight: var(--weight-thin);
       color: var(--ink);
+      letter-spacing: -0.012em;
       margin-bottom: 0.55rem;
       line-height: 1.2;
     }
-    /* Sub fills the step container — wider than before so the copy fits in 2 lines */
+    .apr-step-title strong {
+      font-weight: 700;
+    }
+    /* Sub fills the step container */
     .apr-step-sub {
+      font-family: var(--font-sans);
       font-size: var(--text-body-sm);
-      font-weight: var(--weight-light);
-      color: var(--ink-mid);
+      font-weight: var(--weight-regular);
+      color: rgba(0, 0, 0, 0.55);
       line-height: 1.5;
       max-width: 100%;
     }
@@ -1763,22 +2003,27 @@
       gap: 1.2rem;
       margin-top: 3.5rem;
     }
+    /* v2 tile chrome — matches cs-vz-id-arch's .move-tile: solid white
+       fill + neutral 1px border. Hover affordance comes from the JS-
+       added .spotlight-glow halo (see spotlightGlow IIFE), not from a
+       bg/border-color shift. */
     .move-tile {
       position: relative;
-      background: rgba(255,255,255,0.55);
-      border: 1px solid var(--accent-mid-a08);
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 1rem;
       padding: 2.2rem 2rem 2.5rem;
       overflow: hidden;
     }
-    /* Large transparent line icon, top-right, content-specific */
+    /* Large line icon, top-right — neutral semitransparent black
+       (was purple var(--accent)). */
     .move-tile-icon {
       position: absolute;
       top: -22px;
       right: -22px;
       width: 200px;
       height: 200px;
-      color: var(--accent);
+      color: rgba(0, 0, 0, 0.35);
       opacity: 0.10;
       pointer-events: none;
       z-index: 1;
@@ -1786,19 +2031,24 @@
     .move-tile-label,
     .move-tile-sub,
     .move-tile-list { position: relative; z-index: 2; }
+    /* v2 kicker label — 9pt, medium, tracking-wider, neutral grey
+       (was semibold + tracking-kicker + purple). */
     .move-tile-label {
-      font-size: var(--text-caption);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.4rem;
+      color: rgba(0, 0, 0, 0.55);
+      margin-bottom: 0.8rem;
+      line-height: 1;
     }
     .move-tile-sub {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
+      font-weight: var(--weight-thin);
       font-size: 18pt;
       color: var(--ink);
       line-height: 1.25;
+      letter-spacing: -0.012em;
       margin-bottom: 1.2rem;
       max-width: 80%;
     }
@@ -1823,7 +2073,7 @@
       width: 5px;
       height: 5px;
       border-radius: 50%;
-      background: var(--accent);
+      background: rgba(0, 0, 0, 0.55);
     }
 
     @media (max-width: 900px) {
@@ -1838,7 +2088,9 @@
       grid-template-columns: 1fr 2fr 1fr;
       align-items: center;
       gap: 2.5rem;
-      margin-top: 4.5rem;
+      /* Was 4.5rem — pulled the orbit animation + two callouts up
+         by 40px to tighten the title→visual rhythm. */
+      margin-top: 2rem;
     }
     .dm-callout { position: relative; }
     .dm-callout-eyebrow {
@@ -2020,19 +2272,16 @@
       gap: 1.2rem;
       margin-top: 3.5rem;
     }
+    /* v2 chrome — solid white + neutral border. No bg/border-color
+       shift on hover (the spotlight-glow halo handles that). */
     .prin-tile {
       position: relative;
-      background: rgba(255, 255, 255, 0.55);
-      border: 1px solid var(--accent-mid-a08);
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 1rem;
       padding: 1.8rem 2rem 2rem;
       overflow: hidden;
       min-height: 230px;
-      transition: background 0.4s ease, border-color 0.4s ease;
-    }
-    .prin-tile:hover {
-      background: rgba(255, 255, 255, 0.78);
-      border-color: var(--accent-mid-a25);
     }
     .prin-tile-icon {
       position: absolute;
@@ -2040,29 +2289,31 @@
       right: -22px;
       width: 200px;
       height: 200px;
-      color: var(--accent);
+      color: rgba(0, 0, 0, 0.35);
       opacity: 0.10;
       pointer-events: none;
       z-index: 1;
       transition:
         transform 0.65s cubic-bezier(0.34, 1.4, 0.64, 1),
-        opacity 0.4s ease,
-        color 0.4s ease;
+        opacity 0.4s ease;
     }
+    /* Icon transform on hover stays; the purple color shift was
+       dropped per v2. */
     .prin-tile:hover .prin-tile-icon {
       transform: rotate(-12deg) scale(1.12);
       opacity: 0.22;
-      color: var(--accent-mid);
     }
+    /* v2 kicker label */
     .prin-tile-label {
       position: relative;
       z-index: 2;
-      font-size: var(--text-caption);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: var(--accent);
+      color: rgba(0, 0, 0, 0.55);
       margin-bottom: 1rem;
+      line-height: 1;
       max-width: 85%;
     }
     /* Default/hover swap: both children share the same grid cell so the tile auto-fits both */
@@ -2077,11 +2328,12 @@
       transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .prin-tile-tagline {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: 18pt;
-      font-weight: var(--weight-light);
+      font-weight: var(--weight-thin);
       color: var(--ink);
       line-height: 1.25;
+      letter-spacing: -0.012em;
       max-width: 88%;
       opacity: 1;
       transform: translateY(0);
@@ -2089,8 +2341,10 @@
     .prin-tile-desc {
       font-family: var(--font-sans);
       font-size: var(--text-body-sm);
-      color: var(--ink-mid);
-      line-height: var(--leading-spacious);
+      font-weight: var(--weight-regular);
+      color: rgba(0, 0, 0, 0.65);
+      line-height: 1.6;
+      letter-spacing: -0.012em;
       opacity: 0;
       transform: translateY(8px);
       margin: 0;
@@ -2160,14 +2414,20 @@
       gap: 1.2rem;
       margin-top: 3.5rem;
     }
+    /* v2 dark-card chrome: solid black so the section's 6-line bg
+       doesn't bleed through. Neutral white border at 10% opacity.
+       Per-card moving grid is painted on injected child divs (see
+       gridReveal IIFE) so the spotlight-glow's halo + border layers
+       (also pseudo-element-based) don't conflict with it. */
     .outcome-card {
       grid-column: span 2;
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(141, 148, 255, 0.12);
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.10);
       border-radius: 1rem;
       padding: 1.8rem 2rem;
       position: relative;
       overflow: hidden;
+      isolation: isolate;
       display: flex;
       flex-direction: column;
       min-height: 210px;
@@ -2175,13 +2435,16 @@
     .outcome-card.oc-half { grid-column: span 3; }
     .outcome-card-full { grid-column: 1 / -1; }
 
+    /* v2 kicker label — 9pt medium tracking-wider (was 7pt semibold
+       tracking-kicker). */
     .oc-label {
-      font-size: var(--text-micro);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
       color: rgba(255,255,255,0.55);
       margin-bottom: 1.2rem;
+      line-height: 1;
     }
     .oc-metric {
       display: flex;
@@ -2191,11 +2454,12 @@
       margin-top: auto;
     }
     .oc-num, .oc-num-from {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
+      font-weight: var(--weight-thin);
       font-size: clamp(28pt, 4.6vw, 44pt);
       color: #fff;
       line-height: 1;
-      font-weight: var(--weight-regular);
+      letter-spacing: -0.012em;
     }
     .oc-num-from {
       color: rgba(255,255,255,0.40);
@@ -2204,7 +2468,7 @@
     .oc-arrow-inline {
       font-family: var(--font-sans);
       font-size: clamp(18pt, 2.8vw, 24pt);
-      color: var(--accent-mid);
+      color: rgba(255, 255, 255, 0.55);
       font-weight: var(--weight-light);
       line-height: 1;
     }
@@ -2217,7 +2481,7 @@
     }
     .oc-sub {
       font-size: var(--text-caption);
-      color: rgba(255,255,255,0.42);
+      color: rgba(255,255,255,0.55);
       font-family: var(--font-sans);
       margin-top: 0.55rem;
       letter-spacing: 0.01em;
@@ -2242,7 +2506,7 @@
       right: 1.5rem;
       width: 26px;
       height: 26px;
-      color: var(--accent-mid);
+      color: rgba(255, 255, 255, 0.75);
       opacity: 0.75;
     }
     .oc-arrow line,
@@ -2267,7 +2531,7 @@
       right: 1.5rem;
       width: 64px;
       height: 64px;
-      color: var(--accent-mid);
+      color: rgba(255, 255, 255, 0.85);
       opacity: 0.22;
       pointer-events: none;
     }
@@ -2281,7 +2545,7 @@
     }
     .oc-chart polyline {
       fill: none;
-      stroke: var(--accent-mid);
+      stroke: rgba(255, 255, 255, 0.75);
       stroke-width: 1.6;
       stroke-linecap: round;
       stroke-linejoin: round;
@@ -2363,6 +2627,323 @@
       .outcome-card.oc-half,
       .outcome-card-full { grid-column: 1 / -1; }
       .oc-tl-label { font-size: 6pt; }
+    }
+
+    /* Marquee text — solid white to match cs-vz-id-arch (the global
+       .marquee-item color is var(--white-a60) which reads muted on the
+       pure-black band). Bg is already #000 via the global rule. */
+    .marquee-wrap .marquee-item {
+      color: #fff;
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       EYEBROW + TITLE + BLURB — ported from cs-vz-id-arch.
+
+       Color values match the home HIW / IMPACT pattern (55% / 65%
+       grey), not the saturated 78% / 82% from the v1 case-study CSS.
+
+       SPECIFICITY NOTE: styles.css lines 4909–4913 set
+         .cs-sec .sec-inner > h2.st { margin-bottom: var(--gap-heading); } /* = 0 */
+       which made the title→blurb gap collapse to ~0 in case-study
+       context. Plain `h2.st` overrides (0,1,1) lose to that 0,3,1
+       selector. The spacing rules below use the SAME selector pattern
+       so they win at equal specificity by being defined later in
+       source order. ════════════════════════════════════════════════ */
+
+    /* Color */
+    .sec-ch       { color: rgba(0, 0, 0, 0.55); }
+    .bg-dark .sec-ch { color: rgba(255, 255, 255, 0.55); }
+    .bp          { color: rgba(0, 0, 0, 0.65); }
+    .bp-d        { color: rgba(255, 255, 255, 0.65); }
+
+    /* Layout — .sec-ch is a flex container in styles.css (for the
+       decorative ::after dash). When VCR wraps each word in inline-
+       block spans, those spans become FLEX ITEMS and break alignment.
+       Force display:block + hide the dash. */
+    .sec-ch         { display: block; }
+    .sec-ch::after  { display: none; }
+
+    /* Spacing — match home HIW: kicker mb 1–1.5rem, title mb 1–1.4rem,
+       lede mb 3–5rem. Uses the same `.cs-sec .sec-inner >` specificity
+       as the styles.css rhythm rules they're overriding. */
+    .cs-sec .sec-inner > .sec-ch {
+      margin-bottom: clamp(1rem, 2vh, 1.5rem);
+    }
+    .cs-sec .sec-inner > h2.st,
+    .cs-sec .sec-inner > h2.st-d {
+      margin-bottom: clamp(1rem, 2vh, 1.4rem);
+    }
+    .cs-sec .sec-inner > p.bp,
+    .cs-sec .sec-inner > p.bp-d {
+      margin-bottom: clamp(3rem, 6vh, 5rem);
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       VCR (Vertical-Cut Reveal) — per-word slide-up entry animation.
+       caseStudyVCR IIFE at the bottom of the page wraps each word in
+       <span class="vcr-word"><span class="vcr-inner">word</span></span>,
+       sets a cumulative --word-i per section. Section IO adds
+       .is-vcr-active when the section crosses ~15% of viewport.
+       ════════════════════════════════════════════════════════════════ */
+    .vcr-word {
+      display: inline-block;
+      vertical-align: bottom;
+      clip-path: inset(-0.05em -0.15em -0.18em 0);
+    }
+    .vcr-inner {
+      display: inline-block;
+      transform: translateY(125%);
+      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .is-vcr-active .vcr-inner {
+      transform: translateY(0);
+      transition-delay: calc(var(--word-i, 0) * 70ms);
+    }
+    /* Suppress the legacy .r → .on fade for VCR-target text elements;
+       VCR now drives the entry, and stacking both causes double-anim. */
+    .sec-ch.r:has(.vcr-word),
+    .vzh-kicker.r:has(.vcr-word),
+    .cta-eyebrow.r:has(.vcr-word),
+    h2.st.r:has(.vcr-word),
+    h2.st-d.r:has(.vcr-word),
+    .vzh-title.r:has(.vcr-word),
+    .cta-title.r:has(.vcr-word),
+    .bp.r:has(.vcr-word),
+    .bp-d.r:has(.vcr-word),
+    .cta-sub.r:has(.vcr-word) {
+      opacity: 1;
+      transform: none;
+      transition: none;
+      filter: none;
+    }
+    /* Descender allowance — h2 titles wrap to 2 lines naturally with
+       line-height 1.1; without this padding, descenders ("g/y/p") on
+       the bottom line get cropped by .line-wrap's overflow:hidden if
+       splitLines ever runs. Defensive — splitLines is disabled but
+       leaving for safety. */
+    h2.st .line-wrap,
+    h2.st-d .line-wrap {
+      padding-bottom: 0.15em;
+    }
+
+    /* Consecutive paragraphs (.bp followed by .bp) sit tight — the
+       3-5rem clamp blurb margin-bottom is meant as the blurb→next-
+       content gap, not the para→para gap inside a flowing text block.
+       :has(+ p.bp) only matches a .bp that is IMMEDIATELY followed by
+       another .bp, so single-paragraph blurbs keep the full clamp. */
+    .cs-sec .sec-inner > p.bp:has(+ p.bp),
+    .cs-sec .sec-inner > p.bp-d:has(+ p.bp-d) {
+      margin-bottom: 1rem;
+    }
+
+
+    /* ── 6-line vertical guide background — light-bg sections.
+       Same recipe as the case-study CHALLENGE / INSIGHT sections on
+       cs-vz-id-arch (black-ink lines at 0.08). The global dot-grid
+       backdrop is suppressed so the lines are the only background
+       pattern. Sections sharing this rule must use position:relative
+       (which .cs-sec already provides via the inline style or class). */
+    #context.cs-sec.bg-page,
+    #context-2.cs-sec.bg-page,
+    #summary.cs-sec.bg-page,
+    #challenge.cs-sec.bg-warm,
+    #challenge-2.cs-sec.bg-warm,
+    #approach.cs-sec.bg-page,
+    #move-1.cs-sec.bg-warm,
+    #move-2.cs-sec.bg-page,
+    #move-3.cs-sec.bg-warm,
+    #move-4.cs-sec.bg-page,
+    #strategic-principles.cs-sec.bg-page {
+      background-image: none;
+    }
+    #context,
+    #context-2,
+    #summary,
+    #challenge,
+    #challenge-2,
+    #approach,
+    #move-1,
+    #move-2,
+    #move-3,
+    #move-4,
+    #strategic-principles {
+      --bg-line-edge: 60px;
+      --bg-line-color: rgba(0, 0, 0, 0.08);
+      --bg-lines-image:
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px);
+      --bg-lines-position:
+        var(--bg-line-edge) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 1) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 2) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 3) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 4) 0,
+        calc(100vw - var(--bg-line-edge)) 0;
+    }
+    #context::before,
+    #context-2::before,
+    #summary::before,
+    #challenge::before,
+    #challenge-2::before,
+    #approach::before,
+    #move-1::before,
+    #move-2::before,
+    #move-3::before,
+    #move-4::before,
+    #strategic-principles::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: var(--bg-lines-image);
+      background-position: var(--bg-lines-position);
+      background-repeat: no-repeat;
+      background-size: 1px 100%;
+    }
+    /* Defensive position + overflow for sections whose inline style
+       doesn't set them. The MOVE sections are NOT in this list —
+       .vzh-stack-cover (line 1903) sets `position: sticky` for the
+       parallax cover stack, and adding `position: relative` here would
+       win on specificity and kill the sticky behavior (caused covers
+       to scroll past instead of stacking). Sticky is a non-static
+       position so ::before still anchors correctly. */
+    #summary,
+    #challenge-2 {
+      position: relative;
+      overflow: hidden;
+    }
+    /* ── Epic quote slides — moving grid background (replaces dot grid).
+       White lines on the dark quote (#quote-1), black lines on the
+       light quote (#quote-2). Uses the same shared keyframes as the
+       other moving-grid sections. */
+    #quote-1.cs-sec.bg-dark,
+    #quote-2.cs-sec.bg-page {
+      background-image: none;
+    }
+    .quote-grid-sec {
+      isolation: isolate;
+      overflow: hidden;
+    }
+    .quote-grid-sec::before,
+    .quote-grid-sec::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-size: 40px 40px;
+      animation: impact-grid-scroll 1.5s linear infinite;
+    }
+    /* DARK variant — white lines */
+    #quote-1.quote-grid-sec::before {
+      background-image:
+        linear-gradient(to right,  rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    }
+    #quote-1.quote-grid-sec::after {
+      background-image:
+        linear-gradient(to right,  rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
+      -webkit-mask-image: radial-gradient(
+        300px circle at var(--mx, -1000px) var(--my, -1000px),
+        #000, transparent);
+              mask-image: radial-gradient(
+        300px circle at var(--mx, -1000px) var(--my, -1000px),
+        #000, transparent);
+    }
+    /* LIGHT variant — black lines */
+    #quote-2.quote-grid-sec::before {
+      background-image:
+        linear-gradient(to right,  rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+    }
+    #quote-2.quote-grid-sec::after {
+      background-image:
+        linear-gradient(to right,  rgba(0, 0, 0, 0.25) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 1px, transparent 1px);
+      -webkit-mask-image: radial-gradient(
+        300px circle at var(--mx, -1000px) var(--my, -1000px),
+        #000, transparent);
+              mask-image: radial-gradient(
+        300px circle at var(--mx, -1000px) var(--my, -1000px),
+        #000, transparent);
+    }
+    .quote-grid-sec .sec-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* .sec-inner needs to stack above the ::before grid lines. */
+    #context-2 .sec-inner,
+    #summary .sec-inner,
+    #challenge .sec-inner,
+    #challenge-2 .sec-inner,
+    #approach .sec-inner,
+    #move-1 .sec-inner,
+    #move-2 .sec-inner,
+    #move-3 .sec-inner,
+    #move-4 .sec-inner,
+    #strategic-principles .sec-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── 6-line vertical guide background — DARK variant.
+       Same recipe as the light-bg group above, but with white lines at
+       18% opacity (matches cs-vz-id-arch's #context). Used for the
+       RESULTS / #metrics + FOUNDATION / #design sections (both bg-dark). */
+    #metrics.cs-sec.bg-dark,
+    #design.cs-sec.bg-dark {
+      background-image: none;
+    }
+    #metrics,
+    #design {
+      --bg-line-edge: 60px;
+      --bg-line-color: rgba(255, 255, 255, 0.18);
+      --bg-lines-image:
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px);
+      --bg-lines-position:
+        var(--bg-line-edge) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 1) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 2) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 3) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 4) 0,
+        calc(100vw - var(--bg-line-edge)) 0;
+      position: relative;
+      overflow: hidden;
+    }
+    #metrics::before,
+    #design::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: var(--bg-lines-image);
+      background-position: var(--bg-lines-position);
+      background-repeat: no-repeat;
+      background-size: 1px 100%;
+    }
+    #metrics .sec-inner,
+    #design .sec-wide {
+      position: relative;
+      z-index: 1;
+    }
+    /* FOUNDATION has no positioning in its inline style — add it here
+       so ::before anchors correctly. */
+    #design {
+      position: relative;
+      overflow: hidden;
     }
   </style>
   <script src="https://player.vimeo.com/api/player.js"></script>
@@ -2447,8 +3028,8 @@
   <!-- Content: kicker + title (left) · download CTAs (right, bottom-aligned) -->
   <div class="vzh-content">
     <div class="vzh-content-left">
-      <h1 class="vzh-title">Verizon<br><em>Home App</em></h1>
       <div class="vzh-kicker">Verizon · Mobile · iOS &amp; Android · 2023–2025</div>
+      <h1 class="vzh-title"><strong>Verizon</strong><br>Home App</h1>
     </div>
 
     <div class="vzh-app-btns">
@@ -2532,7 +3113,7 @@
 <!-- ══════════════════════════════════════
      CONTEXT (duplicate of BJ CONTEXT section template)
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-page" style="padding-top:7rem;padding-bottom:7rem;position:relative;overflow:hidden;isolation:isolate;">
+<section class="cs-sec bg-page" id="context" style="padding-top:7rem;padding-bottom:7rem;position:relative;overflow:hidden;isolation:isolate;">
   <div class="hiw-orbs" aria-hidden="true">
     <div class="hiw-orb hiw-orb-tr">
       <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
@@ -2598,7 +3179,7 @@
 <!-- ══════════════════════════════════════
      SUMMARY (Chapter One overview + timeline image)
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-page" style="padding-top:9rem;padding-bottom:9rem;">
+<section class="cs-sec bg-page" id="summary" style="padding-top:9rem;padding-bottom:9rem;">
   <div class="sec-inner">
     <div class="sec-ch r">Summary</div>
     <h2 class="st r d1">From fragmentation to <em>scale</em>.</h2>
@@ -2611,13 +3192,16 @@
 </section>
 
 
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
 <!-- ══════════════════════════════════════
      CHALLENGE → MY ROLE (sticky-cover transition)
 ══════════════════════════════════════ -->
 <div class="vzh-stack">
 
 <!-- ── CHALLENGE (sticky underneath) ── -->
-<section class="cs-sec bg-warm vzh-sticky" style="padding-top:9rem;padding-bottom:11rem;">
+<section class="cs-sec bg-warm vzh-sticky" id="challenge" style="padding-top:9rem;padding-bottom:11rem;">
   <div class="sec-inner">
     <div class="sec-ch r">Challenge</div>
     <h2 class="st r d1">Problem blocking <em>value</em>.</h2>
@@ -2715,7 +3299,7 @@
 ══════════════════════════════════════ -->
 <section class="cs-sec bg-dark vzh-cover" style="padding-top:9rem;padding-bottom:9rem;">
   <div class="sec-inner">
-    <div class="sec-ch r" style="color:var(--accent-mid);">My Role</div>
+    <div class="sec-ch r">My Role</div>
     <h2 class="st-d r d1">Finding my <em>position</em>.</h2>
     <p class="bp-d r d2">This was the moment I had to decide where I could create the most leverage. As a Principal Designer, my value was not only in producing design work, and not only in directing strategy from above. The team needed someone who could sit between craft and leadership, translating ambiguity into structure, connecting decisions across functions, and turning fragmented effort into shared momentum. I positioned myself in the overlap: close enough to the work to protect quality, and close enough to strategy to shape direction.</p>
 
@@ -2756,7 +3340,7 @@
 <div class="vzh-stack-multi">
 
 <!-- ── APPROACH (sticky overview at the bottom of the stack) ── -->
-<section class="cs-sec bg-page vzh-sticky" style="padding-top:9rem;padding-bottom:9rem;z-index:1;">
+<section class="cs-sec bg-page vzh-sticky" id="approach" style="padding-top:9rem;padding-bottom:9rem;z-index:1;">
   <div class="sec-inner">
     <div class="sec-ch r">Approach</div>
     <h2 class="st r d1">Four moves. One <em>direction</em>.</h2>
@@ -2766,25 +3350,25 @@
       <div class="apr-step">
         <div class="apr-step-node">01</div>
         <div class="apr-step-eyebrow">Align</div>
-        <div class="apr-step-title">Build Clarity</div>
+        <div class="apr-step-title">Build <strong>clarity</strong></div>
         <div class="apr-step-sub">Established structure, ownership, and focus.</div>
       </div>
       <div class="apr-step">
         <div class="apr-step-node">02</div>
         <div class="apr-step-eyebrow">Systemize</div>
-        <div class="apr-step-title">Create Cadence</div>
+        <div class="apr-step-title">Create <strong>cadence</strong></div>
         <div class="apr-step-sub">Brought rhythm through sprint planning and design ops.</div>
       </div>
       <div class="apr-step">
         <div class="apr-step-node">03</div>
         <div class="apr-step-eyebrow">Instrument</div>
-        <div class="apr-step-title">Guide with Evidence</div>
+        <div class="apr-step-title">Guide with <strong>evidence</strong></div>
         <div class="apr-step-sub">Reframed success metrics, built a shared decision pipeline.</div>
       </div>
       <div class="apr-step">
         <div class="apr-step-node">04</div>
         <div class="apr-step-eyebrow">Deliver</div>
-        <div class="apr-step-title">Deliver System Change</div>
+        <div class="apr-step-title">Deliver system <strong>change</strong></div>
         <div class="apr-step-sub">Scaled alignment and trust through Project Janus.</div>
       </div>
 
@@ -2793,7 +3377,7 @@
 </section>
 
 <!-- ── MOVE 1 — ALIGN (covers APPROACH) ── -->
-<section class="cs-sec bg-warm vzh-stack-cover" style="padding-top:9rem;padding-bottom:9rem;z-index:2;">
+<section class="cs-sec bg-warm vzh-stack-cover" id="move-1" style="padding-top:9rem;padding-bottom:9rem;z-index:2;">
   <div class="hiw-orbs" aria-hidden="true">
     <div class="hiw-orb hiw-orb-tr">
       <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
@@ -2870,7 +3454,7 @@
 </section>
 
 <!-- ── MOVE 2 — SYSTEMIZE ── -->
-<section class="cs-sec bg-page vzh-stack-cover" style="padding-top:9rem;padding-bottom:9rem;z-index:3;">
+<section class="cs-sec bg-page vzh-stack-cover" id="move-2" style="padding-top:9rem;padding-bottom:9rem;z-index:3;">
   <div class="hiw-orbs" aria-hidden="true">
     <div class="hiw-orb hiw-orb-tr">
       <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
@@ -2949,7 +3533,7 @@
 </section>
 
 <!-- ── MOVE 3 — INSTRUMENT ── -->
-<section class="cs-sec bg-warm vzh-stack-cover" style="padding-top:9rem;padding-bottom:9rem;z-index:4;">
+<section class="cs-sec bg-warm vzh-stack-cover" id="move-3" style="padding-top:9rem;padding-bottom:9rem;z-index:4;">
   <div class="hiw-orbs" aria-hidden="true">
     <div class="hiw-orb hiw-orb-tr">
       <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
@@ -3026,7 +3610,7 @@
 </section>
 
 <!-- ── MOVE 4 — DELIVER ── -->
-<section class="cs-sec bg-page vzh-stack-cover" style="padding-top:9rem;padding-bottom:9rem;z-index:5;">
+<section class="cs-sec bg-page vzh-stack-cover" id="move-4" style="padding-top:9rem;padding-bottom:9rem;z-index:5;">
   <div class="hiw-orbs" aria-hidden="true">
     <div class="hiw-orb hiw-orb-tr">
       <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
@@ -3113,7 +3697,7 @@
 ══════════════════════════════════════ -->
 <section class="cs-sec bg-dark" id="metrics" style="padding-top:9rem;padding-bottom:9rem;">
   <div class="sec-inner">
-    <div class="sec-ch r" style="color:var(--accent-mid);">Results</div>
+    <div class="sec-ch r">Results</div>
     <h2 class="st-d r d1">From structure to <em>scale</em>.</h2>
     <p class="bp-d r d2">The goal was never to ship more features. It was to create a product organization capable of delivering consistently, learning continuously, and growing sustainably. These outcomes reflect the cumulative impact of that foundation.</p>
 
@@ -3226,25 +3810,10 @@
 <!-- ══════════════════════════════════════
      VERIZON 1.0 (product walkthrough video)
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-warm" style="padding-top:9rem;padding-bottom:9rem;position:relative;overflow:hidden;isolation:isolate;">
-  <div class="hiw-orbs" aria-hidden="true">
-    <div class="hiw-orb hiw-orb-tr">
-      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
-    </div>
-    <div class="hiw-orb hiw-orb-bl">
-      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
-    </div>
-  </div>
+<section class="cs-sec bg-warm" id="vz1-video-sec" style="padding-top:9rem;padding-bottom:9rem;position:relative;overflow:hidden;isolation:isolate;">
+  <!-- DottedSurface — THREE.js animated dot field. Replaces the
+       legacy .hiw-orbs + dot-grid bg. -->
+  <canvas class="dotted-surface" id="vz1-dotted-surface" aria-hidden="true"></canvas>
   <div class="sec-inner" style="position:relative;z-index:2;">
     <div class="sec-ch r">Verizon 1.0</div>
     <h2 class="st r d1">The product in <em>motion</em>.</h2>
@@ -3329,14 +3898,14 @@
 
   <!-- Frosted glass overlay (scroll-driven, rises from bottom) -->
   <div class="ch2-glass" id="ch2-glass" aria-hidden="true">
-    <p class="ch2-glass-line">Product vision. Ecosystem strategy. AI experience. Household intelligence.</p>
+    <p class="ch2-glass-line">Product vision. Ecosystem strategy.<br>AI experience. Household intelligence.</p>
     <p class="ch2-glass-line">Not simply a connectivity tool. A system capable of understanding, guiding, and supporting the rhythms of the household.</p>
   </div>
 
   <!-- Bottom-left content: eyebrow ABOVE title -->
   <div class="ch2-content">
     <div class="ch2-eyebrow">Part Two</div>
-    <h2 class="ch2-title">From Reactive<br>to <em>Proactive</em>.</h2>
+    <h2 class="ch2-title">From Reactive<br>to <strong>Proactive</strong>.</h2>
   </div>
 
 </section>
@@ -3346,7 +3915,7 @@
 <!-- ══════════════════════════════════════
      CHAPTER TWO CONTEXT (mirrors Chapter One CONTEXT structure)
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-page" style="padding-top:7rem;padding-bottom:7rem;position:relative;overflow:hidden;isolation:isolate;">
+<section class="cs-sec bg-page" id="context-2" style="padding-top:7rem;padding-bottom:7rem;position:relative;overflow:hidden;isolation:isolate;">
   <div class="hiw-orbs" aria-hidden="true">
     <div class="hiw-orb hiw-orb-tr">
       <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
@@ -3378,10 +3947,13 @@
 </section>
 
 
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
 <!-- ══════════════════════════════════════
      CHAPTER TWO CHALLENGE (3 problem tiles, reuse .hiw-tile)
 ══════════════════════════════════════ -->
-<section class="cs-sec bg-warm" style="padding-top:9rem;padding-bottom:11rem;">
+<section class="cs-sec bg-warm" id="challenge-2" style="padding-top:9rem;padding-bottom:11rem;">
   <div class="sec-inner">
     <div class="sec-ch r">Challenge</div>
     <h2 class="st r d1">The app worked. The <em>model</em> didn’t.</h2>
@@ -3465,31 +4037,17 @@
 </section>
 
 
+<div class="anim-divider"><div class="anim-divider-line"></div><div class="anim-divider-dot"></div></div>
+
+
 <!-- ══════════════════════════════════════
      CHAPTER TWO APPROACH → 4 MOVES (multi-level parallax cover stack)
 ══════════════════════════════════════ -->
 <div class="vzh-stack-multi">
 
 <!-- ── CHAPTER TWO APPROACH (NotebookLM narrated vision video — scrolls naturally so full video stays viewable) ── -->
-<section class="cs-sec bg-page" style="padding-top:9rem;padding-bottom:9rem;position:relative;overflow:hidden;isolation:isolate;">
-  <div class="hiw-orbs" aria-hidden="true">
-    <div class="hiw-orb hiw-orb-tr">
-      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
-    </div>
-    <div class="hiw-orb hiw-orb-bl">
-      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
-    </div>
-  </div>
+<section class="cs-sec bg-page" id="vz2-video-sec" style="padding-top:9rem;padding-bottom:9rem;position:relative;overflow:hidden;isolation:isolate;">
+  <canvas class="dotted-surface" id="vz2-dotted-surface" aria-hidden="true"></canvas>
   <div class="sec-inner" style="position:relative;z-index:2;">
     <div class="sec-ch r">Approach</div>
     <h2 class="st r d1">The strategy in <em>five minutes</em>.</h2>
@@ -3509,8 +4067,8 @@
 <!-- ── CH2 MOVE 1 — DUAL MISSION (dark, covers APPROACH) ── -->
 <section class="cs-sec bg-dark vzh-stack-cover" style="padding-top:5rem;padding-bottom:9rem;z-index:2;">
   <div class="sec-inner">
-    <div class="sec-ch r" style="color:var(--accent-mid);">Dual Mission</div>
-    <h2 class="st-d r d1">Power the <em>Household</em>. Strengthen the <em>Brand</em>.</h2>
+    <div class="sec-ch r">Dual Mission</div>
+    <h2 class="st-d r d1">Power the <em>Household</em>.<br>Strengthen the <em>Brand</em>.</h2>
     <p class="bp-d r d2">The Home App had to serve two missions at once: create meaningful value for customers by becoming an Intelligent Home OS, and create strategic value for Verizon by becoming a primary gateway into the broader ecosystem.</p>
 
     <div class="dm-system r d3">
@@ -3570,7 +4128,7 @@
 </section>
 
 <!-- ── CH2 MOVE 2 — STRATEGIC PRINCIPLES (page) ── -->
-<section class="cs-sec bg-page vzh-stack-cover" style="padding-top:9rem;padding-bottom:9rem;z-index:3;">
+<section class="cs-sec bg-page vzh-stack-cover" id="strategic-principles" style="padding-top:9rem;padding-bottom:9rem;z-index:3;">
   <div class="hiw-orbs" aria-hidden="true">
     <div class="hiw-orb hiw-orb-tr">
       <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
@@ -3693,7 +4251,7 @@
 </section>
 
 <!-- ── CH2 MOVE 3 — EPIC QUOTE 1 (dark) ── -->
-<section class="cs-sec bg-dark vzh-stack-cover" style="padding-top:13rem;padding-bottom:13rem;z-index:4;">
+<section class="cs-sec bg-dark vzh-stack-cover quote-grid-sec" id="quote-1" style="padding-top:13rem;padding-bottom:13rem;z-index:4;">
   <div class="sec-inner">
     <div class="epic-quote r d1">
       <div class="epic-quote-mark" aria-hidden="true">“</div>
@@ -3705,7 +4263,7 @@
 </section>
 
 <!-- ── CH2 MOVE 4 — EPIC QUOTE 2 (page) ── -->
-<section class="cs-sec bg-page vzh-stack-cover" style="padding-top:13rem;padding-bottom:13rem;z-index:5;">
+<section class="cs-sec bg-page vzh-stack-cover quote-grid-sec" id="quote-2" style="padding-top:13rem;padding-bottom:13rem;z-index:5;">
   <div class="sec-inner">
     <div class="epic-quote r d1">
       <div class="epic-quote-mark" aria-hidden="true">“</div>
@@ -3728,7 +4286,7 @@
     <!-- Two-column intro: title left, body right (static, no scroll-lock) -->
     <div class="ia-intro">
       <div class="ia-intro-left">
-        <div class="sec-ch r" style="color:var(--accent-mid);">Foundation</div>
+        <div class="sec-ch r">Foundation</div>
         <h2 class="st-d r d1">Rebuilding the product around <em>intent</em>.</h2>
       </div>
       <div class="ia-intro-right">
@@ -3796,7 +4354,7 @@
   <!-- Frosted glass overlay (scroll-driven; reveals eyebrow, title, body as it rises) -->
   <div class="ch2-glass" id="l10-glass" aria-hidden="true">
     <div class="l10-glass-item l10-glass-eyebrow">The Last 10%</div>
-    <h2 class="l10-glass-item l10-glass-title">From strategy to <em>experience</em>.</h2>
+    <h2 class="l10-glass-item l10-glass-title">From strategy to <strong>experience</strong>.</h2>
     <p class="l10-glass-item l10-glass-body">Strategy only matters if it changes the experience. The following work explores how the principles, architecture, and product vision translated into tangible <em>experiences for customers</em>.</p>
     <p class="l10-glass-item l10-glass-note">* The concepts shown below represent a selection of the work. Due to confidentiality and ongoing development, some experiences have been simplified, redacted, or remain unreleased. The focus here is on the thinking, systems, and product direction behind the work.</p>
   </div>
@@ -4041,15 +4599,18 @@
 <!-- ══════════════════════════════════════
      CTA — NEXT CASE STUDY
 ══════════════════════════════════════ -->
-<section class="cta-sec">
+<section class="cta-sec" data-bg="dot-grid">
   <div class="cta-d"></div>
   <div class="cta-g"></div>
-  <div style="font-size:var(--text-micro); font-weight:var(--weight-semibold); letter-spacing:var(--tracking-widest); text-transform:uppercase; color:var(--accent-mid); margin-bottom:1.2rem; position:relative; z-index:2;">Next Case Study</div>
-  <h2 class="cta-title"><em>03 /</em> BlueJeans by Verizon</h2>
+  <div class="cz-dot-grid" aria-hidden="true">
+    <canvas class="cz-dot-grid__canvas"></canvas>
+  </div>
+  <div class="cta-eyebrow" style="font-size:9pt; font-weight:var(--weight-medium); letter-spacing:var(--tracking-wider); text-transform:uppercase; color:rgba(255,255,255,0.78); line-height:1; margin-bottom:1.2rem; position:relative; z-index:2;">Next Case Study · 03 / 04</div>
+  <h2 class="cta-title"><strong>BlueJeans</strong><br>by Verizon</h2>
   <p class="cta-sub">From chaos to cadence — redesigning enterprise video collaboration at scale.</p>
   <div style="display:flex; gap:0.75rem; justify-content:center; align-items:center; flex-wrap:wrap; position:relative; z-index:2;">
-    <a href="cs-bluejeans.html" class="cz-book-btn">See the case study</a>
-    <a href="index.html#work" class="cz-ghost-btn">Back to portfolio</a>
+    <a href="cs-bluejeans.html" class="glass-cta">See the case study</a>
+    <a href="index.html#work" class="glass-cta glass-cta--ghost">Back to portfolio</a>
   </div>
 </section>
 
@@ -4218,13 +4779,33 @@ function tickCh2Hero(t) {
   });
 }
 
+/* Cache the dark-bg sections once. The nav-light toggle below tests
+   these on every scroll: if any is currently behind the nav bar, we
+   force .nav--light (white text). Mirrors the section-based detection
+   on cs-vz-id-arch (replaces the bogus `t < 80` threshold that left
+   REFAELI MA invisible past the hero). Covers:
+     .vzh-hero        — page hero (dark image + vignette)
+     .cs-sec.bg-dark  — all bg-dark content sections (MY ROLE-style,
+                        DUAL MISSION, RESULTS, EPIC QUOTE 1, FOUNDATION)
+     .chap-break      — chapter navigator breakers (2 of them)
+     .cta-sec         — bottom "Next Case Study" CTA */
+const DARK_SECTIONS = document.querySelectorAll('.vzh-hero, .cs-sec.bg-dark, .chap-break, .cta-sec');
+
 // ── Scroll progress + nav state ──
 window.addEventListener('scroll', () => {
   const t = window.scrollY;
   const h = document.documentElement.scrollHeight - window.innerHeight;
   prog.style.width = (t / h * 100) + '%';
   nav.classList.toggle('scrolled', t > 60);
-  nav.classList.toggle('nav--light', t < 80);
+
+  const navH = nav.offsetHeight + 2;
+  let isDark = false;
+  DARK_SECTIONS.forEach(sec => {
+    const r = sec.getBoundingClientRect();
+    if (r.top < navH && r.bottom > 0) isDark = true;
+  });
+  nav.classList.toggle('nav--light', isDark);
+
   document.getElementById('back-top').classList.toggle('visible', t > 400);
   updateSidenav();
   tickVzhHero(t);
@@ -4352,7 +4933,9 @@ document.addEventListener('mouseover', e => {
 document.documentElement.addEventListener('mouseleave', () => { dot.style.opacity='0'; ring.style.opacity='0'; });
 document.documentElement.addEventListener('mouseenter', () => { dot.style.opacity='1'; ring.style.opacity='1'; });
 
-// ── Heading line-split (matches home page heading reveal) ──
+// ── Heading entry animation — replaced the legacy splitLines (per-line
+//    slide-up) with VCR (per-word slide-up) so case-study titles match
+//    the home pattern. See caseStudyVCR IIFE below.
 function splitLines(el) {
   const base = el.classList.contains('d3') ? 0.25
              : el.classList.contains('d2') ? 0.15
@@ -4364,7 +4947,105 @@ function splitLines(el) {
   ).join('');
   el.classList.add('line-split');
 }
-document.querySelectorAll('h2.st, h2.st-d').forEach(splitLines);
+
+/* ── VCR ENTRY ANIMATION — ported from cs-vz-id-arch. For each top-
+   level section (.vzh-hero, .cs-sec, .cta-sec), grabs the eyebrow /
+   title / blurb trio, wraps every word in
+   <span class="vcr-word"><span class="vcr-inner">word</span></span>
+   with a cumulative --word-i across the trio, then observes the
+   section. When the section crosses ~15% of viewport, .is-vcr-active
+   is added and the CSS rule above cascades the inner spans up. */
+/* ── GRID REVEAL — port of impactGridReveal() from the home.
+   Each target writes element-relative --mx / --my on itself per
+   pointermove (rAF-throttled). Generalized via querySelectorAll so
+   .vzh-stat-strip AND .chap-break (both moving-grid containers on
+   this page) share the same handler. */
+(function gridReveal() {
+  var targets = document.querySelectorAll('.vzh-stat-strip, .chap-break, .quote-grid-sec');
+  if (!targets.length) return;
+  targets.forEach(function (el) {
+    var lastX = 0, lastY = 0;
+    var pending = false;
+    el.addEventListener('pointermove', function (e) {
+      lastX = e.clientX;
+      lastY = e.clientY;
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(function () {
+        pending = false;
+        var rect = el.getBoundingClientRect();
+        el.style.setProperty('--mx', (lastX - rect.left) + 'px');
+        el.style.setProperty('--my', (lastY - rect.top)  + 'px');
+      });
+    });
+    el.addEventListener('pointerleave', function () {
+      el.style.setProperty('--mx', '-1000px');
+      el.style.setProperty('--my', '-1000px');
+    });
+  });
+}());
+
+
+(function caseStudyVCR() {
+  function wrapWords(el, getNextIdx) {
+    if (!el) return;
+    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+    var nodes = [];
+    var n;
+    while ((n = walker.nextNode())) nodes.push(n);
+    nodes.forEach(function (textNode) {
+      var text = textNode.textContent;
+      if (!text.trim()) return;
+      var parts = text.split(/(\s+)/);
+      var frag = document.createDocumentFragment();
+      parts.forEach(function (p) {
+        if (!p) return;
+        if (/^\s+$/.test(p)) {
+          frag.appendChild(document.createTextNode(p));
+        } else {
+          var w = document.createElement('span');
+          w.className = 'vcr-word';
+          w.style.setProperty('--word-i', getNextIdx());
+          var inner = document.createElement('span');
+          inner.className = 'vcr-inner';
+          inner.textContent = p;
+          w.appendChild(inner);
+          frag.appendChild(w);
+        }
+      });
+      textNode.parentNode.replaceChild(frag, textNode);
+    });
+  }
+
+  /* Eyebrow / title / blurb elements within a section. Trio cascades
+     cumulatively per section. .vzh-kicker / .vzh-title for the hero;
+     .cta-eyebrow / .cta-title / .cta-sub for the bottom CTA; .sec-ch /
+     h2.st / h2.st-d / .bp / .bp-d for all body content sections. */
+  var TEXT_SELECTOR = [
+    '.sec-ch', 'h2.st', 'h2.st-d', '.bp', '.bp-d',
+    '.vzh-kicker', '.vzh-title',
+    '.cta-eyebrow', '.cta-title', '.cta-sub'
+  ].join(', ');
+
+  var sections = document.querySelectorAll('section.vzh-hero, section.cs-sec, section.cta-sec');
+  sections.forEach(function (section) {
+    var targets = section.querySelectorAll(TEXT_SELECTOR);
+    if (!targets.length) return;
+
+    var idx = 0;
+    targets.forEach(function (el) {
+      wrapWords(el, function () { return idx++; });
+    });
+
+    var io = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        section.classList.add('is-vcr-active');
+        io.disconnect();
+      }
+    }, { threshold: 0.15 });
+    io.observe(section);
+  });
+}());
 
 // ── Scroll reveal ──
 const obs = new IntersectionObserver(entries => {
@@ -4479,6 +5160,264 @@ function setupMutedVimeo(iframeId) {
 }
 setupMutedVimeo('vz1-vimeo');         // Verizon 1.0 product walkthrough
 setupMutedVimeo('vz2-vision-vimeo');  // From Reactive to Proactive — narrated vision
+
+
+/* ── CTA DOT-GRID — GSAP-driven interactive dot-grid behind the
+   bottom "Next Case Study" CTA. Ported from cs-vz-id-arch. */
+window.addEventListener('load', function () {
+  var section = document.querySelector('.cta-sec[data-bg="dot-grid"]');
+  var wrap    = section && section.querySelector('.cz-dot-grid');
+  var canvas  = wrap && wrap.querySelector('.cz-dot-grid__canvas');
+  if (!section || !wrap || !canvas || typeof gsap === 'undefined') return;
+
+  var DOT_SIZE = 2, GAP = 12;
+  var BASE_COLOR = '#2F293A', ACTIVE_COLOR = '#dfdfdf';
+  var PROXIMITY = 120, SPEED_TRIGGER = 100;
+  var SHOCK_RADIUS = 250, SHOCK_STRENGTH = 5;
+  var MAX_SPEED = 5000, RETURN_DURATION = 1.5, KNOCK_DURATION = 0.45;
+
+  function hexToRgb(hex) {
+    var m = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+    if (!m) return { r: 0, g: 0, b: 0 };
+    return { r: parseInt(m[1], 16), g: parseInt(m[2], 16), b: parseInt(m[3], 16) };
+  }
+  var baseRgb = hexToRgb(BASE_COLOR), activeRgb = hexToRgb(ACTIVE_COLOR);
+  var proxSq = PROXIMITY * PROXIMITY;
+
+  var ctx = canvas.getContext('2d');
+  var dots = [];
+  var circlePath = window.Path2D ? new Path2D() : null;
+  if (circlePath) circlePath.arc(0, 0, DOT_SIZE / 2, 0, Math.PI * 2);
+  var pointer = { x: -9999, y: -9999, vx: 0, vy: 0, speed: 0, lastTime: 0, lastX: 0, lastY: 0 };
+
+  function buildGrid() {
+    var rect = wrap.getBoundingClientRect();
+    var width = rect.width, height = rect.height;
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr; canvas.height = height * dpr;
+    canvas.style.width = width + 'px'; canvas.style.height = height + 'px';
+    ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    var cols = Math.floor((width + GAP) / (DOT_SIZE + GAP));
+    var rows = Math.floor((height + GAP) / (DOT_SIZE + GAP));
+    var cell = DOT_SIZE + GAP;
+    var startX = (width - (cell * cols - GAP)) / 2 + DOT_SIZE / 2;
+    var startY = (height - (cell * rows - GAP)) / 2 + DOT_SIZE / 2;
+    dots = [];
+    for (var y = 0; y < rows; y++) {
+      for (var x = 0; x < cols; x++) {
+        dots.push({ cx: startX + x * cell, cy: startY + y * cell, xOffset: 0, yOffset: 0, _knocked: false });
+      }
+    }
+  }
+  buildGrid();
+  if ('ResizeObserver' in window) new ResizeObserver(buildGrid).observe(wrap);
+  else window.addEventListener('resize', buildGrid);
+
+  function draw() {
+    requestAnimationFrame(draw);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var dx = dot.cx - pointer.x, dy = dot.cy - pointer.y;
+      var dsq = dx * dx + dy * dy;
+      var fill = BASE_COLOR;
+      if (dsq <= proxSq) {
+        var t = 1 - Math.sqrt(dsq) / PROXIMITY;
+        fill = 'rgb(' +
+          Math.round(baseRgb.r + (activeRgb.r - baseRgb.r) * t) + ',' +
+          Math.round(baseRgb.g + (activeRgb.g - baseRgb.g) * t) + ',' +
+          Math.round(baseRgb.b + (activeRgb.b - baseRgb.b) * t) + ')';
+      }
+      ctx.save();
+      ctx.translate(dot.cx + dot.xOffset, dot.cy + dot.yOffset);
+      ctx.fillStyle = fill;
+      if (circlePath) ctx.fill(circlePath);
+      else { ctx.beginPath(); ctx.arc(0, 0, DOT_SIZE / 2, 0, Math.PI * 2); ctx.fill(); }
+      ctx.restore();
+    }
+  }
+  draw();
+
+  var moveLast = 0;
+  function onMove(e) {
+    var now = performance.now();
+    if (now - moveLast < 50) return;
+    moveLast = now;
+    var dt = pointer.lastTime ? now - pointer.lastTime : 16;
+    var vx = ((e.clientX - pointer.lastX) / dt) * 1000;
+    var vy = ((e.clientY - pointer.lastY) / dt) * 1000;
+    var speed = Math.sqrt(vx * vx + vy * vy);
+    if (speed > MAX_SPEED) { var s = MAX_SPEED / speed; vx *= s; vy *= s; speed = MAX_SPEED; }
+    pointer.lastTime = now;
+    pointer.lastX = e.clientX; pointer.lastY = e.clientY;
+    pointer.vx = vx; pointer.vy = vy; pointer.speed = speed;
+    var rect = canvas.getBoundingClientRect();
+    pointer.x = e.clientX - rect.left; pointer.y = e.clientY - rect.top;
+    if (speed <= SPEED_TRIGGER) return;
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var dxx = dot.cx - pointer.x, dyy = dot.cy - pointer.y;
+      var dist = Math.sqrt(dxx * dxx + dyy * dyy);
+      if (dist < PROXIMITY && !dot._knocked) knock(dot, dxx + vx * 0.005, dyy + vy * 0.005);
+    }
+  }
+  function onClick(e) {
+    var rect = canvas.getBoundingClientRect();
+    var cx = e.clientX - rect.left, cy = e.clientY - rect.top;
+    if (cx < 0 || cy < 0 || cx > rect.width || cy > rect.height) return;
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var dxx = dot.cx - cx, dyy = dot.cy - cy;
+      var dist = Math.sqrt(dxx * dxx + dyy * dyy);
+      if (dist < SHOCK_RADIUS && !dot._knocked) {
+        var falloff = Math.max(0, 1 - dist / SHOCK_RADIUS);
+        knock(dot, dxx * SHOCK_STRENGTH * falloff, dyy * SHOCK_STRENGTH * falloff);
+      }
+    }
+  }
+  function knock(dot, pushX, pushY) {
+    dot._knocked = true;
+    gsap.killTweensOf(dot);
+    gsap.to(dot, {
+      xOffset: pushX, yOffset: pushY, duration: KNOCK_DURATION, ease: 'power3.out',
+      onComplete: function () {
+        gsap.to(dot, {
+          xOffset: 0, yOffset: 0, duration: RETURN_DURATION, ease: 'elastic.out(1,0.75)',
+          onComplete: function () { dot._knocked = false; }
+        });
+      }
+    });
+  }
+  window.addEventListener('mousemove', onMove, { passive: true });
+  window.addEventListener('click', onClick);
+});
+
+/* ── SPOTLIGHT GLOW — cursor halo on all v2 tiles + CTAs. Selector
+   list mirrors cs-vz-id-arch's tile inventory, scoped to classes
+   present on this page: .move-tile (4-moves grids), .prin-tile
+   (strategic principles), .challenge-grid .hiw-tile (both Chapter 1
+   AND Chapter 2 CHALLENGE flip cards — Ch2 also has .ch2-challenge,
+   but .challenge-grid covers both). */
+(function spotlightGlow() {
+  document.querySelectorAll('.glass-cta, .move-tile, .prin-tile, .challenge-grid .hiw-tile, .outcome-card, .ia-block')
+    .forEach(function (el) { el.classList.add('spotlight-glow'); });
+  var cards = document.querySelectorAll('.spotlight-glow');
+  if (!cards.length) return;
+  var pending = false, lastX = 0, lastY = 0;
+  function tick() {
+    pending = false;
+    cards.forEach(function (card) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--x', (lastX - r.left).toFixed(2));
+      card.style.setProperty('--y', (lastY - r.top).toFixed(2));
+    });
+  }
+  document.addEventListener('pointermove', function (e) {
+    lastX = e.clientX; lastY = e.clientY;
+    if (!pending) { pending = true; requestAnimationFrame(tick); }
+  }, { passive: true });
+}());
+</script>
+
+
+<!-- ══════════════════════════════════════
+     DOTTED SURFACE — THREE.js particle wave behind the two video
+     sections. Ported verbatim from cs-vz-id-arch (same 40×60 grid,
+     same dual-sine Y animation, same camera). Auto-inits every
+     canvas.dotted-surface on the page.
+══════════════════════════════════════ -->
+<script type="module">
+  import * as THREE from 'https://esm.sh/three@0.158.0';
+
+  function initDottedSurface(canvas) {
+    const parent = canvas.parentElement;
+
+    const SEPARATION = 150;
+    const AMOUNTX    = 40;
+    const AMOUNTY    = 60;
+
+    const scene = new THREE.Scene();
+    scene.fog   = new THREE.Fog(0xffffff, 2000, 10000);
+
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      parent.clientWidth / parent.clientHeight,
+      1,
+      10000
+    );
+    camera.position.set(0, 355, 1220);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(parent.clientWidth, parent.clientHeight);
+    renderer.setClearColor(0xffffff, 0);
+
+    const positions = [];
+    const colors    = [];
+    for (let ix = 0; ix < AMOUNTX; ix++) {
+      for (let iy = 0; iy < AMOUNTY; iy++) {
+        const x = ix * SEPARATION - (AMOUNTX * SEPARATION) / 2;
+        const z = iy * SEPARATION - (AMOUNTY * SEPARATION) / 2;
+        positions.push(x, 0, z);
+        colors.push(0, 0, 0);
+      }
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute('color',    new THREE.Float32BufferAttribute(colors, 3));
+
+    const material = new THREE.PointsMaterial({
+      size: 8,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.8,
+      sizeAttenuation: true
+    });
+
+    const points = new THREE.Points(geometry, material);
+    scene.add(points);
+
+    let count = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      const posAttr = geometry.attributes.position;
+      const arr     = posAttr.array;
+      let i = 0;
+      for (let ix = 0; ix < AMOUNTX; ix++) {
+        for (let iy = 0; iy < AMOUNTY; iy++) {
+          const index = i * 3;
+          arr[index + 1] =
+            Math.sin((ix + count) * 0.3) * 50 +
+            Math.sin((iy + count) * 0.5) * 50;
+          i++;
+        }
+      }
+      posAttr.needsUpdate = true;
+      renderer.render(scene, camera);
+      count += 0.1;
+    }
+    animate();
+
+    const resize = () => {
+      const w = parent.clientWidth, h = parent.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    };
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(resize).observe(parent);
+    } else {
+      window.addEventListener('resize', resize);
+    }
+  }
+
+  document.querySelectorAll('canvas.dotted-surface').forEach(initDottedSurface);
 </script>
 
 </body>

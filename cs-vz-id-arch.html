@@ -6,6 +6,10 @@
   <title>Verizon Identity Architecture · Refaeli Ma</title>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="styles.css">
+  <!-- GSAP — used by the .cta-sec interactive dot-grid background.
+       Defer-loaded; the IIFE that consumes it bails out if `gsap` is
+       undefined, so this is harmless if the network blocks it. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <style>
 
     /* ══════════════════════════════════════
@@ -22,12 +26,29 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #060812;
-      background-image:
-        var(--dot-grid-white-sm),
-        linear-gradient(135deg, #060812 0%, #0c1422 40%, #080f1e 70%, #040810 100%);
-      background-size: var(--dot-size-md), cover;
-      background-repeat: repeat, no-repeat;
+      /* Pure black fallback under the DarkVeil canvas — also shows for the
+         beat before WebGL initializes. */
+      background-color: #000;
+      background-image: none;
+    }
+    /* DarkVeil canvas — full-bleed WebGL background. Sits behind every
+       sibling in .solar-hero (orbit SVG, planets, hero overlay) thanks to
+       DOM order; pointer-events:none so it never blocks hover/scroll. */
+    .darkveil-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* Lift every hero sibling above the DarkVeil. All existing children
+       are already positioned (absolute or relative), so a bare z-index
+       is enough — no position override needed (which would break the
+       absolute layouts of .solar-svg, .mega-stage, .chaos-layer, etc.). */
+    .solar-hero > :not(.darkveil-canvas) {
+      z-index: 1;
     }
     .solar-hero::before {
       content: '';
@@ -188,82 +209,61 @@
       inset: 0;
       z-index: 20;
       pointer-events: none;
-      padding: clamp(2.5rem, 5vh, 4rem) clamp(2rem, 6vw, 6rem);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(2rem, 4vw, 4rem);
+      /* Horizontal padding matches the global nav so .hero-eyebrow + .hero-title
+         line up flush with the REFAELI MA logo: clamp(1.25rem, 5vw, 4rem). */
+      padding: clamp(2.5rem, 5vh, 4rem) clamp(1.25rem, 5vw, 4rem);
+      display: flex;
+      align-items: flex-end;
     }
-    .hero-overlay-left,
-    .hero-overlay-right {
+    .hero-overlay-left {
       opacity: 0;
       transform: translateY(18px);
       transition:
         opacity 1.4s ease,
         transform 1.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .hero-overlay-left {
-      align-self: end;                /* bottom-left */
       transition-delay: 0.9s;          /* fades in alongside Ring 2's reveal */
-    }
-    .hero-overlay-right {
-      align-self: start;               /* top-right */
-      justify-self: end;
-      max-width: 320px;                /* narrower (kept just wide enough for 6 lines) */
-      margin-top: clamp(3rem, 7vh, 5rem); /* clearance below the fixed nav */
-      transition-delay: 1.4s;          /* slightly after the left block */
     }
 
     /* Trigger once Ring 4 is settling in — phase 3 onwards */
     .solar-hero[data-phase="3"] .hero-overlay-left,
     .solar-hero[data-phase="4"] .hero-overlay-left,
-    .solar-hero[data-phase="5"] .hero-overlay-left,
-    .solar-hero[data-phase="3"] .hero-overlay-right,
-    .solar-hero[data-phase="4"] .hero-overlay-right,
-    .solar-hero[data-phase="5"] .hero-overlay-right {
+    .solar-hero[data-phase="5"] .hero-overlay-left {
       opacity: 1;
       transform: translateY(0);
     }
 
+    /* Eyebrow — matches body.v2-home .proj-card-type exactly so the
+       case-study hero kicker reads as the same component class as the
+       home project cards. */
     .hero-eyebrow {
-      font-size: var(--text-micro);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.55);
-      margin-bottom: 1rem;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1;
+      margin-bottom: 1.4rem;
     }
+    /* Title — mirrors body.v2-home .proj-card-title: thin base weight
+       with semibold <strong> for the brand word (VERIZON). Letter-spacing,
+       line-height and uppercase all match the home card. */
     .hero-title {
-      font-family: var(--font-serif);
-      font-size: clamp(26pt, 4.2vw, 50pt);
-      font-weight: var(--weight-regular);
-      color: #fff;
-      line-height: 1.05;
-      margin: 0;
-    }
-    .hero-title em {
-      font-style: italic;
-      color: var(--accent-mid);
-    }
-
-    .hero-note {
       font-family: var(--font-sans);
-      font-size: clamp(0.65rem, 0.85vw, 0.8rem);
-      font-weight: var(--weight-light);
-      color: rgba(255, 255, 255, 0.7);
-      line-height: 1.55;
+      font-size: clamp(28pt, 4.4vw, 56pt);
+      font-weight: var(--weight-thin);
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: -0.012em;
       margin: 0;
-      text-align: right;
-      letter-spacing: 0.005em;
+      text-transform: uppercase;
     }
-    .hero-note em {
-      font-style: italic;
-      color: rgba(189, 194, 255, 0.85);
+    .hero-title strong {
+      font-weight: var(--weight-semibold);
     }
 
     /* Reduced motion: overlay appears instantly in phase 5 */
     @media (prefers-reduced-motion: reduce) {
-      .hero-overlay-left,
-      .hero-overlay-right { transition: none; }
+      .hero-overlay-left { transition: none; }
     }
 
     /* ── Video embed (matches VZ Home App treatment) ── */
@@ -271,6 +271,7 @@
       overflow: hidden;
       background: transparent;
       margin-top: 2.5rem;
+      border-radius: var(--radius-card-lg);
     }
     .cs-video-wrap video { width: 100%; display: block; max-height: 72vh; object-fit: cover; }
 
@@ -305,13 +306,289 @@
       background-image: var(--dot-grid-light);
       background-size: var(--dot-size-md);
     }
+
+    /* ── Eyebrow + title + blurb — match the home HIW / IMPACT pattern.
+
+       SPECIFICITY NOTE: styles.css line 4909–4913 has higher-specificity
+       (0,3,1) rules that set:
+         .cs-sec .sec-inner > .sec-ch  { margin-bottom: var(--gap-eyebrow); }   /* 1.75rem */
+         .cs-sec .sec-inner > h2.st    { margin-bottom: var(--gap-heading); }   /* 0   */
+         .cs-sec .sec-inner > p.bp     { margin-top: 0; }
+       Plain `.sec-ch`, `h2.st`, `.bp` overrides (0,1,0–0,1,1) lose to
+       these and silently fail. The title's `--gap-heading: 0` was the
+       title→blurb-half-gap bug — title margin-bottom was literally 0
+       in the case-study context. Below uses matching specificity so
+       these overrides actually land. */
+
+    /* COLOR — eyebrow + blurb to home HIW greys (55% / 65%). */
+    .sec-ch {
+      color: rgba(0, 0, 0, 0.55);
+    }
+    .bg-dark .sec-ch {
+      color: rgba(255, 255, 255, 0.55);
+    }
+    .bp { color: rgba(0, 0, 0, 0.65); }
+    .bp-d { color: rgba(255, 255, 255, 0.65); }
+
+    /* LAYOUT FIX (1) — .sec-ch is a flex container in styles.css (for
+       the decorative ::after dash). When VCR wraps each word in
+       <span class="vcr-word">, those spans become FLEX ITEMS instead of
+       inline-blocks, breaking baseline + alignment vs. the home (where
+       .hiw-v2-kicker is a plain block). Force display:block + hide
+       the dash so VCR words flow correctly. */
+    .sec-ch {
+      display: block;
+    }
+    .sec-ch::after {
+      display: none;
+    }
+
+    /* SPACING — match home HIW: kicker margin-bottom 1–1.5rem clamp,
+       title margin-bottom 1–1.4rem clamp, lede margin-bottom 3–5rem
+       clamp. Uses the SAME selector specificity as the styles.css
+       rhythm rules (0,3,1) so these win at equal specificity by being
+       defined later in source order. */
+    .cs-sec .sec-inner > .sec-ch {
+      margin-bottom: clamp(1rem, 2vh, 1.5rem);
+    }
+    .cs-sec .sec-inner > h2.st,
+    .cs-sec .sec-inner > h2.st-d {
+      margin-bottom: clamp(1rem, 2vh, 1.4rem);
+    }
+    .cs-sec .sec-inner > p.bp,
+    .cs-sec .sec-inner > p.bp-d {
+      margin-bottom: clamp(3rem, 6vh, 5rem);
+    }
+
+    /* Marquee text — match the home v2 marquee: solid white instead
+       of the global var(--white-a60) so the row reads crisply against
+       the pure-black band. Bg is already #000 via the global
+       .marquee-wrap rule (--dark resolves to #000 post token swap). */
+    .marquee-wrap .marquee-item {
+      color: #fff;
+    }
+
+    /* ── Vertical-Cut Reveal (VCR) — same per-word entry pattern the
+       home uses on HIW / IMPACT / BREAKER / CONTACT headers. JS at the
+       bottom of the page wraps each word in
+         <span class="vcr-word"><span class="vcr-inner">word</span></span>
+       and assigns a cumulative --word-i per section so eyebrow → title
+       → blurb cascade in reading order. Section IntersectionObserver
+       adds .is-vcr-active when the section crosses ~15% of viewport,
+       which kicks the .vcr-inner slide-up. */
+    .vcr-word {
+      display: inline-block;
+      vertical-align: bottom;
+      /* clip-path keeps italic right-overhang + descenders visible
+         while still hiding the inner before reveal. */
+      clip-path: inset(-0.05em -0.15em -0.18em 0);
+    }
+    .vcr-inner {
+      display: inline-block;
+      transform: translateY(125%);
+      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .is-vcr-active .vcr-inner {
+      transform: translateY(0);
+      transition-delay: calc(var(--word-i, 0) * 70ms);
+    }
+    /* Suppress the legacy .r → .on fade for VCR-target text elements;
+       VCR now drives the entry, and stacking both causes double-anim. */
+    .sec-ch.r:has(.vcr-word),
+    .hero-eyebrow.r:has(.vcr-word),
+    .cta-eyebrow.r:has(.vcr-word),
+    h2.st.r:has(.vcr-word),
+    h2.st-d.r:has(.vcr-word),
+    .hero-title.r:has(.vcr-word),
+    .cta-title.r:has(.vcr-word),
+    .bp.r:has(.vcr-word),
+    .bp-d.r:has(.vcr-word),
+    .cta-sub.r:has(.vcr-word) {
+      opacity: 1;
+      transform: none;
+      transition: none;
+      filter: none;
+    }
+    /* OVERVIEW + OUTCOME sections opt out — paint a Three.js dotted-wave
+       surface (DottedSurface) instead of the static dot grid. */
+    #overview-sec.cs-sec.bg-page,
+    #outcome.cs-sec.bg-warm {
+      background-image: none;
+    }
+    .dotted-surface {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      z-index: 0;
+    }
     .cs-sec.bg-dark {
       background-image: var(--dot-grid-white-sm);
       background-size: var(--dot-size-md);
     }
+
+    /* ── CONTEXT section — 6-line vertical guide background ──
+       Port of the body.v2-home pattern: two outer lines 60px from the
+       viewport edges, four inner lines dividing the remaining width
+       into 5 equal segments. Lines run full section height as a
+       ::before layer between the section's bg color (painted first)
+       and .sec-inner content (painted last). White at 40% so they
+       read against the dark fill, same as .hiw-v2-sec on the home.
+
+       The .cs-sec.bg-dark dot-grid backdrop is intentionally removed
+       here — HIW on the home is plain black + lines, no dots; stacking
+       both layers in the case study made the lines read denser than
+       HIW even at identical opacity. */
+    #context.cs-sec.bg-dark {
+      background-image: none;
+    }
+    #context {
+      --bg-line-edge: 60px;
+      /* HIW on the home uses 0.40 in code, but its dense content
+         (kicker + huge title + lede + 4 principle rows + stat row)
+         visually attenuates the strokes. CONTEXT has only a title and
+         a paragraph, so 0.40 reads noticeably brighter. Dialed to the
+         "calm" 0.18 value the home's own bg-lines comment calls out as
+         the alternative — keeps the guides legible without competing
+         with the type. */
+      --bg-line-color: rgba(255, 255, 255, 0.18);
+      --bg-lines-image:
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px);
+      --bg-lines-position:
+        var(--bg-line-edge) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 1) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 2) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 3) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 4) 0,
+        calc(100vw - var(--bg-line-edge)) 0;
+    }
+    #context::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: var(--bg-lines-image);
+      background-position: var(--bg-lines-position);
+      background-repeat: no-repeat;
+      background-size: 1px 100%;
+    }
+
+    /* ── SUB-CHALLENGE sections — 6-line vertical guide background ──
+       Same recipe as #context above but with a black-ink line color
+       (0.08) since these sections sit on the white --page surface.
+       The .cs-sec.bg-page/.bg-warm dot-grid is suppressed so the
+       lines are the only background pattern (cleaner for "just text"
+       reading on top). Per-section selector list covers challenge-1..4;
+       challenge-5 is the epic-quote variant which already has its own
+       cursor-tracked moving grid (.chl-quote-sec rules above). */
+    #challenge.cs-sec.bg-page,
+    #challenge-1.cs-sec.bg-warm,
+    #challenge-2.cs-sec.bg-page,
+    #challenge-3.cs-sec.bg-warm,
+    #challenge-4.cs-sec.bg-page,
+    #insight.cs-sec.bg-page,
+    #vision.cs-sec.bg-warm,
+    #vision-4.cs-sec.bg-warm,
+    #reflection.cs-sec.bg-page {
+      background-image: none;
+    }
+    #challenge,
+    #challenge-1,
+    #challenge-2,
+    #challenge-3,
+    #challenge-4,
+    #insight,
+    #vision,
+    #vision-4,
+    #reflection {
+      --bg-line-edge: 60px;
+      --bg-line-color: rgba(0, 0, 0, 0.08);
+      --bg-lines-image:
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px),
+        linear-gradient(to right, var(--bg-line-color) 1px, transparent 1px);
+      --bg-lines-position:
+        var(--bg-line-edge) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 1) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 2) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 3) 0,
+        calc(var(--bg-line-edge) + (100vw - 2 * var(--bg-line-edge)) / 5 * 4) 0,
+        calc(100vw - var(--bg-line-edge)) 0;
+    }
+    #challenge::before,
+    #challenge-1::before,
+    #challenge-2::before,
+    #challenge-3::before,
+    #challenge-4::before,
+    #insight::before,
+    #vision::before,
+    #vision-4::before,
+    #reflection::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: var(--bg-lines-image);
+      background-position: var(--bg-lines-position);
+      background-repeat: no-repeat;
+      background-size: 1px 100%;
+    }
+
     /* Inline emphasis on dark body copy */
     .bp-d strong { font-weight: var(--weight-medium); color: #fff; }
     .bp-d em     { font-style: italic; color: rgba(255, 255, 255, 0.85); }
+
+    /* ── EPIC QUOTE SECTIONS — replace the .cs-sec dot-grid backdrop
+       with the same cursor-tracked moving grid that paints the IMPACT
+       logo blocks on the home (see body.v2-home .impact-block:: rules
+       in styles.css). JS pushes --mx / --my onto each .chl-quote-sec
+       on pointermove; the ::after layer's radial mask reveals a bright
+       grid under the cursor while the ::before layer paints the faint
+       always-on grid. Both layers use the shared `impact-grid-scroll`
+       keyframes for the constant marching motion. */
+    .chl-quote-sec.cs-sec.bg-warm,
+    .chl-quote-sec.cs-sec.bg-page {
+      background-image: none;
+    }
+    .chl-quote-sec {
+      isolation: isolate;
+    }
+    .chl-quote-sec::before,
+    .chl-quote-sec::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right,  rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: impact-grid-scroll 1.5s linear infinite;
+    }
+    .chl-quote-sec::after {
+      background-image:
+        linear-gradient(to right,  rgba(0, 0, 0, 0.25) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 1px, transparent 1px);
+      -webkit-mask-image: radial-gradient(
+        300px circle at var(--mx, -1000px) var(--my, -1000px),
+        #000, transparent);
+              mask-image: radial-gradient(
+        300px circle at var(--mx, -1000px) var(--my, -1000px),
+        #000, transparent);
+    }
 
     /* ── CHALLENGE → 5 SUB-DIVS multi-level parallax cover stack ──
        Base (CHALLENGE) pins at top:0 while each subsequent cover slides up
@@ -403,27 +680,23 @@
       height: 60px;
       border-radius: 50%;
       background: var(--page);
-      border: 1px solid var(--accent-mid-a25);
-      font-family: var(--font-serif);
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      font-family: var(--font-sans);
       font-size: 18pt;
-      color: var(--accent);
+      font-weight: 700;
+      color: var(--ink);
       margin: 0 0 1.2rem;
       flex-shrink: 0;
     }
-    .apr-step-eyebrow {
-      font-size: var(--text-micro);
-      font-weight: var(--weight-semibold);
-      letter-spacing: var(--tracking-kicker);
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.4rem;
-    }
     .apr-step-title {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: 14pt;
       color: var(--ink);
       margin-bottom: 0.55rem;
       line-height: 1.2;
+    }
+    .apr-step-title strong {
+      font-weight: 700;
     }
     .apr-step-sub {
       font-size: var(--text-body-sm);
@@ -449,7 +722,6 @@
         text-align: left;
       }
       .apr-step-node { margin: 0; width: 44px; height: 44px; font-size: 14pt; }
-      .apr-step-eyebrow,
       .apr-step-title,
       .apr-step-sub { text-align: left; max-width: none; margin: 0 0 0.3rem; }
     }
@@ -462,10 +734,18 @@
       gap: 1.2rem;
       margin-top: 3.5rem;
     }
+    /* Matches the home .glass-tile--dark recipe (light-bg variant):
+       semitransparent black fill + black border at 8% opacity. No
+       hover color change — JS adds .spotlight-glow so cards get a
+       cursor-tracked accent halo instead of a flat color shift. */
+    /* Tile chrome: 1px ink border + 1rem corner radius + solid white
+       fill. Solid (#fff, not transparent) so the section's 6-line guide
+       bg behind the .challenge-grid is masked out under each card and
+       doesn't read through the text. */
     .move-tile {
       position: relative;
-      background: rgba(255, 255, 255, 0.55);
-      border: 1px solid var(--accent-mid-a08);
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 1rem;
       padding: 2.2rem 2rem 2.5rem;
       overflow: hidden;
@@ -476,7 +756,7 @@
       right: -22px;
       width: 200px;
       height: 200px;
-      color: var(--accent);
+      color: rgba(0, 0, 0, 0.35);
       opacity: 0.10;
       pointer-events: none;
       z-index: 1;
@@ -502,7 +782,7 @@
     }
     .move-tile-body {
       font-size: var(--text-body-sm);
-      font-weight: var(--weight-light);
+      font-weight: var(--weight-regular);
       color: var(--ink-mid);
       line-height: var(--leading-spacious);
       margin: 0 0 1rem;
@@ -542,8 +822,25 @@
       line-height: 1.35;
       color: var(--ink);
       margin-bottom: 0;
-      font-style: italic;
+      font-style: normal;
+      font-weight: var(--weight-thin);
     }
+    .chl-tile-aside .move-tile-sub strong {
+      font-weight: 700;
+    }
+
+    /* h2.st / h2.st-d use a per-line `.line-wrap` with overflow:hidden
+       for the slide-up reveal (see splitLines() at the bottom of the
+       page). With line-height:1.1 the wrap's clip box ends right at
+       the last line's baseline, so descenders ("g", "y", "p") on a
+       naturally-wrapped 2nd line get cropped. Tiny padding-bottom
+       gives the descenders room inside the clip box. Page-scoped — the
+       other case studies still use the global rule untouched. */
+    h2.st .line-wrap,
+    h2.st-d .line-wrap {
+      padding-bottom: 0.15em;
+    }
+
 
     @media (max-width: 900px) {
       .challenge-grid { grid-template-columns: 1fr; gap: 1rem; }
@@ -567,19 +864,36 @@
       margin-bottom: 2rem;
       user-select: none;
     }
+    /* Mirrors the home quote-text typography (.quote-text on v2-home):
+       thin (200) base + bold (700) em for the emphasized phrases, no
+       purple accent — em inherits the surrounding ink so the bold
+       italic carries the weight on its own. Size kept slightly smaller
+       than the home quote since these are paragraph-length pull-quotes
+       rather than the home's headline statements. */
     .chl-epic-quote {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-size: clamp(20pt, 2.8vw, 32pt);
-      font-weight: var(--weight-regular);
+      font-weight: var(--weight-thin);
       color: var(--ink);
-      line-height: 1.4;
+      line-height: 1.35;
+      letter-spacing: -0.012em;
       text-align: center;
       max-width: 1080px;
       margin: 0 auto;
     }
     .chl-epic-quote em {
-      color: var(--accent);
       font-style: italic;
+      font-weight: 700;
+      color: inherit;
+    }
+    /* #vision-5 quote — em stays italic but DROPS the global bold so
+       the whole sentence isn't shouted. Per-word emphasis moves to
+       <strong> inside the em (only "digital" and "physical life"). */
+    #vision-5 .chl-epic-quote em {
+      font-weight: var(--weight-thin);
+    }
+    #vision-5 .chl-epic-quote strong {
+      font-weight: 700;
     }
     @media (max-width: 900px) {
       .chl-epic-mark { font-size: 4.5rem; margin-bottom: 1rem; }
@@ -639,10 +953,13 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: clamp(13pt, 1.4vw, 16pt);
-      color: var(--accent-mid);
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-weight: var(--weight-thin);
+      font-size: clamp(11pt, 1.2vw, 14pt);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.92);
       text-align: center;
       width: 70%;
       line-height: 1.2;
@@ -653,6 +970,12 @@
     .role-c1 .role-discipline { top: 25%; }   /* Customer Experience — shift up toward top of ring */
     .role-c2 .role-discipline,
     .role-c3 .role-discipline { top: 75%; }   /* Architecture / Strategy — shift down toward bottom of ring */
+    /* Micro-nudge so the bottom labels feel optically balanced against
+       the overlapping ring shapes — Enterprise leans 4px left, Business
+       Strategy leans 4px right. Uses calc() against the base
+       translate(-50%, -50%) so the centering math is preserved. */
+    .role-c2 .role-discipline { transform: translate(calc(-50% - 4px), -50%); }
+    .role-c3 .role-discipline { transform: translate(calc(-50% + 4px), -50%); }
     .role-system.on .role-discipline { opacity: 1; }
 
     /* Orbiting node labels — 4 around each ring at N/E/S/W, just outside the ring edge */
@@ -695,10 +1018,13 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: clamp(24pt, 3vw, 36pt);
-      color: var(--accent-mid);
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-weight: 700;
+      font-size: clamp(13pt, 1.4vw, 16pt);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #ffffff;
       text-align: center;
       opacity: 0;
       transition: opacity 2s ease;
@@ -721,6 +1047,24 @@
     /* Tile 3 (Impact) carries 3 sub-grouped bullet lists — give the row enough height to fit them */
     .disc-grid .hiw-tile { height: 500px; }
 
+    /* Page-scoped v2 refresh for .hiw-tile (used in .disc-grid and
+       .value-grid below). Brings the tile fill / border in line with
+       the home .glass-tile--dark recipe and strips the purple-tinged
+       hover bg shift so the spotlight-glow halo (added via JS) carries
+       the hover affordance on its own. .hiw-tile is shared across all
+       case studies — these overrides intentionally scope to this page
+       only, leaving the cs-vz-home / bluejeans / iconmobile tiles
+       untouched. */
+    .disc-grid .hiw-tile,
+    .value-grid .hiw-tile {
+      background: transparent;
+      border-color: rgba(0, 0, 0, 0.08);
+    }
+    .disc-grid .hiw-tile:hover,
+    .value-grid .hiw-tile:hover {
+      background: transparent;
+    }
+
     /* Titles sit at the bottom (default spacer behavior), but equalize the description
        block height so all 3 titles land at the same Y. */
     .disc-grid .hiw-face-default .hiw-short { min-height: 11rem; }
@@ -728,12 +1072,13 @@
        everything below) starts at the same Y, regardless of natural line wrap. */
     .disc-grid .hiw-title { min-height: 2.4em; }
 
-    /* Hover-state tagline — short serif italic punchline shown when the tile flips */
+    /* Hover-state tagline — short sentence-case punchline shown when the tile flips */
     .disc-tagline {
-      font-family: var(--font-serif);
-      font-style: italic;
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-weight: var(--weight-regular);
       font-size: clamp(13pt, 1.4vw, 16pt);
-      color: var(--accent);
+      color: #000;
       line-height: 1.3;
       margin-bottom: 0.9rem;
       flex-shrink: 0;
@@ -997,18 +1342,18 @@
       gap: 1.2rem;
       margin-top: 3.5rem;
     }
+    /* Matches the v2 light-bg tile recipe (see .move-tile above).
+       border-color change on hover removed — the spotlight-glow halo
+       added by JS handles all hover affordance. The icon still rotates
+       and grows on hover, just without the purple color shift. */
     .reflect-tile {
       position: relative;
-      background: transparent;
-      border: 1px solid var(--accent-mid-a25);
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 1rem;
       padding: 5rem 2rem 2.8rem;  /* more top breathing room — pushes title + body down */
       min-height: 340px;
       overflow: hidden;
-      transition: border-color 0.4s ease;
-    }
-    .reflect-tile:hover {
-      border-color: var(--accent-mid-a35);
     }
     .reflect-tile-icon {
       position: absolute;
@@ -1016,19 +1361,17 @@
       right: -22px;
       width: 200px;
       height: 200px;
-      color: var(--accent);
+      color: rgba(0, 0, 0, 0.35);
       opacity: 0.10;
       pointer-events: none;
       z-index: 1;
       transition:
         transform 0.65s cubic-bezier(0.34, 1.4, 0.64, 1),
-        opacity 0.4s ease,
-        color 0.4s ease;
+        opacity 0.4s ease;
     }
     .reflect-tile:hover .reflect-tile-icon {
       transform: rotate(-12deg) scale(1.12);
       opacity: 0.22;
-      color: var(--accent-mid);
     }
     .reflect-tile-title {
       position: relative;
@@ -1058,21 +1401,28 @@
       .reflect-tile-icon { width: 150px; height: 150px; top: -18px; right: -18px; }
     }
 
-    /* Roadmap panel extras — insight quote above description + closing tagline below bullets */
+    /* Roadmap panel extras — insight quote above description + closing
+       tagline below bullets. Both follow the v2 thin-italic pattern;
+       the tagline drops its old purple --accent-mid for a neutral
+       semitransparent white that pairs cleanly with the panel surface. */
     .rm-panel-quote {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-style: italic;
+      font-weight: var(--weight-thin);
       font-size: clamp(13pt, 1.4vw, 16pt);
       color: rgba(255, 255, 255, 0.88);
       line-height: 1.35;
+      letter-spacing: -0.012em;
       margin: 0 0 1.2rem;
     }
     .rm-panel-tagline {
-      font-family: var(--font-serif);
+      font-family: var(--font-sans);
       font-style: italic;
+      font-weight: var(--weight-thin);
       font-size: clamp(12pt, 1.3vw, 14pt);
-      color: var(--accent-mid);
+      color: rgba(255, 255, 255, 0.65);
       line-height: 1.5;
+      letter-spacing: -0.012em;
       margin: 1.4rem 0 0;
     }
 
@@ -1786,19 +2136,23 @@
       right: -22px;
       width: 200px;
       height: 200px;
-      color: var(--accent);
+      color: rgba(0, 0, 0, 0.35);
       opacity: 0.10;
       pointer-events: none;
       z-index: 1;
       transition:
         transform 0.65s cubic-bezier(0.34, 1.4, 0.64, 1),
-        opacity 0.4s ease,
-        color 0.4s ease;
+        opacity 0.4s ease;
     }
     .value-grid .hiw-tile:hover .value-tile-icon {
       transform: rotate(-12deg) scale(1.12);
       opacity: 0.22;
-      color: var(--accent-mid);
+    }
+    /* First tile (heart icon) sits 4px higher than the other two so the
+       heart shape reads optically centered against the more rectangular
+       shoulders of the gear / chart icons in tiles 2 and 3. */
+    .value-grid .hiw-tile:first-child .value-tile-icon {
+      top: -32px;
     }
     @media (max-width: 900px) {
       .value-tile-icon { width: 150px; height: 150px; top: -18px; right: -18px; }
@@ -1831,10 +2185,11 @@
     .value-grid .hiw-face-default .value-title { margin-top: auto; }
 
     .value-tagline {
-      font-family: var(--font-serif);
-      font-style: italic;
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-weight: var(--weight-regular);
       font-size: clamp(13pt, 1.4vw, 16pt);
-      color: var(--accent);
+      color: #000;
       line-height: 1.5;
       margin: 0;
       flex-shrink: 0;
@@ -1920,15 +2275,24 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: clamp(20pt, 3vw, 32pt);
-      color: var(--accent);
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-weight: var(--weight-thin);
+      font-size: clamp(13pt, 1.6vw, 18pt);
+      color: #000;
       text-align: center;
       max-width: 620px;
       line-height: 1.3;
       transition: opacity 1.2s ease;
       z-index: 10;
+    }
+    /* <em> inside .vis-intro keeps thin weight + normal style so the
+       whole phrase reads as one upright line (was a purple italic
+       accent on the original v1 design). */
+    .vis-intro em {
+      font-style: normal;
+      font-weight: var(--weight-thin);
+      color: inherit;
     }
     .vision-solar:not([data-phase="1"]) .vis-intro { opacity: 0; }
 
@@ -1958,8 +2322,9 @@
       border-radius: 50%;
     }
     .vis-center-label {
-      font-family: var(--font-serif);
-      font-style: italic;
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-weight: var(--weight-regular);
       font-size: 12pt;
       color: var(--accent);
       letter-spacing: 0.08em;
@@ -2422,6 +2787,11 @@
 ══════════════════════════════════════ -->
 <section class="solar-hero" id="overview" data-phase="1" aria-label="Identity architecture as a solar system">
 
+  <!-- DarkVeil — animated WebGL background (OGL + CPPN fragment shader),
+       sits behind the orbit SVG and hero overlay. Initialized in the
+       <script type="module"> block at the bottom of the page. -->
+  <canvas class="darkveil-canvas" id="darkveil-canvas" aria-hidden="true"></canvas>
+
   <!-- SVG canvas: orbit paths + connection lines + data pulses -->
   <svg class="solar-svg" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMidYMid meet">
     <!-- Orbit path rings (visual guides; staggered fade-in matches HTML .ring radii) -->
@@ -2530,10 +2900,7 @@
   <div class="hero-overlay">
     <div class="hero-overlay-left">
       <div class="hero-eyebrow">Verizon · Experience Architecture · 2026–Present</div>
-      <h1 class="hero-title">Verizon Identity <em>Architecture</em></h1>
-    </div>
-    <div class="hero-overlay-right">
-      <p class="hero-note">The most important outcomes of this project were not screens, frameworks, or organizational artifacts. While many of those remain confidential, the problem-solving approach, strategic thinking, and systems design principles behind them can be shared. This case study focuses on the <em>work beneath the work</em>.</p>
+      <h1 class="hero-title"><strong>Verizon</strong><br>Identity Architecture</h1>
     </div>
   </div>
 
@@ -2570,24 +2937,12 @@
      SECTION 01 · OVERVIEW
 ══════════════════════════════════════ -->
 <section class="cs-sec bg-page" id="overview-sec" style="padding-top:7rem;padding-bottom:7rem;position:relative;overflow:hidden;isolation:isolate;">
-  <div class="hiw-orbs" aria-hidden="true">
-    <div class="hiw-orb hiw-orb-tr">
-      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
-    </div>
-    <div class="hiw-orb hiw-orb-bl">
-      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
-    </div>
-  </div>
+  <!-- DottedSurface — Three.js particle field that paints the section
+       background. Vanilla port of the React DottedSurface component;
+       initialization lives in the <script type="module"> block at the
+       bottom of the page. The decorative .hiw-orbs that used to live
+       here were removed in favor of this surface. -->
+  <canvas class="dotted-surface" id="overview-dotted-surface" aria-hidden="true"></canvas>
   <div class="sec-inner" style="position:relative;z-index:2;">
     <div class="sec-ch r">Overview</div>
     <h2 class="st r d1">Identity <em>Architecture</em>.</h2>
@@ -2613,7 +2968,7 @@
 ══════════════════════════════════════ -->
 <section class="cs-sec bg-dark" id="context" style="padding-top:10rem;padding-bottom:10rem;position:relative;overflow:hidden;isolation:isolate;">
   <div class="sec-inner" style="position:relative;z-index:2;">
-    <div class="sec-ch r" style="color:var(--accent-mid);">Context</div>
+    <div class="sec-ch r">Context</div>
     <h2 class="st-d r d1">The problem beneath the <em>problem</em>.</h2>
     <p class="bp-d r d2" style="max-width:1100px;">By the time I joined, Verizon had already invested years into solving identity from multiple angles. Despite meaningful progress in individual areas, the organization still lacked a <strong>unified framework</strong> for understanding customers across products, services, devices, and households. The need was widely recognized; the challenge was defining <strong>what problem we were actually trying to solve</strong>.</p>
   </div>
@@ -2636,26 +2991,22 @@
     <div class="apr-stepper r d3">
       <div class="apr-step">
         <div class="apr-step-node">01</div>
-        <div class="apr-step-eyebrow">Challenge</div>
-        <div class="apr-step-title">Nobody Owned the Customer</div>
+        <div class="apr-step-title">Nobody owned the <strong>customer</strong></div>
         <div class="apr-step-sub">Everyone owned a piece. Nobody owned the whole.</div>
       </div>
       <div class="apr-step">
         <div class="apr-step-node">02</div>
-        <div class="apr-step-eyebrow">Challenge</div>
-        <div class="apr-step-title">The Incentives Worked Against Unification</div>
+        <div class="apr-step-title">The incentives worked against <strong>unification</strong></div>
         <div class="apr-step-sub">Identity was important, but never urgent.</div>
       </div>
       <div class="apr-step">
         <div class="apr-step-node">03</div>
-        <div class="apr-step-eyebrow">Challenge</div>
-        <div class="apr-step-title">Legacy Systems Made Change Expensive</div>
+        <div class="apr-step-title">Legacy systems made change <strong>expensive</strong></div>
         <div class="apr-step-sub">The deeper the problem, the harder it was to touch.</div>
       </div>
       <div class="apr-step">
         <div class="apr-step-node">04</div>
-        <div class="apr-step-eyebrow">Challenge</div>
-        <div class="apr-step-title">Identity Was Framed as a Technical Problem</div>
+        <div class="apr-step-title">Identity was framed as a <strong>technical</strong> problem</div>
         <div class="apr-step-sub">The organization saw infrastructure. The customer felt experience.</div>
       </div>
     </div>
@@ -2720,7 +3071,7 @@
           <line x1="10" y1="11" x2="14" y2="11"/>
         </svg>
         <div class="move-tile-label">Key Insight</div>
-        <div class="move-tile-sub">Verizon had accounts, lines, products, and systems, but no shared customer model.</div>
+        <div class="move-tile-sub">Verizon had accounts, lines, products, and systems, but no shared <strong>customer model</strong>.</div>
       </div>
     </div>
   </div>
@@ -2784,7 +3135,7 @@
           <line x1="10" y1="11" x2="14" y2="11"/>
         </svg>
         <div class="move-tile-label">Key Insight</div>
-        <div class="move-tile-sub">Everyone benefited from unified identity, but no single team was rewarded for creating it.</div>
+        <div class="move-tile-sub">Everyone <strong>benefited</strong> from unified identity, but no single team was <strong>rewarded</strong> for creating it.</div>
       </div>
     </div>
   </div>
@@ -2843,7 +3194,7 @@
           <line x1="10" y1="11" x2="14" y2="11"/>
         </svg>
         <div class="move-tile-label">Key Insight</div>
-        <div class="move-tile-sub">The perception of risk often outweighed the perceived value of transformation.</div>
+        <div class="move-tile-sub">The perception of risk often <strong>outweighed</strong> the perceived value of transformation.</div>
       </div>
     </div>
   </div>
@@ -2904,14 +3255,14 @@
           <line x1="10" y1="11" x2="14" y2="11"/>
         </svg>
         <div class="move-tile-label">Key Insight</div>
-        <div class="move-tile-sub">Identity isn't a back-end problem. It's the foundation of every experience, every insight, and every future AI capability.</div>
+        <div class="move-tile-sub">Identity isn't a back-end problem. It's the foundation of every experience, every insight, and every future <strong>AI capability</strong>.</div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ── SUB-DIV 05 — epic quote moment (light) ── -->
-<section class="cs-sec bg-warm cs-stack-cover" id="challenge-5" style="padding-top:7rem;padding-bottom:7rem;z-index:6;">
+<section class="cs-sec bg-warm cs-stack-cover chl-quote-sec" id="challenge-5" style="padding-top:7rem;padding-bottom:7rem;z-index:6;">
   <div class="sec-inner chl-epic-stage" style="position:relative;z-index:2;">
     <div class="chl-epic-mark r d1" aria-hidden="true">“</div>
     <p class="chl-epic-quote r d2">The more I investigated, the clearer it became: this wasn't a data problem or a technology problem. <em>It was an understanding problem.</em> Before defining a solution, we first needed to understand what was actually broken.</p>
@@ -2926,7 +3277,7 @@
 ══════════════════════════════════════ -->
 <section class="cs-sec bg-dark" id="role" style="padding-top:9rem;padding-bottom:5rem;position:relative;overflow:hidden;isolation:isolate;">
   <div class="sec-inner" style="position:relative;z-index:2;">
-    <div class="sec-ch r" style="color:var(--accent-mid);">My Role</div>
+    <div class="sec-ch r">My Role</div>
     <h2 class="st-d r d1">A problem between <em>disciplines</em>.</h2>
     <p class="bp-d r d2">Leading Verizon Home gave me a unique vantage point into the ecosystem. I had experienced the consequences of fragmented identity firsthand, from authentication failures and account confusion to disconnected customer journeys across products and services. Combined with a passion for navigating ambiguity and solving large-scale systems problems, this perspective allowed me to connect <em>customer experience</em>, <em>business strategy</em>, and <em>enterprise architecture</em>.</p>
 
@@ -3104,7 +3455,7 @@
 </section>
 
 <!-- ── INSIGHT QUOTE — epic quote moment (covers INSIGHT) ── -->
-<section class="cs-sec bg-warm cs-stack-cover" id="insight-quote" style="padding-top:7rem;padding-bottom:7rem;z-index:2;">
+<section class="cs-sec bg-warm cs-stack-cover chl-quote-sec" id="insight-quote" style="padding-top:7rem;padding-bottom:7rem;z-index:2;">
   <div class="sec-inner chl-epic-stage" style="position:relative;z-index:2;">
     <div class="chl-epic-mark r d1" aria-hidden="true">“</div>
     <p class="chl-epic-quote r d2">In the telecom world, the same person often exists as <em>three different customers</em>: the mobile subscriber, the home internet user, and the person calling support.<br><em>The system treated them as strangers.</em></p>
@@ -3126,7 +3477,7 @@
 
       <!-- Header (inside the pin — always visible) -->
       <div class="impact-pin-header">
-        <div class="sec-ch r" style="color:var(--accent-mid);">Impact</div>
+        <div class="sec-ch r">Impact</div>
         <h2 class="st-d r d1">The cost of doing <em>nothing</em>.</h2>
         <p class="bp-d r d2">The risks weren't immediate, which is precisely what made them dangerous. Fragmented identity rarely causes a single catastrophic failure. Instead, it <strong>quietly compounds inefficiencies</strong>, distorts decision-making, and limits an organization's ability to adapt to the future.</p>
       </div>
@@ -3373,7 +3724,7 @@
     </div>
   </div>
   <div class="sec-inner" style="position:relative;z-index:2;">
-    <div class="sec-ch r" style="color:var(--accent-mid);">The Shift</div>
+    <div class="sec-ch r">The Shift</div>
     <h2 class="st-d r d1">From selling products to <em>understanding households</em>.</h2>
 
     <!-- SHIFT visual: 3-part (today | shift arrow | tomorrow), phase-driven -->
@@ -3572,10 +3923,10 @@
 </section>
 
 <!-- ── SUB-DIV 05 — epic quote moment ── -->
-<section class="cs-sec bg-page cs-stack-cover" id="vision-5" style="padding-top:7rem;padding-bottom:7rem;z-index:6;">
+<section class="cs-sec bg-page cs-stack-cover chl-quote-sec" id="vision-5" style="padding-top:7rem;padding-bottom:7rem;z-index:6;">
   <div class="sec-inner chl-epic-stage" style="position:relative;z-index:2;">
     <div class="chl-epic-mark r d1" aria-hidden="true">“</div>
-    <p class="chl-epic-quote r d2">Identity is not a login system.<br><em>It's the operating system of the<br>customer's digital and physical life.</em></p>
+    <p class="chl-epic-quote r d2">Identity is not a <em>login system</em>.<br>It's the operating system of the<br>customer's <strong>digital</strong> and <strong>physical life</strong>.</p>
   </div>
 </section>
 
@@ -3593,7 +3944,7 @@
 
       <!-- Header (inside the pin — always visible) -->
       <div class="impact-pin-header">
-        <div class="sec-ch r" style="color:var(--accent-mid);">Roadmap</div>
+        <div class="sec-ch r">Roadmap</div>
         <h2 class="st-d r d1">Making change <em>inevitable</em>.</h2>
         <p class="bp-d r d2">We didn't need to start with a platform.<br>We needed to make the <em>cost of not having one</em> visible.</p>
       </div>
@@ -3712,24 +4063,8 @@
      SECTION 12 · OUTCOME
 ══════════════════════════════════════ -->
 <section class="cs-sec bg-warm" id="outcome" style="padding-top:7rem;padding-bottom:7rem;position:relative;overflow:hidden;isolation:isolate;">
-  <div class="hiw-orbs" aria-hidden="true">
-    <div class="hiw-orb hiw-orb-tr">
-      <span class="hiw-dot-arm" style="--da:0deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:60deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:120deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:180deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:240deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:300deg"><span class="hiw-orb-dot"></span></span>
-    </div>
-    <div class="hiw-orb hiw-orb-bl">
-      <span class="hiw-dot-arm" style="--da:30deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:90deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:150deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:210deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:270deg"><span class="hiw-orb-dot"></span></span>
-      <span class="hiw-dot-arm" style="--da:330deg"><span class="hiw-orb-dot"></span></span>
-    </div>
-  </div>
+  <!-- DottedSurface — same Three.js particle field as #overview-sec. -->
+  <canvas class="dotted-surface" id="outcome-dotted-surface" aria-hidden="true"></canvas>
   <div class="sec-inner" style="position:relative;z-index:2;">
     <div class="sec-ch r">Outcome</div>
     <h2 class="st r d1">Building the <em>foundation</em>.</h2>
@@ -3828,15 +4163,21 @@
 <!-- ══════════════════════════════════════
      CTA — NEXT CASE STUDY
 ══════════════════════════════════════ -->
-<section class="cta-sec">
+<section class="cta-sec" data-bg="dot-grid">
   <div class="cta-d"></div>
   <div class="cta-g"></div>
-  <div style="font-size:var(--text-micro); font-weight:var(--weight-semibold); letter-spacing:var(--tracking-widest); text-transform:uppercase; color:var(--accent-mid); margin-bottom:1.2rem; position:relative; z-index:2;">Next Case Study</div>
-  <h2 class="cta-title"><em>02 /</em> Verizon Home App</h2>
+  <!-- GSAP-driven interactive dot-grid background — same component as
+       the home contact section's .cz-dot-grid. JS init lives at the
+       bottom of the page; bails out cleanly if GSAP didn't load. -->
+  <div class="cz-dot-grid" aria-hidden="true">
+    <canvas class="cz-dot-grid__canvas"></canvas>
+  </div>
+  <div class="cta-eyebrow" style="font-size:9pt; font-weight:var(--weight-medium); letter-spacing:var(--tracking-wider); text-transform:uppercase; color:rgba(255,255,255,0.78); line-height:1; margin-bottom:1.2rem; position:relative; z-index:2;">Next Case Study · 02 / 04</div>
+  <h2 class="cta-title"><strong>Verizon</strong><br>Home App</h2>
   <p class="cta-sub">From reactive utility to proactive intelligence, building a connected home product that earns trust over time.</p>
   <div style="display:flex; gap:0.75rem; justify-content:center; align-items:center; flex-wrap:wrap; position:relative; z-index:2;">
-    <a href="cs-vz-home.html" class="cz-book-btn">See the case study</a>
-    <a href="index.html#work" class="cz-ghost-btn">Back to portfolio</a>
+    <a href="cs-vz-home.html" class="glass-cta">See the case study</a>
+    <a href="index.html#work" class="glass-cta glass-cta--ghost">Back to portfolio</a>
   </div>
 </section>
 
@@ -3867,12 +4208,27 @@ if (solarHero) {
   }
 }
 
+/* Cache the list of dark-background elements once. The nav-light toggle
+   below tests these on every scroll: if any is currently behind the nav
+   bar, we force nav--light (white text). Mirrors the section-based
+   detection used by updateNavColor() on the new home, so REFAELI MA
+   and PORTFOLIO stay white over the hero AND over every later .bg-dark
+   section (context, role, etc.) instead of flipping dark at scrollY=80. */
+const DARK_SECTIONS = document.querySelectorAll('.solar-hero, .bg-dark');
+
 window.addEventListener('scroll', () => {
   const t = window.scrollY;
   const h = document.documentElement.scrollHeight - window.innerHeight;
   prog.style.width = (t / h * 100) + '%';
   nav.classList.toggle('scrolled', t > 60);
-  nav.classList.toggle('nav--light', t < 80);
+
+  const navH = nav.offsetHeight + 2;
+  let isDark = false;
+  DARK_SECTIONS.forEach(sec => {
+    const r = sec.getBoundingClientRect();
+    if (r.top < navH && r.bottom > 0) isDark = true;
+  });
+  nav.classList.toggle('nav--light', isDark);
 
   const bt = document.getElementById('back-top');
   bt.classList.toggle('visible', t > 400);
@@ -3942,9 +4298,10 @@ mobNav.querySelectorAll('a').forEach(a => {
   });
 });
 
-/* ── Heading line-split (matches home / VZ Home heading reveal — without this,
-       h2.st.r keeps its translateY(40px) and never lands, causing the title to sit too
-       low and overlap the body) ── */
+/* ── Heading entry animation — replaced the legacy splitLines (per-line
+   slide-up) with VCR (per-word slide-up) so case-study titles match the
+   home pattern. splitLines fn kept for any potential rollback but the
+   call site is removed. See `caseStudyVCR` IIFE below. */
 function splitLines(el) {
   const base = el.classList.contains('d3') ? 0.25
              : el.classList.contains('d2') ? 0.15
@@ -3956,7 +4313,73 @@ function splitLines(el) {
   ).join('');
   el.classList.add('line-split');
 }
-document.querySelectorAll('h2.st, h2.st-d').forEach(splitLines);
+
+/* ── VCR ENTRY ANIMATION — vanilla port of `hiwVerticalCutReveal` on
+   index.html. For each top-level section (.solar-hero, .cs-sec,
+   .cta-sec), grabs the eyebrow / title / blurb trio, wraps every word
+   in <span class="vcr-word"><span class="vcr-inner">word</span></span>
+   with a cumulative --word-i across the trio, then observes the
+   section. When the section crosses ~15% of viewport, .is-vcr-active
+   is added and the CSS rule above cascades the inner spans up. */
+(function caseStudyVCR() {
+  function wrapWords(el, getNextIdx) {
+    if (!el) return;
+    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+    var nodes = [];
+    var n;
+    while ((n = walker.nextNode())) nodes.push(n);
+    nodes.forEach(function (textNode) {
+      var text = textNode.textContent;
+      if (!text.trim()) return;
+      var parts = text.split(/(\s+)/);
+      var frag = document.createDocumentFragment();
+      parts.forEach(function (p) {
+        if (!p) return;
+        if (/^\s+$/.test(p)) {
+          frag.appendChild(document.createTextNode(p));
+        } else {
+          var w = document.createElement('span');
+          w.className = 'vcr-word';
+          w.style.setProperty('--word-i', getNextIdx());
+          var inner = document.createElement('span');
+          inner.className = 'vcr-inner';
+          inner.textContent = p;
+          w.appendChild(inner);
+          frag.appendChild(w);
+        }
+      });
+      textNode.parentNode.replaceChild(frag, textNode);
+    });
+  }
+
+  /* Selector for the eyebrow/title/blurb elements within a section.
+     Trio cascades cumulatively per section. */
+  var TEXT_SELECTOR = [
+    '.sec-ch', 'h2.st', 'h2.st-d', '.bp', '.bp-d',
+    '.hero-eyebrow', '.hero-title',
+    '.cta-eyebrow', '.cta-title', '.cta-sub'
+  ].join(', ');
+
+  /* Sections that hold the trios. */
+  var sections = document.querySelectorAll('section.solar-hero, section.cs-sec, section.cta-sec');
+  sections.forEach(function (section) {
+    var targets = section.querySelectorAll(TEXT_SELECTOR);
+    if (!targets.length) return;
+
+    var idx = 0;
+    targets.forEach(function (el) {
+      wrapWords(el, function () { return idx++; });
+    });
+
+    var io = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        section.classList.add('is-vcr-active');
+        io.disconnect();
+      }
+    }, { threshold: 0.15 });
+    io.observe(section);
+  });
+}());
 
 /* ── SCROLL REVEAL ── */
 const obs = new IntersectionObserver(entries => {
@@ -4274,6 +4697,530 @@ document.addEventListener('mouseenter', () => {
   dot.style.opacity  = '1';
   ring.style.opacity = '1';
 });
+
+
+/* ── QUOTE GRID REVEAL — ported from impactGridReveal() in index.html.
+   Each .chl-quote-sec writes element-relative --mx / --my on itself on
+   pointermove (rAF-throttled); the section's ::after layer's radial
+   mask consumes those vars to brighten the grid under the cursor.
+   Sends the vars off-canvas on pointerleave so the bright grid fades. */
+(function quoteGridReveal() {
+  var sections = document.querySelectorAll('.chl-quote-sec');
+  if (!sections.length) return;
+  sections.forEach(function (sec) {
+    var lastX = 0, lastY = 0;
+    var pending = false;
+    sec.addEventListener('pointermove', function (e) {
+      lastX = e.clientX;
+      lastY = e.clientY;
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(function () {
+        pending = false;
+        var rect = sec.getBoundingClientRect();
+        sec.style.setProperty('--mx', (lastX - rect.left) + 'px');
+        sec.style.setProperty('--my', (lastY - rect.top)  + 'px');
+      });
+    });
+    sec.addEventListener('pointerleave', function () {
+      sec.style.setProperty('--mx', '-1000px');
+      sec.style.setProperty('--my', '-1000px');
+    });
+  });
+}());
+
+
+/* ── SPOTLIGHT GLOW — ported verbatim from index.html so the bottom
+   .glass-cta picks up the same cursor-tracked accent halo + border
+   highlight as the "Book a Call" CTA on the home contact section.
+
+   Extended selector list: every card / tile with a hover affordance
+   on this page now opts into the same glow so the hover treatment
+   matches the home pattern across the board. Replaces the old
+   color-shift hover state, which lived on each tile's CSS. */
+/* ── CTA DOT-GRID — GSAP-driven interactive dot-grid behind the
+   "Next Case Study" CTA. Vanilla port of the IIFE on index.html that
+   paints .contact-zone[data-bg="dot-grid"]; scoped here to .cta-sec
+   so the case-study CTA gets the same proximity-color + speed-knock
+   + click-shockwave behavior. Bails out cleanly if GSAP didn't load
+   (defer'd CDN script). */
+window.addEventListener('load', function () {
+  var section = document.querySelector('.cta-sec[data-bg="dot-grid"]');
+  var wrap    = section && section.querySelector('.cz-dot-grid');
+  var canvas  = wrap && wrap.querySelector('.cz-dot-grid__canvas');
+  if (!section || !wrap || !canvas || typeof gsap === 'undefined') return;
+
+  /* Tunables — DotGrid component props from the home spec. */
+  var DOT_SIZE         = 2;
+  var GAP              = 12;
+  var BASE_COLOR       = '#2F293A';
+  var ACTIVE_COLOR     = '#dfdfdf';
+  var PROXIMITY        = 120;
+  var SPEED_TRIGGER    = 100;
+  var SHOCK_RADIUS     = 250;
+  var SHOCK_STRENGTH   = 5;
+  var MAX_SPEED        = 5000;
+  var RETURN_DURATION  = 1.5;
+  var KNOCK_DURATION   = 0.45;
+
+  function hexToRgb(hex) {
+    var m = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+    if (!m) return { r: 0, g: 0, b: 0 };
+    return {
+      r: parseInt(m[1], 16),
+      g: parseInt(m[2], 16),
+      b: parseInt(m[3], 16)
+    };
+  }
+  var baseRgb   = hexToRgb(BASE_COLOR);
+  var activeRgb = hexToRgb(ACTIVE_COLOR);
+  var proxSq    = PROXIMITY * PROXIMITY;
+
+  var ctx = canvas.getContext('2d');
+  var dots = [];
+  var circlePath = window.Path2D ? new Path2D() : null;
+  if (circlePath) circlePath.arc(0, 0, DOT_SIZE / 2, 0, Math.PI * 2);
+
+  var pointer = { x: -9999, y: -9999, vx: 0, vy: 0, speed: 0, lastTime: 0, lastX: 0, lastY: 0 };
+
+  function buildGrid() {
+    var rect = wrap.getBoundingClientRect();
+    var width  = rect.width;
+    var height = rect.height;
+    var dpr    = window.devicePixelRatio || 1;
+    canvas.width        = width  * dpr;
+    canvas.height       = height * dpr;
+    canvas.style.width  = width  + 'px';
+    canvas.style.height = height + 'px';
+    ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    var cols   = Math.floor((width  + GAP) / (DOT_SIZE + GAP));
+    var rows   = Math.floor((height + GAP) / (DOT_SIZE + GAP));
+    var cell   = DOT_SIZE + GAP;
+    var gridW  = cell * cols - GAP;
+    var gridH  = cell * rows - GAP;
+    var startX = (width  - gridW) / 2 + DOT_SIZE / 2;
+    var startY = (height - gridH) / 2 + DOT_SIZE / 2;
+
+    dots = [];
+    for (var y = 0; y < rows; y++) {
+      for (var x = 0; x < cols; x++) {
+        dots.push({
+          cx: startX + x * cell,
+          cy: startY + y * cell,
+          xOffset: 0, yOffset: 0,
+          _knocked: false
+        });
+      }
+    }
+  }
+  buildGrid();
+
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(buildGrid).observe(wrap);
+  } else {
+    window.addEventListener('resize', buildGrid);
+  }
+
+  function draw() {
+    requestAnimationFrame(draw);
+    var w = canvas.width;
+    var h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var ox  = dot.cx + dot.xOffset;
+      var oy  = dot.cy + dot.yOffset;
+      var dx  = dot.cx - pointer.x;
+      var dy  = dot.cy - pointer.y;
+      var dsq = dx * dx + dy * dy;
+
+      var fill = BASE_COLOR;
+      if (dsq <= proxSq) {
+        var dist = Math.sqrt(dsq);
+        var t    = 1 - dist / PROXIMITY;
+        fill = 'rgb(' +
+          Math.round(baseRgb.r + (activeRgb.r - baseRgb.r) * t) + ',' +
+          Math.round(baseRgb.g + (activeRgb.g - baseRgb.g) * t) + ',' +
+          Math.round(baseRgb.b + (activeRgb.b - baseRgb.b) * t) +
+        ')';
+      }
+
+      ctx.save();
+      ctx.translate(ox, oy);
+      ctx.fillStyle = fill;
+      if (circlePath) {
+        ctx.fill(circlePath);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, DOT_SIZE / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+  draw();
+
+  var moveLast = 0;
+  function onMove(e) {
+    var now = performance.now();
+    if (now - moveLast < 50) return;
+    moveLast = now;
+
+    var dt = pointer.lastTime ? now - pointer.lastTime : 16;
+    var dx = e.clientX - pointer.lastX;
+    var dy = e.clientY - pointer.lastY;
+    var vx = (dx / dt) * 1000;
+    var vy = (dy / dt) * 1000;
+    var speed = Math.sqrt(vx * vx + vy * vy);
+    if (speed > MAX_SPEED) {
+      var s = MAX_SPEED / speed;
+      vx *= s; vy *= s; speed = MAX_SPEED;
+    }
+    pointer.lastTime = now;
+    pointer.lastX = e.clientX;
+    pointer.lastY = e.clientY;
+    pointer.vx = vx; pointer.vy = vy; pointer.speed = speed;
+
+    var rect = canvas.getBoundingClientRect();
+    pointer.x = e.clientX - rect.left;
+    pointer.y = e.clientY - rect.top;
+
+    if (speed <= SPEED_TRIGGER) return;
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var dxx = dot.cx - pointer.x;
+      var dyy = dot.cy - pointer.y;
+      var dist = Math.sqrt(dxx * dxx + dyy * dyy);
+      if (dist < PROXIMITY && !dot._knocked) {
+        knock(dot, dxx + vx * 0.005, dyy + vy * 0.005);
+      }
+    }
+  }
+
+  function onClick(e) {
+    var rect = canvas.getBoundingClientRect();
+    var cx = e.clientX - rect.left;
+    var cy = e.clientY - rect.top;
+    if (cx < 0 || cy < 0 || cx > rect.width || cy > rect.height) return;
+    for (var i = 0; i < dots.length; i++) {
+      var dot = dots[i];
+      var dxx = dot.cx - cx;
+      var dyy = dot.cy - cy;
+      var dist = Math.sqrt(dxx * dxx + dyy * dyy);
+      if (dist < SHOCK_RADIUS && !dot._knocked) {
+        var falloff = Math.max(0, 1 - dist / SHOCK_RADIUS);
+        knock(dot, dxx * SHOCK_STRENGTH * falloff, dyy * SHOCK_STRENGTH * falloff);
+      }
+    }
+  }
+
+  function knock(dot, pushX, pushY) {
+    dot._knocked = true;
+    gsap.killTweensOf(dot);
+    gsap.to(dot, {
+      xOffset: pushX,
+      yOffset: pushY,
+      duration: KNOCK_DURATION,
+      ease: 'power3.out',
+      onComplete: function () {
+        gsap.to(dot, {
+          xOffset: 0,
+          yOffset: 0,
+          duration: RETURN_DURATION,
+          ease: 'elastic.out(1,0.75)',
+          onComplete: function () { dot._knocked = false; }
+        });
+      }
+    });
+  }
+
+  window.addEventListener('mousemove', onMove, { passive: true });
+  window.addEventListener('click', onClick);
+});
+
+
+(function spotlightGlow() {
+  document.querySelectorAll('.glass-cta, .move-tile, .reflect-tile, .disc-grid .hiw-tile, .value-grid .hiw-tile')
+    .forEach(function (el) { el.classList.add('spotlight-glow'); });
+
+  var cards = document.querySelectorAll('.spotlight-glow');
+  if (!cards.length) return;
+
+  var pending = false;
+  var lastX = 0, lastY = 0;
+  function tick() {
+    pending = false;
+    cards.forEach(function (card) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--x', (lastX - r.left).toFixed(2));
+      card.style.setProperty('--y', (lastY - r.top).toFixed(2));
+    });
+  }
+  document.addEventListener('pointermove', function (e) {
+    lastX = e.clientX;
+    lastY = e.clientY;
+    if (!pending) {
+      pending = true;
+      requestAnimationFrame(tick);
+    }
+  }, { passive: true });
+}());
+</script>
+
+
+<!-- ══════════════════════════════════════
+     DARKVEIL — animated WebGL hero background
+     Vanilla port of the React DarkVeil component (ReactBits).
+     CPPN fragment shader rendered via OGL (loaded from esm.sh).
+     All extra effects (hue shift / noise / scanlines / warp) are
+     dialed to zero per the supplied prop set; only `speed` is non-zero.
+══════════════════════════════════════ -->
+<script type="module">
+  import { Renderer, Program, Mesh, Triangle, Vec2 } from 'https://esm.sh/ogl@1.0.11';
+
+  const canvas = document.getElementById('darkveil-canvas');
+  if (canvas) {
+    const parent = canvas.parentElement;
+
+    // Tunables — match the React props passed in the design spec.
+    const HUE_SHIFT = 0;
+    const NOISE     = 0;
+    const SCAN      = 0;
+    const SCAN_FREQ = 0;
+    const WARP      = 0;
+    const SPEED     = 0.5;
+    const RES_SCALE = 1;
+
+    const vertex = /* glsl */`
+      attribute vec2 position;
+      void main(){ gl_Position = vec4(position, 0.0, 1.0); }
+    `;
+
+    /* CPPN fragment shader — long matrix block ported verbatim from the
+       original DarkVeil source. Do not edit the cppn_fn weights; they are
+       the trained network. */
+    const fragment = `
+      #ifdef GL_ES
+      precision lowp float;
+      #endif
+      uniform vec2 uResolution;
+      uniform float uTime;
+      uniform float uHueShift;
+      uniform float uNoise;
+      uniform float uScan;
+      uniform float uScanFreq;
+      uniform float uWarp;
+      #define iTime uTime
+      #define iResolution uResolution
+
+      vec4 buf[8];
+      float rand(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}
+
+      mat3 rgb2yiq=mat3(0.299,0.587,0.114,0.596,-0.274,-0.322,0.211,-0.523,0.312);
+      mat3 yiq2rgb=mat3(1.0,0.956,0.621,1.0,-0.272,-0.647,1.0,-1.106,1.703);
+
+      vec3 hueShiftRGB(vec3 col,float deg){
+        vec3 yiq=rgb2yiq*col;
+        float rad=radians(deg);
+        float cosh=cos(rad),sinh=sin(rad);
+        vec3 yiqShift=vec3(yiq.x,yiq.y*cosh-yiq.z*sinh,yiq.y*sinh+yiq.z*cosh);
+        return clamp(yiq2rgb*yiqShift,0.0,1.0);
+      }
+
+      vec4 sigmoid(vec4 x){return 1./(1.+exp(-x));}
+
+      vec4 cppn_fn(vec2 coordinate,float in0,float in1,float in2){
+        buf[6]=vec4(coordinate.x,coordinate.y,0.3948333106474662+in0,0.36+in1);
+        buf[7]=vec4(0.14+in2,sqrt(coordinate.x*coordinate.x+coordinate.y*coordinate.y),0.,0.);
+        buf[0]=mat4(vec4(6.5404263,-3.6126034,0.7590882,-1.13613),vec4(2.4582713,3.1660357,1.2219609,0.06276096),vec4(-5.478085,-6.159632,1.8701609,-4.7742867),vec4(6.039214,-5.542865,-0.90925294,3.251348))*buf[6]+mat4(vec4(0.8473259,-5.722911,3.975766,1.6522468),vec4(-0.24321538,0.5839259,-1.7661959,-5.350116),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(0.21808943,1.1243913,-1.7969975,5.0294676);
+        buf[1]=mat4(vec4(-3.3522482,-6.0612736,0.55641043,-4.4719114),vec4(0.8631464,1.7432913,5.643898,1.6106541),vec4(2.4941394,-3.5012043,1.7184316,6.357333),vec4(3.310376,8.209261,1.1355612,-1.165539))*buf[6]+mat4(vec4(5.24046,-13.034365,0.009859298,15.870829),vec4(2.987511,3.129433,-0.89023495,-1.6822904),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-5.9457836,-6.573602,-0.8812491,1.5436668);
+        buf[0]=sigmoid(buf[0]);buf[1]=sigmoid(buf[1]);
+        buf[2]=mat4(vec4(-15.219568,8.095543,-2.429353,-1.9381982),vec4(-5.951362,4.3115187,2.6393783,1.274315),vec4(-7.3145227,6.7297835,5.2473326,5.9411426),vec4(5.0796127,8.979051,-1.7278991,-1.158976))*buf[6]+mat4(vec4(-11.967154,-11.608155,6.1486754,11.237008),vec4(2.124141,-6.263192,-1.7050359,-0.7021966),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-4.17164,-3.2281182,-4.576417,-3.6401186);
+        buf[3]=mat4(vec4(3.1832156,-13.738922,1.879223,3.233465),vec4(0.64300746,12.768129,1.9141049,0.50990224),vec4(-0.049295485,4.4807224,1.4733979,1.801449),vec4(5.0039253,13.000481,3.3991797,-4.5561905))*buf[6]+mat4(vec4(-0.1285731,7.720628,-3.1425676,4.742367),vec4(0.6393625,3.714393,-0.8108378,-0.39174938),vec4(0.,0.,0.,0.),vec4(0.,0.,0.,0.))*buf[7]+vec4(-1.1811101,-21.621881,0.7851888,1.2329718);
+        buf[2]=sigmoid(buf[2]);buf[3]=sigmoid(buf[3]);
+        buf[4]=mat4(vec4(5.214916,-7.183024,2.7228765,2.6592617),vec4(-5.601878,-25.3591,4.067988,0.4602802),vec4(-10.57759,24.286327,21.102104,37.546658),vec4(4.3024497,-1.9625226,2.3458803,-1.372816))*buf[0]+mat4(vec4(-17.6526,-10.507558,2.2587414,12.462782),vec4(6.265566,-502.75443,-12.642513,0.9112289),vec4(-10.983244,20.741234,-9.701768,-0.7635988),vec4(5.383626,1.4819539,-4.1911616,-4.8444734))*buf[1]+mat4(vec4(12.785233,-16.345072,-0.39901125,1.7955981),vec4(-30.48365,-1.8345358,1.4542528,-1.1118771),vec4(19.872723,-7.337935,-42.941723,-98.52709),vec4(8.337645,-2.7312303,-2.2927687,-36.142323))*buf[2]+mat4(vec4(-16.298317,3.5471997,-0.44300047,-9.444417),vec4(57.5077,-35.609753,16.163465,-4.1534753),vec4(-0.07470326,-3.8656476,-7.0901804,3.1523974),vec4(-12.559385,-7.077619,1.490437,-0.8211543))*buf[3]+vec4(-7.67914,15.927437,1.3207729,-1.6686112);
+        buf[5]=mat4(vec4(-1.4109162,-0.372762,-3.770383,-21.367174),vec4(-6.2103205,-9.35908,0.92529047,8.82561),vec4(11.460242,-22.348068,13.625772,-18.693201),vec4(-0.3429052,-3.9905605,-2.4626114,-0.45033523))*buf[0]+mat4(vec4(7.3481627,-4.3661838,-6.3037653,-3.868115),vec4(1.5462853,6.5488915,1.9701879,-0.58291394),vec4(6.5858274,-2.2180402,3.7127688,-1.3730392),vec4(-5.7973905,10.134961,-2.3395722,-5.965605))*buf[1]+mat4(vec4(-2.5132585,-6.6685553,-1.4029363,-0.16285264),vec4(-0.37908727,0.53738135,4.389061,-1.3024765),vec4(-0.70647055,2.0111287,-5.1659346,-3.728635),vec4(-13.562562,10.487719,-0.9173751,-2.6487076))*buf[2]+mat4(vec4(-8.645013,6.5546675,-6.3944063,-5.5933375),vec4(-0.57783127,-1.077275,36.91025,5.736769),vec4(14.283112,3.7146652,7.1452246,-4.5958776),vec4(2.7192075,3.6021907,-4.366337,-2.3653464))*buf[3]+vec4(-5.9000807,-4.329569,1.2427121,8.59503);
+        buf[4]=sigmoid(buf[4]);buf[5]=sigmoid(buf[5]);
+        buf[6]=mat4(vec4(-1.61102,0.7970257,1.4675229,0.20917463),vec4(-28.793737,-7.1390953,1.5025433,4.656581),vec4(-10.94861,39.66238,0.74318546,-10.095605),vec4(-0.7229728,-1.5483948,0.7301322,2.1687684))*buf[0]+mat4(vec4(3.2547753,21.489103,-1.0194173,-3.3100595),vec4(-3.7316632,-3.3792162,-7.223193,-0.23685838),vec4(13.1804495,0.7916005,5.338587,5.687114),vec4(-4.167605,-17.798311,-6.815736,-1.6451967))*buf[1]+mat4(vec4(0.604885,-7.800309,-7.213122,-2.741014),vec4(-3.522382,-0.12359311,-0.5258442,0.43852118),vec4(9.6752825,-22.853785,2.062431,0.099892326),vec4(-4.3196306,-17.730087,2.5184598,5.30267))*buf[2]+mat4(vec4(-6.545563,-15.790176,-6.0438633,-5.415399),vec4(-43.591583,28.551912,-16.00161,18.84728),vec4(4.212382,8.394307,3.0958717,8.657522),vec4(-5.0237565,-4.450633,-4.4768,-5.5010443))*buf[3]+mat4(vec4(1.6985557,-67.05806,6.897715,1.9004834),vec4(1.8680354,2.3915145,2.5231109,4.081538),vec4(11.158006,1.7294737,2.0738268,7.386411),vec4(-4.256034,-306.24686,8.258898,-17.132736))*buf[4]+mat4(vec4(1.6889864,-4.5852966,3.8534803,-6.3482175),vec4(1.3543309,-1.2640043,9.932754,2.9079645),vec4(-5.2770967,0.07150358,-0.13962056,3.3269649),vec4(28.34703,-4.918278,6.1044083,4.085355))*buf[5]+vec4(6.6818056,12.522166,-3.7075126,-4.104386);
+        buf[7]=mat4(vec4(-8.265602,-4.7027016,5.098234,0.7509808),vec4(8.6507845,-17.15949,16.51939,-8.884479),vec4(-4.036479,-2.3946867,-2.6055532,-1.9866527),vec4(-2.2167742,-1.8135649,-5.9759874,4.8846445))*buf[0]+mat4(vec4(6.7790847,3.5076547,-2.8191125,-2.7028968),vec4(-5.743024,-0.27844876,1.4958696,-5.0517144),vec4(13.122226,15.735168,-2.9397483,-4.101023),vec4(-14.375265,-5.030483,-6.2599335,2.9848232))*buf[1]+mat4(vec4(4.0950394,-0.94011575,-5.674733,4.755022),vec4(4.3809423,4.8310084,1.7425908,-3.437416),vec4(2.117492,0.16342592,-104.56341,16.949184),vec4(-5.22543,-2.994248,3.8350096,-1.9364246))*buf[2]+mat4(vec4(-5.900337,1.7946124,-13.604192,-3.8060522),vec4(6.6583457,31.911177,25.164474,91.81147),vec4(11.840538,4.1503043,-0.7314397,6.768467),vec4(-6.3967767,4.034772,6.1714606,-0.32874924))*buf[3]+mat4(vec4(3.4992442,-196.91893,-8.923708,2.8142626),vec4(3.4806502,-3.1846354,5.1725626,5.1804223),vec4(-2.4009497,15.585794,1.2863957,2.0252278),vec4(-71.25271,-62.441242,-8.138444,0.50670296))*buf[4]+mat4(vec4(-12.291733,-11.176166,-7.3474145,4.390294),vec4(10.805477,5.6337385,-0.9385842,-4.7348723),vec4(-12.869276,-7.039391,5.3029537,7.5436664),vec4(1.4593618,8.91898,3.5101583,5.840625))*buf[5]+vec4(2.2415268,-6.705987,-0.98861027,-2.117676);
+        buf[6]=sigmoid(buf[6]);buf[7]=sigmoid(buf[7]);
+        buf[0]=mat4(vec4(1.6794263,1.3817469,2.9625452,0.),vec4(-1.8834411,-1.4806935,-3.5924516,0.),vec4(-1.3279216,-1.0918057,-2.3124623,0.),vec4(0.2662234,0.23235129,0.44178495,0.))*buf[0]+mat4(vec4(-0.6299101,-0.5945583,-0.9125601,0.),vec4(0.17828953,0.18300213,0.18182953,0.),vec4(-2.96544,-2.5819945,-4.9001055,0.),vec4(1.4195864,1.1868085,2.5176322,0.))*buf[1]+mat4(vec4(-1.2584374,-1.0552157,-2.1688404,0.),vec4(-0.7200217,-0.52666044,-1.438251,0.),vec4(0.15345335,0.15196142,0.272854,0.),vec4(0.945728,0.8861938,1.2766753,0.))*buf[2]+mat4(vec4(-2.4218085,-1.968602,-4.35166,0.),vec4(-22.683098,-18.0544,-41.954372,0.),vec4(0.63792,0.5470648,1.1078634,0.),vec4(-1.5489894,-1.3075932,-2.6444845,0.))*buf[3]+mat4(vec4(-0.49252132,-0.39877754,-0.91366625,0.),vec4(0.95609266,0.7923952,1.640221,0.),vec4(0.30616966,0.15693925,0.8639857,0.),vec4(1.1825981,0.94504964,2.176963,0.))*buf[4]+mat4(vec4(0.35446745,0.3293795,0.59547555,0.),vec4(-0.58784515,-0.48177817,-1.0614829,0.),vec4(2.5271258,1.9991658,4.6846647,0.),vec4(0.13042648,0.08864098,0.30187556,0.))*buf[5]+mat4(vec4(-1.7718065,-1.4033192,-3.3355875,0.),vec4(3.1664357,2.638297,5.378702,0.),vec4(-3.1724713,-2.6107926,-5.549295,0.),vec4(-2.851368,-2.249092,-5.3013067,0.))*buf[6]+mat4(vec4(1.5203838,1.2212278,2.8404984,0.),vec4(1.5210563,1.2651345,2.683903,0.),vec4(2.9789467,2.4364579,5.2347264,0.),vec4(2.2270417,1.8825914,3.8028636,0.))*buf[7]+vec4(-1.5468478,-3.6171484,0.24762098,0.);
+        buf[0]=sigmoid(buf[0]);
+        return vec4(buf[0].x,buf[0].y,buf[0].z,1.);
+      }
+
+      void mainImage(out vec4 fragColor,in vec2 fragCoord){
+        vec2 uv=fragCoord/uResolution.xy*2.-1.;
+        uv.y*=-1.;
+        uv+=uWarp*vec2(sin(uv.y*6.283+uTime*0.5),cos(uv.x*6.283+uTime*0.5))*0.05;
+        fragColor=cppn_fn(uv,0.1*sin(0.3*uTime),0.1*sin(0.69*uTime),0.1*sin(0.44*uTime));
+      }
+
+      void main(){
+        vec4 col;mainImage(col,gl_FragCoord.xy);
+        col.rgb=hueShiftRGB(col.rgb,uHueShift);
+        float scanline_val=sin(gl_FragCoord.y*uScanFreq)*0.5+0.5;
+        col.rgb*=1.-(scanline_val*scanline_val)*uScan;
+        col.rgb+=(rand(gl_FragCoord.xy+uTime)-0.5)*uNoise;
+        gl_FragColor=vec4(clamp(col.rgb,0.0,1.0),1.0);
+      }
+    `;
+
+    const renderer = new Renderer({
+      dpr: Math.min(window.devicePixelRatio, 2),
+      canvas
+    });
+    const gl = renderer.gl;
+    const geometry = new Triangle(gl);
+    const program = new Program(gl, {
+      vertex,
+      fragment,
+      uniforms: {
+        uTime:      { value: 0 },
+        uResolution:{ value: new Vec2() },
+        uHueShift:  { value: HUE_SHIFT },
+        uNoise:     { value: NOISE },
+        uScan:      { value: SCAN },
+        uScanFreq:  { value: SCAN_FREQ },
+        uWarp:      { value: WARP }
+      }
+    });
+    const mesh = new Mesh(gl, { geometry, program });
+
+    const resize = () => {
+      const w = parent.clientWidth, h = parent.clientHeight;
+      renderer.setSize(w * RES_SCALE, h * RES_SCALE);
+      program.uniforms.uResolution.value.set(w, h);
+    };
+    window.addEventListener('resize', resize);
+    resize();
+
+    const start = performance.now();
+    const loop = () => {
+      program.uniforms.uTime.value = ((performance.now() - start) / 1000) * SPEED;
+      renderer.render({ scene: mesh });
+      requestAnimationFrame(loop);
+    };
+    loop();
+  }
+</script>
+
+
+<!-- ══════════════════════════════════════
+     DOTTED SURFACE — Three.js particle wave
+     Vanilla port of the React DottedSurface component. A 40×60 grid
+     of points sits on the floor; per-point Y is animated as the sum
+     of two sine waves so the field reads as a soft wavy surface.
+     Scoped to each .dotted-surface canvas (not full-viewport like the
+     React version) so the canvas sizes / resizes to its parent box.
+     Initializes for EVERY .dotted-surface on the page so adding a new
+     one is a markup-only change (no JS edits required).
+══════════════════════════════════════ -->
+<script type="module">
+  import * as THREE from 'https://esm.sh/three@0.158.0';
+
+  function initDottedSurface(canvas) {
+    const parent = canvas.parentElement;
+
+    const SEPARATION = 150;
+    const AMOUNTX    = 40;
+    const AMOUNTY    = 60;
+
+    const scene = new THREE.Scene();
+    scene.fog   = new THREE.Fog(0xffffff, 2000, 10000);
+
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      parent.clientWidth / parent.clientHeight,
+      1,
+      10000
+    );
+    camera.position.set(0, 355, 1220);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(parent.clientWidth, parent.clientHeight);
+    /* Fully transparent clear color — the section's white bg shows
+       through, the points float on top. */
+    renderer.setClearColor(0xffffff, 0);
+
+    /* Build the particle field. Single BufferGeometry with all points;
+       per-vertex Y will be mutated in the animation loop. Colors are
+       black for a light surface (matches the React `theme !== 'dark'`
+       branch). */
+    const positions = [];
+    const colors    = [];
+    for (let ix = 0; ix < AMOUNTX; ix++) {
+      for (let iy = 0; iy < AMOUNTY; iy++) {
+        const x = ix * SEPARATION - (AMOUNTX * SEPARATION) / 2;
+        const z = iy * SEPARATION - (AMOUNTY * SEPARATION) / 2;
+        positions.push(x, 0, z);
+        colors.push(0, 0, 0);
+      }
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute('color',    new THREE.Float32BufferAttribute(colors, 3));
+
+    const material = new THREE.PointsMaterial({
+      size: 8,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.8,
+      sizeAttenuation: true
+    });
+
+    const points = new THREE.Points(geometry, material);
+    scene.add(points);
+
+    let count = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const posAttr = geometry.attributes.position;
+      const arr     = posAttr.array;
+      let i = 0;
+      for (let ix = 0; ix < AMOUNTX; ix++) {
+        for (let iy = 0; iy < AMOUNTY; iy++) {
+          const index = i * 3;
+          arr[index + 1] =
+            Math.sin((ix + count) * 0.3) * 50 +
+            Math.sin((iy + count) * 0.5) * 50;
+          i++;
+        }
+      }
+      posAttr.needsUpdate = true;
+      renderer.render(scene, camera);
+      count += 0.1;
+    }
+    animate();
+
+    /* Track section size — the section grows / shrinks with the
+       page layout, not the window. ResizeObserver fires whenever
+       the section's box changes (including window resize, font
+       loading, video aspect-ratio settling, etc.). */
+    const resize = () => {
+      const w = parent.clientWidth, h = parent.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    };
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(resize).observe(parent);
+    } else {
+      window.addEventListener('resize', resize);
+    }
+  }
+
+  document.querySelectorAll('canvas.dotted-surface').forEach(initDottedSurface);
 </script>
 
 </body>

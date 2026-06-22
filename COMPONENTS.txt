@@ -3,6 +3,14 @@ REFAELI MA PORTFOLIO — COMPONENT REFERENCE
 Files: index.html · styles.css · tokens.css
        cs-bluejeans.html · cs-vz-home.html
        cs-vz-id-arch.html · cs-iconmobile.html
+
+▶ NOTE: index-v2.html (the active v2 home redesign) uses a separate
+  design system. See V2_DESIGN_SYSTEM.md for v2 typography, padding,
+  reusable components (.glass-cta, .glass-tile, .spotlight-glow),
+  and the case-study migration checklist.
+  Tokens.css aliases that affect ALL pages:
+    --font-serif → Outfit (serif dropped globally)
+    --dark       → #000   (was #181821)
 Last updated: 2026-06-03
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
