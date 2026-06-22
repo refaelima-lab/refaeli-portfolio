@@ -563,7 +563,9 @@
       background-image: none;
     }
     .chl-quote-sec {
+      position: relative;
       isolation: isolate;
+      overflow: hidden;
     }
     .chl-quote-sec::before,
     .chl-quote-sec::after {
@@ -577,6 +579,11 @@
         linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
       background-size: 40px 40px;
       animation: impact-grid-scroll 1.5s linear infinite;
+      animation-play-state: paused;
+    }
+    .chl-quote-sec.is-on-screen::before,
+    .chl-quote-sec.is-on-screen::after {
+      animation-play-state: running;
     }
     .chl-quote-sec::after {
       background-image:
@@ -604,12 +611,28 @@
       position: sticky;
       top: 0;
       border-radius: 1.5rem 1.5rem 0 0;
-      box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.10);
+      /* Original was `box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.10);` — a
+         60px-blur shadow gets re-rasterized every frame while the sticky
+         cover slides, which was a major cause of the challenge-4 → 5
+         scroll-glitch. Replaced with a much cheaper hairline + smaller
+         blur that reads the same at viewport scale but composites for
+         pennies on the GPU. */
+      box-shadow:
+        0 -1px 0 rgba(0, 0, 0, 0.06),
+        0 -8px 20px rgba(0, 0, 0, 0.06);
       overflow: hidden;
       isolation: isolate;
+      /* GPU-promote each cover so the sticky transition composites instead
+         of repainting. */
+      will-change: transform;
+      transform: translateZ(0);
+      backface-visibility: hidden;
       /* Each cover needs scroll runway so the previous one has time to "land"
          before the next one covers it. Remove once real content fills the section. */
       min-height: 100vh;
+      /* Hint the browser this is its own paint container so the rounded-
+         corner clip mask doesn't re-rasterize against the body on scroll. */
+      contain: paint;
     }
 
     /* ── CHALLENGE — 4-step stepper (mirrors VZ Home APPROACH apr-stepper) ── */
@@ -2253,7 +2276,24 @@
       height: 70vh;
       min-height: 580px;
       margin-top: 1.25rem;  /* pulled 20px closer to the title */
+      margin-bottom: 80px;  /* extra breathing room below the animation */
       overflow: visible;
+    }
+    /* Vision section taller — let the 2-line title + 70vh animation
+       both fit without clipping. */
+    #vision {
+      min-height: calc(100vh + 80px) !important;
+    }
+    /* Eyebrow + title back in their default .sec-inner column. Title
+       forced onto a single line via nowrap + max-width: none so it can
+       expand beyond the 1200px centered box if needed. Font size stays
+       at the global .st clamp. */
+    #vision h2.st {
+      white-space: nowrap;
+      max-width: none;
+    }
+    @media (max-width: 1100px) {
+      #vision h2.st { white-space: normal; }
     }
 
     /* Wrapper that holds the entire solar system. Scaled to 85% at rest (was 95%,
@@ -3261,15 +3301,20 @@
   </div>
 </section>
 
-<!-- ── SUB-DIV 05 — epic quote moment (light) ── -->
-<section class="cs-sec bg-warm cs-stack-cover chl-quote-sec" id="challenge-5" style="padding-top:7rem;padding-bottom:7rem;z-index:6;">
+  </div><!-- /.cs-stack-multi --><!-- closed BEFORE the quote section
+                                      so the quote isn't a sticky cover -->
+
+<!-- ── EPIC QUOTE — standalone (no longer part of the parallax stack).
+     Pulled out of .cs-stack-multi so it doesn't participate in the sticky
+     cover hand-off (that was the source of the challenge-4 → 5 glitch).
+     Now safe to re-apply .chl-quote-sec for the cursor-tracked moving
+     grid since there's no sticky compositor stall to interact with. -->
+<section class="cs-sec bg-page chl-quote-sec" id="challenge-5" style="padding-top:7rem;padding-bottom:7rem;">
   <div class="sec-inner chl-epic-stage" style="position:relative;z-index:2;">
     <div class="chl-epic-mark r d1" aria-hidden="true">“</div>
     <p class="chl-epic-quote r d2">The more I investigated, the clearer it became: this wasn't a data problem or a technology problem. <em>It was an understanding problem.</em> Before defining a solution, we first needed to understand what was actually broken.</p>
   </div>
 </section>
-
-</div><!-- /.cs-stack-multi -->
 
 
 <!-- ══════════════════════════════════════
@@ -4707,7 +4752,16 @@ document.addEventListener('mouseenter', () => {
 (function quoteGridReveal() {
   var sections = document.querySelectorAll('.chl-quote-sec');
   if (!sections.length) return;
+  // Pause the impact-grid-scroll animation + skip mask repaints when
+  // off-screen. Eliminates a GPU compositor stall when challenge-5
+  // (first quote section) slides in during the sticky cover handoff.
+  var visObs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      en.target.classList.toggle('is-on-screen', en.isIntersecting);
+    });
+  }, { rootMargin: '150px' });
   sections.forEach(function (sec) {
+    visObs.observe(sec);
     var lastX = 0, lastY = 0;
     var pending = false;
     sec.addEventListener('pointermove', function (e) {
