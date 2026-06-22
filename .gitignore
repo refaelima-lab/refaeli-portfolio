@@ -1,2 +1,6 @@
 *.mp4
 *.mov
+
+# Allow the 4 home project-card background videos (compressed, all <25MB)
+!assets/home-project-card-videos/*.mp4
+!assets/home-project-card-videos/*.mov
