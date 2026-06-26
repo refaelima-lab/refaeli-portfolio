@@ -7307,6 +7307,19 @@ body.v2-home #hero-spline-iframe.is-revealed {
   scale: 1.1;
 }
 
+/* Particle text canvas — sits above the WebGL bg (z-1), below the
+   corner text (z-3). pointer-events:none so it never intercepts
+   clicks/hovers on links beneath it. */
+body.v2-home #hero-text-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  background: transparent;
+}
+
 /* Logo fully matched to the nav links — size, weight, and tracking.
    Base logo:  10pt / semibold (600) / tracking-label  (0.22em)
    Links:       9pt / medium  (500) / tracking-wider  (0.16em) */

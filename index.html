@@ -6,6 +6,7 @@
   <title>Refaeli Ma · Experience Architect (v2)</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><circle cx=%2216%22 cy=%2216%22 r=%229%22 fill=%22%233C49FF%22/></svg>">
   <script defer src="assets/favicon-eclipse.js"></script>
+  <script defer src="assets/hero-particles-text.js"></script>
   <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="styles.css">
   <!-- Spline viewer for the welcome overlay 3D background -->
@@ -185,10 +186,9 @@
 <!-- ══════════════════════════════════════
      HERO — v2, simplified.
      Direct children of <section.hero>:
-       1. <spline-viewer> ascending  — background, z-1
-       2. <iframe>        seoul       — foreground, z-2 (HIDDEN for now)
-       3. <div.hero-role>             — z-3
-       4. <div.hero-location>         — z-3
+       1. <div#hero-particles>        — WebGL particles background, z-1
+       2. <div.hero-role>             — z-3
+       3. <div.hero-location>         — z-3
      No nested .hero-original / .hero-photo-wrap. No opacity gates.
 ══════════════════════════════════════ -->
 <section class="hero" id="hero">
@@ -198,14 +198,11 @@
        loaded from esm.sh via the module script at the bottom of body). -->
   <div id="hero-particles" aria-hidden="true"></div>
 
-  <!-- Foreground iframe — seoul scene, mix-blend-mode: screen blends
-       it against the ascending background below. -->
-  <iframe
-    id="hero-spline-iframe"
-    src="https://my.spline.design/seoulcopycopy-2gDASuladJnUL5xhaXiPw0y3-u7k/?v=2"
-    frameborder="0"
-    title="Hero foreground scene"
-  ></iframe>
+  <!-- Particle text — vanilla port of 21st.dev's ParticleTextEffect.
+       Cycles white particles into NOISE → SIGNAL → PATTERN → SYSTEM →
+       MEANING. Transparent canvas above the WebGL bg, pointer-events
+       off so it doesn't block the corner text/nav. -->
+  <canvas id="hero-text-canvas" aria-hidden="true"></canvas>
 
   <!-- Corner text -->
   <div class="hero-role">
@@ -1129,8 +1126,6 @@
       requestAnimationFrame(function () {
         var nav = document.getElementById('nav');
         if (nav) nav.classList.add('is-dropped');
-        var heroFrame = document.getElementById('hero-spline-iframe');
-        if (heroFrame) heroFrame.classList.add('is-revealed');
         var corners = document.querySelectorAll('.hero-role, .hero-location');
         corners.forEach(function (el) { el.classList.add('is-revealed'); });
       });
@@ -2309,54 +2304,6 @@ window.addEventListener('load', function () {
   }, { passive: true });
 }());
 
-
-/* ── HERO IFRAME PARALLAX ──
-   Subtle vertical parallax on the seoul iframe. As the page scrolls
-   down past the hero, the iframe lags behind by ~30% — feels like
-   it sits "behind" the main content rather than scrolling with it.
-   Drives a CSS custom property (--parallax-y) which the iframe's CSS
-   `translate:` consumes, leaving CSS in charge of the reveal scale. */
-(function heroIframeParallax() {
-  var hero = document.getElementById('hero');
-  var iframe = document.getElementById('hero-spline-iframe');
-  if (!hero || !iframe) return;
-
-  var FACTOR = 0.30;  /* 0 = no parallax (scrolls with page), 1 = fixed */
-  var ticking = false;
-
-  function update() {
-    ticking = false;
-    var heroTop = hero.getBoundingClientRect().top;
-    /* Only apply parallax once the hero starts scrolling away. */
-    var scrollPast = heroTop < 0 ? -heroTop : 0;
-    iframe.style.setProperty('--parallax-y', (scrollPast * FACTOR) + 'px');
-  }
-  function onScroll() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(update);
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  update();
-}());
-
-
-/* ── HERO IFRAME CURSOR SWAP ──
-   Cross-origin iframes don't forward mousemove to the parent, so the
-   custom cursor would freeze when over the Spline scene. Hide the
-   custom cursor while the mouse is over the iframe (CSS), letting the
-   browser's native cursor take over inside it. Cursor reappears the
-   moment the mouse exits the iframe area. */
-(function heroIframeCursorSwap() {
-  var iframe = document.getElementById('hero-spline-iframe');
-  if (!iframe) return;
-  iframe.addEventListener('mouseenter', function () {
-    document.body.classList.add('cursor-in-iframe');
-  });
-  iframe.addEventListener('mouseleave', function () {
-    document.body.classList.remove('cursor-in-iframe');
-  });
-}());
 
 
 /* ── CURSOR ── */
