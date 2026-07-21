@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Challenges · Refaeli Ma</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><circle cx=%2216%22 cy=%2216%22 r=%229%22 fill=%22%233C49FF%22/></svg>">
+  <script defer src="assets/favicon-eclipse.js"></script>
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Page-local styles for the Design Challenges landing page. Scoped
+       via body.dc-page so nothing leaks back into the main portfolio. */
+
+    body.dc-page {
+      background: var(--dark);
+      color: #fff;
+      min-height: 100vh;
+      /* Positioning context for the ::before line layer. Line color
+         mirrors the recipe on body.v2-home .hiw-v2-sec but dialed
+         lighter — the comment on that rule literally recommends
+         "~0.18"; going one notch below for a whisper-quiet guide. */
+      position: relative;
+      --bg-line-color: rgba(255, 255, 255, 0.15);
+    }
+    /* Vertical guide lines — reuses the shared --bg-lines-image /
+       --bg-lines-position vars defined on body.v2-home. Same recipe
+       as body.v2-home .hiw-v2-sec::before, scoped once to the whole
+       page so lines run continuously through hero + grid + foot.
+       `top` offsets the layer below the fixed global nav so the
+       lines don't cross behind the nav row. */
+    body.dc-page::before {
+      content: '';
+      position: absolute;
+      top: clamp(70px, 9vh, 95px);
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: var(--bg-lines-image);
+      background-position: var(--bg-lines-position);
+      background-repeat: no-repeat;
+      background-size: 1px 100%;
+    }
+    /* Stack page sections above the line layer. */
+    body.dc-page .dc-hero,
+    body.dc-page .dc-grid-sec,
+    body.dc-page .cz-foot {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hero — layout wrapper only. Text styling is inherited from the
+       shared .hiw-v2-kicker / .hiw-v2-title / .hiw-v2-lede rules so
+       this section reads visually identical to HOW I WORK on the home
+       page (font, weight, tracking, color, italic em). */
+    .dc-hero {
+      padding: 180px 0 60px;
+    }
+    .dc-hero-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+    }
+
+    /* Challenges grid */
+    .dc-grid-sec {
+      padding: 40px 0 140px;
+    }
+    .dc-grid-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+    }
+    .dc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 760px) {
+      .dc-grid { grid-template-columns: 1fr; }
+      .dc-hero { padding: 140px 0 40px; }
+    }
+
+    /* Base card. Hover halo comes from the shared .spotlight-glow
+       ::before / ::after layers (added at runtime by the spotlight JS),
+       so no local :hover treatment here — that would just fight the
+       cursor-tracked glow used on the home-page project + nav cards. */
+    .dc-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 28px;
+      min-height: 260px;
+      /* Solid page-bg fill so the vertical guide lines behind the
+         page don't bleed through. Same var(--dark) used on body. */
+      background: var(--dark);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .dc-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-sans);
+      font-size: 9pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 20px;
+    }
+    .dc-card-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+    }
+    .dc-card-title {
+      font-family: var(--font-serif);
+      font-weight: var(--weight-regular);
+      font-size: clamp(1.5rem, 2.4vw, 2rem);
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      color: #fff;
+      margin: 0 0 0.7rem;
+    }
+    .dc-card-desc {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.6);
+      margin: 0 0 auto;
+    }
+    .dc-card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 26px;
+    }
+    .dc-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .dc-tag {
+      font-family: var(--font-sans);
+      font-size: 8.5pt;
+      font-weight: var(--weight-medium);
+      letter-spacing: var(--tracking-wider);
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+      padding: 4px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+    }
+    .dc-card-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: rgba(255, 255, 255, 0.7);
+      transition: transform 0.25s ease, color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+      flex-shrink: 0;
+    }
+    .dc-card:hover .dc-card-arrow {
+      transform: translateX(4px);
+      color: #fff;
+      border-color: var(--accent);
+      background: var(--accent);
+      /* Sit above the .spotlight-glow ::before / ::after layers so the
+         solid accent fill isn't washed out by the halo. */
+      position: relative;
+      z-index: 3;
+    }
+
+    /* Placeholder "coming soon" card — same shape, muted treatment */
+    .dc-card--soon {
+      pointer-events: none;
+      opacity: 0.55;
+    }
+    .dc-card--soon .dc-card-arrow {
+      display: none;
+    }
+
+  </style>
+</head>
+<body class="v2-home dc-page">
+
+<!-- PROGRESS BAR -->
+<div id="prog"></div>
+
+<!-- CURSOR -->
+<div id="cur-dot"></div>
+<div id="cur-ring"><span id="cur-label">View</span></div>
+
+<!-- BACK TO TOP -->
+<button id="back-top" aria-label="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <path d="M7 11V3M3 6.5L7 3l4 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+
+<!-- ══════════════════════════════════════
+     NAV — mirrors index.html so the WORK dropdown behaves identically
+     from this page. Anchors that point at sections on the home page use
+     index.html# prefixes so they still navigate correctly.
+══════════════════════════════════════ -->
+<nav id="nav" class="nav--light">
+  <a href="index.html" class="nav-logo">Refaeli Ma</a>
+  <ul class="nav-links">
+    <li><a href="index.html#how-i-work">About</a></li>
+    <li class="nav-link-dropdown">
+      <a href="index.html#made-real">Work<svg class="nav-link-caret" width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M2 3.5l2.5 2.5L7 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <ul class="nav-dropdown" aria-label="Case studies">
+        <li>
+          <a href="cs-vz-id-arch.html" class="nav-dropdown-card">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <circle cx="11" cy="11" r="8.5" stroke="currentColor" stroke-width="1.4"/>
+                <circle cx="11" cy="11" r="4.5" stroke="currentColor" stroke-width="1.4"/>
+                <circle cx="11" cy="11" r="1.5" fill="currentColor"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">Verizon Identity Architecture</span>
+            <span class="nav-dropdown-desc">Invisible structure connecting households, devices, and services</span>
+          </a>
+        </li>
+        <li>
+          <a href="cs-vz-home.html" class="nav-dropdown-card">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M3.5 11l7.5-7 7.5 7v7a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+                <circle cx="11" cy="13" r="1.6" fill="currentColor"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">Verizon Home App</span>
+            <span class="nav-dropdown-desc">Connected home experience for the whole household</span>
+          </a>
+        </li>
+        <li>
+          <a href="cs-bluejeans.html" class="nav-dropdown-card">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <rect x="2.5" y="6" width="12.5" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+                <path d="M15.5 9.2l4-2v8l-4-2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">BlueJeans by Verizon</span>
+            <span class="nav-dropdown-desc">Enterprise video communication redesigned at scale</span>
+          </a>
+        </li>
+        <li>
+          <a href="cs-iconmobile.html" class="nav-dropdown-card">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M2.8 14a8.2 8.2 0 0 1 16.4 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M11 6.5v3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M11 14l3.4-2.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">Iconmobile</span>
+            <span class="nav-dropdown-desc">In-car experience design for automotive brands</span>
+          </a>
+        </li>
+        <li class="nav-dropdown-wide-item">
+          <a href="design-challenges.html" class="nav-dropdown-card nav-dropdown-card--wide" aria-current="page">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M11 2.5l1.9 5.6 5.6 1.9-5.6 1.9-1.9 5.6-1.9-5.6-5.6-1.9 5.6-1.9z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">Design Challenges</span>
+            <span class="nav-dropdown-desc">Product concepts, redesigns, and speculative work</span>
+            <span class="nav-dropdown-arrow" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li><a href="index.html#objects-breaker">Object</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Mobile nav overlay -->
+<div class="mob-nav" id="mob-nav" aria-hidden="true">
+  <div class="mob-nav-bg"></div>
+  <ul class="mob-nav-links">
+    <li><a href="index.html#how-i-work">About</a></li>
+    <li>
+      <a href="index.html#made-real">Work</a>
+      <ul class="mob-nav-sublinks">
+        <li><a href="cs-vz-id-arch.html">01 · VZ Identity Architecture</a></li>
+        <li><a href="cs-vz-home.html">02 · Verizon Home App</a></li>
+        <li><a href="cs-bluejeans.html">03 · BlueJeans by Verizon</a></li>
+        <li><a href="cs-iconmobile.html">04 · Iconmobile</a></li>
+        <li><a href="design-challenges.html" aria-current="page">✦ Design Challenges</a></li>
+      </ul>
+    </li>
+    <li><a href="index.html#objects-breaker">Object</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <a href="index.html#contact" class="mob-nav-cta">Let's Talk</a>
+  <div class="mob-nav-foot">Los Angeles, CA &nbsp;·&nbsp; Available worldwide</div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="dc-hero">
+  <div class="dc-hero-inner">
+    <div class="hiw-v2-kicker">Design Challenges</div>
+    <h1 class="hiw-v2-title">Concepts, redesigns, and <em>speculative work</em>.</h1>
+    <p class="hiw-v2-lede">A collection of self-directed explorations. Space to stretch, question, and stress-test how products could look, feel, and behave.</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CHALLENGES GRID
+══════════════════════════════════════ -->
+<section class="dc-grid-sec">
+  <div class="dc-grid-inner">
+    <div class="dc-grid">
+
+      <!-- 01 · TikTok 2026 -->
+      <a href="case-studies/tik-tok-2026/index.html" class="dc-card">
+        <div class="dc-card-meta">
+          <span class="dc-card-dot"></span>
+          <span>01 · TikTok · 2026</span>
+        </div>
+        <h2 class="dc-card-title">For You, From Friends</h2>
+        <p class="dc-card-desc">A speculative TikTok redesign centered on friend-to-friend discovery, reframing the For You feed as a social loop rather than an algorithmic one.</p>
+        <div class="dc-card-foot">
+          <div class="dc-card-tags">
+            <span class="dc-tag">Dark Social</span>
+            <span class="dc-tag">Private Channel</span>
+            <span class="dc-tag">Friend Graph</span>
+          </div>
+          <span class="dc-card-arrow" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Placeholder for future entries -->
+      <div class="dc-card dc-card--soon" aria-hidden="true">
+        <div class="dc-card-meta">
+          <span class="dc-card-dot" style="background:rgba(255,255,255,.35); box-shadow:none;"></span>
+          <span>More coming</span>
+        </div>
+        <h2 class="dc-card-title">Next challenge in progress</h2>
+        <p class="dc-card-desc">More self-initiated explorations will land here as they're ready.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     FOOTER — same markup as index.html's .cz-foot so text scale,
+     color, and border-top rules from styles.css apply automatically.
+══════════════════════════════════════ -->
+<div class="cz-foot">
+  <div class="cz-foot-left">
+    <div class="cz-foot-copy">© 2026 Refaeli Yaofei Ma. All rights reserved.</div>
+    <div class="cz-foot-humor">Because lorem ipsum deserves better. 😃</div>
+  </div>
+  <div class="cz-foot-right">Los Angeles, CA</div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PAGE SCRIPTS
+     Minimal port of the index.html cursor + nav behaviors. Everything
+     else on index.html (hero particles, section-driven nav color,
+     project card magnetism, etc.) is home-page-specific and skipped.
+══════════════════════════════════════ -->
+<script>
+/* ── SPOTLIGHT GLOW — cursor-tracked accent halo.
+   Same recipe as index.html: JS tags targets with .spotlight-glow,
+   then pointermove updates each card's --x / --y (element-relative
+   pixel coords) which the ::before / ::after CSS layers consume. */
+(function () {
+  document.querySelectorAll('.nav-dropdown a.nav-dropdown-card, a.dc-card')
+    .forEach(function (el) { el.classList.add('spotlight-glow'); });
+
+  var cards = document.querySelectorAll('.spotlight-glow');
+  if (!cards.length) return;
+
+  var pending = false, lastX = 0, lastY = 0;
+  function tick() {
+    pending = false;
+    cards.forEach(function (card) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--x', (lastX - r.left).toFixed(2));
+      card.style.setProperty('--y', (lastY - r.top).toFixed(2));
+    });
+  }
+  document.addEventListener('pointermove', function (e) {
+    lastX = e.clientX; lastY = e.clientY;
+    if (!pending) { pending = true; requestAnimationFrame(tick); }
+  }, { passive: true });
+}());
+
+/* ── CURSOR ── */
+(function () {
+  var dot  = document.getElementById('cur-dot');
+  var ring = document.getElementById('cur-ring');
+  var mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', function (e) {
+    if (!document.body.classList.contains('cursor-ready')) {
+      document.body.classList.add('cursor-ready');
+    }
+    mx = e.clientX; my = e.clientY;
+    if (dot) { dot.style.left = mx + 'px'; dot.style.top = my + 'px'; }
+  });
+
+  (function lerp() {
+    rx += (mx - rx) * 0.1;
+    ry += (my - ry) * 0.1;
+    if (ring) { ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; }
+    requestAnimationFrame(lerp);
+  })();
+
+  document.addEventListener('mouseover', function (e) {
+    var t = e.target;
+    if (t.closest('input, textarea')) return (document.body.dataset.cursor = 'text');
+    if (t.closest('a, button, [role="button"]')) return (document.body.dataset.cursor = 'hover');
+    document.body.dataset.cursor = 'default';
+  });
+}());
+
+/* ── PROGRESS BAR + BACK-TO-TOP ── */
+(function () {
+  var prog = document.getElementById('prog');
+  var bt   = document.getElementById('back-top');
+  window.addEventListener('scroll', function () {
+    var t = window.scrollY;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    if (prog) prog.style.width = (h > 0 ? (t / h * 100) : 0) + '%';
+    if (bt)   bt.classList.toggle('visible', t > 500);
+  }, { passive: true });
+  if (bt) bt.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}());
+
+/* ── WORK DROPDOWN — align right edge to CONTACT's right edge ── */
+(function () {
+  var contact    = document.querySelector('.nav-links a[href="index.html#contact"]');
+  var dropdown   = document.querySelector('.nav-dropdown');
+  var dropdownLi = dropdown ? dropdown.parentElement : null;
+  if (!contact || !dropdown || !dropdownLi) return;
+  function reposition() {
+    var contactRect = contact.getBoundingClientRect();
+    var parentRect  = dropdownLi.getBoundingClientRect();
+    dropdownLi.style.setProperty('--nav-dropdown-right', (parentRect.right - contactRect.right) + 'px');
+  }
+  reposition();
+  window.addEventListener('resize', reposition);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(reposition).catch(function () {});
+  }
+}());
+
+/* ── NAV LETTER-SPREAD on hover ── */
+(function () {
+  function wrapLetters(el) {
+    Array.prototype.slice.call(el.childNodes).forEach(function (node) {
+      if (node.nodeType !== Node.TEXT_NODE) return;
+      var text = node.textContent;
+      if (!text.trim()) return;
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < text.length; i++) {
+        var ch = text.charAt(i);
+        if (ch === ' ') { frag.appendChild(document.createTextNode(' ')); continue; }
+        var span = document.createElement('span');
+        span.className = 'nav-letter';
+        span.style.setProperty('--i', i);
+        span.style.setProperty('--n', text.length);
+        span.textContent = ch;
+        frag.appendChild(span);
+      }
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+  document.querySelectorAll('.nav-links > li > a, .nav-logo').forEach(wrapLetters);
+}());
+
+/* ── MAGNETIC BUTTONS — top-level nav links ── */
+Array.prototype.slice.call(document.querySelectorAll('.nav-links > li > a')).forEach(function (el) {
+  el.addEventListener('mousemove', function (e) {
+    var r  = el.getBoundingClientRect();
+    var dx = (e.clientX - (r.left + r.width  / 2)) * 0.30;
+    var dy = (e.clientY - (r.top  + r.height / 2)) * 0.30;
+    el.style.transition = 'transform 0.08s ease';
+    el.style.transform  = 'translate(' + dx + 'px, ' + dy + 'px)';
+  });
+  el.addEventListener('mouseleave', function () {
+    el.style.transition = 'transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    el.style.transform  = '';
+  });
+});
+
+/* ── MOBILE NAV — burger toggle ── */
+(function () {
+  var burger = document.getElementById('nav-burger');
+  var mobNav = document.getElementById('mob-nav');
+  if (!burger || !mobNav) return;
+  burger.addEventListener('click', function () {
+    var open = mobNav.classList.toggle('open');
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open);
+    mobNav.setAttribute('aria-hidden', !open);
+  });
+  mobNav.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      mobNav.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded', false);
+      mobNav.setAttribute('aria-hidden', true);
+    });
+  });
+}());
+</script>
+
+</body>
+</html>

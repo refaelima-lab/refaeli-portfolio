@@ -149,6 +149,22 @@
             <span class="nav-dropdown-desc">In-car experience design for automotive brands</span>
           </a>
         </li>
+        <li class="nav-dropdown-wide-item">
+          <a href="design-challenges.html" class="nav-dropdown-card nav-dropdown-card--wide">
+            <span class="nav-dropdown-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                <path d="M11 2.5l1.9 5.6 5.6 1.9-5.6 1.9-1.9 5.6-1.9-5.6-5.6-1.9 5.6-1.9z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="nav-dropdown-title">Design Challenges</span>
+            <span class="nav-dropdown-desc">Product concepts, redesigns, and speculative work</span>
+            <span class="nav-dropdown-arrow" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        </li>
       </ul>
     </li>
     <li><a href="#objects-breaker">Object</a></li>
@@ -173,6 +189,7 @@
         <li><a href="cs-vz-home.html">02 · Verizon Home App</a></li>
         <li><a href="cs-bluejeans.html">03 · BlueJeans by Verizon</a></li>
         <li><a href="cs-iconmobile.html">04 · Iconmobile</a></li>
+        <li><a href="design-challenges.html">✦ Design Challenges</a></li>
       </ul>
     </li>
     <li><a href="#objects-breaker">Object</a></li>
@@ -200,9 +217,16 @@
 
   <!-- Particle text — vanilla port of 21st.dev's ParticleTextEffect.
        Cycles white particles into NOISE → SIGNAL → PATTERN → SYSTEM →
-       MEANING. Transparent canvas above the WebGL bg, pointer-events
-       off so it doesn't block the corner text/nav. -->
-  <canvas id="hero-text-canvas" aria-hidden="true"></canvas>
+       EXPERIENCE. Transparent canvas above the WebGL bg, pointer-events
+       off so it doesn't block the corner text/nav.
+       Layout styles are inlined here so the canvas can never end up
+       rendering at its default 300×150 in the top-left if styles.css
+       is cached/late on a live deploy. -->
+  <canvas
+    id="hero-text-canvas"
+    aria-hidden="true"
+    style="position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;background:transparent;"
+  ></canvas>
 
   <!-- Corner text -->
   <div class="hero-role">

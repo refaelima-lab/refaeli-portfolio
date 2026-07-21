@@ -237,10 +237,26 @@
   }
 
   function resize() {
-    const rect = canvas.getBoundingClientRect();
-    W = rect.width;
-    H = rect.height;
-    if (W < 2 || H < 2) return;
+    /* Try the canvas first. If for any reason it has 0 dimensions
+       (CSS late, parent collapsed, etc.) fall back to the hero
+       container's size, then to the viewport. This stops the canvas
+       from ever sitting at its default 300×150 in the top-left. */
+    let rect = canvas.getBoundingClientRect();
+    let w = rect.width, h = rect.height;
+    if (w < 2 || h < 2) {
+      const hero = canvas.parentElement;
+      if (hero) {
+        const hr = hero.getBoundingClientRect();
+        if (hr.width >= 2 && hr.height >= 2) { w = hr.width; h = hr.height; }
+      }
+    }
+    if (w < 2 || h < 2) {
+      w = window.innerWidth;
+      h = window.innerHeight;
+    }
+    if (w < 2 || h < 2) return;
+
+    W = w; H = h;
     DPR = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.ceil(W * DPR);
     canvas.height = Math.ceil(H * DPR);
@@ -319,6 +335,25 @@
   }
 
   window.addEventListener('resize', resize);
+
+  /* If the canvas's actual painted size changes (CSS arriving late,
+     parent layout shifting, etc.) re-run resize. Catches the case
+     where the canvas was 0×0 at first measure and only got real
+     dimensions afterwards. */
+  if (typeof ResizeObserver !== 'undefined') {
+    let lastW = 0, lastH = 0;
+    const ro = new ResizeObserver(entries => {
+      for (const e of entries) {
+        const cw = Math.round(e.contentRect.width);
+        const ch = Math.round(e.contentRect.height);
+        if ((cw !== lastW || ch !== lastH) && cw >= 2 && ch >= 2) {
+          lastW = cw; lastH = ch;
+          resize();
+        }
+      }
+    });
+    ro.observe(canvas);
+  }
 
   function start() {
     resize();

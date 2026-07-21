@@ -612,7 +612,10 @@ nav.nav--on-photo .nav-links > li > a {
   /* 2×2 grid of case-study cards — padding and gap matched + bumped */
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-auto-rows: 1fr;       /* equal row heights */
+  /* auto-sized rows — the 2×2 project cards stay uniform via their
+     own min-height, and the wide "Design Challenges" row in the 3rd
+     row is free to render at its natural (shorter) height. */
+  grid-auto-rows: auto;
   gap: 20px;
   padding: 20px;
   width: 600px;
@@ -740,6 +743,51 @@ nav.nav--on-photo .nav-links > li > a {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+/* ── Wide row: "Design Challenges" full-width card under the 2×2 grid.
+   The <li> spans both dropdown columns; the card itself switches to a
+   horizontal flex layout (icon · title/desc · arrow) and drops to a
+   shorter min-height so it reads as a secondary entry point. */
+.nav-dropdown-wide-item {
+  grid-column: 1 / -1;
+  /* Prevent the card from stretching to fill the row height — keeps the
+     row (and the whole dropdown container) compact. */
+  align-self: start;
+}
+.nav-dropdown a.nav-dropdown-card--wide {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 0;
+  padding: 0.75rem 1.05rem;
+  grid-template-columns: none;
+  grid-template-rows: none;
+}
+.nav-dropdown-card--wide .nav-dropdown-title {
+  margin-top: 0;
+  padding-top: 0;
+}
+.nav-dropdown-card--wide .nav-dropdown-desc {
+  grid-column: auto;
+  grid-row: auto;
+  margin-top: 0;
+  -webkit-line-clamp: 1;
+  flex: 1;
+  min-width: 0;
+}
+.nav-dropdown-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.nav-dropdown a.nav-dropdown-card--wide:hover .nav-dropdown-arrow {
+  transform: translateX(3px);
+}
+
 @media (max-width: 760px) {
   .nav-dropdown { display: none; }  /* mob-nav has its own list */
   .nav-link-dropdown { padding-bottom: 0; margin-bottom: 0; }
@@ -9357,6 +9405,33 @@ body.v2-home .nav-dropdown-desc {
   /* 4px between title and blurb. */
   margin-top: 4px;
   color: rgba(255, 255, 255, 0.55);
+}
+
+/* v2-home wide card — horizontal row, shorter than the stacked 2×2
+   cards above it. Overrides the flex-column + min-height: 160px from
+   the standard v2-home card rules so this row stays compact. */
+body.v2-home .nav-dropdown a.nav-dropdown-card--wide {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 0;
+  padding: 14px 18px;
+}
+body.v2-home .nav-dropdown-card--wide .nav-dropdown-title {
+  margin-top: 0;
+  padding-top: 0;
+}
+body.v2-home .nav-dropdown-card--wide .nav-dropdown-desc {
+  margin-top: 0;
+  -webkit-line-clamp: 1;
+  flex: 1;
+  min-width: 0;
+}
+body.v2-home .nav-dropdown-arrow {
+  color: rgba(255, 255, 255, 0.6);
+}
+body.v2-home .nav-dropdown a.nav-dropdown-card--wide:hover .nav-dropdown-arrow {
+  color: #fff;
 }
 
 body.v2-home .welcome-enter {
