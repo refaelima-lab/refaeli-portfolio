@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You, From Friends · TikTok Design Challenge</title>
+
+<!-- Portfolio chrome: brings nav / nav--light, .glass-cta, .cta-sec,
+     #back-top and the shared color tokens so the top nav, foot CTA
+     and back-to-top button match cs-vz-id-arch exactly. Loaded BEFORE
+     the page-local <style> so TikTok's own aesthetic (body font,
+     colors, hero styling) wins any same-specificity conflicts. -->
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="../../styles.css">
+
+<style>
+  :root{ --red:#FE2C55; --cyan:#25F4EE; --gold:#FFD84D; --bg:#08080b; --ink:#f3f3f6; --muted:#9a9aa8; --line:rgba(255,255,255,.09); --card:rgba(255,255,255,.035); }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.65; -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(900px 500px at 85% -5%, rgba(37,244,238,.10), transparent 60%),
+                     radial-gradient(900px 600px at 0% 0%, rgba(254,44,85,.12), transparent 55%);
+    background-attachment:fixed;}
+  .wrap{max-width:900px; margin:0 auto; padding:0 24px;}
+  section{padding:64px 0; border-bottom:1px solid var(--line);}
+  h1,h2,h3{letter-spacing:-0.5px; line-height:1.12; font-weight:800;}
+  h2{font-size:30px; margin-bottom:18px;}
+  h3{font-size:19px; margin-bottom:8px; letter-spacing:-0.3px;}
+  p{font-size:16.5px; color:#dcdce4; margin-bottom:16px;}
+  p.muted{color:var(--muted); font-size:15px;}
+  a{color:var(--cyan); text-decoration:none;}
+  .kicker{display:inline-block; font-size:12px; font-weight:800; letter-spacing:2px; text-transform:uppercase;
+    color:var(--cyan); margin-bottom:14px;}
+  .accent{color:var(--red);} .cy{color:var(--cyan);}
+  strong{color:#fff; font-weight:700;}
+  .pill-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+  .pill{font-size:12.5px; font-weight:600; color:#cfcfd6; background:rgba(255,255,255,.06); border:1px solid var(--line);
+    padding:6px 12px; border-radius:20px;}
+
+  /* height + min-height reset the portfolio's .hero rule from styles.css
+     (100vh / 600px min-height) so this hero sizes to its content and
+     doesn't leave a huge void after the CTA. */
+  .hero{padding:132px 0 64px; height:auto; min-height:0; text-align:center; border-bottom:1px solid var(--line);}
+  .hero .kicker{color:var(--muted);}
+  .hero h1{font-size:60px; font-weight:900; letter-spacing:-2px; line-height:1.02;
+    background:linear-gradient(120deg,#fff 20%,#ffd9e1 45%,#25F4EE 90%); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .hero h1 .en-sub{display:block; font-size:26px; font-weight:600; letter-spacing:0; margin-top:14px;
+    -webkit-text-fill-color:#c8c8d2; color:#c8c8d2; opacity:.9;}
+  @media(max-width:720px){ .hero h1 .en-sub{font-size:20px; margin-top:10px;} }
+  .hero .sub{font-size:19px; color:#d3d3dd; max-width:620px; margin:20px auto 0;}
+  .hero .meta{margin-top:26px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+  .hero .meta .pill{background:rgba(255,255,255,.05);}
+  .cta{display:inline-flex; align-items:center; gap:8px; margin-top:30px; background:linear-gradient(135deg,var(--red),#ff5c7a);
+    color:#fff; font-weight:700; font-size:15px; padding:13px 24px; border-radius:26px;
+    box-shadow:0 16px 34px -10px var(--red);}
+
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin-top:8px;}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px;}
+  .stat .n{font-size:34px; font-weight:900; letter-spacing:-1px;
+    background:linear-gradient(120deg,#fff,#25F4EE); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .stat .l{font-size:14px; color:#cfcfd6; margin-top:6px; line-height:1.45;}
+  .stat .s{font-size:11.5px; color:var(--muted); margin-top:10px;}
+
+  .lead{font-size:20px; color:#fff; font-weight:600; line-height:1.5;}
+  blockquote{border-left:3px solid var(--red); padding:6px 0 6px 20px; margin:22px 0; font-size:20px; color:#fff;
+    font-weight:600; line-height:1.4;}
+  blockquote small{display:block; margin-top:8px; font-size:13px; color:var(--muted); font-weight:500;}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media(max-width:720px){ .grid2,.grid3{grid-template-columns:1fr;} .hero h1{font-size:42px;} h2{font-size:25px;} }
+
+  .box{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px;}
+  .box.red{border-color:rgba(254,44,85,.35);} .box.cyan{border-color:rgba(37,244,238,.32);}
+  .box .tag{font-size:11.5px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; color:var(--muted);}
+  .box h3{margin-top:8px;}
+  .box p{font-size:15px; margin-bottom:0; color:#cbcbd4;}
+
+  .tl{position:relative; margin-top:10px; padding-left:22px;}
+  .tl:before{content:""; position:absolute; left:5px; top:6px; bottom:6px; width:2px; background:var(--line);}
+  .tl .row{position:relative; padding:10px 0 10px 6px;}
+  .tl .row:before{content:""; position:absolute; left:-22px; top:16px; width:11px; height:11px; border-radius:50%;
+    background:var(--red); box-shadow:0 0 0 4px rgba(254,44,85,.15);}
+  .tl .row.alive:before{background:var(--cyan); box-shadow:0 0 0 4px rgba(37,244,238,.15);}
+  .tl .row .y{font-size:13px; font-weight:700; color:#fff;}
+  .tl .row .d{font-size:14.5px; color:#c5c5cf;}
+
+  .loop{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:8px;}
+  @media(max-width:720px){ .loop{grid-template-columns:1fr 1fr;} }
+  .loop .step{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px; text-align:center;}
+  .loop .step .i{font-size:26px;} .loop .step .t{font-weight:800; margin-top:8px; font-size:15px;}
+  .loop .step .x{font-size:13px; color:var(--muted); margin-top:4px;}
+
+  .cmp{width:100%; border-collapse:separate; border-spacing:0; margin-top:10px; font-size:14.5px;}
+  .cmp th,.cmp td{padding:13px 14px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top;}
+  .cmp th{font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); font-weight:700;}
+  .cmp td:first-child{color:#fff; font-weight:600; width:34%;}
+  .cmp .ours{color:var(--cyan); font-weight:600;}
+
+  .phase{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px;}
+  .phase.m{border-color:rgba(37,244,238,.32);}
+  .phase h3{display:flex; align-items:center; gap:8px;}
+  .phase .badge{font-size:11px; font-weight:800; letter-spacing:.5px; padding:3px 9px; border-radius:12px;
+    background:rgba(255,255,255,.08); color:#cfcfd6;}
+  .phase.m .badge{background:var(--cyan); color:#053; }
+  .phase ul{list-style:none; margin-top:6px;} .phase li{font-size:14.5px; color:#cbcbd4; padding:6px 0 6px 20px; position:relative;}
+  .phase li:before{content:""; position:absolute; left:0; top:13px; width:6px; height:6px; border-radius:50%; background:var(--red);}
+  .phase.m li:before{background:var(--cyan);}
+
+  .events{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
+  .events code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; color:#ffd9e1;
+    background:rgba(254,44,85,.12); border:1px solid rgba(254,44,85,.25); padding:6px 11px; border-radius:9px;}
+
+  .demo{background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:22px; padding:18px; text-align:center;}
+  .demo iframe{width:100%; height:900px; border:none; border-radius:16px; background:#000; display:block;}
+  .demo .hintline{font-size:13.5px; color:var(--muted); margin-top:12px;}
+
+  .proc{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media(max-width:720px){ .proc{grid-template-columns:1fr;} }
+  .who{font-size:12px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase;}
+  .who.h{color:var(--red);} .who.a{color:var(--cyan);}
+
+  footer{padding:48px 0 70px; text-align:center; color:var(--muted); font-size:13.5px;}
+  .src{font-size:12.5px; color:var(--muted);}
+  .src a{color:#b9b9c4;}
+
+  /* phase 2 · mini phone preview grid */
+  .p2-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:14px;}
+  @media(max-width:720px){ .p2-grid{grid-template-columns:1fr 1fr;} }
+  .p2-card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:14px 14px 16px; text-align:center;
+    transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease; display:block; color:inherit;}
+  .p2-card:hover{transform:translateY(-3px); border-color:rgba(255,216,77,.4); box-shadow:0 20px 40px -20px rgba(255,216,77,.28);}
+  .p2-mini{width:100%; aspect-ratio:9/16; border-radius:16px; background:#0b0b0f; overflow:hidden; position:relative; margin-bottom:12px;
+    border:1px solid rgba(255,255,255,.08); box-shadow:0 12px 24px -14px rgba(0,0,0,.6);}
+  .p2-mini .p2-inner{position:absolute; inset:6px; border-radius:11px; overflow:hidden;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:10px;}
+  .p2-card h4{font-size:14.5px; font-weight:800; letter-spacing:-.2px; color:#fff;}
+  .p2-card p{font-size:13px; color:var(--muted); margin-top:4px; margin-bottom:0; line-height:1.4;}
+
+  .p2-badge .p2-inner{background:radial-gradient(180px 110px at 50% 22%, rgba(37,244,238,.18), transparent 60%);}
+  .p2-badge .em{width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px;
+    background:radial-gradient(circle at 30% 25%, #4a4a58, #111119); border:2px solid var(--cyan);
+    box-shadow:0 0 0 4px rgba(37,244,238,.14);}
+  .p2-badge .lbl{font-size:11.5px; font-weight:800; margin-top:10px; color:#fff;}
+  .p2-badge .sub{font-size:10px; color:var(--muted); margin-top:3px; line-height:1.35;}
+
+  .p2-prof .big{font-size:36px; font-weight:900; letter-spacing:-1px;
+    background:linear-gradient(120deg,#fff,var(--cyan)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .p2-prof .sub{font-size:10px; color:#c7c7d1; margin-top:2px; line-height:1.35;}
+  .p2-prof .chip{margin-top:9px; font-size:10px; font-weight:700; background:rgba(37,244,238,.12);
+    border:1px solid rgba(37,244,238,.35); color:var(--cyan); padding:3px 9px; border-radius:14px;}
+
+  .p2-crown .p2-inner{background:radial-gradient(180px 100px at 50% 0%, rgba(255,216,77,.22), transparent 60%);}
+  .p2-crown .crown{font-size:32px;}
+  .p2-crown .lead{font-size:9.5px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; color:var(--gold); margin-top:4px;}
+  .p2-crown .who{font-size:17px; font-weight:900; margin-top:2px; color:#fff;}
+  .p2-crown .sub{font-size:9.5px; color:var(--muted); margin-top:5px;}
+
+  .p2-arc .p2-inner{padding:8px;}
+  .p2-arc .grid9{display:grid; grid-template-columns:repeat(3,1fr); gap:3px; width:100%;}
+  .p2-arc .cell{aspect-ratio:9/14; border-radius:4px; position:relative;}
+  .p2-arc .cell.heart:after{content:"💛"; position:absolute; top:2px; right:2px; font-size:8px;}
+
+  .cta-gold{background:linear-gradient(135deg,var(--gold),#ffb800) !important; color:#111 !important;
+    box-shadow:0 16px 34px -10px rgba(255,216,77,.5) !important;}
+
+  /* language toggle — dropped below the portfolio nav so the two
+     don't fight for the top-right corner. Right edge matches the
+     nav's horizontal padding (clamp(1.25rem, 5vw, 4rem)) so the
+     toggle stacks flush under the DESIGN CHALLENGES link above. */
+  .lang-toggle{position:fixed; top:90px; right:clamp(1.25rem, 5vw, 4rem); z-index:9998;
+    display:flex; background:rgba(20,20,26,.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.12); border-radius:20px; padding:3px;
+    box-shadow:0 8px 24px rgba(0,0,0,.4);}
+  .lang-toggle button{background:none; border:none; padding:6px 13px;
+    color:#9a9aa8; font-size:12.5px; font-weight:700; cursor:pointer;
+    border-radius:16px; transition:color .2s ease, background .2s ease; font-family:inherit; letter-spacing:.3px;}
+  .lang-toggle button.on{background:linear-gradient(135deg,var(--red),#ff5c7a); color:#fff;}
+  .lang-toggle button:hover:not(.on){color:#fff;}
+  @media(max-width:720px){ .lang-toggle{top:72px;} .lang-toggle button{padding:5px 10px; font-size:12px;} }
+
+  /* branded cursor — TikTok red/cyan chromatic split follower.
+     z-index sits above the #lock overlay (100000) so the custom
+     cursor stays visible on the password screen too. */
+  .cursor-dot, .cursor-ring{
+    position:fixed; top:0; left:0; pointer-events:none; z-index:100001;
+    transform:translate(-50%,-50%); mix-blend-mode:screen; will-change:transform;
+    opacity:0; transition:opacity .25s;
+  }
+  .cursor-dot{width:6px; height:6px; border-radius:50%; background:#fff;
+    box-shadow:-2px 0 0 var(--cyan), 2px 0 0 var(--red);
+    transition:opacity .25s, width .18s ease, height .18s ease;}
+  .cursor-ring{width:34px; height:34px; border-radius:50%;
+    border:1.5px solid rgba(255,255,255,.35);
+    box-shadow:-3px 0 0 rgba(37,244,238,.55), 3px 0 0 rgba(254,44,85,.55);
+    transition:opacity .25s, width .28s ease, height .28s ease, border-color .2s;}
+  .cursor-dot.on, .cursor-ring.on{opacity:1;}
+  .cursor-ring.hover{width:52px; height:52px; border-color:rgba(255,255,255,.7);}
+  .cursor-dot.hover{width:8px; height:8px;}
+  @media (hover:none), (pointer:coarse){ .cursor-dot,.cursor-ring{display:none;} }
+
+  /* Portfolio chrome font override — TikTok's body sets an -apple-system
+     stack which anchors/nav-back/nav-logo would otherwise inherit,
+     making the top nav read visually different from cs-vz-id-arch.
+     Pin the same var(--font-sans) used by the rest of the portfolio. */
+  #nav, #nav *,
+  #mob-nav, #mob-nav *,
+  .glass-cta {
+    font-family: var(--font-sans);
+  }
+  /* Extra 8px breathing room above the nav row so the logo doesn't
+     sit flush to the top edge on this page. */
+  #nav {
+    padding-top: calc(clamp(1.1rem, 2vh, 1.5rem) + 8px);
+  }
+
+  /* TikTok spotlight glow — same recipe / structure as the portfolio's
+     .spotlight-glow ::before / ::after in styles.css, recolored to
+     TikTok red (#FE2C55 ≈ hsl 347 99% 58%) and scaled down for the
+     smaller case-study tiles. Cyan variant (.tt-cyan) is applied via
+     JS to tiles that already carry a cyan accent border so the halo
+     matches the tile's inherent color. Only the background gradient
+     is overridden — mask / padding / z-index inherit from styles.css
+     so the ::after border-ring effect still works. */
+  .stat.spotlight-glow,
+  .box.spotlight-glow,
+  .loop .step.spotlight-glow,
+  .phase.spotlight-glow {
+    --spot-inner: 200px;
+    --spot-outer: 260px;
+  }
+  .spotlight-glow::before {
+    background: radial-gradient(
+      var(--spot-inner) var(--spot-inner) at
+      calc(var(--x, -9999) * 1px) calc(var(--y, -9999) * 1px),
+      hsla(347, 99%, 58%, 0.22),
+      hsla(347, 99%, 58%, 0.10) 30%,
+      transparent 60%
+    );
+  }
+  .spotlight-glow::after {
+    background: radial-gradient(
+      var(--spot-outer) var(--spot-outer) at
+      calc(var(--x, -9999) * 1px) calc(var(--y, -9999) * 1px),
+      hsla(347, 99%, 58%, 0.95),
+      hsla(347, 99%, 58%, 0.40) 25%,
+      transparent 50%
+    );
+  }
+  .spotlight-glow.tt-cyan::before {
+    background: radial-gradient(
+      var(--spot-inner) var(--spot-inner) at
+      calc(var(--x, -9999) * 1px) calc(var(--y, -9999) * 1px),
+      hsla(178, 90%, 55%, 0.22),
+      hsla(178, 90%, 55%, 0.10) 30%,
+      transparent 60%
+    );
+  }
+  .spotlight-glow.tt-cyan::after {
+    background: radial-gradient(
+      var(--spot-outer) var(--spot-outer) at
+      calc(var(--x, -9999) * 1px) calc(var(--y, -9999) * 1px),
+      hsla(178, 90%, 55%, 0.95),
+      hsla(178, 90%, 55%, 0.40) 25%,
+      transparent 50%
+    );
+  }
+
+  /* PASSWORD LOCK — client-side gate. Cosmetic only (source-viewable),
+     not real access control. Rendered above everything; body.unlocked
+     hides the overlay after the correct password is entered. */
+  #lock {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: #08080b;
+    background-image:
+      radial-gradient(900px 500px at 85% 15%, rgba(37,244,238,.14), transparent 60%),
+      radial-gradient(900px 600px at 15% 85%, rgba(254,44,85,.18), transparent 55%);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    color: #f3f3f6;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  body.unlocked #lock {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  body:not(.unlocked) {
+    overflow: hidden;
+  }
+  #lock-card {
+    max-width: 380px;
+    width: 100%;
+    padding: 34px 30px 30px;
+    background: rgba(20,20,26,.7);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 18px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 24px 60px rgba(0,0,0,.5);
+    text-align: center;
+  }
+  #lock-emoji {
+    font-size: 30px;
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+  #lock-title {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+  #lock-desc {
+    font-size: 13.5px;
+    color: #9a9aa8;
+    line-height: 1.5;
+    margin-bottom: 22px;
+  }
+  #lock-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 15px;
+    font-family: inherit;
+    letter-spacing: .4px;
+    outline: none;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  #lock-input:focus {
+    border-color: rgba(37,244,238,.55);
+    background: rgba(255,255,255,.06);
+  }
+  #lock-input::placeholder { color: rgba(255,255,255,.35); }
+  #lock-btn {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #FE2C55, #ff5c7a);
+    border: 0;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    cursor: pointer;
+    box-shadow: 0 12px 26px -10px #FE2C55;
+    transition: transform .15s ease, box-shadow .2s ease;
+  }
+  #lock-btn:hover { transform: translateY(-1px); box-shadow: 0 16px 32px -10px #FE2C55; }
+  #lock-btn:active { transform: translateY(0); }
+  #lock-err {
+    font-size: 12.5px;
+    color: #FE2C55;
+    margin-top: 10px;
+    min-height: 16px;
+    opacity: 0;
+    transition: opacity .2s ease;
+  }
+  #lock-err.on { opacity: 1; }
+  #lock-card.shake { animation: lockShake .35s ease; }
+  @keyframes lockShake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    50% { transform: translateX(8px); }
+    75% { transform: translateX(-4px); }
+  }
+  #lock-hint {
+    margin-top: 16px;
+    font-size: 11.5px;
+    color: rgba(255,255,255,.35);
+    letter-spacing: .3px;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     PASSWORD LOCK — password: TikTok2026. Client-side only. Uses
+     localStorage so a successful unlock persists across visits on
+     this device / browser.
+══════════════════════════════════════ -->
+<script>
+  /* Synchronous — runs before first paint. If the user has already
+     unlocked, add .unlocked to <body> so the overlay skips the fade-in. */
+  try {
+    if (localStorage.getItem('ttUnlocked') === '1') {
+      document.documentElement.classList.add('_ttUnlocked');
+    }
+  } catch (e) {}
+</script>
+<style>html._ttUnlocked #lock { display: none; } html._ttUnlocked body { overflow: auto !important; }</style>
+
+<div id="lock" role="dialog" aria-modal="true" aria-labelledby="lock-title">
+  <div id="lock-card">
+    <div id="lock-emoji" aria-hidden="true">🔒</div>
+    <div id="lock-title">Private Preview</div>
+    <div id="lock-desc">This design challenge is password-protected. Enter the password to view.</div>
+    <form id="lock-form" autocomplete="off">
+      <input id="lock-input" type="password" placeholder="Password" autocomplete="off" spellcheck="false" aria-label="Password">
+      <button id="lock-btn" type="submit">Unlock</button>
+      <div id="lock-err" role="alert">Incorrect password.</div>
+    </form>
+    <div id="lock-hint">Ask Refaeli if you need access.</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var PASS = 'TikTok2026';
+  var lock  = document.getElementById('lock');
+  var form  = document.getElementById('lock-form');
+  var input = document.getElementById('lock-input');
+  var err   = document.getElementById('lock-err');
+  var card  = document.getElementById('lock-card');
+
+  /* If the sync script above already flagged this as unlocked, add the
+     class to <body> as well so the shared CSS rules kick in and reveal
+     the page. */
+  if (document.documentElement.classList.contains('_ttUnlocked')) {
+    document.body.classList.add('unlocked');
+    return;
+  }
+
+  /* Focus the input as soon as the overlay is interactive. */
+  setTimeout(function () { input && input.focus(); }, 60);
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (input.value === PASS) {
+      try { localStorage.setItem('ttUnlocked', '1'); } catch (e) {}
+      document.body.classList.add('unlocked');
+      err.classList.remove('on');
+    } else {
+      err.classList.add('on');
+      card.classList.remove('shake');
+      /* Force reflow so re-adding the class re-triggers the animation. */
+      void card.offsetWidth;
+      card.classList.add('shake');
+      input.select();
+    }
+  });
+}());
+</script>
+
+
+<!-- PROGRESS BAR -->
+<div id="prog"></div>
+
+<!-- BACK TO TOP -->
+<button id="back-top" aria-label="Back to top">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <path d="M7 11V3M3 6.5L7 3l4 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+
+<!-- ══════════════════════════════════════
+     NAV — case study variant, simplified (no pill switcher since this
+     is the only challenge). Logo left, back-to-Design-Challenges right.
+══════════════════════════════════════ -->
+<nav id="nav" class="nav--light">
+  <a href="../../index.html" class="nav-logo">Refaeli Ma</a>
+
+  <a href="../../design-challenges.html" class="nav-back">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2L4 6l4 4"/></svg>
+    Design Challenges
+  </a>
+
+  <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- Mobile nav overlay -->
+<div class="mob-nav" id="mob-nav" aria-hidden="true">
+  <div class="mob-nav-bg"></div>
+  <ul class="mob-nav-links">
+    <li><a href="../../index.html">Home</a></li>
+    <li><a href="../../design-challenges.html">Design Challenges</a></li>
+  </ul>
+  <a href="../../design-challenges.html" class="mob-nav-cta">← Back to Design Challenges</a>
+  <div class="mob-nav-foot">Design Challenge · TikTok 2026</div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     IN-PAGE SIDENAV — same pattern as cs-vz-id-arch. Dots track the
+     main story arc; each targets a section id. CSS already loaded
+     via styles.css (.cs-sidenav / .cs-sidenav-dot).
+══════════════════════════════════════ -->
+<nav class="cs-sidenav" id="cs-sidenav" aria-label="Page sections">
+  <button class="cs-sidenav-dot active" data-label="Overview"  data-target="overview"></button>
+  <button class="cs-sidenav-dot"        data-label="Insight"   data-target="insight"></button>
+  <button class="cs-sidenav-dot"        data-label="Idea"      data-target="idea"></button>
+  <button class="cs-sidenav-dot"        data-label="Prototype" data-target="prototype"></button>
+  <button class="cs-sidenav-dot"        data-label="Impact"    data-target="impact"></button>
+  <button class="cs-sidenav-dot"        data-label="Roadmap"   data-target="roadmap"></button>
+</nav>
+
+
+<div class="lang-toggle" id="langToggle" aria-label="Language toggle">
+  <button data-lang="en" class="on">EN</button>
+  <button data-lang="zh">中文</button>
+</div>
+
+<header class="hero" id="overview">
+  <div class="wrap">
+    <span class="kicker" data-i18n="hero.kicker">TikTok product design challenge · common app optimization · by Refaeli Ma</span>
+    <h1 data-i18n="hero.h1">For You,<br>From Friends</h1>
+    <p class="sub" data-i18n="hero.sub">TikTok perfected the algorithm that guesses what you’ll watch. It never built the one thing an algorithm can’t do: a friend who knows exactly what’s <em>so you</em>.</p>
+    <div class="meta">
+      <span class="pill" data-i18n="hero.pill.author">By Refaeli Ma</span>
+      <span class="pill" data-i18n="hero.pill.product">Product: TikTok</span>
+      <span class="pill" data-i18n="hero.pill.surface">One redesigned surface: the inbox</span>
+      <span class="pill" data-i18n="hero.pill.build">AI-collaborated build</span>
+    </div>
+    <a class="cta" href="#prototype" data-i18n="hero.cta">Try the prototype ↓</a>
+  </div>
+</header>
+
+<section id="mission">
+  <div class="wrap">
+    <span class="kicker" data-i18n="s01.kicker">01 · the brief</span>
+    <h2 data-i18n="s01.h2">The assignment</h2>
+    <p data-i18n="s01.p1">Choose a product (TikTok, CapCut, or Instagram), find a real problem in its design, explain <em>why</em> it exists, and redesign at least one key point, shown as a working, high-fidelity, AI-coded prototype.</p>
+    <p class="muted" data-i18n="s01.p2">I chose TikTok. Not the safe choice. The people grading this use it every day and have strong opinions, but that’s exactly why a sharp insight lands harder here than anywhere else. The rule I set myself: go deep on one defensible problem, not wide on a feed redesign nobody can falsify.</p>
+  </div>
+</section>
+
+<section id="insight">
+  <div class="wrap">
+    <span class="kicker" data-i18n="s02.kicker">02 · the insight</span>
+    <h2 data-i18n="s02.h2">Most people aren’t creators. They’re curators.</h2>
+    <p class="lead" data-i18n="s02.lead">The dominant creative act on TikTok isn’t posting. It’s the <span class="accent">send</span>: passing a video to a friend or group chat, “this is so you.”</p>
+    <p data-i18n="s02.p">It started as a personal observation. My friends and I don’t post. We share. We half-compete over who sends the best stuff, “let me see if you sent anything good.” If most users never create, they never get likes, never build an identity on the platform. So what if the thing they <em>are</em> great at, having taste and knowing their friends, became something the product actually saw and rewarded?</p>
+    <div class="stats">
+      <div class="stat"><div class="n">~52%</div><div class="l" data-i18n="s02.stat1.l">of US adult TikTok users have <strong>ever</strong> posted a video, so about half never have</div><div class="s">Pew Research, 2024</div></div>
+      <div class="stat"><div class="n">98%</div><div class="l" data-i18n="s02.stat2.l">of public videos come from the most active <strong>25%</strong> of users</div><div class="s">Pew Research, 2024</div></div>
+      <div class="stat"><div class="n">84%</div><div class="l" data-i18n="s02.stat3.l">of all outbound sharing happens on “dark social,” private channels rather than public posts</div><div class="s">RadiumOne, 2016</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="validation">
+  <div class="wrap">
+    <span class="kicker" data-i18n="s03.kicker">03 · is this real?</span>
+    <h2 data-i18n="s03.h2">The whole industry just pivoted here</h2>
+    <p data-i18n="s03.p">This isn’t a hunch anymore. It’s the biggest live shift in social product design, and it happened in the last year.</p>
+    <blockquote data-i18n="s03.quote">“That feed is dead. People stopped sharing personal moments to feed years ago… The primary way people share now is in DMs.”
+      <small>Adam Mosseri, Head of Instagram, December 2025</small></blockquote>
+    <div class="grid2">
+      <div class="box"><div class="tag" data-i18n="s03.box1.tag">the signal</div><h3 data-i18n="s03.box1.h3">Sends already run the algorithm</h3><p data-i18n="s03.box1.p">“Share” is a documented For You ranking signal (TikTok, 2020). Instagram’s Mosseri calls “sends per reach” one of its biggest ranking signals. The platforms already know the send is the highest-intent action. They just don’t design <em>for</em> it.</p></div>
+      <div class="box"><div class="tag" data-i18n="s03.box2.tag">the money follows retention</div><h3 data-i18n="s03.box2.h3">Friends keep you around</h3><p data-i18n="s03.box2.p">Friend-graph density is a classic retention lever. Facebook’s growth team famously found new users who reached <strong>7 friends in 10 days</strong> were far likelier to stay. A denser friend graph is worth more lifetime attention than any single feed tweak.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <span class="kicker" data-i18n="s04.kicker">04 · why doesn’t it exist yet?</span>
+    <h2 data-i18n="s04.h2">Because the friend layer kept getting built as a new surface</h2>
+    <p data-i18n="s04.p">Every time TikTok reached for “friends,” it built a <strong>new social surface</strong>, and each one struggled within a year. The lesson isn’t “friends don’t work.” It’s that new graphs tend to die, while enhancements to the existing share act tend to live.</p>
+    <div class="tl">
+      <div class="row"><div class="y" data-i18n="s04.tl1.y">2023 · retired</div><div class="d" data-i18n="s04.tl1.d"><strong>TikTok Now</strong>, the BeReal clone. Given a bottom-nav slot, gone in under a year.</div></div>
+      <div class="row"><div class="y" data-i18n="s04.tl2.y">2023 · walked back</div><div class="d" data-i18n="s04.tl2.d"><strong>Friends tab</strong>, an algorithmic mutual-follow feed. Reconsidered within a year.</div></div>
+      <div class="row"><div class="y" data-i18n="s04.tl3.y">2025 · retired</div><div class="d" data-i18n="s04.tl3.d"><strong>TikTok Notes</strong>, an Instagram competitor. Shut down after about a year.</div></div>
+      <div class="row alive"><div class="y" data-i18n="s04.tl4.y">survived</div><div class="d" data-i18n="s04.tl4.d"><strong>Repost</strong>, a lightweight action layered on the algorithm, not a new graph. The one that lived.</div></div>
+    </div>
+
+    <h3 style="margin-top:34px;" data-i18n="s04.subh">I pressure-tested the idea against five objections</h3>
+    <div class="grid2" style="margin-top:12px;">
+      <div class="box red"><div class="tag" data-i18n="s04.obj1.tag">objection</div><h3 data-i18n="s04.obj1.h3">“The group chats aren’t even in TikTok.”</h3><p data-i18n="s04.obj1.p">True, a lot of sharing lives in iMessage and WhatsApp. So we don’t try to trap it; we make the sharing that <em>does</em> happen in-app dramatically more rewarding, so more of it comes home.</p></div>
+      <div class="box red"><div class="tag" data-i18n="s04.obj2.tag">objection</div><h3 data-i18n="s04.obj2.h3">“Snapchat / Blend already did this.”</h3><p data-i18n="s04.obj2.p">They built <em>algorithmic</em> shared feeds. Nobody rewards the human who deliberately picks “this is so you.” That’s the gap, covered just below.</p></div>
+      <div class="box red"><div class="tag" data-i18n="s04.obj3.tag">objection</div><h3 data-i18n="s04.obj3.h3">“Scoring social behavior creates anxiety.”</h3><p data-i18n="s04.obj3.p">Snapchat Streaks are linked to documented teen stress; TikTok shipped anti-doomscroll features in Nov 2025. So this design is <strong>positive-only</strong>: no dislikes, no streaks, no public rank.</p></div>
+      <div class="box red"><div class="tag" data-i18n="s04.obj4.tag">objection</div><h3 data-i18n="s04.obj4.h3">“This doesn’t make money.”</h3><p data-i18n="s04.obj4.p">It grows sends (a ranking signal) and friend-graph density (a retention driver), and produces a higher-quality human taste signal. Retention is the business case.</p></div>
+    </div>
+    <p class="muted" style="margin-top:16px;" data-i18n="s04.trade">Trade-off I made on purpose: I dropped the “meme-god leaderboard” from my first idea. A public competition is higher-ceiling but fights both the graveyard and the wellbeing evidence. Recognition beats competition here.</p>
+  </div>
+</section>
+
+<section id="diff">
+  <div class="wrap">
+    <span class="kicker" data-i18n="s05.kicker">05 · the gap nobody filled</span>
+    <h2 data-i18n="s05.h2">Algorithmic blending vs. human curation</h2>
+    <p data-i18n="s05.p">Given a year of R&amp;D each, the two biggest companies in social both reached for the algorithm again. Neither honored the deliberate human act of choosing a video for a specific person.</p>
+    <table class="cmp">
+      <tr><th></th><th data-i18n="s05.cmp.col2">Instagram Blend / TikTok Shared Feed</th><th class="ours">For You, From Friends</th></tr>
+      <tr><td data-i18n="s05.cmp.r1.a">Who curates</td><td data-i18n="s05.cmp.r1.b">The algorithm blends two people’s interests</td><td class="ours" data-i18n="s05.cmp.r1.c">A real friend deliberately picks it for you</td></tr>
+      <tr><td data-i18n="s05.cmp.r2.a">The user’s role</td><td data-i18n="s05.cmp.r2.b">Passive co-consumer</td><td class="ours" data-i18n="s05.cmp.r2.c">Active curator with an identity</td></tr>
+      <tr><td data-i18n="s05.cmp.r3.a">The signal</td><td data-i18n="s05.cmp.r3.b">“What do these two have in common?”</td><td class="ours" data-i18n="s05.cmp.r3.c">“What does a friend <em>know</em> you’d love?”</td></tr>
+      <tr><td data-i18n="s05.cmp.r4.a">Launched</td><td data-i18n="s05.cmp.r4.b">Blend Apr 2025 · Shared Feed Dec 2025</td><td class="ours" data-i18n="s05.cmp.r4.c">The layer they both left open</td></tr>
+    </table>
+    <blockquote style="margin-top:26px;" data-i18n="s05.quote">They asked what the algorithm thinks two friends have in common. We ask what a friend <em>knows</em> about you that the algorithm never will.</blockquote>
+  </div>
+</section>
+
+<section id="idea">
+  <div class="wrap">
+    <span class="kicker" data-i18n="s06.kicker">06 · the idea</span>
+    <h2 data-i18n="s06.h2">Turn the inbox into what it’s actually used for</h2>
+    <p data-i18n="s06.p">TikTok’s inbox is a chat UI wrapped around a behavior that isn’t chatting. It’s mostly videos friends sent you, flattened into gray bubbles and forgotten. We split it into <strong class="cy">From Friends</strong> (a swipeable feed of everything friends hand-picked for you, tagged by sender) and <strong>Chats</strong> (the rare real conversations). One positive gesture closes the loop.</p>
+    <div class="loop">
+      <div class="step"><div class="i">📤</div><div class="t" data-i18n="s06.loop1.t">Send</div><div class="x" data-i18n="s06.loop1.x">pick a video, add “this is so you”</div></div>
+      <div class="step"><div class="i">📥</div><div class="t" data-i18n="s06.loop2.t">Receive</div><div class="x" data-i18n="s06.loop2.x">it lands in From Friends, tagged</div></div>
+      <div class="step"><div class="i">💛</div><div class="t" data-i18n="s06.loop3.t">Recognize</div><div class="x" data-i18n="s06.loop3.x">swipe right, a warm private ping</div></div>
+      <div class="step"><div class="i">🔁</div><div class="t" data-i18n="s06.loop4.t">Reciprocate</div><div class="x" data-i18n="s06.loop4.x">one tap to send something back</div></div>
+    </div>
+    <div class="grid3" style="margin-top:22px;">
+      <div class="box"><div class="tag" data-i18n="s06.b1.tag">placement</div><h3 data-i18n="s06.b1.h3">Revives a dead surface</h3><p data-i18n="s06.b1.p">Lives in the inbox, where TikTok already put Shared Feed, as a “From Friends / Chats” toggle. No new nav tab (that’s the graveyard).</p></div>
+      <div class="box"><div class="tag" data-i18n="s06.b2.tag">gesture</div><h3 data-i18n="s06.b2.h3">Swipe up = next, right = “so me”</h3><p data-i18n="s06.b2.p">Vertical stays TikTok-native. Right is the one new positive gesture. There is no negative gesture, ever.</p></div>
+      <div class="box cyan"><div class="tag" data-i18n="s06.b3.tag">the private party</div><h3 data-i18n="s06.b3.h3">Recognition, not competition</h3><p data-i18n="s06.b3.p">Credit is invisible by default. The system only ever sends good news: “Mario’s been vibing with your shares.”</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="prototype">
+  <div class="wrap">
+    <span class="kicker" data-i18n="s07.kicker">07 · the prototype</span>
+    <h2 data-i18n="s07.h2">Try it</h2>
+    <p data-i18n="s07.p">A high-fidelity, AI-coded build of the core loop. Tap through the “what’s new” tour, then swipe up for the next clip, or right for “this is so me,” and watch the sender get credited.</p>
+    <div class="demo">
+      <iframe src="prototype.html" title="For You, From Friends prototype" loading="lazy"></iframe>
+      <div class="hintline" data-i18n="s07.hint">Best experienced with sound-off autoplay · <a href="prototype.html" target="_blank">open full screen ↗</a></div>
+    </div>
+  </div>
+</section>
+
+<section id="impact">
+  <div class="wrap">
+    <span class="kicker" data-i18n="s08.kicker">08 · impact &amp; value</span>
+    <h2 data-i18n="s08.h2">Who wins, and the balance</h2>
+    <div class="grid3">
+      <div class="box"><div class="tag" data-i18n="s08.b1.tag">for the user</div><h3 data-i18n="s08.b1.h3">Status without pressure</h3><p data-i18n="s08.b1.p">The roughly half who never post get a creative identity as curators. Received shares stop dying. A reason to open the app that’s connection, not doomscroll.</p></div>
+      <div class="box"><div class="tag" data-i18n="s08.b2.tag">for the creator</div><h3 data-i18n="s08.b2.h3">A high-trust distribution lane</h3><p data-i18n="s08.b2.p">“Send this to someone” finally has a destination. Content that resonates travels through friend networks, a discovery path the pure algorithm doesn’t offer smaller creators.</p></div>
+      <div class="box"><div class="tag" data-i18n="s08.b3.tag">for the business</div><h3 data-i18n="s08.b3.h3">Retention, not just reach</h3><p data-i18n="s08.b3.p">Grows sends (a ranking signal) and friend-graph density (a retention driver), and yields a higher-quality human taste signal to improve recommendations.</p></div>
+    </div>
+    <div class="box cyan" style="margin-top:16px;">
+      <div class="tag" data-i18n="s08.balance.tag">balancing business vs. wellbeing</div>
+      <h3 data-i18n="s08.balance.h3">Engagement from connection, not anxiety</h3>
+      <p data-i18n="s08.balance.p">I deliberately chose recognition over competition, positive-only over dislikes, invisible-by-default over public scores, and capped data use at “better experience.” The engagement gains are designed to come from deeper friendships, the healthy kind of retention, not manufactured compulsion.</p>
+    </div>
+  </div>
+</section>
+
+<section id="roadmap">
+  <div class="wrap">
+    <span class="kicker" data-i18n="s09.kicker">09 · the plan</span>
+    <h2 data-i18n="s09.h2">What ships, and what tracks it</h2>
+    <div class="grid3">
+      <div class="phase m"><h3><span data-i18n="s09.mvp.h3">MVP</span> <span class="badge" data-i18n="s09.mvp.badge">now</span></h3><ul>
+        <li data-i18n="s09.mvp.li1">Inbox “From Friends / Chats” toggle (feed default)</li>
+        <li data-i18n="s09.mvp.li2">Meshed swipe feed, sender-tagged, optional captions</li>
+        <li data-i18n="s09.mvp.li3">Swipe-right “this is so me” to a private ping</li>
+        <li data-i18n="s09.mvp.li4">“What’s new” quick tour</li>
+      </ul></div>
+      <div class="phase"><h3><span data-i18n="s09.p2.h3">Phase 2</span> <span class="badge" data-i18n="s09.p2.badge">next</span></h3><ul>
+        <li data-i18n="s09.p2.li1">Opt-in Curator badge (comparison-free)</li>
+        <li data-i18n="s09.p2.li2">Group “meme-god,” celebratory and rotating</li>
+        <li data-i18n="s09.p2.li3">Per-chat shared archives</li>
+        <li data-i18n="s09.p2.li4">Curator identity on profile</li>
+      </ul></div>
+      <div class="phase"><h3><span data-i18n="s09.p3.h3">Phase 3</span> <span class="badge" data-i18n="s09.p3.badge">vision</span></h3><ul>
+        <li data-i18n="s09.p3.li1">Taste-graph flywheel to better recs</li>
+        <li data-i18n="s09.p3.li2">Creator “send to someone” CTAs</li>
+        <li data-i18n="s09.p3.li3">Resonance-based distribution for small creators</li>
+      </ul></div>
+    </div>
+    <h3 style="margin-top:30px;" data-i18n="s09.events.h3">Events to track</h3>
+    <div class="events">
+      <code>swipe_right_this_is_so_me</code><code>video_share_sent</code><code>caption_added</code>
+      <code>share_watched</code><code>recognition_notif_opened</code><code>reciprocal_send</code>
+      <code>toggle_switch</code><code>tour_completed</code><code>badge_display_opt_in</code>
+    </div>
+    <p class="muted" style="margin-top:14px;" data-i18n="s09.north">North star: sends per active user each week. Guardrail: by design, no negative-signal events exist to farm.</p>
+    <p style="margin-top:24px;"><a class="cta" href="prd.html" data-i18n="s09.cta">Read the full PRD ↗</a></p>
+  </div>
+</section>
+
+<section id="phase2">
+  <div class="wrap">
+    <span class="kicker" style="color:var(--gold);" data-i18n="s10.kicker">10 · phase 2, in pixels</span>
+    <h2 data-i18n="s10.h2">What the curator identity looks like</h2>
+    <p data-i18n="s10.p">The four Phase 2 bullets above, made concrete. Every screen keeps the same guardrails: comparison-free, positive-only, opt-in by default.</p>
+
+    <div class="p2-grid">
+      <a class="p2-card p2-badge" href="phase2.html#badge">
+        <div class="p2-mini"><div class="p2-inner">
+          <div class="em">&#11088;</div>
+          <div class="lbl" data-i18n="s10.c1.lbl">You&rsquo;re a Curator</div>
+          <div class="sub" data-i18n="s10.c1.sub">12 friends vibed with your picks</div>
+        </div></div>
+        <h4 data-i18n="s10.c1.h4">Badge unlock</h4>
+        <p data-i18n="s10.c1.p">Earned by real friends, opt-in to show.</p>
+      </a>
+
+      <a class="p2-card p2-prof" href="phase2.html#profile">
+        <div class="p2-mini"><div class="p2-inner">
+          <div class="big">47&times;</div>
+          <div class="sub" data-i18n="s10.c2.sub">your taste landed this month</div>
+          <div class="chip" data-i18n="s10.c2.chip">&#11088; Curator</div>
+        </div></div>
+        <h4 data-i18n="s10.c2.h4">Curator profile</h4>
+        <p data-i18n="s10.c2.p">Status without posting. Taste is the identity.</p>
+      </a>
+
+      <a class="p2-card p2-crown" href="phase2.html#group">
+        <div class="p2-mini"><div class="p2-inner">
+          <div class="crown">&#128081;</div>
+          <div class="lead" data-i18n="s10.c3.lead">March&rsquo;s curator</div>
+          <div class="who">Milo</div>
+          <div class="sub" data-i18n="s10.c3.sub">rotates monthly &middot; all love</div>
+        </div></div>
+        <h4 data-i18n="s10.c3.h4">Group &ldquo;meme-god&rdquo;</h4>
+        <p data-i18n="s10.c3.p">A crown you can lose, so it stays fun.</p>
+      </a>
+
+      <a class="p2-card p2-arc" href="phase2.html#archive">
+        <div class="p2-mini"><div class="p2-inner">
+          <div class="grid9">
+            <div class="cell heart" style="background:linear-gradient(160deg,#ff6a3d,#7a0f3a)"></div>
+            <div class="cell" style="background:linear-gradient(160deg,#3a8dff,#211456)"></div>
+            <div class="cell heart" style="background:linear-gradient(160deg,#17b98a,#053a2e)"></div>
+            <div class="cell" style="background:linear-gradient(160deg,#8a5cff,#1c1250)"></div>
+            <div class="cell heart" style="background:linear-gradient(160deg,#ff9f45,#7a1d3a)"></div>
+            <div class="cell" style="background:linear-gradient(160deg,#639922,#173404)"></div>
+            <div class="cell" style="background:linear-gradient(160deg,#f08fb0,#5e2038)"></div>
+            <div class="cell heart" style="background:linear-gradient(160deg,#2b5db3,#070b18)"></div>
+            <div class="cell" style="background:linear-gradient(160deg,#17b98a,#0e6e56)"></div>
+          </div>
+        </div></div>
+        <h4 data-i18n="s10.c4.h4">Shared archive</h4>
+        <p data-i18n="s10.c4.p">Every video you two ever traded.</p>
+      </a>
+    </div>
+
+    <p style="margin-top:24px;"><a class="cta cta-gold" href="phase2.html" data-i18n="s10.cta">See the annotated screens &rarr;</a></p>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <span class="kicker" data-i18n="s11.kicker">11 · how this was made</span>
+    <h2 data-i18n="s11.h2">Human + AI, in the open</h2>
+    <p data-i18n="s11.p">This was built as a collaboration. I brought the product judgment and the calls; AI acted as a skeptical partner that researched, pressure-tested, and built, so I could move from a hunch to an evidenced, prototyped concept fast.</p>
+    <div class="proc">
+      <div class="box"><span class="who h" data-i18n="s11.b1.who">what I drove</span><h3 style="margin-top:8px;" data-i18n="s11.b1.h3">The thinking</h3><p data-i18n="s11.b1.p">The core insight, the decision to reject a feed redesign, the call to drop the public leaderboard, the inbox placement, the “feed as default,” and every gesture and copy decision.</p></div>
+      <div class="box"><span class="who a" data-i18n="s11.b2.who">what AI drove</span><h3 style="margin-top:8px;" data-i18n="s11.b2.h3">The legwork</h3><p data-i18n="s11.b2.p">Five parallel research passes (the graveyard, dark-social data, pain points, competitor teardown), adversarial pressure-testing of my idea, and the coded high-fidelity prototype.</p></div>
+    </div>
+    <p class="muted" style="margin-top:16px;" data-i18n="s11.footer">The most useful thing AI did wasn’t agree with me. It was pointing five loaded objections at my first idea until only the defensible version survived.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     CTA — back to design challenges. Same .cta-sec pattern as
+     cs-vz-id-arch's next-case-study block, minus the "next" link
+     since this is the only challenge for now.
+══════════════════════════════════════ -->
+<section class="cta-sec">
+  <div class="cta-d"></div>
+  <div class="cta-g"></div>
+  <div style="display:flex; gap:0.75rem; justify-content:center; align-items:center; flex-wrap:wrap; position:relative; z-index:2;">
+    <a href="../../design-challenges.html" class="glass-cta">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-right:0.5rem;"><path d="M8 2L4 6l4 4"/></svg>
+      Back to Design Challenges
+    </a>
+  </div>
+</section>
+
+
+<footer>
+  <div class="wrap">
+    <p class="src" data-i18n="f.sources">Sources: Pew Research (2024) · RadiumOne (2016) &amp; SparkToro (2023) on dark social · TikTok Newsroom · <a href="https://om.co/2026/01/01/what-is-instagrams-adam-mosseri-really-saying-in-his-year-end-memo/" target="_blank">Mosseri memo (Dec 2025)</a> · TechCrunch (TikTok Now / Notes / Friends tab) · Bureau of Investigative Journalism (Snap Streaks, 2025).</p>
+    <p style="margin-top:14px;" data-i18n="f.credit">For You, From Friends · TikTok design challenge · built with AI collaboration</p>
+    <p style="margin-top:6px;" data-i18n="f.byline">By <strong style="color:#fff;">Refaeli Ma</strong> · July 2026</p>
+  </div>
+</footer>
+
+<div class="cursor-ring" id="cRing"></div>
+<div class="cursor-dot" id="cDot"></div>
+<script>
+(function(){
+  const dot=document.getElementById('cDot'), ring=document.getElementById('cRing');
+  if(!dot||!ring) return;
+  let mx=window.innerWidth/2, my=window.innerHeight/2;
+  let rx=mx, ry=my;
+  let shown=false;
+  window.addEventListener('pointermove', e=>{
+    if(e.pointerType && e.pointerType!=='mouse') return;
+    mx=e.clientX; my=e.clientY;
+    if(!shown){ shown=true; dot.classList.add('on'); ring.classList.add('on'); }
+    dot.style.transform=`translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+  }, {passive:true});
+  window.addEventListener('pointerleave', ()=>{ dot.classList.remove('on'); ring.classList.remove('on'); shown=false; });
+  window.addEventListener('blur', ()=>{ dot.classList.remove('on'); ring.classList.remove('on'); shown=false; });
+  function tick(){
+    rx += (mx-rx)*0.18; ry += (my-ry)*0.18;
+    ring.style.transform=`translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+    requestAnimationFrame(tick);
+  }
+  tick();
+  const hoverSel='a, button, .cta, .pill, .stat, .box, .phase, .step, iframe';
+  document.addEventListener('pointerover', e=>{
+    if(e.target.closest && e.target.closest(hoverSel)){ ring.classList.add('hover'); dot.classList.add('hover'); }
+  });
+  document.addEventListener('pointerout', e=>{
+    if(e.target.closest && e.target.closest(hoverSel)){ ring.classList.remove('hover'); dot.classList.remove('hover'); }
+  });
+})();
+</script>
+
+<script>
+(function(){
+  const I18N = {
+    'hero.kicker': { en: 'TikTok product design challenge · common app optimization · by Refaeli Ma',
+                     zh: 'TikTok 产品设计挑战 · 现有应用优化 · 作者 Refaeli Ma' },
+    'hero.h1':     { en: 'For You,<br>From Friends',
+                     zh: '朋友投喂<br><span class="en-sub">For You, From Friends</span>' },
+    'hero.sub':    { en: 'TikTok perfected the algorithm that guesses what you’ll watch. It never built the one thing an algorithm can’t do: a friend who knows exactly what’s <em>so you</em>.',
+                     zh: '算法猜你喜欢，朋友知道你喜欢。' },
+    'hero.pill.author':  { en: 'By Refaeli Ma',                     zh: '作者 Refaeli Ma' },
+    'hero.pill.product': { en: 'Product: TikTok',                   zh: '产品：TikTok' },
+    'hero.pill.surface': { en: 'One redesigned surface: the inbox', zh: '重新设计的一个界面：收件箱' },
+    'hero.pill.build':   { en: 'AI-collaborated build',             zh: 'AI 协作构建' },
+    'hero.cta':          { en: 'Try the prototype ↓',               zh: '体验原型 ↓' },
+
+    's01.kicker': { en: '01 · the brief',    zh: '01 · 命题' },
+    's01.h2':     { en: 'The assignment',    zh: '任务' },
+    's01.p1':     { en: 'Choose a product (TikTok, CapCut, or Instagram), find a real problem in its design, explain <em>why</em> it exists, and redesign at least one key point, shown as a working, high-fidelity, AI-coded prototype.',
+                    zh: '从 TikTok、CapCut 或 Instagram 中选一个产品，找出设计上真实存在的问题，解释它<em>为何</em>存在，并至少重新设计其中一个关键节点，最终以可交互的高保真、由 AI 编码的原型呈现。' },
+    's01.p2':     { en: 'I chose TikTok. Not the safe choice. The people grading this use it every day and have strong opinions, but that’s exactly why a sharp insight lands harder here than anywhere else. The rule I set myself: go deep on one defensible problem, not wide on a feed redesign nobody can falsify.',
+                    zh: '我选了 TikTok。这不是保险的选择，评审天天在用它，都有各自的强观点，但也正因如此，一个锐利的洞察在这里更有分量。我给自己定的规矩：把一个能站得住脚的问题挖深，而不是做一个无从证伪的信息流重设计。' },
+
+    's02.kicker': { en: '02 · the insight', zh: '02 · 洞察' },
+    's02.h2':     { en: 'Most people aren’t creators. They’re curators.',
+                    zh: '大多数人不是创作者，而是品味担当。' },
+    's02.lead':   { en: 'The dominant creative act on TikTok isn’t posting. It’s the <span class="accent">send</span>: passing a video to a friend or group chat, “this is so you.”',
+                    zh: 'TikTok 上最主流的"创作"行为并不是发布，而是<span class="accent">转发</span>，把一条视频甩给朋友或群聊："这就是你。"' },
+    's02.p':      { en: 'It started as a personal observation. My friends and I don’t post. We share. We half-compete over who sends the best stuff, “let me see if you sent anything good.” If most users never create, they never get likes, never build an identity on the platform. So what if the thing they <em>are</em> great at, having taste and knowing their friends, became something the product actually saw and rewarded?',
+                    zh: '起点是我自己的观察。我和朋友都不发视频，我们只转发，还半开玩笑地比谁转得更妙："我看看你有没有给我转好东西。"如果大多数用户从不创作，他们就永远拿不到点赞、也建立不起平台上的身份。那么，他们真正<em>擅长</em>的那件事（有品味、懂朋友），能不能被产品看见并被奖励呢？' },
+    's02.stat1.l': { en: 'of US adult TikTok users have <strong>ever</strong> posted a video, so about half never have',
+                     zh: '美国成年 TikTok 用户中<strong>发过</strong>视频的比例，也就是说约一半从未发过' },
+    's02.stat2.l': { en: 'of public videos come from the most active <strong>25%</strong> of users',
+                     zh: '公开视频来自最活跃的那<strong>25% 用户</strong>' },
+    's02.stat3.l': { en: 'of all outbound sharing happens on “dark social,” private channels rather than public posts',
+                     zh: '全部对外分享发生在私域渠道（英文里的 "dark social"），而不是公开发布' },
+
+    's03.kicker': { en: '03 · is this real?', zh: '03 · 这是真的吗？' },
+    's03.h2':     { en: 'The whole industry just pivoted here',
+                    zh: '整个行业刚刚集体转向了这里' },
+    's03.p':      { en: 'This isn’t a hunch anymore. It’s the biggest live shift in social product design, and it happened in the last year.',
+                    zh: '这早已不是直觉。这是社交产品设计眼下最大的一次转向，就发生在过去一年。' },
+    's03.quote':  { en: '“That feed is dead. People stopped sharing personal moments to feed years ago… The primary way people share now is in DMs.”<small>Adam Mosseri, Head of Instagram, December 2025</small>',
+                    zh: '"那个信息流已经死了。人们几年前就不再往信息流里发个人瞬间了……现在人们分享的主要方式，是私信。"<small>Adam Mosseri，Instagram 负责人，2025 年 12 月</small>' },
+    's03.box1.tag': { en: 'the signal',                     zh: '信号' },
+    's03.box1.h3':  { en: 'Sends already run the algorithm', zh: '转发早已在驱动算法' },
+    's03.box1.p':   { en: '“Share” is a documented For You ranking signal (TikTok, 2020). Instagram’s Mosseri calls “sends per reach” one of its biggest ranking signals. The platforms already know the send is the highest-intent action. They just don’t design <em>for</em> it.',
+                      zh: '"分享"是官方披露的 For You 排序信号（TikTok，2020）。Instagram 的 Mosseri 把"每次触达带来的转发数"称为最重要的排序信号之一。平台其实早就知道，转发是意图最强的动作。它们只是没有<em>为它</em>做设计。' },
+    's03.box2.tag': { en: 'the money follows retention', zh: '钱跟着留存走' },
+    's03.box2.h3':  { en: 'Friends keep you around',    zh: '朋友把你留下来' },
+    's03.box2.p':   { en: 'Friend-graph density is a classic retention lever. Facebook’s growth team famously found new users who reached <strong>7 friends in 10 days</strong> were far likelier to stay. A denser friend graph is worth more lifetime attention than any single feed tweak.',
+                      zh: '朋友图谱的密度是经典的留存杠杆。Facebook 增长团队有个广为流传的发现：<strong>10 天内加到 7 个朋友</strong>的新用户，留存率显著更高。一个更密的朋友图谱，比任何一次信息流微调都能换来更长的终身注意力。' },
+
+    's04.kicker': { en: '04 · why doesn’t it exist yet?', zh: '04 · 为什么它还不存在？' },
+    's04.h2':     { en: 'Because the friend layer kept getting built as a new surface',
+                    zh: '因为"朋友层"总是被做成一个新的独立入口' },
+    's04.p':      { en: 'Every time TikTok reached for “friends,” it built a <strong>new social surface</strong>, and each one struggled within a year. The lesson isn’t “friends don’t work.” It’s that new graphs tend to die, while enhancements to the existing share act tend to live.',
+                    zh: '每次 TikTok 想触及"朋友"，它就新造一个<strong>独立社交入口</strong>，而这些入口无一在一年内站稳。教训并不是"朋友这条路走不通"，而是新造图谱大多会死，反倒是给已有转发动作加成的做法能活下来。' },
+    's04.tl1.y':  { en: '2023 · retired',      zh: '2023 · 已下线' },
+    's04.tl1.d':  { en: '<strong>TikTok Now</strong>, the BeReal clone. Given a bottom-nav slot, gone in under a year.',
+                    zh: '<strong>TikTok Now</strong>，对标 BeReal 的复刻品。曾分到底部导航的一席，不到一年就消失。' },
+    's04.tl2.y':  { en: '2023 · walked back',  zh: '2023 · 已回撤' },
+    's04.tl2.d':  { en: '<strong>Friends tab</strong>, an algorithmic mutual-follow feed. Reconsidered within a year.',
+                    zh: '<strong>Friends 标签页</strong>，一个基于互关的算法信息流。不到一年就被重新考虑。' },
+    's04.tl3.y':  { en: '2025 · retired',      zh: '2025 · 已下线' },
+    's04.tl3.d':  { en: '<strong>TikTok Notes</strong>, an Instagram competitor. Shut down after about a year.',
+                    zh: '<strong>TikTok Notes</strong>，对标 Instagram 的产品。上线约一年即关停。' },
+    's04.tl4.y':  { en: 'survived',            zh: '存活至今' },
+    's04.tl4.d':  { en: '<strong>Repost</strong>, a lightweight action layered on the algorithm, not a new graph. The one that lived.',
+                    zh: '<strong>Repost</strong>，叠加在既有算法之上的轻量动作，不是新图谱。唯一活下来的那个。' },
+    's04.subh':   { en: 'I pressure-tested the idea against five objections',
+                    zh: '我用五个反对意见对这个想法做了压力测试' },
+    's04.obj1.tag': { en: 'objection', zh: '反对' },
+    's04.obj1.h3':  { en: '“The group chats aren’t even in TikTok.”', zh: '"群聊压根就不在 TikTok 里发生。"' },
+    's04.obj1.p':   { en: 'True, a lot of sharing lives in iMessage and WhatsApp. So we don’t try to trap it; we make the sharing that <em>does</em> happen in-app dramatically more rewarding, so more of it comes home.',
+                      zh: '确实，很多分享其实在 iMessage 和 WhatsApp 里发生。所以我们不去截流，而是让<em>已经</em>发生在应用内的那部分分享带来的回报显著提高，从而把更多分享吸回来。' },
+    's04.obj2.tag': { en: 'objection', zh: '反对' },
+    's04.obj2.h3':  { en: '“Snapchat / Blend already did this.”', zh: '"Snapchat / Blend 已经做过这件事了。"' },
+    's04.obj2.p':   { en: 'They built <em>algorithmic</em> shared feeds. Nobody rewards the human who deliberately picks “this is so you.” That’s the gap, covered just below.',
+                      zh: '他们做的是<em>算法拼接</em>的共享信息流。没人奖励那个真心挑出"这就是你"的人。这就是空缺，下面会展开。' },
+    's04.obj3.tag': { en: 'objection', zh: '反对' },
+    's04.obj3.h3':  { en: '“Scoring social behavior creates anxiety.”', zh: '"给社交行为打分会带来焦虑。"' },
+    's04.obj3.p':   { en: 'Snapchat Streaks are linked to documented teen stress; TikTok shipped anti-doomscroll features in Nov 2025. So this design is <strong>positive-only</strong>: no dislikes, no streaks, no public rank.',
+                      zh: 'Snapchat Streaks 与青少年压力有明确关联；TikTok 在 2025 年 11 月上线了对抗沉迷刷视频的功能。所以本方案<strong>只做正向</strong>：不设点踩、不设连击、不设公开排名。' },
+    's04.obj4.tag': { en: 'objection', zh: '反对' },
+    's04.obj4.h3':  { en: '“This doesn’t make money.”', zh: '"这不赚钱。"' },
+    's04.obj4.p':   { en: 'It grows sends (a ranking signal) and friend-graph density (a retention driver), and produces a higher-quality human taste signal. Retention is the business case.',
+                      zh: '它推高转发量（一个排序信号）与朋友图谱密度（一个留存驱动力），并沉淀更高质量的人类品味信号。留存本身就是商业价值。' },
+    's04.trade':    { en: 'Trade-off I made on purpose: I dropped the “meme-god leaderboard” from my first idea. A public competition is higher-ceiling but fights both the graveyard and the wellbeing evidence. Recognition beats competition here.',
+                      zh: '我特意做的取舍：把最初想法里的"梗神榜"砍掉了。公开排行的天花板更高，但既撞在独立入口"墓地"上，又撞在心理健康证据上。这里，认可比竞争更合适。' },
+
+    's05.kicker': { en: '05 · the gap nobody filled', zh: '05 · 无人填补的空缺' },
+    's05.h2':     { en: 'Algorithmic blending vs. human curation', zh: '算法拼接 vs. 人的精选' },
+    's05.p':      { en: 'Given a year of R&amp;D each, the two biggest companies in social both reached for the algorithm again. Neither honored the deliberate human act of choosing a video for a specific person.',
+                    zh: '各花一年做研发，两家社交巨头都再一次选择了算法。没有一家真正尊重"专门为某个人挑一条视频"这个人类动作。' },
+    's05.cmp.col2': { en: 'Instagram Blend / TikTok Shared Feed', zh: 'Instagram Blend / TikTok 共享信息流' },
+    's05.cmp.r1.a': { en: 'Who curates',                                     zh: '由谁精选' },
+    's05.cmp.r1.b': { en: 'The algorithm blends two people’s interests',      zh: '算法把两个人的兴趣拼在一起' },
+    's05.cmp.r1.c': { en: 'A real friend deliberately picks it for you',      zh: '真实的朋友专门为你挑一条' },
+    's05.cmp.r2.a': { en: 'The user’s role',                                  zh: '用户的角色' },
+    's05.cmp.r2.b': { en: 'Passive co-consumer',                              zh: '被动的联合观众' },
+    's05.cmp.r2.c': { en: 'Active curator with an identity',                  zh: '拥有身份的主动品味担当' },
+    's05.cmp.r3.a': { en: 'The signal',                                       zh: '信号' },
+    's05.cmp.r3.b': { en: '“What do these two have in common?”',              zh: '"这两个人有什么共同点？"' },
+    's05.cmp.r3.c': { en: '“What does a friend <em>know</em> you’d love?”',    zh: '"朋友<em>知道</em>你会喜欢什么？"' },
+    's05.cmp.r4.a': { en: 'Launched',                                         zh: '上线时间' },
+    's05.cmp.r4.b': { en: 'Blend Apr 2025 · Shared Feed Dec 2025',            zh: 'Blend 2025 年 4 月 · Shared Feed 2025 年 12 月' },
+    's05.cmp.r4.c': { en: 'The layer they both left open',                    zh: '两家都留白的那一层' },
+    's05.quote':  { en: 'They asked what the algorithm thinks two friends have in common. We ask what a friend <em>knows</em> about you that the algorithm never will.',
+                    zh: '他们问的是"算法认为两个朋友有什么共同点"。我们问的是"一个朋友<em>知道</em>你身上算法永远学不会的哪一面"。' },
+
+    's06.kicker': { en: '06 · the idea', zh: '06 · 想法' },
+    's06.h2':     { en: 'Turn the inbox into what it’s actually used for',
+                    zh: '让收件箱回到它真正被用来做的事上' },
+    's06.p':      { en: 'TikTok’s inbox is a chat UI wrapped around a behavior that isn’t chatting. It’s mostly videos friends sent you, flattened into gray bubbles and forgotten. We split it into <strong class="cy">From Friends</strong> (a swipeable feed of everything friends hand-picked for you, tagged by sender) and <strong>Chats</strong> (the rare real conversations). One positive gesture closes the loop.',
+                    zh: 'TikTok 的收件箱披着聊天的皮，包住的却根本不是"聊天"。里面绝大部分是朋友转来的视频，被压成灰色气泡然后被遗忘。我们把它拆成 <strong class="cy">From Friends</strong>（一个可滑动的信息流，装着朋友专门为你挑的视频，并注明发送人）和 <strong>Chats</strong>（少数真正的对话）。一个正向手势闭合整个回路。' },
+    's06.loop1.t': { en: 'Send',        zh: '发' },
+    's06.loop1.x': { en: 'pick a video, add “this is so you”', zh: '挑一条视频，加一句"这就是你"' },
+    's06.loop2.t': { en: 'Receive',     zh: '收' },
+    's06.loop2.x': { en: 'it lands in From Friends, tagged',  zh: '落到 From Friends，带标注' },
+    's06.loop3.t': { en: 'Recognize',   zh: '认' },
+    's06.loop3.x': { en: 'swipe right, a warm private ping',  zh: '右滑，一个温热的私密通知' },
+    's06.loop4.t': { en: 'Reciprocate', zh: '回' },
+    's06.loop4.x': { en: 'one tap to send something back',    zh: '一键回敬一条' },
+    's06.b1.tag': { en: 'placement',                zh: '位置' },
+    's06.b1.h3':  { en: 'Revives a dead surface',   zh: '复活一个已死的界面' },
+    's06.b1.p':   { en: 'Lives in the inbox, where TikTok already put Shared Feed, as a “From Friends / Chats” toggle. No new nav tab (that’s the graveyard).',
+                    zh: '落在收件箱里（TikTok 本来就把 Shared Feed 放在那），以"From Friends / Chats"切换的形式呈现。不做新的导航入口（那是墓地）。' },
+    's06.b2.tag': { en: 'gesture',                     zh: '手势' },
+    's06.b2.h3':  { en: 'Swipe up = next, right = “so me”', zh: '上滑 = 下一条，右滑 = "这就是我"' },
+    's06.b2.p':   { en: 'Vertical stays TikTok-native. Right is the one new positive gesture. There is no negative gesture, ever.',
+                    zh: '纵向依旧是 TikTok 的原生手势；右滑是唯一新增的正向手势。绝不引入负向手势。' },
+    's06.b3.tag': { en: 'the private party',           zh: '私下的小小庆祝' },
+    's06.b3.h3':  { en: 'Recognition, not competition', zh: '认可，而不是竞争' },
+    's06.b3.p':   { en: 'Credit is invisible by default. The system only ever sends good news: “Mario’s been vibing with your shares.”',
+                    zh: '认可默认是隐形的。系统只推送好消息："Mario 最近很吃你转的东西。"' },
+
+    's07.kicker': { en: '07 · the prototype', zh: '07 · 原型' },
+    's07.h2':     { en: 'Try it',             zh: '亲手试试' },
+    's07.p':      { en: 'A high-fidelity, AI-coded build of the core loop. Tap through the “what’s new” tour, then swipe up for the next clip, or right for “this is so me,” and watch the sender get credited.',
+                    zh: '核心回路的高保真原型，由 AI 编码。先点完"新功能"引导，然后上滑看下一条、右滑说"这就是我"，看看发送人如何被点亮。（原型内的界面保持英文。）' },
+    's07.hint':   { en: 'Best experienced with sound-off autoplay · <a href="prototype.html" target="_blank">open full screen ↗</a>',
+                    zh: '建议在无声自动播放下体验 · <a href="prototype.html" target="_blank">全屏打开 ↗</a>' },
+
+    's08.kicker': { en: '08 · impact &amp; value', zh: '08 · 影响与价值' },
+    's08.h2':     { en: 'Who wins, and the balance', zh: '谁受益，以及权衡' },
+    's08.b1.tag': { en: 'for the user',              zh: '对用户' },
+    's08.b1.h3':  { en: 'Status without pressure',   zh: '有身份，无压力' },
+    's08.b1.p':   { en: 'The roughly half who never post get a creative identity as curators. Received shares stop dying. A reason to open the app that’s connection, not doomscroll.',
+                    zh: '从不发布的那约一半人拥有了"品味担当"这个创作身份。别人转来的视频不再石沉大海。打开 App 的理由，是连接，而不是无止境地刷。' },
+    's08.b2.tag': { en: 'for the creator',                zh: '对创作者' },
+    's08.b2.h3':  { en: 'A high-trust distribution lane', zh: '一条高信任的分发通道' },
+    's08.b2.p':   { en: '“Send this to someone” finally has a destination. Content that resonates travels through friend networks, a discovery path the pure algorithm doesn’t offer smaller creators.',
+                    zh: '"转给某个人"终于有了归宿。真正打动人心的内容会顺着朋友网络传播，这是纯算法给不了中小创作者的一条发现路径。' },
+    's08.b3.tag': { en: 'for the business',       zh: '对业务' },
+    's08.b3.h3':  { en: 'Retention, not just reach', zh: '留存，不只是触达' },
+    's08.b3.p':   { en: 'Grows sends (a ranking signal) and friend-graph density (a retention driver), and yields a higher-quality human taste signal to improve recommendations.',
+                    zh: '推高转发量（排序信号）与朋友图谱密度（留存驱动力），并沉淀更优质的人类品味信号，反哺推荐。' },
+    's08.balance.tag': { en: 'balancing business vs. wellbeing', zh: '在商业与用户福祉之间取平衡' },
+    's08.balance.h3':  { en: 'Engagement from connection, not anxiety', zh: '让活跃来自连接，而不是焦虑' },
+    's08.balance.p':   { en: 'I deliberately chose recognition over competition, positive-only over dislikes, invisible-by-default over public scores, and capped data use at “better experience.” The engagement gains are designed to come from deeper friendships, the healthy kind of retention, not manufactured compulsion.',
+                        zh: '我有意选择了：认可胜过竞争、只做正向反馈胜过引入点踩、默认隐形胜过公开评分、数据使用只用到"体验更好"为止。活跃度的提升被设计为来自更深的友情，这是健康的留存，不是人造的沉迷。' },
+
+    's09.kicker': { en: '09 · the plan',            zh: '09 · 计划' },
+    's09.h2':     { en: 'What ships, and what tracks it', zh: '上线什么，如何度量' },
+    's09.mvp.h3': { en: 'MVP',   zh: 'MVP' },
+    's09.mvp.badge': { en: 'now', zh: '首发' },
+    's09.mvp.li1': { en: 'Inbox “From Friends / Chats” toggle (feed default)',      zh: '收件箱增加"From Friends / Chats"切换（默认 feed）' },
+    's09.mvp.li2': { en: 'Meshed swipe feed, sender-tagged, optional captions',      zh: '可滑动的合并信息流，标注发送人，可选加句' },
+    's09.mvp.li3': { en: 'Swipe-right “this is so me” to a private ping',            zh: '右滑触发"这就是我"，转化为私密通知' },
+    's09.mvp.li4': { en: '“What’s new” quick tour',                                   zh: '"新功能"快速引导' },
+    's09.p2.h3':  { en: 'Phase 2', zh: '第二阶段' },
+    's09.p2.badge': { en: 'next',  zh: '接下来' },
+    's09.p2.li1': { en: 'Opt-in Curator badge (comparison-free)',   zh: '可选开启的"品味担当"徽章（无比较）' },
+    's09.p2.li2': { en: 'Group “meme-god,” celebratory and rotating', zh: '群聊"梗神"，庆祝式、每月轮换' },
+    's09.p2.li3': { en: 'Per-chat shared archives',                  zh: '每段聊天下的共享档案' },
+    's09.p2.li4': { en: 'Curator identity on profile',               zh: '个人主页上的品味担当身份' },
+    's09.p3.h3':  { en: 'Phase 3', zh: '第三阶段' },
+    's09.p3.badge': { en: 'vision', zh: '远景' },
+    's09.p3.li1': { en: 'Taste-graph flywheel to better recs',             zh: '品味图谱飞轮，反哺推荐' },
+    's09.p3.li2': { en: 'Creator “send to someone” CTAs',                   zh: '创作者可放置"转给某个人"的 CTA' },
+    's09.p3.li3': { en: 'Resonance-based distribution for small creators',  zh: '面向中小创作者的共鸣型分发' },
+    's09.events.h3': { en: 'Events to track', zh: '需要追踪的埋点' },
+    's09.north':  { en: 'North star: sends per active user each week. Guardrail: by design, no negative-signal events exist to farm.',
+                    zh: '北极星：每周每活跃用户的转发数。护栏：整个设计里不存在可被"刷"的负向信号事件。' },
+    's09.cta':    { en: 'Read the full PRD ↗', zh: '阅读完整 PRD ↗' },
+
+    's10.kicker': { en: '10 · phase 2, in pixels',      zh: '10 · 第二阶段，落到像素' },
+    's10.h2':     { en: 'What the curator identity looks like', zh: '品味担当的身份长什么样' },
+    's10.p':      { en: 'The four Phase 2 bullets above, made concrete. Every screen keeps the same guardrails: comparison-free, positive-only, opt-in by default.',
+                    zh: '上面第二阶段的四条要点，落地为具体屏幕。每一屏都坚持同一套护栏：无比较、只做正向、默认自愿开启。' },
+    's10.c1.lbl': { en: 'You&rsquo;re a Curator',        zh: '你是品味担当' },
+    's10.c1.sub': { en: '12 friends vibed with your picks', zh: '12 位朋友很吃你转的东西' },
+    's10.c1.h4':  { en: 'Badge unlock',                  zh: '徽章解锁' },
+    's10.c1.p':   { en: 'Earned by real friends, opt-in to show.', zh: '由真实朋友解锁，是否展示由你决定。' },
+    's10.c2.sub': { en: 'your taste landed this month',  zh: '本月你的品味被认可的次数' },
+    's10.c2.chip':{ en: '&#11088; Curator',              zh: '&#11088; 品味担当' },
+    's10.c2.h4':  { en: 'Curator profile',               zh: '品味担当主页' },
+    's10.c2.p':   { en: 'Status without posting. Taste is the identity.', zh: '无需发帖也有身份，品味就是身份。' },
+    's10.c3.lead':{ en: 'March&rsquo;s curator',         zh: '三月的品味担当' },
+    's10.c3.sub': { en: 'rotates monthly &middot; all love', zh: '每月轮换 · 只有爱' },
+    's10.c3.h4':  { en: 'Group &ldquo;meme-god&rdquo;',   zh: '群聊"梗神"' },
+    's10.c3.p':   { en: 'A crown you can lose, so it stays fun.', zh: '可以丢掉的王冠，所以永远好玩。' },
+    's10.c4.h4':  { en: 'Shared archive',                zh: '共享档案' },
+    's10.c4.p':   { en: 'Every video you two ever traded.', zh: '你俩曾经互传的每一条视频。' },
+    's10.cta':    { en: 'See the annotated screens &rarr;', zh: '查看带注释的屏幕 →' },
+
+    's11.kicker': { en: '11 · how this was made', zh: '11 · 这是怎么做出来的' },
+    's11.h2':     { en: 'Human + AI, in the open', zh: '人 + AI，全程透明' },
+    's11.p':      { en: 'This was built as a collaboration. I brought the product judgment and the calls; AI acted as a skeptical partner that researched, pressure-tested, and built, so I could move from a hunch to an evidenced, prototyped concept fast.',
+                    zh: '这是一次协作的产物。我负责产品判断和取舍；AI 扮演一个持怀疑态度的搭档，做研究、做压力测试、写代码，让我能从一个直觉迅速走到有证据、有原型的方案。' },
+    's11.b1.who': { en: 'what I drove',   zh: '我主导的部分' },
+    's11.b1.h3':  { en: 'The thinking',   zh: '思考' },
+    's11.b1.p':   { en: 'The core insight, the decision to reject a feed redesign, the call to drop the public leaderboard, the inbox placement, the “feed as default,” and every gesture and copy decision.',
+                    zh: '核心洞察、否掉"重做信息流"的决定、砍掉公开排行榜的决定、放在收件箱的选择、"feed 为默认"的定调，以及每一个手势与文案的决定。' },
+    's11.b2.who': { en: 'what AI drove',  zh: 'AI 主导的部分' },
+    's11.b2.h3':  { en: 'The legwork',    zh: '跑腿的活' },
+    's11.b2.p':   { en: 'Five parallel research passes (the graveyard, dark-social data, pain points, competitor teardown), adversarial pressure-testing of my idea, and the coded high-fidelity prototype.',
+                    zh: '五路并行的研究（产品墓地、私域分享数据、痛点、竞品拆解）、对我想法的对抗式压力测试，以及那份高保真的代码原型。' },
+    's11.footer': { en: 'The most useful thing AI did wasn’t agree with me. It was pointing five loaded objections at my first idea until only the defensible version survived.',
+                    zh: 'AI 最有用的，不是附和我，而是把五个尖锐的反对意见对准我的第一个想法，直到只剩下站得住脚的那一版。' },
+
+    'f.sources':  { en: 'Sources: Pew Research (2024) · RadiumOne (2016) &amp; SparkToro (2023) on dark social · TikTok Newsroom · <a href="https://om.co/2026/01/01/what-is-instagrams-adam-mosseri-really-saying-in-his-year-end-memo/" target="_blank">Mosseri memo (Dec 2025)</a> · TechCrunch (TikTok Now / Notes / Friends tab) · Bureau of Investigative Journalism (Snap Streaks, 2025).',
+                    zh: '资料来源：Pew Research（2024）· RadiumOne（2016）与 SparkToro（2023）关于 "dark social" 的研究 · TikTok Newsroom · <a href="https://om.co/2026/01/01/what-is-instagrams-adam-mosseri-really-saying-in-his-year-end-memo/" target="_blank">Mosseri 年终备忘（2025 年 12 月）</a> · TechCrunch（关于 TikTok Now / Notes / Friends 标签页）· Bureau of Investigative Journalism（Snap Streaks，2025）。' },
+    'f.credit':   { en: 'For You, From Friends · TikTok design challenge · built with AI collaboration',
+                    zh: 'For You, From Friends · TikTok 设计挑战 · 由 AI 协作完成' },
+    'f.byline':   { en: 'By <strong style="color:#fff;">Refaeli Ma</strong> · July 2026',
+                    zh: '作者 <strong style="color:#fff;">Refaeli Ma</strong> · 2026 年 7 月' }
+  };
+
+  function apply(lang){
+    document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : 'en';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const entry = I18N[key];
+      if(entry && entry[lang] != null) el.innerHTML = entry[lang];
+    });
+    document.querySelectorAll('#langToggle button').forEach(b => {
+      b.classList.toggle('on', b.getAttribute('data-lang') === lang);
+    });
+    try{ localStorage.setItem('caseStudyLang', lang); }catch(e){}
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('#langToggle button').forEach(b => {
+      b.addEventListener('click', () => apply(b.getAttribute('data-lang')));
+    });
+    let saved = null;
+    try{ saved = localStorage.getItem('caseStudyLang'); }catch(e){}
+    apply(saved === 'zh' ? 'zh' : 'en');
+  });
+})();
+</script>
+
+
+<!-- ══════════════════════════════════════
+     PORTFOLIO CHROME SCRIPTS
+     Progress bar + back-to-top toggle + mobile burger + nav letter-
+     spread. Same recipes as cs-vz-id-arch.html / design-challenges.html.
+══════════════════════════════════════ -->
+<script>
+/* ── PROGRESS BAR + BACK-TO-TOP ── */
+(function () {
+  var prog = document.getElementById('prog');
+  var bt   = document.getElementById('back-top');
+  window.addEventListener('scroll', function () {
+    var t = window.scrollY;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    if (prog) prog.style.width = (h > 0 ? (t / h * 100) : 0) + '%';
+    if (bt)   bt.classList.toggle('visible', t > 500);
+  }, { passive: true });
+  if (bt) bt.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}());
+
+/* ── NAV LETTER-SPREAD on hover ── */
+(function () {
+  function wrapLetters(el) {
+    Array.prototype.slice.call(el.childNodes).forEach(function (node) {
+      if (node.nodeType !== Node.TEXT_NODE) return;
+      var text = node.textContent;
+      if (!text.trim()) return;
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < text.length; i++) {
+        var ch = text.charAt(i);
+        if (ch === ' ') { frag.appendChild(document.createTextNode(' ')); continue; }
+        var span = document.createElement('span');
+        span.className = 'nav-letter';
+        span.style.setProperty('--i', i);
+        span.style.setProperty('--n', text.length);
+        span.textContent = ch;
+        frag.appendChild(span);
+      }
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+  /* Only the logo gets letter-spread — matches cs-vz-id-arch. Wrapping
+     .nav-back mangled its "Design Challenges" whitespace because the
+     raw text node includes indentation newlines that the loop treats
+     as characters. */
+  document.querySelectorAll('.nav-logo').forEach(wrapLetters);
+}());
+
+/* ── SPOTLIGHT GLOW on tiles — same pattern as design-challenges /
+   nav-dropdown cards. Tags every .stat / .box / .step / .phase with
+   .spotlight-glow so the ::before / ::after painted layers activate,
+   auto-adds .tt-cyan to tiles that already have a cyan accent
+   (.cyan / .m modifier), then updates each tile's --x / --y on
+   pointermove so the halo tracks the cursor. */
+(function () {
+  var tiles = document.querySelectorAll('.stat, .box, .loop .step, .phase');
+  if (!tiles.length) return;
+  tiles.forEach(function (el) {
+    el.classList.add('spotlight-glow');
+    if (el.classList.contains('cyan') || el.classList.contains('m')) {
+      el.classList.add('tt-cyan');
+    }
+  });
+  var pending = false, lastX = 0, lastY = 0;
+  function tick() {
+    pending = false;
+    tiles.forEach(function (card) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--x', (lastX - r.left).toFixed(2));
+      card.style.setProperty('--y', (lastY - r.top).toFixed(2));
+    });
+  }
+  document.addEventListener('pointermove', function (e) {
+    lastX = e.clientX; lastY = e.clientY;
+    if (!pending) { pending = true; requestAnimationFrame(tick); }
+  }, { passive: true });
+}());
+
+/* ── IN-PAGE SIDENAV — smooth-scroll on click, active tracking on
+   scroll. Same recipe as cs-vz-id-arch. */
+(function () {
+  var snav = document.getElementById('cs-sidenav');
+  if (!snav) return;
+  var targets = ['overview', 'insight', 'idea', 'prototype', 'impact', 'roadmap'];
+
+  snav.querySelectorAll('.cs-sidenav-dot').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var el = document.getElementById(btn.dataset.target);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  function update() {
+    var active = targets[0];
+    var offset = window.innerHeight * 0.45;
+    targets.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top < offset) active = id;
+    });
+    snav.querySelectorAll('.cs-sidenav-dot').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.target === active);
+    });
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update, { passive: true });
+  update();
+}());
+
+/* ── MOBILE NAV — burger toggle ── */
+(function () {
+  var burger = document.getElementById('nav-burger');
+  var mobNav = document.getElementById('mob-nav');
+  if (!burger || !mobNav) return;
+  burger.addEventListener('click', function () {
+    var open = mobNav.classList.toggle('open');
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open);
+    mobNav.setAttribute('aria-hidden', !open);
+  });
+  mobNav.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      mobNav.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded', false);
+      mobNav.setAttribute('aria-hidden', true);
+    });
+  });
+}());
+</script>
+</body>
+</html>

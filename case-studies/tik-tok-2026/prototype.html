@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You, From Friends · Prototype</title>
+<style>
+  :root{
+    --tt-red:#FE2C55; --tt-cyan:#25F4EE; --ink:#0b0b0f; --paper:#f1f1f4;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 800px at 50% -10%, #1c1c26 0%, #0b0b0f 55%, #060608 100%);
+    color:#fff; min-height:100%; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; padding:28px 16px; gap:18px;
+  }
+  .caption-top{text-align:center; max-width:340px;}
+  .caption-top h1{font-size:16px; font-weight:600; letter-spacing:-0.2px;}
+  .caption-top p{font-size:13px; color:#9a9aa8; margin-top:4px; line-height:1.5;}
+
+  /* ---- phone ---- */
+  .phone{
+    position:relative; width:375px; height:770px; border-radius:44px; background:#000;
+    padding:11px; box-shadow:0 40px 90px -30px rgba(0,0,0,.8), 0 0 0 2px #2a2a33, inset 0 0 0 2px #000;
+  }
+  .screen{
+    position:relative; width:100%; height:100%; border-radius:34px; overflow:hidden;
+    background:#000; display:flex; flex-direction:column;
+  }
+  .notch{position:absolute; top:11px; left:50%; transform:translateX(-50%); width:120px; height:26px;
+    background:#000; border-radius:0 0 16px 16px; z-index:60;}
+  .statusbar{position:relative; z-index:55; display:flex; justify-content:space-between; align-items:center;
+    padding:12px 22px 4px; font-size:13px; font-weight:600; letter-spacing:.2px;}
+  .statusbar .r{display:flex; gap:6px; align-items:center; font-size:12px;}
+
+  /* ---- header + toggle ---- */
+  header{position:relative; z-index:40; padding:6px 16px 10px;}
+  .h-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
+  .h-row .ttl{font-size:19px; font-weight:700; letter-spacing:-0.3px;}
+  .h-row .ic{display:flex; gap:16px; color:#eaeaef; font-size:19px; opacity:.85;}
+  .seg{position:relative; display:flex; background:rgba(255,255,255,.08); border-radius:12px; padding:4px;}
+  .seg button{flex:1; position:relative; z-index:2; background:none; border:none; color:#9a9aa8;
+    font-size:14px; font-weight:600; padding:9px 0; cursor:pointer; transition:color .25s; font-family:inherit;}
+  .seg button.on{color:#fff;}
+  .seg .pill{position:absolute; z-index:1; top:4px; left:4px; width:calc(50% - 4px); height:calc(100% - 8px);
+    background:linear-gradient(135deg,#2b2b36,#1c1c24); border-radius:9px;
+    box-shadow:0 2px 10px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.06);
+    transition:transform .32s cubic-bezier(.5,1.4,.5,1);}
+  .seg .pill.right{transform:translateX(100%);}
+  .seg .dot{display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--tt-red);
+    margin-left:6px; vertical-align:middle; box-shadow:0 0 8px var(--tt-red);}
+
+  /* ---- feed / deck ---- */
+  .body{position:relative; flex:1; overflow:hidden;}
+  .deck{position:absolute; inset:12px 14px 0; }
+  .card{
+    position:absolute; inset:0; border-radius:22px; overflow:hidden; cursor:grab;
+    box-shadow:0 24px 50px -20px rgba(0,0,0,.7);
+    will-change:transform; touch-action:none;
+  }
+  .card:active{cursor:grabbing;}
+  .card .vid{position:absolute; inset:0;}
+  .card video.vid{width:100%; height:100%; object-fit:cover;}
+  .card .glyph{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:150px; opacity:.30; filter:saturate(1.2);}
+  .card .scrim{position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,.28) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,0) 52%, rgba(0,0,0,.72) 100%);}
+  .card .shine{position:absolute; inset:0; opacity:.5;
+    background:radial-gradient(600px 300px at 78% 12%, rgba(255,255,255,.16), transparent 60%);}
+
+  /* sender chip (the hero element) */
+  .sender{position:absolute; top:14px; left:14px; right:14px; z-index:5; display:flex; gap:10px; align-items:flex-start;}
+  .sender .av{width:38px; height:38px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:15px; color:#fff; box-shadow:0 0 0 2px rgba(255,255,255,.9), 0 4px 12px rgba(0,0,0,.4);}
+  .sender .meta{background:rgba(10,10,14,.42); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+    border-radius:14px; padding:7px 12px; border:1px solid rgba(255,255,255,.12);}
+  .sender .who{font-size:13px; font-weight:600; line-height:1.2;}
+  .sender .who b{color:#fff;} .sender .who span{color:#c7c7d1; font-weight:500;}
+  .sender .note{font-size:14px; color:#fff; margin-top:2px; font-weight:500;}
+
+  /* bottom creator info */
+  .creator{position:absolute; left:14px; right:70px; bottom:16px; z-index:5;}
+  .creator .handle{font-size:15px; font-weight:700; letter-spacing:-0.2px;}
+  .creator .desc{font-size:13px; color:#e9e9ef; margin-top:5px; line-height:1.35; opacity:.95;}
+  .creator .sound{display:inline-flex; gap:7px; align-items:center; margin-top:9px; font-size:12px; color:#eaeaef;
+    background:rgba(0,0,0,.25); padding:4px 10px; border-radius:20px;}
+
+  /* right action rail */
+  .rail{position:absolute; right:10px; bottom:16px; z-index:5; display:flex; flex-direction:column; gap:16px; align-items:center;}
+  .rail .a{display:flex; flex-direction:column; align-items:center; gap:3px;}
+  .rail .a .b{width:40px; height:40px; border-radius:50%; background:rgba(20,20,26,.35); backdrop-filter:blur(4px);
+    display:flex; align-items:center; justify-content:center; font-size:19px;}
+  .rail .a .n{font-size:11px; color:#e9e9ef; font-weight:600;}
+
+  /* "SO ME" stamp shown while dragging right */
+  .stamp{position:absolute; top:96px; left:22px; z-index:8; transform:rotate(-14deg) scale(.9); opacity:0;
+    border:3px solid var(--tt-cyan); color:var(--tt-cyan); font-weight:800; font-size:26px; letter-spacing:1px;
+    padding:6px 14px; border-radius:12px; text-shadow:0 0 12px rgba(37,244,238,.5); background:rgba(0,0,0,.15);
+    transition:opacity .1s;}
+  .stamp.skip{left:auto; right:22px; transform:rotate(14deg) scale(.9); border-color:#9a9aa8; color:#cfcfd6; text-shadow:none;}
+
+  .progress{position:absolute; top:0; left:0; right:0; height:3px; z-index:6; background:rgba(255,255,255,.16);}
+  .progress i{display:block; height:100%; width:38%; background:#fff; border-radius:2px;}
+
+  /* floating "this is so me" button on the card */
+  .some-fab{position:absolute; z-index:9; left:50%; bottom:20px; transform:translateX(-50%);
+    display:inline-flex; align-items:center; gap:8px; padding:13px 24px; border-radius:28px; white-space:nowrap;
+    background:linear-gradient(135deg,var(--tt-red),#ff5c7a); color:#fff; font-weight:700; font-size:15px;
+    border:none; cursor:pointer; font-family:inherit;
+    box-shadow:0 14px 30px -8px var(--tt-red), 0 0 0 4px rgba(254,44,85,.16);}
+  .some-fab:active{transform:translateX(-50%) scale(.94);}
+  .some-fab .h{font-size:17px;}
+
+  /* first-run gesture coach marks (fade after first use) */
+  .coach{position:absolute; inset:0; z-index:8; pointer-events:none; transition:opacity .45s;}
+  .coach.gone{opacity:0;}
+  .coach .cue{position:absolute; display:flex; flex-direction:column; align-items:center; gap:5px;
+    color:#fff; font-size:12px; font-weight:700; text-shadow:0 1px 8px rgba(0,0,0,.75);}
+  .coach .cue .chev{font-size:32px; line-height:1;}
+  .coach .up{left:50%; bottom:150px; transform:translateX(-50%);}
+  .coach .right{right:22px; top:42%; transform:translateY(-50%);}
+  .coach .up .chev{animation:bobUp 1.25s ease-in-out infinite;}
+  .coach .right .chev{animation:bobRight 1.25s ease-in-out infinite;}
+  @keyframes bobUp{0%,100%{transform:translateY(0);opacity:.4} 50%{transform:translateY(-13px);opacity:1}}
+  @keyframes bobRight{0%,100%{transform:translateX(0);opacity:.4} 50%{transform:translateX(13px);opacity:1}}
+
+  /* toast + incoming banner */
+  .toast{position:absolute; z-index:70; bottom:118px; left:50%; transform:translateX(-50%) translateY(14px);
+    background:rgba(20,20,26,.92); border:1px solid rgba(255,255,255,.12); backdrop-filter:blur(10px);
+    padding:10px 16px; border-radius:16px; font-size:13.5px; font-weight:500; opacity:0; transition:.3s; white-space:nowrap;
+    box-shadow:0 12px 30px rgba(0,0,0,.5);}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .toast b{color:var(--tt-cyan);}
+  .banner{position:absolute; z-index:75; top:52px; left:12px; right:12px; display:flex; gap:11px; align-items:center;
+    background:rgba(28,28,36,.94); border:1px solid rgba(255,255,255,.12); backdrop-filter:blur(12px);
+    padding:11px 13px; border-radius:18px; transform:translateY(-140%); transition:transform .45s cubic-bezier(.4,1.3,.5,1);
+    box-shadow:0 16px 36px rgba(0,0,0,.5);}
+  .banner.show{transform:translateY(0);}
+  .banner .bi{width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--tt-red),#ff5c7a);
+    display:flex; align-items:center; justify-content:center; font-size:17px; flex:none;}
+  .banner .bt{font-size:13px; line-height:1.35;}
+  .banner .bt b{font-weight:700;}
+  .banner .bt small{color:#9a9aa8; font-size:11.5px; display:block; margin-top:1px;}
+
+  /* heart burst */
+  .burst{position:absolute; z-index:150; left:50%; top:44%; pointer-events:none;}
+  .burst span{position:absolute; font-size:22px; opacity:0;}
+
+  /* empty state */
+  .empty{position:absolute; inset:12px 14px 0; border-radius:22px; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; text-align:center; gap:12px; background:rgba(255,255,255,.03); border:1px dashed rgba(255,255,255,.14);
+    opacity:0; pointer-events:none; transition:.4s; padding:24px;}
+  .empty.show{opacity:1;}
+  .empty .e-emoji{font-size:44px;}
+  .empty h3{font-size:17px; font-weight:700;}
+  .empty p{font-size:13.5px; color:#9a9aa8; line-height:1.5; max-width:230px;}
+  .empty button{margin-top:6px; background:rgba(255,255,255,.1); color:#fff; border:none; padding:10px 20px; border-radius:20px;
+    font-family:inherit; font-weight:600; font-size:13px; cursor:pointer;}
+
+  /* ---- chats view ---- */
+  .chats{position:absolute; inset:0; padding:4px 8px; overflow-y:auto; display:none;}
+  .chats.on{display:block;}
+  .chatrow{display:flex; gap:12px; align-items:center; padding:11px 10px; border-radius:14px;}
+  .chatrow:active{background:rgba(255,255,255,.05);}
+  .chatrow .av{width:50px; height:50px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:18px; color:#fff;}
+  .chatrow .c{flex:1; min-width:0;}
+  .chatrow .c .nm{font-size:15px; font-weight:600; display:flex; align-items:center; gap:6px;}
+  .chatrow .c .pv{font-size:13px; color:#9a9aa8; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .chatrow .c .pv i{color:var(--tt-cyan); font-style:normal;}
+  .chatrow .t{font-size:11.5px; color:#6f6f7a; flex:none;}
+  .chatrow .unread{width:9px; height:9px; border-radius:50%; background:var(--tt-red); flex:none;}
+  .chat-hint{text-align:center; font-size:12px; color:#6f6f7a; padding:14px 20px 4px; line-height:1.5;}
+
+  /* ---- nav ---- */
+  .nav{position:relative; z-index:30; display:flex; justify-content:space-around; align-items:center;
+    padding:8px 6px 14px; background:#000; border-top:1px solid rgba(255,255,255,.06);}
+  .nav a{display:flex; flex-direction:column; align-items:center; gap:3px; font-size:10px; color:#8a8a94; font-weight:600;}
+  .nav a.mid{color:#fff;}
+  .nav a .g{font-size:20px;}
+  .nav a.active{color:#fff;}
+  .nav .plus{width:44px; height:29px; border-radius:9px; background:#fff; color:#000; display:flex; align-items:center;
+    justify-content:center; font-size:22px; font-weight:700; position:relative;
+    box-shadow:-3px 0 0 var(--tt-cyan), 3px 0 0 var(--tt-red);}
+
+  /* ---- tour overlay ---- */
+  .tour{position:absolute; inset:0; z-index:100; background:rgba(4,4,8,.72); backdrop-filter:blur(3px);
+    display:flex; flex-direction:column; justify-content:flex-end; padding:22px; transition:opacity .3s;}
+  .tour.hide{opacity:0; pointer-events:none;}
+  .tour .sheet{background:linear-gradient(180deg,#1b1b22,#141419); border:1px solid rgba(255,255,255,.1);
+    border-radius:24px; padding:22px 20px 18px; box-shadow:0 30px 60px rgba(0,0,0,.6);}
+  .tour .tag{display:inline-block; font-size:11px; font-weight:700; letter-spacing:1.2px; color:var(--tt-cyan);
+    text-transform:uppercase; margin-bottom:10px;}
+  .tour .emoji{font-size:34px; margin-bottom:8px;}
+  .tour h2{font-size:21px; font-weight:700; letter-spacing:-0.4px; line-height:1.2;}
+  .tour p{font-size:14px; color:#b6b6c2; line-height:1.55; margin-top:8px;}
+  .tour .foot{display:flex; align-items:center; justify-content:space-between; margin-top:20px;}
+  .tour .dots{display:flex; gap:6px;}
+  .tour .dots i{width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.22);}
+  .tour .dots i.on{background:#fff; width:20px; border-radius:4px;}
+  .tour .btns{display:flex; gap:10px; align-items:center;}
+  .tour .skip{background:none; border:none; color:#8a8a94; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer;}
+  .tour .go{background:#fff; color:#000; border:none; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer;
+    padding:11px 22px; border-radius:22px;}
+  @media (max-height:820px){ .phone{transform:scale(.92); transform-origin:top center;} }
+</style>
+</head>
+<body>
+
+  <div class="caption-top">
+    <h1>For You, From Friends</h1>
+    <p>Swipe up for the next one, or right for “this is so me”. Buttons work too.</p>
+  </div>
+
+  <div class="phone">
+    <div class="screen">
+      <div class="notch"></div>
+      <div class="statusbar">
+        <span>9:41</span>
+        <span class="r">&#9679;&#9679;&#9679; &nbsp;&#128246;&nbsp; &#128267;</span>
+      </div>
+
+      <header>
+        <div class="h-row">
+          <div class="ttl">Inbox</div>
+          <div class="ic"><span>&#9993;&#65039;</span><span>&#128276;</span></div>
+        </div>
+        <div class="seg">
+          <div class="pill" id="pill"></div>
+          <button class="on" id="segFriends" onclick="setView('friends')">From Friends<span class="dot"></span></button>
+          <button id="segChats" onclick="setView('chats')">Chats</button>
+        </div>
+      </header>
+
+      <div class="body">
+        <!-- FEED -->
+        <div class="deck" id="deck"></div>
+
+        <div class="empty" id="empty">
+          <div class="e-emoji">&#128075;</div>
+          <h3>You’re all caught up</h3>
+          <p>New picks from your friends will land right here. Nothing to doomscroll, just the good stuff people chose for you.</p>
+          <button onclick="restart()">Replay demo</button>
+        </div>
+
+        <!-- CHATS -->
+        <div class="chats" id="chats">
+          <div class="chat-hint">Notice how many of these are just shared videos, that’s the whole point.</div>
+          <div class="chatrow" id="c1">
+            <div class="av" style="background:linear-gradient(135deg,#FE2C55,#ff7a90)">M</div>
+            <div class="c"><div class="nm">Milo</div><div class="pv"><i>&#127925; sent a video</i> · “new obsession”</div></div>
+            <div class="t">now</div><div class="unread"></div>
+          </div>
+          <div class="chatrow">
+            <div class="av" style="background:linear-gradient(135deg,#7C5CFF,#25F4EE)">B</div>
+            <div class="c"><div class="nm">the boys &#127866;</div><div class="pv"><i>&#127909; Dana sent a video</i> · Sam: “LMAOO”</div></div>
+            <div class="t">2m</div><div class="unread"></div>
+          </div>
+          <div class="chatrow">
+            <div class="av" style="background:linear-gradient(135deg,#1D9E75,#25F4EE)">D</div>
+            <div class="c"><div class="nm">Dana</div><div class="pv"><i>&#127909; sent a video</i> · “literally us”</div></div>
+            <div class="t">18m</div>
+          </div>
+          <div class="chatrow">
+            <div class="av" style="background:linear-gradient(135deg,#FF9F27,#FE2C55)">S</div>
+            <div class="c"><div class="nm">Sam</div><div class="pv">ok but for real are we booking Lisbon</div></div>
+            <div class="t">1h</div>
+          </div>
+          <div class="chatrow">
+            <div class="av" style="background:linear-gradient(135deg,#378ADD,#7C5CFF)">P</div>
+            <div class="c"><div class="nm">Priya</div><div class="pv"><i>&#127909; sent a video</i> · “so cozy, so you”</div></div>
+            <div class="t">3h</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+      <div class="banner" id="banner">
+        <div class="bi">&#10024;</div>
+        <div class="bt" id="bannerText"></div>
+      </div>
+      <div class="burst" id="burst"></div>
+
+      <div class="nav">
+        <a class="active"><span class="g">&#127968;</span>Home</a>
+        <a><span class="g">&#128101;</span>Friends</a>
+        <a class="mid"><span class="plus">+</span></a>
+        <a class="mid"><span class="g">&#9993;&#65039;</span>Inbox</a>
+        <a><span class="g">&#128100;</span>Profile</a>
+      </div>
+
+      <!-- TOUR -->
+      <div class="tour" id="tour">
+        <div class="sheet">
+          <span class="tag" id="tourTag">What’s new · 1 of 3</span>
+          <div class="emoji" id="tourEmoji">&#128236;</div>
+          <h2 id="tourTitle">Your inbox is now a feed</h2>
+          <p id="tourBody">Everything your friends sent you, gathered in one place. Swipe up to browse the videos people picked just for you.</p>
+          <div class="foot">
+            <div class="dots"><i class="on" id="d0"></i><i id="d1"></i><i id="d2"></i></div>
+            <div class="btns">
+              <button class="skip" onclick="endTour()">Skip</button>
+              <button class="go" id="tourGo" onclick="nextTour()">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  const CARDS = [
+    {send:"Milo", av:["#FE2C55","#ff7a90"], note:"this is SO you 😭", handle:"@noodle.lab",
+      desc:"3d noodle asmr, weirdly hypnotic", glyph:"🍜", g:"linear-gradient(160deg,#ff6a3d,#c81d4e 60%,#7a0f3a)", video:"mock-videos/01-noodles.mp4"},
+    {send:"Theo", av:["#378ADD","#1b1b22"], note:"bro this is unreal 🚀", handle:"@cosmos.cut",
+      desc:"POV: you wake up in orbit", glyph:"🚀", g:"linear-gradient(160deg,#2b5db3,#16264f 60%,#070b18)", video:"mock-videos/02-astronaut.mp4"},
+    {send:"Priya", av:["#ED93B1","#7C5CFF"], note:"your next set 💅", handle:"@nailinspo",
+      desc:"the detail on this is insane", glyph:"💅", g:"linear-gradient(160deg,#f08fb0,#c14e7a 60%,#5e2038)", video:"mock-videos/03-nailart.mp4"},
+    {send:"Zoe", av:["#FE2C55","#7C5CFF"], note:"the confidence 😤", handle:"@fitcheck",
+      desc:"elevator mirror check, elite tier", glyph:"🕶️", g:"linear-gradient(160deg,#8a5cff,#4a2ea8 60%,#1c1250)", video:"mock-videos/04-elevator.mp4"},
+    {send:"Jules", av:["#FE2C55","#FF9F27"], note:"our aspen era 🎿", handle:"@luxlife",
+      desc:"winter fits hit so different", glyph:"🏔️", g:"linear-gradient(160deg,#ff5a3c,#b11d3e 60%,#5c0f2a)", video:"mock-videos/05-winter.mp4"},
+    {send:"Sam", av:["#FF9F27","#FE2C55"], note:"NYC when?? 🗽", handle:"@citywalks",
+      desc:"times square never sleeps", glyph:"🗽", g:"linear-gradient(160deg,#ff9f45,#e5533b 55%,#7a1d3a)", video:"mock-videos/06-timessquare.mp4"},
+    {send:"Ben", av:["#378ADD","#7C5CFF"], note:"this view 🌆", handle:"@skylines",
+      desc:"twilight from the top floor", glyph:"🌆", g:"linear-gradient(160deg,#3a8dff,#5c3bd6 60%,#211456)", video:"mock-videos/07-skyline.mp4"},
+    {send:"Mara", av:["#1D9E75","#25F4EE"], note:"so dreamy, so you ✨", handle:"@visualpoetry",
+      desc:"when the light does that thing", glyph:"✨", g:"linear-gradient(160deg,#17b98a,#0e6e56 60%,#053a2e)", video:"mock-videos/08-dreamy.mp4"},
+    {send:"the boys 🍻", av:["#7C5CFF","#25F4EE"], note:"LMAO send help ❄️", handle:"@sendit",
+      desc:"he really sent it 💀", glyph:"❄️", g:"linear-gradient(160deg,#6a5cff,#3b2a9e 60%,#170f45)", video:"mock-videos/09-snowjump.mp4"},
+    {send:"college 🎓", av:["#7C5CFF","#25F4EE"], note:"reunion energy ⛳", handle:"@teetime",
+      desc:"golf then cocktails, balance", glyph:"⛳", g:"linear-gradient(160deg,#639922,#3b6d11 60%,#173404)", video:"mock-videos/10-golf.mp4"},
+    {send:"Sam", av:["#FF9F27","#FE2C55"], note:"our next trip 🥹", handle:"@wanderlust",
+      desc:"golden hour, palm trees, peace", glyph:"🌅", g:"linear-gradient(160deg,#ff9f45,#e5533b 55%,#7a1d3a)", video:"mock-videos/11-goldenhour.mp4"},
+    {send:"Dana", av:["#1D9E75","#25F4EE"], note:"screaming this is gorgeous 🏔️", handle:"@earthpix",
+      desc:"the matterhorn under a purple sky", glyph:"🏔️", g:"linear-gradient(160deg,#8a5cff,#4a2ea8 60%,#1c1250)", video:"mock-videos/12-matterhorn.mp4"},
+  ];
+
+  let idx=0, likes=0, view='friends', dragging=false, startX=0, startY=0, curEl=null, learned=false;
+  const deck=document.getElementById('deck');
+
+  function initial(name){return name.trim()[0].toUpperCase();}
+
+  function build(){
+    deck.innerHTML='';
+    for(let k=Math.min(idx+1, CARDS.length-1); k>=idx; k--){
+      if(k>=CARDS.length) continue;
+      const c=CARDS[k]; const el=document.createElement('div'); el.className='card';
+      el.style.zIndex=100-k;
+      const isTop=(k===idx);
+      if(k>idx){ el.style.transform='scale(.94) translateY(10px)'; el.style.filter='brightness(.7)'; }
+      const extras = isTop ? `
+        <button class="some-fab" onpointerdown="event.stopPropagation()" onclick="soMe()"><span class="h">&#9829;</span> This is so me</button>
+        ${(idx===0 && !learned) ? `<div class="coach" id="coach"><div class="cue up"><div class="chev">&#8593;</div><div>Swipe up · next</div></div><div class="cue right"><div class="chev">&#8594;</div><div>Swipe right · so me</div></div></div>` : ''}` : '';
+      const media = c.video ? `<video class="vid" src="${c.video}" autoplay muted loop playsinline></video>`
+                            : `<div class="vid" style="background:${c.g}"></div><div class="glyph">${c.glyph}</div>`;
+      el.innerHTML=`
+        ${media}
+        <div class="shine"></div>
+        <div class="scrim"></div>
+        <div class="progress"><i></i></div>
+        <div class="stamp">SO ME</div>
+        <div class="sender">
+          <div class="av" style="background:linear-gradient(135deg,${c.av[0]},${c.av[1]})">${initial(c.send)}</div>
+          <div class="meta">
+            <div class="who"><b>${c.send}</b> <span>sent you this</span></div>
+            <div class="note">${c.note}</div>
+          </div>
+        </div>
+        <div class="rail">
+          <div class="a"><div class="b">&#9825;</div><div class="n">12.4k</div></div>
+          <div class="a"><div class="b">&#128172;</div><div class="n">840</div></div>
+          <div class="a"><div class="b">&#10148;</div><div class="n">Share</div></div>
+        </div>
+        <div class="creator">
+          <div class="handle">${c.handle}</div>
+          <div class="desc">${c.desc}</div>
+          <div class="sound">&#127925; original sound · ${c.handle.replace('@','')}</div>
+        </div>
+        ${extras}`;
+      deck.appendChild(el);
+      if(k===idx){ curEl=el; attachDrag(el); }
+    }
+    const done = idx>=CARDS.length;
+    document.getElementById('empty').classList.toggle('show', done);
+  }
+  function dismissCoach(){ learned=true; const c=document.getElementById('coach'); if(c) c.classList.add('gone'); }
+
+  function attachDrag(el){
+    el.addEventListener('pointerdown', e=>{
+      dragging=true; startX=e.clientX; startY=e.clientY; el.setPointerCapture(e.pointerId);
+      el.style.transition='none'; dismissCoach();
+    });
+    el.addEventListener('pointermove', e=>{
+      if(!dragging) return;
+      const dx=e.clientX-startX, dy=e.clientY-startY;
+      const rot=dx/18;
+      el.style.transform=`translate(${dx}px, ${Math.min(dy,0)*.6}px) rotate(${rot}deg)`;
+      const soMe=el.querySelector('.stamp');
+      soMe.style.opacity = dx>30 ? Math.min((dx-30)/70,1) : 0;
+    });
+    el.addEventListener('pointerup', e=>{
+      if(!dragging) return; dragging=false;
+      const dx=e.clientX-startX, dy=e.clientY-startY;
+      el.style.transition='transform .35s cubic-bezier(.3,.8,.3,1)';
+      if(dx>72){ flyLike(); }
+      else if(dy<-90){ flySkip(); }
+      else{ el.style.transform=''; el.querySelectorAll('.stamp').forEach(s=>s.style.opacity=0); }
+    });
+  }
+
+  function flyLike(){
+    if(!curEl) return;
+    curEl.style.transform='translate(500px,-40px) rotate(24deg)';
+    likes++; heartBurst();
+    const who=CARDS[idx].send;
+    showToast(`💛 <b>${who}</b> will feel that`);
+    if(likes===2 || likes===4){ setTimeout(()=>incoming(likes), 650); }
+    advance();
+  }
+  function flySkip(){
+    if(!curEl) return;
+    curEl.style.transform='translateY(-620px) rotate(-6deg)';
+    advance();
+  }
+  function advance(){ setTimeout(()=>{ idx++; build(); }, 320); }
+
+  function soMe(){ if(idx<CARDS.length){ dismissCoach(); flyLike(); } }
+  function skip(){ if(idx<CARDS.length){ dismissCoach(); flySkip(); } }
+
+  function showToast(html){
+    const t=document.getElementById('toast'); t.innerHTML=html; t.classList.add('show');
+    clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2000);
+  }
+  function incoming(n){
+    const b=document.getElementById('banner'), bt=document.getElementById('bannerText');
+    const msgs=[
+      {n:"Dana’s been vibing with your shares", s:"3 of your picks were “so me” this week"},
+      {n:"You’re Milo’s most-watched sender", s:"Your taste is landing, keep it up"}
+    ];
+    const m = n===2 ? msgs[0] : msgs[1];
+    bt.innerHTML=`<b>${m.n}</b><small>${m.s}</small>`;
+    b.classList.add('show'); clearTimeout(b._t); b._t=setTimeout(()=>b.classList.remove('show'),3200);
+  }
+  function heartBurst(){
+    const wrap=document.getElementById('burst'); wrap.innerHTML='';
+    const ring=document.createElement('span');
+    ring.style.cssText='position:absolute;left:0;top:0;width:22px;height:22px;border-radius:50%;border:3px solid #25F4EE;transform:translate(-50%,-50%);';
+    wrap.appendChild(ring);
+    ring.animate([
+      {transform:'translate(-50%,-50%) scale(.3)', opacity:.9},
+      {transform:'translate(-50%,-50%) scale(6.5)', opacity:0}
+    ], {duration:600, easing:'ease-out'});
+
+    const colors=['#FE2C55','#25F4EE','#FFD84D','#ffffff','#7C5CFF','#FF9F27'];
+    for(let i=0;i<28;i++){
+      const p=document.createElement('span');
+      const sz=6+Math.random()*6;
+      p.style.cssText=`position:absolute;left:0;top:0;width:${sz}px;height:${sz}px;border-radius:${Math.random()<.5?'50%':'2px'};background:${colors[i%colors.length]};`;
+      wrap.appendChild(p);
+      const ang=Math.random()*Math.PI*2, dist=55+Math.random()*95;
+      const dx=Math.cos(ang)*dist, dy=Math.sin(ang)*dist-20;
+      p.animate([
+        {transform:'translate(-50%,-50%) scale(0) rotate(0deg)', opacity:1},
+        {transform:`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(1) rotate(${Math.random()*360}deg)`, opacity:1, offset:.65},
+        {transform:`translate(calc(-50% + ${dx}px), calc(-50% + ${dy+70}px)) scale(.5) rotate(${Math.random()*540}deg)`, opacity:0}
+      ], {duration:800+Math.random()*300, easing:'cubic-bezier(.2,.7,.3,1)'});
+    }
+    ['✨','💛','✨'].forEach((e,i)=>{
+      const s=document.createElement('span'); s.textContent=e;
+      s.style.cssText='position:absolute;left:0;top:0;font-size:24px;';
+      wrap.appendChild(s);
+      const ang=(-90+(i-1)*42)*Math.PI/180, dist=72;
+      s.animate([
+        {transform:'translate(-50%,-50%) scale(.4)', opacity:1},
+        {transform:`translate(calc(-50% + ${Math.cos(ang)*dist}px), calc(-50% + ${Math.sin(ang)*dist}px)) scale(1.35)`, opacity:0}
+      ], {duration:850, easing:'ease-out'});
+    });
+  }
+
+  function setView(v){
+    view=v;
+    document.getElementById('pill').classList.toggle('right', v==='chats');
+    document.getElementById('segFriends').classList.toggle('on', v==='friends');
+    document.getElementById('segChats').classList.toggle('on', v==='chats');
+    document.getElementById('chats').classList.toggle('on', v==='chats');
+    deck.style.display = v==='friends' ? 'block':'none';
+    const done = idx>=CARDS.length;
+    if(v==='friends' && done) document.getElementById('empty').classList.add('show');
+    else document.getElementById('empty').classList.remove('show');
+  }
+  function restart(){ idx=0; likes=0; learned=false; document.getElementById('empty').classList.remove('show'); build(); }
+
+  /* tour */
+  const TOUR=[
+    {tag:"What’s new · 1 of 3", e:"📬", t:"Your inbox is now a feed", b:"Everything your friends sent you, gathered in one place. Swipe up to browse the videos people picked just for you."},
+    {tag:"What’s new · 2 of 3", e:"💛", t:"Swipe right to give credit", b:"Loved a friend’s pick? Swipe right for “this is so me,” and they’ll get a warm little note. No dislikes, ever."},
+    {tag:"What’s new · 3 of 3", e:"⭐", t:"Switch anytime", b:"Tap “Chats” for your text conversations. Keep sharing great taste and you’ll earn an optional Curator badge."}
+  ];
+  let ti=0;
+  function paintTour(){
+    const s=TOUR[ti];
+    document.getElementById('tourTag').textContent=s.tag;
+    document.getElementById('tourEmoji').textContent=s.e;
+    document.getElementById('tourTitle').textContent=s.t;
+    document.getElementById('tourBody').textContent=s.b;
+    [0,1,2].forEach(i=>document.getElementById('d'+i).classList.toggle('on', i===ti));
+    document.getElementById('tourGo').textContent = ti===2 ? "Got it" : "Next";
+  }
+  function nextTour(){ if(ti<2){ ti++; paintTour(); } else endTour(); }
+  function endTour(){ document.getElementById('tour').classList.add('hide'); }
+
+  build(); paintTour();
+</script>
+</body>
+</html>

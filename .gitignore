@@ -4,3 +4,11 @@
 # Allow the 4 home project-card background videos (compressed, all <25MB)
 !assets/home-project-card-videos/*.mp4
 !assets/home-project-card-videos/*.mov
+
+# Allow the TikTok challenge prototype mock videos (12 files, ~120MB)
+!case-studies/tik-tok-2026/mock-videos/*.mp4
+
+# System / editor / tool cruft
+.DS_Store
+**/.DS_Store
+**/.claude/

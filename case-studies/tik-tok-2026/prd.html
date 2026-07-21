@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD · For You, From Friends</title>
+<style>
+  :root{ --red:#FE2C55; --cyan:#25F4EE; --bg:#08080b; --ink:#f3f3f6; --muted:#9a9aa8; --line:rgba(255,255,255,.09); --card:rgba(255,255,255,.035); }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.65; -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(800px 500px at 90% -5%, rgba(37,244,238,.08), transparent 60%),
+                     radial-gradient(800px 600px at 0% 0%, rgba(254,44,85,.10), transparent 55%);
+    background-attachment:fixed;}
+  .wrap{max-width:820px; margin:0 auto; padding:0 24px;}
+  .top{padding:20px 0; border-bottom:1px solid var(--line);}
+  .back{font-size:13.5px; color:var(--cyan); font-weight:600;}
+  header.h{padding:56px 0 34px; border-bottom:1px solid var(--line);}
+  .kicker{display:inline-block; font-size:12px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:12px;}
+  h1{font-size:40px; font-weight:900; letter-spacing:-1.4px; line-height:1.05;
+    background:linear-gradient(120deg,#fff 30%,#25F4EE 95%); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  h1 small{display:block; font-size:16px; font-weight:600; color:#cfcfd6; -webkit-text-fill-color:#cfcfd6; margin-top:10px; letter-spacing:0;}
+  section{padding:34px 0; border-bottom:1px solid var(--line);}
+  h2{font-size:14px; font-weight:800; letter-spacing:1.6px; text-transform:uppercase; color:var(--cyan); margin-bottom:14px;}
+  h3{font-size:18px; font-weight:800; letter-spacing:-0.3px; margin:18px 0 6px;}
+  p{font-size:16px; color:#dcdce4; margin-bottom:14px;}
+  strong{color:#fff; font-weight:700;} .red{color:var(--red);} .cy{color:var(--cyan);}
+  a{color:var(--cyan); text-decoration:none;}
+  ul{list-style:none; margin:8px 0 14px;} li{font-size:15.5px; color:#cbcbd4; padding:5px 0 5px 20px; position:relative;}
+  li:before{content:""; position:absolute; left:2px; top:13px; width:6px; height:6px; border-radius:50%; background:var(--red);}
+  blockquote{border-left:3px solid var(--red); padding:8px 0 8px 20px; margin:16px 0; font-size:18px; color:#fff; font-weight:600; line-height:1.45;}
+  .lead{font-size:18px; color:#fff; font-weight:600;}
+  table{width:100%; border-collapse:separate; border-spacing:0; margin:12px 0; font-size:14.5px;}
+  th,td{padding:12px 14px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{font-size:11.5px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); font-weight:700;}
+  td:first-child{color:#fff; font-weight:600;}
+  .ok{color:var(--cyan); font-weight:700;} .no{color:var(--red); font-weight:700;}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:720px){ .grid{grid-template-columns:1fr;} h1{font-size:31px;} }
+  .box{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px;}
+  .box.m{border-color:rgba(37,244,238,.32);}
+  .box .b{font-size:11px; font-weight:800; letter-spacing:.6px; padding:3px 9px; border-radius:12px; background:rgba(255,255,255,.08); color:#cfcfd6; display:inline-block; margin-bottom:8px;}
+  .box.m .b{background:var(--cyan); color:#053;}
+  .events code{font-family:ui-monospace,Menlo,monospace; font-size:12.5px; color:#ffd9e1; background:rgba(254,44,85,.12);
+    border:1px solid rgba(254,44,85,.25); padding:5px 10px; border-radius:8px; display:inline-block; margin:4px 4px 0 0;}
+  footer{padding:34px 0 64px; color:var(--muted); font-size:13px;}
+
+  /* language toggle */
+  .lang-toggle{position:fixed; top:20px; right:20px; z-index:9998;
+    display:flex; background:rgba(20,20,26,.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.12); border-radius:20px; padding:3px;
+    box-shadow:0 8px 24px rgba(0,0,0,.4);}
+  .lang-toggle button{background:none; border:none; padding:6px 13px;
+    color:#9a9aa8; font-size:12.5px; font-weight:700; cursor:pointer;
+    border-radius:16px; transition:color .2s ease, background .2s ease; font-family:inherit; letter-spacing:.3px;}
+  .lang-toggle button.on{background:linear-gradient(135deg,var(--red),#ff5c7a); color:#fff;}
+  .lang-toggle button:hover:not(.on){color:#fff;}
+  @media(max-width:720px){ .lang-toggle{top:12px; right:12px;} .lang-toggle button{padding:5px 10px; font-size:12px;} }
+</style>
+</head>
+<body>
+
+<div class="lang-toggle" id="langToggle" aria-label="Language toggle">
+  <button data-lang="en" class="on">EN</button>
+  <button data-lang="zh">中文</button>
+</div>
+
+<div class="top"><div class="wrap"><a class="back" href="index.html" data-i18n="back">← back to the case study</a></div></div>
+
+<header class="h">
+  <div class="wrap">
+    <span class="kicker" data-i18n="head.kicker">Product requirements · v2 · architecture locked</span>
+    <h1>For You, From Friends
+      <small data-i18n="head.sub">Turning TikTok's inbox into a human-curated, taste-graph feed</small></h1>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="s1.h2">1 · TL;DR</h2>
+    <p data-i18n="s1.p1">TikTok mastered the <strong>interest graph</strong> (what people like you watch) and ignored the <strong>taste graph</strong> (what your specific friends know <em>you</em> would love). The most valuable, least algorithm-replicable signal on the platform, a friend deliberately picking a video and saying "this is so you," is thrown away the instant it happens.</p>
+    <p data-i18n="s1.p2"><strong class="cy">For You, From Friends</strong> transforms the inbox into what it's actually used for. Today the inbox is a chat UI wrapped around a behavior that isn't chatting; it's mostly videos friends sent you. We split it into <strong>From Friends</strong> (a swipeable feed of everything friends hand-picked for you, tagged by sender) and <strong>Chats</strong> (real conversations). One positive gesture, <strong>swipe right = "this is so me,"</strong> sends warm, private recognition back to the curator. It gives the roughly half of users who never post a real creative identity: the curator.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="s2.h2">2 · Problem &amp; background</h2>
+    <p data-i18n="s2.p1"><strong>The behavioral truth.</strong> Most users are not creators. Only about 52% of US adult TikTok users have ever posted a video; 98% of public videos come from the top 25% most active (Pew, 2024). The dominant creative act for everyone else is the send.</p>
+    <p data-i18n="s2.p2"><strong>The gap.</strong> That send is a dead-end. The sender gets no signal their taste landed; the received video is flattened into a message bubble and forgotten.</p>
+    <p data-i18n="s2.p3"><strong>Why it exists.</strong> TikTok's DNA is the algorithmic interest graph, so the human curation layer was never the point, and never designed for.</p>
+    <p data-i18n="s2.p4"><strong>Why now.</strong> Instagram's Adam Mosseri (Dec 2025): "That feed is dead… the primary way people share now is in DMs," and "sends per reach" is a top ranking signal. TikTok shipped Shared Feed (Dec 2025, inside DMs); Instagram shipped Blend (Apr 2025). All of these keep the algorithm as the curator and the human as a passive consumer. That whitespace is the opportunity.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="s3.h2">3 · Insight</h2>
+    <blockquote data-i18n="s3.quote">Interest graph vs. taste graph. The For You page optimizes "what will this person watch." A friend optimizes "what will land for this specific person I know." The metaphor: your friends are matchmakers, and every video they send is a setup.</blockquote>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="s4.h2">4 · Goals &amp; non-goals</h2>
+    <h3 data-i18n="s4.goals.h3">Goals</h3>
+    <ul>
+      <li data-i18n="s4.goals.li1">Give the non-creator majority a durable creative identity (the curator).</li>
+      <li data-i18n="s4.goals.li2">Turn the one-way send into a closed loop: send, receive, recognize, reciprocate.</li>
+      <li data-i18n="s4.goals.li3">Grow two metrics the business cares about: sends (a ranking signal) and friend-graph density (a retention driver).</li>
+    </ul>
+    <h3 data-i18n="s4.non.h3">Non-goals</h3>
+    <ul>
+      <li data-i18n="s4.non.li1">Not replacing or reordering the For You page.</li>
+      <li data-i18n="s4.non.li2">Not a new bottom-nav tab (that's the graveyard).</li>
+      <li data-i18n="s4.non.li3">No public leaderboard, ranking, streak, or negative signal.</li>
+      <li data-i18n="s4.non.li4">Not a new algorithmic co-recommendation feed (Shared Feed / Blend already do that).</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="s5.h2">5 · The core loop</h2>
+    <ul>
+      <li data-i18n="s5.li1"><strong>Send.</strong> A curator picks a video and sends it, optionally with a caption.</li>
+      <li data-i18n="s5.li2"><strong>Receive.</strong> It lands in the From Friends feed: full-screen, swipeable, tagged with who sent it.</li>
+      <li data-i18n="s5.li3"><strong>Recognize.</strong> Swipe right = "this is so me," a warm private ping to the sender.</li>
+      <li data-i18n="s5.li4"><strong>Reciprocate.</strong> One tap to send something back, strengthening the tie.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="s6.h2">6 · Architecture &amp; placement (locked)</h2>
+    <p data-i18n="s6.p">The feed lives inside the existing Inbox tab as a segmented view. It replaces nothing and adds no nav item.</p>
+    <ul>
+      <li data-i18n="s6.li1">Segmented toggle at the top of the inbox: <strong>From Friends | Chats</strong>. From Friends is the default view; Chats is the traditional message list, one tap away, with all text messages fully readable.</li>
+      <li data-i18n="s6.li2">From Friends is a meshed aggregate feed. Each card is tagged, "Milo sent you this · 'this is so you'," with the caption shown when the sender added one.</li>
+      <li data-i18n="s6.li3">Interaction: swipe up = next; swipe right = "this is so me" (positive only); no negative gesture, ever.</li>
+      <li data-i18n="s6.li4">Per-chat shared archives are Phase 2.</li>
+    </ul>
+    <p class="muted" data-i18n="s6.muted">Why the inbox and not the Home tabs: a swipe-to-match gesture in the main feed fights the For You vertical scroll. TikTok's own Shared Feed already lives inside DMs, so the platform is telling us the friend layer belongs in the messaging surface.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="s7.h2">7 · Onboarding, the "What's New" tour</h2>
+    <p data-i18n="s7.p">Because the default view changes, a lightweight first-run tour orients the user (3 steps, skippable):</p>
+    <ul>
+      <li data-i18n="s7.li1">"Your inbox is now a feed." Everything friends sent you, in one place.</li>
+      <li data-i18n="s7.li2">"Swipe right to give credit." They'll get a warm little note. No dislikes, ever.</li>
+      <li data-i18n="s7.li3">"Switch anytime." Tap Chats for text conversations. Keep sharing great taste and you'll earn an optional Curator badge.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="s8.h2">8 · Guardrails, the "private party" principle</h2>
+    <p data-i18n="s8.p">The closest analog, Snapchat Streaks, is now linked to documented teen anxiety, and TikTok itself shipped anti-doomscrolling features in Nov 2025. This feature is built to avoid scoring social behavior into pressure.</p>
+    <ul>
+      <li data-i18n="s8.li1"><strong>Positive-only.</strong> The system only ever notifies you of good news. No negative signal exists to farm anxiety from.</li>
+      <li data-i18n="s8.li2"><strong>Invisible by default.</strong> Credit is private between friends. No public counts, no global rank.</li>
+      <li data-i18n="s8.li3"><strong>No streaks, no decay, no loss aversion.</strong> Nothing expires to manufacture compulsion.</li>
+      <li data-i18n="s8.li4"><strong>Recognition, not comparison.</strong> Status rewards quality of taste, never a ranking against others.</li>
+      <li data-i18n="s8.li5"><strong>Opt-in and reversible</strong> at every step.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="s9.h2">9 · Roadmap</h2>
+    <div class="grid">
+      <div class="box m"><span class="b" data-i18n="s9.mvp.b">MVP · now</span>
+        <ul>
+          <li data-i18n="s9.mvp.li1">Inbox "From Friends / Chats" toggle (feed default)</li>
+          <li data-i18n="s9.mvp.li2">Meshed swipe feed, sender-tagged, optional captions</li>
+          <li data-i18n="s9.mvp.li3">Swipe-right "this is so me" to a private ping</li>
+          <li data-i18n="s9.mvp.li4">"What's new" quick tour</li>
+        </ul></div>
+      <div class="box"><span class="b" data-i18n="s9.p2.b">Phase 2 · next</span>
+        <ul>
+          <li data-i18n="s9.p2.li1">Opt-in Curator badge, earned from distinct friends (un-spammable), comparison-free</li>
+          <li data-i18n="s9.p2.li2">Group "meme-god," celebratory and rotating</li>
+          <li data-i18n="s9.p2.li3">Per-chat shared archives; curator identity on profile</li>
+        </ul></div>
+    </div>
+    <div class="box" style="margin-top:14px;"><span class="b" data-i18n="s9.p3.b">Phase 3 · vision</span>
+      <ul>
+        <li data-i18n="s9.p3.li1">Taste-graph flywheel: human "this is so me" labels improve recommendations (framed as better experience; ad relevance is a downstream benefit, gated by privacy guardrails)</li>
+        <li data-i18n="s9.p3.li2">Creator ecosystem: "send this to someone it reminds you of" CTAs; resonant content reaches smaller creators through trusted human curation</li>
+      </ul></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="s10.h2">10 · Events to track</h2>
+    <table>
+      <tr><th data-i18n="s10.th.event">Event</th><th data-i18n="s10.th.why">Why it matters</th></tr>
+      <tr><td>tour_step_viewed / tour_completed</td><td data-i18n="s10.r1">Onboarding comprehension of the new default view.</td></tr>
+      <tr><td>inbox_default_view</td><td data-i18n="s10.r2">Are users staying in the feed or switching to Chats?</td></tr>
+      <tr><td>toggle_switch</td><td data-i18n="s10.r3">Balance of feed vs. conversation use.</td></tr>
+      <tr><td>video_share_sent, caption_added</td><td data-i18n="s10.r4">Core input; does the caption prompt lift personalization?</td></tr>
+      <tr><td>share_watched</td><td data-i18n="s10.r5">Receive-to-watch rate (is the feed compelling?).</td></tr>
+      <tr><td class="cy">swipe_right_this_is_so_me</td><td data-i18n="s10.r6">The key signal, taste landing, powers recognition and the taste graph.</td></tr>
+      <tr><td>recognition_notif_opened</td><td data-i18n="s10.r7">Is positive feedback closing the loop?</td></tr>
+      <tr><td>reciprocal_send</td><td data-i18n="s10.r8">A send that earns a send back.</td></tr>
+      <tr><td>badge_earned, badge_display_opt_in</td><td data-i18n="s10.r9">Phase 2, curator identity uptake.</td></tr>
+    </table>
+    <p class="muted" data-i18n="s10.north">North star: sends per active user each week. Guardrail: by design, no negative-signal events exist.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="s11.h2">11 · Impact &amp; value</h2>
+    <div class="grid">
+      <div class="box" data-i18n="s11.user"><strong class="cy">For the user.</strong><p>The roughly half who never post gain a creative identity as curators. Received shares stop dying. Recognition is warm and pressure-free.</p></div>
+      <div class="box" data-i18n="s11.creator"><strong class="cy">For the creator.</strong><p>Human curation becomes a high-trust distribution channel. "Send this to someone" gets a real destination. Smaller creators get a discovery path the pure algorithm doesn't offer.</p></div>
+    </div>
+    <div class="box" style="margin-top:14px;" data-i18n="s11.business"><strong class="cy">For the business.</strong><p>Grows sends (a ranking signal) and friend-graph density (a leading retention indicator). The human "this is so me" label is a higher-quality taste signal than watch-time, improving recommendations and, downstream, ad relevance.</p></div>
+    <blockquote style="margin-top:18px;" data-i18n="s11.quote">Balancing business vs. wellbeing: the engagement gains are designed to come from connection, not manufactured anxiety. Recognition over competition, positive-only over dislikes, invisible-by-default over public scores.</blockquote>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 data-i18n="s12.h2">12 · Open questions</h2>
+    <ul>
+      <li data-i18n="s12.li1">Naming of the badge (Curator? Taste-maker?) and whether the group meme-god nod is monthly or event-based.</li>
+      <li data-i18n="s12.li2">Cold-start: seed the feed from existing DM-shared videos for users whose friends aren't sending yet?</li>
+      <li data-i18n="s12.li3">Group sends: land in each person's meshed feed, a shared group lane, or both?</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap"><a class="back" href="index.html" data-i18n="back">← back to the case study</a> &nbsp; · &nbsp; <span data-i18n="footer.tag">For You, From Friends · PRD v2</span></div>
+</footer>
+
+<script>
+(function(){
+  const I18N = {
+    'back':       { en: '← back to the case study', zh: '← 返回案例主页' },
+    'head.kicker':{ en: 'Product requirements · v2 · architecture locked',
+                    zh: '产品需求文档 · v2 · 架构已锁定' },
+    'head.sub':   { en: 'Turning TikTok’s inbox into a human-curated, taste-graph feed',
+                    zh: '把 TikTok 的收件箱，变成由人策展的品味图谱信息流' },
+
+    's1.h2':      { en: '1 · TL;DR', zh: '1 · 一句话说完' },
+    's1.p1':      { en: 'TikTok mastered the <strong>interest graph</strong> (what people like you watch) and ignored the <strong>taste graph</strong> (what your specific friends know <em>you</em> would love). The most valuable, least algorithm-replicable signal on the platform, a friend deliberately picking a video and saying "this is so you," is thrown away the instant it happens.',
+                    zh: 'TikTok 精通了<strong>兴趣图谱</strong>（像你的人在看什么），却忽略了<strong>品味图谱</strong>（你的朋友知道<em>你</em>会喜欢什么）。平台上最有价值、也最难被算法复制的信号，就是一位朋友专门为你挑一条视频说"这就是你"，可它一发生就被扔掉了。' },
+    's1.p2':      { en: '<strong class="cy">For You, From Friends</strong> transforms the inbox into what it’s actually used for. Today the inbox is a chat UI wrapped around a behavior that isn’t chatting; it’s mostly videos friends sent you. We split it into <strong>From Friends</strong> (a swipeable feed of everything friends hand-picked for you, tagged by sender) and <strong>Chats</strong> (real conversations). One positive gesture, <strong>swipe right = "this is so me,"</strong> sends warm, private recognition back to the curator. It gives the roughly half of users who never post a real creative identity: the curator.',
+                    zh: '<strong class="cy">For You, From Friends</strong> 让收件箱回到它真正被用来做的事上。今天的收件箱披着聊天的皮，包住的却不是聊天，里面绝大部分是朋友转来的视频。我们把它拆成 <strong>From Friends</strong>（一个可滑动的信息流，装着朋友专门为你挑的视频，并注明发送人）和 <strong>Chats</strong>（真正的对话）。一个正向手势，<strong>右滑 = "这就是我"</strong>，把温暖、私密的认可回传给品味担当。它给那约一半从不发布的用户一份真正的创作身份：品味担当。' },
+
+    's2.h2':      { en: '2 · Problem &amp; background', zh: '2 · 问题与背景' },
+    's2.p1':      { en: '<strong>The behavioral truth.</strong> Most users are not creators. Only about 52% of US adult TikTok users have ever posted a video; 98% of public videos come from the top 25% most active (Pew, 2024). The dominant creative act for everyone else is the send.',
+                    zh: '<strong>行为层面的事实。</strong>大多数用户不是创作者。只有约 52% 的美国成年 TikTok 用户发过视频；98% 的公开视频来自最活跃的 25% 用户（Pew, 2024）。对其他人而言，最主流的创作行为，就是转发。' },
+    's2.p2':      { en: '<strong>The gap.</strong> That send is a dead-end. The sender gets no signal their taste landed; the received video is flattened into a message bubble and forgotten.',
+                    zh: '<strong>空缺。</strong>那个转发是死胡同。发送者得不到"品味被认可"的信号；收到的视频被压成一个消息气泡，然后被遗忘。' },
+    's2.p3':      { en: '<strong>Why it exists.</strong> TikTok’s DNA is the algorithmic interest graph, so the human curation layer was never the point, and never designed for.',
+                    zh: '<strong>为何会这样。</strong>TikTok 的 DNA 是算法驱动的兴趣图谱，"人的策展"这一层从来不是重点，也从未被专门设计过。' },
+    's2.p4':      { en: '<strong>Why now.</strong> Instagram’s Adam Mosseri (Dec 2025): "That feed is dead… the primary way people share now is in DMs," and "sends per reach" is a top ranking signal. TikTok shipped Shared Feed (Dec 2025, inside DMs); Instagram shipped Blend (Apr 2025). All of these keep the algorithm as the curator and the human as a passive consumer. That whitespace is the opportunity.',
+                    zh: '<strong>为何是现在。</strong>Instagram 的 Adam Mosseri（2025 年 12 月）："那个信息流已经死了……现在人们分享的主要方式，是私信。""每次触达带来的转发数"是最重要的排序信号之一。TikTok 上线了 Shared Feed（2025 年 12 月，在私信里）；Instagram 上线了 Blend（2025 年 4 月）。这些做法都让算法继续扮演策展者，人依然是被动的观众。留白就是机会。' },
+
+    's3.h2':      { en: '3 · Insight', zh: '3 · 洞察' },
+    's3.quote':   { en: 'Interest graph vs. taste graph. The For You page optimizes "what will this person watch." A friend optimizes "what will land for this specific person I know." The metaphor: your friends are matchmakers, and every video they send is a setup.',
+                    zh: '兴趣图谱 vs. 品味图谱。For You 页优化的是"这个人会看什么"，朋友优化的是"我认识的这个人会为哪条视频动心"。可以打个比方：朋友们是媒人，他们转来的每一条视频都是一次相亲。' },
+
+    's4.h2':      { en: '4 · Goals &amp; non-goals', zh: '4 · 目标与非目标' },
+    's4.goals.h3':{ en: 'Goals', zh: '目标' },
+    's4.goals.li1':{ en: 'Give the non-creator majority a durable creative identity (the curator).',
+                     zh: '给不做创作者的大多数用户一份能长久留存的创作身份（品味担当）。' },
+    's4.goals.li2':{ en: 'Turn the one-way send into a closed loop: send, receive, recognize, reciprocate.',
+                     zh: '把单向的转发变成一个闭环：发、收、认可、回敬。' },
+    's4.goals.li3':{ en: 'Grow two metrics the business cares about: sends (a ranking signal) and friend-graph density (a retention driver).',
+                     zh: '拉动业务在意的两项指标：转发量（排序信号）与朋友图谱密度（留存驱动力）。' },
+    's4.non.h3':  { en: 'Non-goals', zh: '非目标' },
+    's4.non.li1': { en: 'Not replacing or reordering the For You page.',
+                    zh: '不替换、也不重排 For You 页。' },
+    's4.non.li2': { en: 'Not a new bottom-nav tab (that’s the graveyard).',
+                    zh: '不做新的底部导航标签（那是墓地）。' },
+    's4.non.li3': { en: 'No public leaderboard, ranking, streak, or negative signal.',
+                    zh: '不设公开排行榜、不设排名、不设连击、不设任何负向信号。' },
+    's4.non.li4': { en: 'Not a new algorithmic co-recommendation feed (Shared Feed / Blend already do that).',
+                    zh: '不做又一个算法拼接的共同推荐信息流（Shared Feed / Blend 已经在做了）。' },
+
+    's5.h2':      { en: '5 · The core loop', zh: '5 · 核心回路' },
+    's5.li1':     { en: '<strong>Send.</strong> A curator picks a video and sends it, optionally with a caption.',
+                    zh: '<strong>发。</strong>品味担当挑一条视频转出去，可选加一句话。' },
+    's5.li2':     { en: '<strong>Receive.</strong> It lands in the From Friends feed: full-screen, swipeable, tagged with who sent it.',
+                    zh: '<strong>收。</strong>它落到 From Friends 信息流：全屏、可滑动、标注是谁转的。' },
+    's5.li3':     { en: '<strong>Recognize.</strong> Swipe right = "this is so me," a warm private ping to the sender.',
+                    zh: '<strong>认可。</strong>右滑 = "这就是我"，一个温热的私密通知回到发送人。' },
+    's5.li4':     { en: '<strong>Reciprocate.</strong> One tap to send something back, strengthening the tie.',
+                    zh: '<strong>回敬。</strong>一键回敬一条，把关系变得更紧。' },
+
+    's6.h2':      { en: '6 · Architecture &amp; placement (locked)', zh: '6 · 架构与位置（已锁定）' },
+    's6.p':       { en: 'The feed lives inside the existing Inbox tab as a segmented view. It replaces nothing and adds no nav item.',
+                    zh: '这个信息流放在现有的收件箱标签内，以分段视图呈现。不替换任何东西，也不新增导航项。' },
+    's6.li1':     { en: 'Segmented toggle at the top of the inbox: <strong>From Friends | Chats</strong>. From Friends is the default view; Chats is the traditional message list, one tap away, with all text messages fully readable.',
+                    zh: '收件箱顶部的分段切换：<strong>From Friends | Chats</strong>。From Friends 是默认视图；Chats 是传统的消息列表，一键切过去，所有文字消息完全可读。' },
+    's6.li2':     { en: 'From Friends is a meshed aggregate feed. Each card is tagged, "Milo sent you this · ‘this is so you’," with the caption shown when the sender added one.',
+                    zh: 'From Friends 是合并起来的信息流。每张卡片都有标签："Milo 转给你的 · ‘这就是你’"，发送人写了句子时会一并显示。' },
+    's6.li3':     { en: 'Interaction: swipe up = next; swipe right = "this is so me" (positive only); no negative gesture, ever.',
+                    zh: '交互：上滑 = 下一条；右滑 = "这就是我"（只做正向）；绝不设负向手势。' },
+    's6.li4':     { en: 'Per-chat shared archives are Phase 2.',
+                    zh: '每段聊天下的共享档案属于第二阶段。' },
+    's6.muted':   { en: 'Why the inbox and not the Home tabs: a swipe-to-match gesture in the main feed fights the For You vertical scroll. TikTok’s own Shared Feed already lives inside DMs, so the platform is telling us the friend layer belongs in the messaging surface.',
+                    zh: '为什么放在收件箱，而不是首页：在主 feed 加一个"匹配式滑动手势"，会跟 For You 的纵向滚动打架。TikTok 自己的 Shared Feed 已经放在私信里，等于告诉我们朋友层归属于消息界面。' },
+
+    's7.h2':      { en: '7 · Onboarding, the "What’s New" tour', zh: '7 · 引导："新功能"教程' },
+    's7.p':       { en: 'Because the default view changes, a lightweight first-run tour orients the user (3 steps, skippable):',
+                    zh: '因为默认视图变了，首次进入时会有一个轻量引导，帮用户过渡（3 步，可跳过）：' },
+    's7.li1':     { en: '"Your inbox is now a feed." Everything friends sent you, in one place.',
+                    zh: '"收件箱现在是一个信息流。"朋友转给你的一切，聚在一处。' },
+    's7.li2':     { en: '"Swipe right to give credit." They’ll get a warm little note. No dislikes, ever.',
+                    zh: '"右滑给认可。"对方会收到一条温暖的小小提醒。永远不设点踩。' },
+    's7.li3':     { en: '"Switch anytime." Tap Chats for text conversations. Keep sharing great taste and you’ll earn an optional Curator badge.',
+                    zh: '"随时可切换。"点 Chats 就进文字对话。持续分享好品味，就能解锁一个可选的品味担当徽章。' },
+
+    's8.h2':      { en: '8 · Guardrails, the "private party" principle',
+                    zh: '8 · 护栏："私下的小小庆祝"原则' },
+    's8.p':       { en: 'The closest analog, Snapchat Streaks, is now linked to documented teen anxiety, and TikTok itself shipped anti-doomscrolling features in Nov 2025. This feature is built to avoid scoring social behavior into pressure.',
+                    zh: '最接近的对照物 Snapchat Streaks 现在已被证明与青少年焦虑相关；TikTok 自己也在 2025 年 11 月上线了对抗沉迷刷视频的功能。本方案的设计目标之一，就是避免把社交行为量化成压力。' },
+    's8.li1':     { en: '<strong>Positive-only.</strong> The system only ever notifies you of good news. No negative signal exists to farm anxiety from.',
+                    zh: '<strong>只做正向。</strong>系统只推送好消息。整套设计里，不存在能被"刷"出焦虑的负向信号。' },
+    's8.li2':     { en: '<strong>Invisible by default.</strong> Credit is private between friends. No public counts, no global rank.',
+                    zh: '<strong>默认隐形。</strong>认可是朋友之间的私事。不设公开计数，不设全球排名。' },
+    's8.li3':     { en: '<strong>No streaks, no decay, no loss aversion.</strong> Nothing expires to manufacture compulsion.',
+                    zh: '<strong>不设连击、不设衰减、不设损失厌恶。</strong>没有会过期的东西去制造沉迷。' },
+    's8.li4':     { en: '<strong>Recognition, not comparison.</strong> Status rewards quality of taste, never a ranking against others.',
+                    zh: '<strong>认可，而不是比较。</strong>身份奖励的是品味的质量，从不用来跟别人排名。' },
+    's8.li5':     { en: '<strong>Opt-in and reversible</strong> at every step.',
+                    zh: '每一步都<strong>可选开启、可以撤回</strong>。' },
+
+    's9.h2':      { en: '9 · Roadmap', zh: '9 · 路线图' },
+    's9.mvp.b':   { en: 'MVP · now', zh: 'MVP · 首发' },
+    's9.mvp.li1': { en: 'Inbox "From Friends / Chats" toggle (feed default)',
+                    zh: '收件箱增加"From Friends / Chats"切换（默认 feed）' },
+    's9.mvp.li2': { en: 'Meshed swipe feed, sender-tagged, optional captions',
+                    zh: '可滑动的合并信息流，标注发送人，可选加句' },
+    's9.mvp.li3': { en: 'Swipe-right "this is so me" to a private ping',
+                    zh: '右滑触发"这就是我"，转化为私密通知' },
+    's9.mvp.li4': { en: '"What’s new" quick tour',
+                    zh: '"新功能"快速引导' },
+    's9.p2.b':    { en: 'Phase 2 · next', zh: '第二阶段 · 接下来' },
+    's9.p2.li1':  { en: 'Opt-in Curator badge, earned from distinct friends (un-spammable), comparison-free',
+                    zh: '可选开启的品味担当徽章，由多位不同朋友（无法刷量）解锁，无比较' },
+    's9.p2.li2':  { en: 'Group "meme-god," celebratory and rotating',
+                    zh: '群聊"梗神"，庆祝式、每月轮换' },
+    's9.p2.li3':  { en: 'Per-chat shared archives; curator identity on profile',
+                    zh: '每段聊天下的共享档案；主页上的品味担当身份' },
+    's9.p3.b':    { en: 'Phase 3 · vision', zh: '第三阶段 · 远景' },
+    's9.p3.li1':  { en: 'Taste-graph flywheel: human "this is so me" labels improve recommendations (framed as better experience; ad relevance is a downstream benefit, gated by privacy guardrails)',
+                    zh: '品味图谱飞轮：人给出的"这就是我"标签能反哺推荐（对用户表述为"体验更好"；广告相关性是下游收益，受隐私护栏约束）' },
+    's9.p3.li2':  { en: 'Creator ecosystem: "send this to someone it reminds you of" CTAs; resonant content reaches smaller creators through trusted human curation',
+                    zh: '创作者生态："转给这条视频让你联想到的人"这样的 CTA；能引起共鸣的内容通过可信的人的品味触达中小创作者' },
+
+    's10.h2':     { en: '10 · Events to track', zh: '10 · 需要追踪的埋点' },
+    's10.th.event': { en: 'Event',        zh: '事件' },
+    's10.th.why':   { en: 'Why it matters', zh: '为什么重要' },
+    's10.r1':     { en: 'Onboarding comprehension of the new default view.',
+                    zh: '对新默认视图的引导理解程度。' },
+    's10.r2':     { en: 'Are users staying in the feed or switching to Chats?',
+                    zh: '用户是留在信息流里，还是切到 Chats？' },
+    's10.r3':     { en: 'Balance of feed vs. conversation use.',
+                    zh: '信息流与对话两种用法之间的平衡。' },
+    's10.r4':     { en: 'Core input; does the caption prompt lift personalization?',
+                    zh: '核心输入；加句子的提示是否提升个性化？' },
+    's10.r5':     { en: 'Receive-to-watch rate (is the feed compelling?).',
+                    zh: '"收到 → 观看"的转化率（信息流是否有吸引力？）' },
+    's10.r6':     { en: 'The key signal, taste landing, powers recognition and the taste graph.',
+                    zh: '关键信号：品味被认可；驱动"认可循环"与品味图谱。' },
+    's10.r7':     { en: 'Is positive feedback closing the loop?',
+                    zh: '正向反馈是否闭合了回路？' },
+    's10.r8':     { en: 'A send that earns a send back.',
+                    zh: '一次转发引来对方也转一条回来。' },
+    's10.r9':     { en: 'Phase 2, curator identity uptake.',
+                    zh: '第二阶段，品味担当身份的采纳情况。' },
+    's10.north':  { en: 'North star: sends per active user each week. Guardrail: by design, no negative-signal events exist.',
+                    zh: '北极星：每周每活跃用户的转发数。护栏：整个设计里不存在负向信号事件。' },
+
+    's11.h2':     { en: '11 · Impact &amp; value', zh: '11 · 影响与价值' },
+    's11.user':   { en: '<strong class="cy">For the user.</strong><p>The roughly half who never post gain a creative identity as curators. Received shares stop dying. Recognition is warm and pressure-free.</p>',
+                    zh: '<strong class="cy">对用户。</strong><p>那约一半从不发布的人拥有了品味担当这个创作身份。别人转来的视频不再石沉大海。认可温暖，不带压力。</p>' },
+    's11.creator':{ en: '<strong class="cy">For the creator.</strong><p>Human curation becomes a high-trust distribution channel. "Send this to someone" gets a real destination. Smaller creators get a discovery path the pure algorithm doesn’t offer.</p>',
+                    zh: '<strong class="cy">对创作者。</strong><p>人的策展成了高信任的分发通道。"转给某个人"终于有了归宿。中小创作者也拥有了纯算法给不了的发现路径。</p>' },
+    's11.business':{en: '<strong class="cy">For the business.</strong><p>Grows sends (a ranking signal) and friend-graph density (a leading retention indicator). The human "this is so me" label is a higher-quality taste signal than watch-time, improving recommendations and, downstream, ad relevance.</p>',
+                    zh: '<strong class="cy">对业务。</strong><p>推高转发量（排序信号）与朋友图谱密度（留存的领先指标）。人给出的"这就是我"标签，是比观看时长更优质的品味信号，能改善推荐；再往下游，也能提升广告的相关性。</p>' },
+    's11.quote':  { en: 'Balancing business vs. wellbeing: the engagement gains are designed to come from connection, not manufactured anxiety. Recognition over competition, positive-only over dislikes, invisible-by-default over public scores.',
+                    zh: '在商业与用户福祉之间取平衡：活跃度的提升被设计为来自连接，不是人造焦虑。认可胜过竞争、只做正向胜过引入点踩、默认隐形胜过公开评分。' },
+
+    's12.h2':     { en: '12 · Open questions', zh: '12 · 待定问题' },
+    's12.li1':    { en: 'Naming of the badge (Curator? Taste-maker?) and whether the group meme-god nod is monthly or event-based.',
+                    zh: '徽章名字（品味担当？品味制定者？），以及群聊"梗神"是每月一次还是按事件触发。' },
+    's12.li2':    { en: 'Cold-start: seed the feed from existing DM-shared videos for users whose friends aren’t sending yet?',
+                    zh: '冷启动：对于朋友还没开始转的用户，是否从他们私信里已经转过的视频给信息流做初始填充？' },
+    's12.li3':    { en: 'Group sends: land in each person’s meshed feed, a shared group lane, or both?',
+                    zh: '群发：落到每个人的合并信息流里、单独一条群共享通道，还是两者都有？' },
+
+    'footer.tag': { en: 'For You, From Friends · PRD v2',
+                    zh: 'For You, From Friends · 产品需求文档 v2' }
+  };
+
+  function apply(lang){
+    document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : 'en';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const entry = I18N[key];
+      if(entry && entry[lang] != null) el.innerHTML = entry[lang];
+    });
+    document.querySelectorAll('#langToggle button').forEach(b => {
+      b.classList.toggle('on', b.getAttribute('data-lang') === lang);
+    });
+    try{ localStorage.setItem('caseStudyLang', lang); }catch(e){}
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('#langToggle button').forEach(b => {
+      b.addEventListener('click', () => apply(b.getAttribute('data-lang')));
+    });
+    let saved = null;
+    try{ saved = localStorage.getItem('caseStudyLang'); }catch(e){}
+    apply(saved === 'zh' ? 'zh' : 'en');
+  });
+})();
+</script>
+</body>
+</html>
